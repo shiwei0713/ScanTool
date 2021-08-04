@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="top"
+    tools:context=".MasterActivity">
+
+    <ImageView
+        android:id="@+id/imgMasterBanner"
+        android:layout_width="match_parent"
+        android:layout_height="215dp"
+        android:layout_alignParentTop="true"
+        android:scaleType="centerCrop"
+        app:srcCompat="@drawable/master_banner" />
+
+    <ImageView
+        android:id="@+id/imgMasterUser"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginLeft="30dp"
+        app:srcCompat="@drawable/master_user" />
+
+    <LinearLayout
+        android:id="@+id/linearMasterTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_toRightOf="@id/imgMasterUser"
+        android:layout_marginTop="50dp"
+        android:layout_marginLeft="15dp">
+
+        <TextView
+            android:id="@+id/txtMasterUser"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_toRightOf="@id/imgMasterUser"
+            android:textColor="@color/login_title"
+            android:textSize="26sp"
+            android:textStyle="bold"
+            android:text="@string/master_username" />
+
+        <TextView
+            android:id="@+id/txtLoginout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/txtMasterUser"
+            android:layout_marginLeft="10dp"
+            android:layout_centerHorizontal="true"
+            android:textColor="@color/master_loginout"
+            android:text="@string/master_logout"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/txtMasterDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_toRightOf="@id/imgMasterUser"
+        android:layout_below="@id/linearMasterTitle"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="5dp"
+        android:textColor="@color/login_title"
+        android:textSize="16sp"
+        android:text="" />
+
+    <LinearLayout
+        android:id="@+id/linearMasterAction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/imgMasterBanner"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnAction1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableTop="@drawable/master_action1"
+            android:drawablePadding="5dp"
+            android:text="@string/master_action1"/>
+
+        <Button
+            android:id="@+id/btnAction2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableTop="@drawable/master_action2"
+            android:drawablePadding="5dp"
+            android:text="@string/master_action2"/>
+
+        <Button
+            android:id="@+id/btnAction3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableTop="@drawable/master_action3"
+            android:drawablePadding="5dp"
+            android:text="@string/master_action3"/>
+
+        <Button
+            android:id="@+id/btnAction4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableTop="@drawable/master_action4"
+            android:drawablePadding="5dp"
+            android:text="@string/master_action4"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearMasterAction2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/linearMasterAction"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnAction5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableTop="@drawable/master_action5"
+            android:drawablePadding="5dp"
+            android:text="@string/master_action5"/>
+
+        <Button
+            android:id="@+id/btnAction6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableTop="@drawable/master_action6"
+            android:drawablePadding="5dp"
+            android:text="@string/master_action6"/>
+
+        <Button
+            android:id="@+id/btnAction7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableTop="@drawable/master_action7"
+            android:drawablePadding="5dp"
+            android:text="@string/master_action7"/>
+
+        <Button
+            android:id="@+id/btnAction8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableTop="@drawable/master_action8"
+            android:drawablePadding="5dp"
+            android:text="@string/master_action8"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearMasterLine"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="50dp"
+        android:background="@color/line"
+        android:layout_below="@id/linearMasterAction2"
+        android:orientation="vertical">
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearMasterText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/linearMasterLine"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:visibility="gone"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                app:srcCompat="@drawable/master_message"/>
+
+            <TextView
+                android:id="@+id/txtMasterMsgTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="3dp"
+                android:textStyle="bold"
+                android:textColor="@color/master_message"
+                android:text="@string/master_message_title"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/master_message"
+            android:orientation="horizontal">
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txtMasterMsgContent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/master_message"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:text="@string/master_message_content"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/master_message"
+            android:orientation="horizontal">
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/linearMasterText"
+        android:layout_centerInParent="true"
+        android:gravity="bottom"
+        android:layout_marginBottom="10dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/txtMasterSite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:textStyle="bold"
+            android:textColor="@color/login_bottom"/>
+    </RelativeLayout>
+
+</RelativeLayout>

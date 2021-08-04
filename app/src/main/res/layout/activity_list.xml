@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ListActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeNoBar.ScanTool.AppBarOverlay">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/listToolBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/action_style"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
+        <!--
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:minHeight="?actionBarSize"
+            android:padding="@dimen/appbar_padding"
+            android:text="@string/master_action2"
+            android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title" />-->
+        <LinearLayout
+            android:id="@+id/linearStaus"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:background="@color/white"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="@drawable/linearlayout_style"
+                android:gravity="center"
+                android:padding="5dp">
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    app:srcCompat="@drawable/task1" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/list_item_number"
+                    android:layout_marginLeft="5dp"
+                    android:text="@string/list_task1" />
+
+                <TextView
+                    android:id="@+id/txtTask1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/list_item_number"
+                    android:layout_marginLeft="5dp"
+                    android:textStyle="bold"
+                    android:textSize="16sp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:gravity="center"
+                android:background="@drawable/linearlayout_style"
+                android:padding="5dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_weight="1"
+                    app:srcCompat="@drawable/task2" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/master_loginout"
+                    android:layout_marginLeft="5dp"
+                    android:text="@string/list_task2" />
+
+                <TextView
+                    android:id="@+id/txtTask2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/master_loginout"
+                    android:layout_marginLeft="5dp"
+                    android:textStyle="bold"
+                    android:textSize="16sp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/linearlayout_style"
+                android:gravity="center"
+                android:padding="5dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_weight="1"
+                    app:srcCompat="@drawable/task3" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/red"
+                    android:layout_marginLeft="5dp"
+                    android:text="@string/list_task3" />
+
+                <TextView
+                    android:id="@+id/txtTask3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/red"
+                    android:layout_marginLeft="5dp"
+                    android:textStyle="bold"
+                    android:textSize="16sp"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:background="@color/line"
+            android:orientation="vertical">
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearQuery"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@color/white"
+            android:padding="5dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="5dp">
+
+                <TextView
+                    android:id="@+id/txtQueryQcNameTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:text="@string/query_title_name" />
+
+                <EditText
+                    android:id="@+id/txtQueryQcName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:background="@drawable/query_style"
+                    android:ems="8"
+                    android:padding="2dp"
+                    android:hint="@string/query_hint_name"
+                    android:textColorHint="@color/hint_color"
+                    android:textColor="@color/black"
+                    android:inputType=""
+                    android:textSize="14sp" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="25dp"
+                    android:background="@drawable/list_button_selector"
+                    android:layout_marginLeft="10dp"
+                    android:textColor="@color/teal_700"
+                    android:textStyle="normal"
+                    android:focusable="false"
+                    android:textSize="@dimen/list_detail_button"
+                    android:text="@string/query_button"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp">
+
+                <TextView
+                    android:id="@+id/txtQueryQcDateTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:text="@string/query_title_date" />
+
+                <EditText
+                    android:id="@+id/txtQueryQcbDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:background="@drawable/query_style"
+                    android:padding="2dp"
+                    android:ems="5"
+                    android:hint="@string/query_hint_bdate"
+                    android:textColorHint="@color/hint_color"
+                    android:textColor="@color/black"
+                    android:inputType="date"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:text="-"
+                    android:padding="2dp"
+                    android:textColor="@color/black" />
+
+                <EditText
+                    android:id="@+id/txtQueryQceDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:background="@drawable/query_style"
+                    android:padding="2dp"
+                    android:ems="5"
+                    android:hint="@string/query_hint_edate"
+                    android:textColorHint="@color/hint_color"
+                    android:textColor="@color/black"
+                    android:inputType="date"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/txtLabel1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:text="@string/query_label1"
+                    android:textColor="@color/button_color" />
+
+                <TextView
+                    android:id="@+id/txtLabel2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:text="@string/query_label2"
+                    android:textColor="@color/button_color" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:background="@color/line"
+            android:orientation="vertical">
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearFlag"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:background="@color/white"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/teal_700"
+                android:text="@string/list_flag_query"/>
+
+            <Button
+                android:id="@+id/btnFlag1"
+                android:layout_width="60dp"
+                android:layout_height="25dp"
+                android:background="@drawable/list_flag_selector"
+                android:textColor="@color/teal_700"
+                android:layout_marginLeft="10dp"
+                android:textStyle="normal"
+                android:focusable="false"
+                android:textSize="@dimen/list_detail_button"
+                android:text="@string/list_flag1"/>
+
+            <Button
+                android:id="@+id/btnFlag2"
+                android:layout_width="60dp"
+                android:layout_height="25dp"
+                android:background="@drawable/list_flag_selector"
+                android:layout_marginLeft="10dp"
+                android:textColor="@color/teal_700"
+                android:textStyle="normal"
+                android:focusable="false"
+                android:textSize="@dimen/list_detail_button"
+                android:text="@string/list_flag2"/>
+
+            <Button
+                android:id="@+id/btnFlag3"
+                android:layout_width="60dp"
+                android:layout_height="25dp"
+                android:background="@drawable/list_flag_selector"
+                android:layout_marginLeft="10dp"
+                android:textColor="@color/teal_700"
+                android:textStyle="normal"
+                android:focusable="false"
+                android:textSize="@dimen/list_detail_button"
+                android:text="@string/list_flag3"/>
+
+            <Button
+                android:id="@+id/btnFlag4"
+                android:layout_width="60dp"
+                android:layout_height="25dp"
+                android:background="@drawable/list_flag_selector"
+                android:layout_marginLeft="10dp"
+                android:textColor="@color/teal_700"
+                android:textStyle="normal"
+                android:focusable="false"
+                android:textSize="@dimen/list_detail_button"
+                android:text="@string/list_flag4"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:background="@color/line"
+            android:orientation="vertical">
+
+        </LinearLayout>
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:tabTextColor="@color/black"
+            android:background="@color/white" />
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabRefresh"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="@dimen/fab_refresh_margin"
+        android:layout_marginLeft="@dimen/fab_margin"
+        android:layout_marginRight="@dimen/fab_margin"
+        android:layout_marginTop="@dimen/fab_refresh_margin"
+        app:srcCompat="@drawable/floating_button_refresh"
+        android:backgroundTint="@color/white"
+        app:fabSize="normal"
+        android:scaleType="fitXY"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        app:srcCompat="@drawable/floating_button_scan"
+        android:backgroundTint="@color/white"
+        app:fabSize="normal"
+        android:scaleType="fitXY"/>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

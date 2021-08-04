@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center|left"
+        android:layout_marginLeft="@dimen/detail_content_margin"
+        android:layout_marginRight="@dimen/detail_content_margin"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/detail_content_height"
+            android:gravity="center|left"
+            android:layout_marginLeft="@dimen/detail_content_margin"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/detailProductCodeTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/detail_content_title1"
+                android:textColor="@color/list_item_icon"
+                android:textSize="@dimen/detail_content_textsize" />
+
+            <TextView
+                android:id="@+id/detailProductCode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/detail_content_input_margin"
+                android:textColor="@color/list_item_icon"
+                android:textSize="@dimen/detail_content_textsize" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/line"
+            android:orientation="vertical" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/detail_content_height"
+            android:gravity="center|left"
+            android:layout_marginLeft="@dimen/detail_content_margin"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/detailProductModelsTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/detail_content_title2"
+                android:textColor="@color/list_item_icon"
+                android:textSize="@dimen/detail_content_textsize" />
+
+            <TextView
+                android:id="@+id/detailProductModels"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/detail_content_input_margin"
+                android:textColor="@color/list_item_icon"
+                android:textSize="@dimen/detail_content_textsize" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/line"
+            android:orientation="vertical" />
+
+        <LinearLayout
+            android:id="@+id/detailLinearProcess"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/detail_content_height"
+            android:gravity="center|left"
+            android:layout_marginLeft="@dimen/detail_content_margin"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/detailProcessTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/detail_content_title3"
+                android:textColor="@color/list_item_icon"
+                android:textSize="@dimen/detail_content_textsize" />
+
+            <TextView
+                android:id="@+id/detailProcess"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/detail_content_input_margin"
+                android:textColor="@color/list_item_icon"
+                android:textSize="@dimen/detail_content_textsize" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/line"
+            android:orientation="vertical" />
+
+        <LinearLayout
+            android:id="@+id/detailLinearDevice"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/detail_content_height"
+            android:gravity="center|left"
+            android:layout_marginLeft="@dimen/detail_content_margin"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/detailDeviceTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/detail_content_title4"
+                android:textColor="@color/list_item_icon"
+                android:textSize="@dimen/detail_content_textsize" />
+
+            <TextView
+                android:id="@+id/detailDevice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/detail_content_input_margin"
+                android:textColor="@color/list_item_icon"
+                android:textSize="@dimen/detail_content_textsize" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/line"
+            android:orientation="vertical" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/detail_content_height"
+            android:gravity="center|left"
+            android:layout_marginLeft="@dimen/detail_content_margin"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/detailStartPlanDateTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/detail_content_title5"
+                android:textColor="@color/list_item_icon"
+                android:textSize="@dimen/detail_content_textsize" />
+
+            <TextView
+                android:id="@+id/detailStartPlanDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/detail_content_input_margin"
+                android:textColor="@color/list_item_icon"
+                android:textSize="@dimen/detail_content_textsize" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/line"
+            android:orientation="vertical" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/detail_content_height"
+            android:gravity="center|left"
+            android:layout_marginLeft="@dimen/detail_content_margin"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/detailEndPlanDateTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/detail_content_title6"
+                android:textColor="@color/list_item_icon"
+                android:textSize="@dimen/detail_content_textsize" />
+
+            <TextView
+                android:id="@+id/detailEndPlanDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/detail_content_input_margin"
+                android:textColor="@color/list_item_icon"
+                android:textSize="@dimen/detail_content_textsize" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/line"
+            android:orientation="vertical" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/detail_content_height"
+            android:gravity="center|left"
+            android:layout_marginLeft="@dimen/detail_content_margin"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/detailQuantityTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/detail_content_title7"
+                android:textColor="@color/list_item_icon"
+                android:textSize="@dimen/detail_content_textsize" />
+
+            <TextView
+                android:id="@+id/detailQuantity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/detail_content_input_margin"
+                android:textColor="@color/list_item_icon"
+                android:textSize="@dimen/detail_content_textsize" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/line"
+            android:orientation="vertical" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/detail_content_height"
+            android:gravity="center|left"
+            android:layout_marginLeft="@dimen/detail_content_margin"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/detailDocnoTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/detail_content_title8"
+                android:textColor="@color/list_item_icon"
+                android:textSize="@dimen/detail_content_textsize" />
+
+            <TextView
+                android:id="@+id/detailDocno"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/detail_content_input_margin"
+                android:textColor="@color/list_item_icon"
+                android:textSize="@dimen/detail_content_textsize" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/line"
+            android:orientation="vertical" />
+
+    </LinearLayout>
+
+</ScrollView>

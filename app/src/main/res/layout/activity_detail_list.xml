@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".DetailListActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/detailListToolBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/action_style"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
+
+    <LinearLayout
+        android:id="@+id/linearDetailDocno"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/txtDetailDocnoTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/detail_title_padding"
+            android:text="@string/detail_docno"
+            android:textColor="@color/list_detail_item" />
+
+        <TextView
+            android:id="@+id/txtDetailDocno"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/detail_title_padding"
+            android:textColor="@color/list_detail_item" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/line"
+        android:orientation="vertical">
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearDetailProductName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/txtDetailProductNameTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/detail_title_padding"
+            android:text="@string/detail_title6"
+            android:textColor="@color/list_detail_item" />
+
+        <TextView
+            android:id="@+id/txtDetailProductCode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/detail_title_padding"
+            android:textColor="@color/list_detail_item" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="/"
+            android:textColor="@color/list_detail_item" />
+
+        <TextView
+            android:id="@+id/txtDetailProductName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/detail_title_padding"
+            android:textColor="@color/list_detail_item" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/line"
+        android:orientation="vertical">
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearDetailProductModels"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/txtDetailProductModelsTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/detail_title_padding"
+            android:text="@string/detail_product_models"
+            android:textColor="@color/list_detail_item" />
+
+        <TextView
+            android:id="@+id/txtDetailProductModels"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/detail_title_padding"
+            android:textColor="@color/list_detail_item" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/line"
+        android:orientation="vertical">
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:padding="5dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/txtDetailQuantityTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/detail_title4"
+            android:padding="@dimen/detail_title_padding"
+            android:textColor="@color/list_detail_item" />
+
+        <TextView
+            android:id="@+id/txtDetailQuantity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/detail_title_padding"
+            android:inputType="number"
+            android:ems="4"
+            android:textColor="@color/list_detail_item" />
+
+        <TextView
+            android:id="@+id/txtDetailQuantityPcsTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="@string/detail_detail_quantity"
+            android:padding="@dimen/detail_title_padding"
+            android:textColor="@color/list_detail_item" />
+
+        <TextView
+            android:id="@+id/txtDetailQuantityCurrent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/detail_title_padding"
+            android:textColor="@color/master_message" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="/"
+            android:textColor="@color/list_detail_item" />
+
+        <TextView
+            android:id="@+id/txtDetailQuantityPcs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/detail_title_padding"
+            android:inputType="number"
+            android:ems="4"
+            android:textColor="@color/list_detail_item" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/line"
+        android:orientation="vertical">
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/txtDetailProducerTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/detail_title5"
+            android:padding="@dimen/detail_title_padding"
+            android:textColor="@color/list_detail_item" />
+
+        <TextView
+            android:id="@+id/txtDetailProducerId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/detail_title_padding"
+            android:textColor="@color/list_detail_item" />
+
+        <TextView
+            android:id="@+id/txtDetailProducer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/detail_title_padding"
+            android:textColor="@color/list_detail_item" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/line"
+        android:orientation="vertical">
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearDetailStock"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:padding="5dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/txtDetailStockTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/detail_title7"
+            android:padding="@dimen/detail_title_padding"
+            android:textColor="@color/list_detail_item" />
+
+        <TextView
+            android:id="@+id/txtDetailStockId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/detail_title_padding"
+            android:textColor="@color/list_detail_item" />
+
+        <TextView
+            android:id="@+id/txtDetailStock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/detail_title_padding"
+            android:textColor="@color/list_detail_item" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/line"
+        android:orientation="vertical">
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="top|center"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnSubmit"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:background="@drawable/list_button_selector"
+            android:textColor="@color/teal_700"
+            android:textStyle="normal"
+            android:focusable="false"
+            android:textSize="@dimen/list_detail_button"
+            android:text="@string/detail_submit" />
+
+        <Button
+            android:id="@+id/btnCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_marginLeft="30dp"
+            android:background="@drawable/list_button_selector"
+            android:textColor="@color/teal_700"
+            android:textStyle="normal"
+            android:focusable="false"
+            android:textSize="@dimen/list_detail_button"
+            android:text="@string/detail_refresh" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:background="@color/line"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical">
+
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/detailListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="@color/white"
+        android:dividerHeight="5dp"
+        android:padding="5dp" />
+
+</LinearLayout>

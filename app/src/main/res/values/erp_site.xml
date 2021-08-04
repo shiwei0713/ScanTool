@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="site">
+        <item>武汉华滋东江汽车零部件有限公司</item>
+        <item>成都华滋东江汽车零部件有限公司</item>
+        <item>湘潭华滋东江汽车零部件有限公司</item>
+    </string-array>
+</resources>
