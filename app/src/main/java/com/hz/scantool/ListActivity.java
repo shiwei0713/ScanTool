@@ -16,9 +16,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -28,29 +25,34 @@ import android.widget.TextView;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.hz.scantool.adapter.MyToast;
-import com.hz.scantool.helper.SharedHelper;
-import com.hz.scantool.helper.WebServiceHelper;
-import com.hz.scantool.models.Company;
+import com.hz.scantool.helper.T100ServiceHelper;
 import com.hz.scantool.models.UserInfo;
 import com.hz.scantool.ui.main.SectionsPagerAdapter;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 import static com.google.zxing.integration.android.IntentIntegrator.REQUEST_CODE;
 
 public class ListActivity extends AppCompatActivity {
 
     private static final String SCANACTION="com.android.server.scannerservice.broadcast";
+
     private SectionsPagerAdapter sectionsPagerAdapter;
     private ViewPager viewPager;
     private TabLayout tabs;
-    private String nerworkType;
-    Company company;
-    Context mContext;
-    SharedHelper sharedHelper;
+
+    private String statusCode;
+    private String statusDescription;
+
     private int intCount;
     private int intIndex;
     private TextView txtTask1;
@@ -70,30 +72,10 @@ public class ListActivity extends AppCompatActivity {
     private String qrSid;
     private String productCode;
 
-    //创建Handler
-    private final Handler listHandler = new Handler(Looper.getMainLooper()){
-        @Override
-        public void handleMessage(@NonNull Message msg) {
-            super.handleMessage(msg);
-
-            List<Map<String,Object>> strResponseList = (List<Map<String,Object>>)msg.obj;
-            for(Map<String,Object> m: strResponseList){
-                if(!m.get("statusCode").toString().equals("0")){
-                    MyToast.myShow(ListActivity.this,m.get("statusDescription").toString(),0);
-                }
-            }
-        }
-    };
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
-
-        //初始化存储信息
-        mContext=getApplicationContext();
-        sharedHelper=new SharedHelper(mContext);
 
         //初始化textview
         txtTask1 = findViewById(R.id.txtTask1);
@@ -154,10 +136,6 @@ public class ListActivity extends AppCompatActivity {
         tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
 
-        //初始化查询条件，并绑定事件
-//        txtQueryQcName = findViewById(R.id.txtQueryQcName);
-//        txtQueryQcName.addTextChangedListener(textWatcher);
-
         //浮动按钮扫描事件初始化
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setVisibility(View.GONE);
@@ -184,6 +162,7 @@ public class ListActivity extends AppCompatActivity {
 
     }
 
+    //PDA扫描注册
     @Override
     protected void onResume() {
         super.onResume();
@@ -195,6 +174,7 @@ public class ListActivity extends AppCompatActivity {
         registerReceiver(scanReceiver,intentFilter);
     }
 
+    //PDA扫描数据接收
     private BroadcastReceiver scanReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -202,75 +182,107 @@ public class ListActivity extends AppCompatActivity {
                 String qrContent = intent.getStringExtra("scannerdata");
 
                 if(qrContent!=null && qrContent.length()!=0){
+                    scanResult(qrContent,context,intent);
 
-                    //解析二维码
-                    String[] qrCodeValue = qrContent.split("_");
-                    int qrIndex = qrContent.indexOf("_");
-                    if(qrIndex==-1){
-//                        Toast.makeText(context,"条码错误:"+qrContent,Toast.LENGTH_SHORT).show();
-                        MyToast.myShow(context,"条码错误:"+qrContent,0);
-                    }else{
-                        //单据类别
-                        Boolean isSale = false;
-                        String doctype = "";
-                        String docno = qrCodeValue[0].trim();
-                        if(!docno.isEmpty()) {
-                            String[] docList = docno.split("-");
-                            String docSlip = docList[0].trim();
-                            doctype = docSlip.substring(1,3);
-
-                            if(doctype.equals("XM") && docList.length == 2 && (intIndex == 1 || intIndex == 5)){
-                                isSale = true;
-                            }
-                        }
-
-                        if(isSale){
-                            intent = new Intent(context,DetailListActivity.class);
-                            //设置传入参数
-                            bundle=new Bundle();
-                            bundle.putString("txtListDocno",qrCodeValue[0].trim());
-                            bundle.putString("txtListProductCode","");
-                            bundle.putString("txtListProductName","");
-                            bundle.putString("txtListProductModels","");
-                            bundle.putString("txtListProducerId",qrCodeValue[1].trim());
-                            bundle.putString("txtListProducer",qrCodeValue[2].trim());
-                            bundle.putString("txtListStockId",qrCodeValue[3].trim());
-                            bundle.putString("txtListStock",qrCodeValue[4].trim());
-                            bundle.putString("txtListQuantity","");
-                            bundle.putInt("index",intIndex);
-
-                            intent.putExtras(bundle);
-                            startActivity(intent);
-                        }else{
-                            if(intIndex == 7){
-                                qrSid = qrCodeValue[0].trim();
-                                productCode = qrCodeValue[1].trim();
-                                updateStorageCheck();
-                            }else{
-                                intent = new Intent(context,DetailActivity.class);
-                                //设置传入参数
-                                bundle=new Bundle();
-                                bundle.putString("qrCode",qrContent);
-                                bundle.putString("docno",docno);
-                                bundle.putInt("index",intIndex);
-                                intent.putExtras(bundle);
-                                startActivity(intent);
-                            }
-                        }
-                    }
                 }else{
-//                    Toast.makeText(context,"扫描失败,请重新扫描!"+qrContent,Toast.LENGTH_SHORT).show();
                     MyToast.myShow(context,"扫描失败,请重新扫描",0);
                 }
             }
         }
     };
 
+    //取消PDA广播注册
     @Override
     protected void onPause() {
         super.onPause();
 
         unregisterReceiver(scanReceiver);
+    }
+
+    //手机调用摄像头扫描
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==REQUEST_CODE){
+            IntentResult intentResult = IntentIntegrator.parseActivityResult(resultCode,data);
+            String qrContent = intentResult.getContents();
+            Intent intent = null;
+
+            if(qrContent!=null && qrContent.length()!=0){
+                scanResult(qrContent,this,intent);
+            }else{
+                MyToast.myShow(this,"扫描失败,请重新扫描"+qrContent,0);
+            }
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        //工具栏返回按钮事件定义
+        if(item.getItemId()==android.R.id.home){
+            finish();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    //扫描结果解析
+    private void scanResult(String qrContent,Context context, Intent intent){
+        //解析二维码
+        String[] qrCodeValue = qrContent.split("_");
+        int qrIndex = qrContent.indexOf("_");
+        if(qrIndex==-1){
+            MyToast.myShow(context,"条码错误:"+qrContent,0);
+        }else{
+            //单据类别
+            Boolean isSale = false;
+            String doctype = "";
+            String docno = qrCodeValue[0].trim();
+            if(!docno.isEmpty()) {
+                String[] docList = docno.split("-");
+                String docSlip = docList[0].trim();
+                doctype = docSlip.substring(1,3);
+
+                if(doctype.equals("XM") && docList.length == 2 && (intIndex == 1 || intIndex == 5)){
+                    isSale = true;
+                }
+            }
+
+            if(isSale){
+                intent = new Intent(context,DetailListActivity.class);
+                //设置传入参数
+                bundle=new Bundle();
+                bundle.putString("txtListDocno",qrCodeValue[0].trim());
+                bundle.putString("txtListProductCode","");
+                bundle.putString("txtListProductName","");
+                bundle.putString("txtListProductModels","");
+                bundle.putString("txtListProducerId",qrCodeValue[1].trim());
+                bundle.putString("txtListProducer",qrCodeValue[2].trim());
+                bundle.putString("txtListStockId",qrCodeValue[3].trim());
+                bundle.putString("txtListStock",qrCodeValue[4].trim());
+                bundle.putString("txtListQuantity","");
+                bundle.putInt("index",intIndex);
+
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }else{
+                if(intIndex == 7){
+                    qrSid = qrCodeValue[0].trim();
+                    productCode = qrCodeValue[1].trim();
+                    updateStorageForCheck();
+                }else{
+                    intent = new Intent(context,DetailActivity.class);
+                    //设置传入参数
+                    bundle=new Bundle();
+                    bundle.putString("qrCode",qrContent);
+                    bundle.putString("docno",docno);
+                    bundle.putInt("index",intIndex);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }
+            }
+        }
     }
 
     //筛选条件查询
@@ -305,8 +317,6 @@ public class ListActivity extends AppCompatActivity {
     }
 
     private void refreshView(){
-        //获取任务数
-//        getTaskCount();
 
         //创建listview
         sectionsPagerAdapter = new SectionsPagerAdapter(ListActivity.this, getSupportFragmentManager());
@@ -317,27 +327,21 @@ public class ListActivity extends AppCompatActivity {
         tabs.setupWithViewPager(viewPager);
     }
 
-    private void updateStorageCheck(){
-        new Thread(new Runnable() {
+    //扫描更新盘点数据
+    private void updateStorageForCheck(){
+        Observable.create(new ObservableOnSubscribe<String>() {
             @Override
-            public void run() {
-                //初始化网络类型和营运据点
-//                company=new Company();
-//                Map<String,String> data=sharedHelper.readShared();
-//                nerworkType = data.get("network");
-//                company.setSite(data.get("userSite"));
-
+            public void subscribe(ObservableEmitter<String> e) throws Exception {
                 //初始化T100服务名
                 String webServiceName = "StorageCheckRequestUpdate";
 
-                //设置传入请求参数
-                StringBuilder strWebRequestConten= new StringBuilder();
-                strWebRequestConten.append("&lt;Document&gt;\n"+
+                T100ServiceHelper t100ServiceHelper = new T100ServiceHelper();
+                String requestBody = "&lt;Document&gt;\n"+
                         "&lt;RecordSet id=\"1\"&gt;\n"+
                         "&lt;Master name=\"bcah_t\" node_id=\"1\"&gt;\n"+
                         "&lt;Record&gt;\n"+
-                        "&lt;Field name=\"bcahsite\" value=\""+company.getCode()+"\"/&gt;\n"+
-                        "&lt;Field name=\"bcahent\" value=\"10\"/&gt;\n"+
+                        "&lt;Field name=\"bcahsite\" value=\""+UserInfo.getUserSiteId(getApplicationContext())+"\"/&gt;\n"+
+                        "&lt;Field name=\"bcahent\" value=\""+UserInfo.getUserEnterprise(getApplicationContext())+"\"/&gt;\n"+
                         "&lt;Field name=\"bcah002\" value=\""+productCode+"\"/&gt;\n"+
                         "&lt;Field name=\"bcah018\" value=\""+ UserInfo.getUserId(getApplicationContext()) +"\"/&gt;\n"+
                         "&lt;Field name=\"qrsid\" value=\""+qrSid+"\"/&gt;\n"+
@@ -351,110 +355,41 @@ public class ListActivity extends AppCompatActivity {
                         "&lt;/Record&gt;\n"+
                         "&lt;/Master&gt;\n"+
                         "&lt;/RecordSet&gt;\n"+
-                        "&lt;/Document&gt;\n");
+                        "&lt;/Document&gt;\n";
+                String strResponse = t100ServiceHelper.getT100Data(requestBody,webServiceName,getApplicationContext());
 
-                //设置WebService参数
-                WebServiceHelper webServiceHelper=new WebServiceHelper();
-                webServiceHelper.setWebKey("16baae6c40b922d8ddb12a0320d8ea1d");
-                webServiceHelper.setWebTimestamp("20201114083106031");
-                webServiceHelper.setWebName(webServiceName);
-                webServiceHelper.setWebUrl(nerworkType);
-                webServiceHelper.setWebSite(company.getCode());
-                webServiceHelper.setWebRequestContent(strWebRequestConten);
-
-                //发送WebService请求,并返回结果
-                String strResponse = "";
-                try{
-                    strResponse=webServiceHelper.sendWebRequest();
-                }catch (Exception e){
-                    e.printStackTrace();
+                List<Map<String,Object>> strResponseList = t100ServiceHelper.getT100StatusData(strResponse);
+                for(Map<String,Object> m: strResponseList){
+                    statusCode = m.get("statusCode").toString();
+                    statusDescription = m.get("statusDescription").toString();
                 }
 
-                //获取WebService相应代码
-                Integer iResponseCode=webServiceHelper.getWebResponseCode();
-
-                //存储列表
-                List<Map<String,Object>> taskList = new ArrayList<Map<String,Object>>();
-                String statusCode;
-                String statusSqlcode;
-                String statusDescription;
-
-                if(iResponseCode==200){
-                    Map<String,Object> map = new HashMap<String,Object>();
-
-                    //检查索引
-                    Integer iTaskIndex=strResponse.indexOf("Status",1);
-                    if (iTaskIndex>-1){
-                        //当前任务数
-                        String strStatus=strResponse.substring(strResponse.indexOf("Status",1),strResponse.length()).replace("\"","");
-                        statusCode=strStatus.substring(strStatus.indexOf("code",1)+5,strStatus.indexOf("sqlcode",1)-1);
-                        statusSqlcode = strStatus.substring(strStatus.indexOf("sqlcode",1)+8,strStatus.indexOf("description",1)-1);
-                        statusDescription = strStatus.substring(strStatus.indexOf("description",1)+12,strStatus.indexOf("&gt;",1)-1);
-
-                        map.put("statusCode",statusCode.trim());
-                        map.put("statusSqlcode",statusSqlcode.trim());
-                        map.put("statusDescription",statusDescription.trim());
-                        taskList.add(map);
-                    }
-                }
-
-                Message message = new Message();
-                message.obj = taskList;
-                listHandler.sendMessage(message);
+                e.onNext(statusCode);
+                e.onNext(statusDescription);
+                e.onComplete();
             }
-        }).start();
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<String>() {
+            @Override
+            public void onSubscribe(Disposable d) {
 
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==REQUEST_CODE){
-            IntentResult intentResult = IntentIntegrator.parseActivityResult(resultCode,data);
-            final String qrContent = intentResult.getContents();
-            if(qrContent!=null && qrContent.length()!=0){
-                Intent intent = null;
-                //解析二维码
-                String[] qrCodeValue = qrContent.split("_");
-                int qrIndex = qrContent.indexOf("_");
-                if(qrIndex==-1){
-//                    Toast.makeText(this,"条码错误:"+qrContent,Toast.LENGTH_SHORT).show();
-                    MyToast.myShow(this,"条码错误"+qrContent,0);
-                }else{
-                    intent = new Intent(this,DetailListActivity.class);
-                    //设置传入参数
-                    bundle=new Bundle();
-                    bundle.putString("txtListDocno",qrCodeValue[0].trim());
-                    bundle.putString("txtListProductCode","");
-                    bundle.putString("txtListProductName","");
-                    bundle.putString("txtListProductModels","");
-                    bundle.putString("txtListProducerId",qrCodeValue[1].trim());
-                    bundle.putString("txtListProducer",qrCodeValue[2].trim());
-                    bundle.putString("txtListStockId",qrCodeValue[3].trim());
-                    bundle.putString("txtListStock",qrCodeValue[4].trim());
-                    bundle.putString("txtListQuantity","");
-                    bundle.putInt("index",intIndex);
-
-                    intent.putExtras(bundle);
-                    startActivity(intent);
-//                    Toast.makeText(this,"扫描:"+qrContent,Toast.LENGTH_SHORT).show();
-                    MyToast.myShow(this,"扫描:"+qrContent,2);
-                }
-            }else{
-//                Toast.makeText(this,"扫描失败,请重新扫描!"+qrContent,Toast.LENGTH_SHORT).show();
-                MyToast.myShow(this,"扫描失败,请重新扫描"+qrContent,0);
             }
-        }
+
+            @Override
+            public void onNext(String s) {
+                int intType = Integer.parseInt(statusCode);
+                MyToast.myShow(ListActivity.this,statusDescription,intType);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                MyToast.myShow(ListActivity.this,"更新失败",0);
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
     }
 
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        //工具栏返回按钮事件定义
-        if(item.getItemId()==android.R.id.home){
-            finish();
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 }

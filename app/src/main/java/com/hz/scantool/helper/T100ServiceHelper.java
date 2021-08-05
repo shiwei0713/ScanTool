@@ -5,8 +5,13 @@ import android.content.Context;
 import com.hz.scantool.models.Company;
 import com.hz.scantool.models.UserInfo;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import okhttp3.MediaType;
@@ -101,7 +106,7 @@ public class T100ServiceHelper {
         return response;
     }
 
-    //获取返回数据
+    //获取返回XML数据
     public String getT100Data(String requestBody,String requestMethod,Context mContext) throws IOException {
         String strResponse="";
 
@@ -127,4 +132,107 @@ public class T100ServiceHelper {
         return strResponse;
     }
 
+    //解析xml状态数据
+    public List<Map<String,Object>> getT100StatusData(String strResponse){
+        List<Map<String,Object>> statusList = new ArrayList<Map<String,Object>>();
+        String statusCode="";
+        String statusSqlcode="";
+        String statusDescription="";
+
+        //检查索引
+        int iStatusIndex=strResponse.indexOf("Status",1);
+
+        Map<String,Object> map = new HashMap<String,Object>();
+        if (iStatusIndex>-1){
+            //当前任务数
+            String strStatus=strResponse.substring(strResponse.indexOf("Status",1),strResponse.length()).replace("\"","");
+            statusCode=strStatus.substring(strStatus.indexOf("code",1)+5,strStatus.indexOf("sqlcode",1)-1);
+            statusSqlcode = strStatus.substring(strStatus.indexOf("sqlcode",1)+8,strStatus.indexOf("description",1)-1);
+            statusDescription = strStatus.substring(strStatus.indexOf("description",1)+12,strStatus.indexOf("&gt;",1)-1);
+
+            map.put("statusCode",statusCode.trim());
+            map.put("statusSqlcode",statusSqlcode.trim());
+            map.put("statusDescription",statusDescription.trim());
+            statusList.add(map);
+        }
+
+        return statusList;
+    }
+
+    //解析xml多结果数据
+    public List<Map<String,Object>> getT100JsonListData(String listJson, String xmlIndexStr){
+        List<Map<String,Object>> detailList = new ArrayList<Map<String,Object>>();
+        String strDetailContent = listJson;
+        int iStartId = strDetailContent.indexOf(xmlIndexStr,1);
+        //处理返回xml
+        while(iStartId>-1) {
+            String strSubContent = strDetailContent.substring(iStartId, strDetailContent.length());
+            String strJson = strSubContent.substring(strSubContent.indexOf("value", 1) + 7, strSubContent.indexOf("&gt;", 1) - 2);
+            Map<String, Object> map = new HashMap<String, Object>();
+            try {
+                JSONArray jsonArray = new JSONArray(strJson);
+                JSONObject jsonObject = jsonArray.getJSONObject(0);
+
+                map.put("ProductCode", jsonObject.getString("erpProductCode").trim());
+                map.put("ProductName", jsonObject.getString("erpProductName").trim());
+                map.put("ProductModels", jsonObject.getString("erpProductModels").trim());
+                map.put("StockId", jsonObject.getString("erpStockId").trim());
+                map.put("StockLocationId", jsonObject.getString("erpStockLocationId").trim());
+                map.put("StockLocation", jsonObject.getString("erpStockLocation").trim());
+                map.put("StockBatch", jsonObject.getString("erpStockBatch").trim());
+                map.put("Inventory", jsonObject.getString("erpInventory").trim());
+                map.put("Quantity", jsonObject.getString("erpQuantity").trim());
+                map.put("QuantityPcs", jsonObject.getString("erpQuantityPcs").trim());
+                map.put("PlanDate", jsonObject.getString("erpPlanDate").trim());
+                map.put("Status", jsonObject.getString("erpStatus").trim());
+                detailList.add(map);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            int iCurrentStartId = strSubContent.indexOf("/Record", 1);
+            int iCurrentEndId = strSubContent.length();
+
+            strDetailContent = strSubContent.substring(iCurrentStartId, iCurrentEndId);
+            iStartId = strDetailContent.indexOf(xmlIndexStr, 1);
+        }
+
+        return detailList;
+    }
+
+    //解析xml单条结果数据
+    public List<Map<String,Object>> getT100JsonData(String listJson, String xmlIndexStr){
+        List<Map<String,Object>> detailList = new ArrayList<Map<String,Object>>();
+        Map<String,Object> map = new HashMap<String,Object>();
+
+        //检查索引
+        int iTaskIndex=listJson.indexOf(xmlIndexStr,1);
+        if (iTaskIndex>-1){
+            //扫描明晰
+            String strContent =listJson.replaceAll("&amp;quot;","\"");
+            String strQr=strContent.substring(strContent.indexOf(xmlIndexStr,1),strContent.length());
+            String strQrJson=strQr.substring(strQr.indexOf("value",1)+7,strQr.indexOf("&gt;",1)-2);
+            try{
+                JSONArray jsonArray = new JSONArray(strQrJson);
+                JSONObject jsonObject = jsonArray.getJSONObject(0);
+                map.put("ProductCode",jsonObject.getString("erpProductCode").trim());
+                map.put("ProductName",jsonObject.getString("erpProductName").trim());
+                map.put("ProductModels",jsonObject.getString("erpProductModels").trim());
+                map.put("Process",jsonObject.getString("erpProcess").trim());
+                map.put("Device",jsonObject.getString("erpDevice").trim());
+                map.put("PlanDate",jsonObject.getString("erpPlanDate").trim());
+                map.put("Quantity",jsonObject.getString("erpQuantity").trim());
+                map.put("Docno",jsonObject.getString("erpDocno").trim());
+                map.put("QuantityNg",jsonObject.getString("erpQuantityNg").trim());
+                map.put("QuantityNo",jsonObject.getString("erpQuantityNo").trim());
+                map.put("QrCodeRule",jsonObject.getString("erpQrCodeRule").trim());
+                map.put("Status",jsonObject.getString("erpStatus").trim());
+                detailList.add(map);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+
+        return detailList;
+    }
 }

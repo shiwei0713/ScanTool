@@ -14,6 +14,7 @@ public class UserInfo {
     private static String userSiteId;
     private static Integer userSiteCode;
     private static String userNetwork;
+    private static String userEnterprise;
 
     private static SharedHelper sharedHelper;
     private static Map<String,String> userData;
@@ -69,9 +70,17 @@ public class UserInfo {
         return userSiteCode;
     }
 
+    //网络类型
     public static String getUserNetwork(Context mContext){
         userNetwork = getUserData(mContext).get("network");
 
         return userNetwork;
+    }
+
+    //企业编号
+    public static String getUserEnterprise(Context mContext){
+        userEnterprise = "10";
+
+        return userEnterprise;
     }
 }

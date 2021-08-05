@@ -94,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
             rBtnWlan.setChecked(false);
         }
 
+        //初始化公司
         spinnerSite.setSelection(UserInfo.getUserSiteCode(getApplicationContext()));
     }
 
@@ -179,7 +180,7 @@ public class MainActivity extends AppCompatActivity {
                     T100ServiceHelper t100ServiceHelper = new T100ServiceHelper();
                     String requestBody = "&lt;Parameter&gt;\n"+
                             "&lt;Record&gt;\n"+
-                            "&lt;Field name=\"enterprise\" value=\"10\"/&gt;\n"+
+                            "&lt;Field name=\"enterprise\" value=\""+UserInfo.getUserEnterprise(getApplicationContext())+"\"/&gt;\n"+
                             "&lt;Field name=\"account\" value=\""+txtUserName.getText().toString()+"\"/&gt;\n"+
                             "&lt;Field name=\"site\" value=\""+UserInfo.getUserSiteId(getApplicationContext())+"\"/&gt;\n"+
                             "&lt;/Record&gt;\n"+

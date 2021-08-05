@@ -11,10 +11,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -27,18 +23,19 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.hz.scantool.adapter.DetailListItemAdapter;
 import com.hz.scantool.adapter.MyToast;
-import com.hz.scantool.helper.SharedHelper;
-import com.hz.scantool.helper.WebServiceHelper;
-import com.hz.scantool.models.Company;
+import com.hz.scantool.helper.T100ServiceHelper;
+import com.hz.scantool.models.UserInfo;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 import static com.google.zxing.integration.android.IntentIntegrator.REQUEST_CODE;
 
@@ -57,6 +54,9 @@ public class DetailListActivity extends AppCompatActivity {
     private String strStock;
     private String strQuantity;
     private String strQuantityPcs;
+
+    private String statusCode;
+    private String statusDescription;
 
     private LinearLayout linearDetailDocno;
     private LinearLayout linearDetailProductName;
@@ -88,47 +88,9 @@ public class DetailListActivity extends AppCompatActivity {
     private ListView listView;
     private List<Map<String,Object>> list;
     private DetailListItemAdapter detailItemAdapter;
-    public static String listJson = "";
 
-    private Company company;
     Context mContext;
-    private String nerworkType;
-    private String userCode;
     private String strStatus = "Y";
-    SharedHelper sharedHelper;
-
-    //创建Handler
-    private final Handler detailListHandler = new Handler(Looper.getMainLooper()){
-        @Override
-        public void handleMessage(@NonNull Message msg) {
-            super.handleMessage(msg);
-
-            listJson = (String)msg.obj;
-            list = decodeJsonData(listJson);
-            //初始化ListView
-            detailItemAdapter = new DetailListItemAdapter(list,getApplicationContext(),sharedHelper,txtDetailDocno.getText().toString(),intIndex);
-            listView.setAdapter(detailItemAdapter);
-
-            //刷新汇总数
-            refreshCurrentPcs();
-        }
-    };
-
-    //创建Handler
-    private final Handler uHandler = new Handler(Looper.getMainLooper()){
-        @Override
-        public void handleMessage(@NonNull Message msg) {
-            super.handleMessage(msg);
-
-            if(msg.what == 1){
-//                Toast.makeText(DetailListActivity.this,"提交成功!",Toast.LENGTH_SHORT).show();
-                MyToast.myShow(DetailListActivity.this,"提交成功",1);
-            }else{
-//                Toast.makeText(DetailListActivity.this,"提交失败!",Toast.LENGTH_SHORT).show();
-                MyToast.myShow(DetailListActivity.this,"提交失败",0);
-            }
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,7 +99,6 @@ public class DetailListActivity extends AppCompatActivity {
 
         //初始化存储信息
         mContext=getApplicationContext();
-        sharedHelper=new SharedHelper(mContext);
 
         //获取工具栏
         Toolbar toolbar=findViewById(R.id.detailListToolBar);
@@ -196,7 +157,7 @@ public class DetailListActivity extends AppCompatActivity {
         txtDetailStockId.setText(strStockId);
 
         //获取网络接口数据并解析
-        getData();
+        getDetailListData();
 
     }
 
@@ -205,7 +166,7 @@ public class DetailListActivity extends AppCompatActivity {
         super.onRestart();
 
         //刷新显示数
-        getData();
+        getDetailListData();
     }
 
     private void initView(){
@@ -293,7 +254,6 @@ public class DetailListActivity extends AppCompatActivity {
                         String qrFirst = qrDetailContent.substring(1,3);
 
                         if(qrFirst.equals("XM")){
-//                            Toast.makeText(context,"请扫描零件条码！",Toast.LENGTH_SHORT).show();
                             MyToast.myShow(context,"请扫描零件条码",2);
                         }else{
                             Bundle bundle;
@@ -308,15 +268,14 @@ public class DetailListActivity extends AppCompatActivity {
                                     bundle.putInt("index",intIndex);
                                     intent.putExtras(bundle);
                                     startActivity(intent);
-                                    getData();
-                                    refreshCurrentPcs();
+                                    getDetailListData();
                                     break;
                                 case 5:
                                     //刷新显示数据
                                     try{
                                         List<Map<String,Object>> refreshList = refreshData(qrDetailContent);
                                         //初始化ListView
-                                        detailItemAdapter = new DetailListItemAdapter(refreshList,getApplicationContext(),sharedHelper,txtDetailDocno.getText().toString(),intIndex);
+                                        detailItemAdapter = new DetailListItemAdapter(refreshList,getApplicationContext(),txtDetailDocno.getText().toString(),intIndex);
                                         listView.setAdapter(detailItemAdapter);
                                     }catch (Exception e){
                                         e.printStackTrace();
@@ -325,7 +284,6 @@ public class DetailListActivity extends AppCompatActivity {
                             }
                         }
                     }else{
-//                        Toast.makeText(context,"扫描结果:"+qrDetailContent,Toast.LENGTH_SHORT).show();
                         MyToast.myShow(context,"扫描结果:"+qrDetailContent,2);
                     }
                 }catch (Exception e){
@@ -349,7 +307,6 @@ public class DetailListActivity extends AppCompatActivity {
         if(requestCode==REQUEST_CODE){
             IntentResult intentResult = IntentIntegrator.parseActivityResult(resultCode,data);
             final String qrDetailContent = intentResult.getContents();
-            Log.i("QRCODE","CODE:"+qrDetailContent);
 
             try{
                 if(!qrDetailContent.isEmpty()){
@@ -365,15 +322,14 @@ public class DetailListActivity extends AppCompatActivity {
                             bundle.putInt("index",intIndex);
                             intent.putExtras(bundle);
                             startActivity(intent);
-                            getData();
-                            refreshCurrentPcs();
+                            getDetailListData();
                             break;
                         case 5:
                             //刷新显示数据
                             try{
                                 List<Map<String,Object>> refreshList = refreshData(qrDetailContent);
                                 //初始化ListView
-                                detailItemAdapter = new DetailListItemAdapter(refreshList,getApplicationContext(),sharedHelper,txtDetailDocno.getText().toString(),intIndex);
+                                detailItemAdapter = new DetailListItemAdapter(refreshList,getApplicationContext(),txtDetailDocno.getText().toString(),intIndex);
                                 listView.setAdapter(detailItemAdapter);
                             }catch (Exception e){
                                 e.printStackTrace();
@@ -381,7 +337,6 @@ public class DetailListActivity extends AppCompatActivity {
                             break;
                     }
                 }else{
-//                    Toast.makeText(this,"扫描结果:"+qrDetailContent,Toast.LENGTH_SHORT).show();
                     MyToast.myShow(this,"扫描结果:"+qrDetailContent,2);
                 }
             }catch (Exception e){
@@ -398,10 +353,9 @@ public class DetailListActivity extends AppCompatActivity {
                 //提交备货
                 case R.id.btnSubmit:
                     if(checkStatus()){
-                        sendData();
+                        updateDetailListData();
                     }else{
                         strStatus = "N";
-//                        Toast.makeText(DetailListActivity.this,"所有零件备货完成才可提交",Toast.LENGTH_SHORT).show();
                         MyToast.myShow(DetailListActivity.this,"所有零件备货完成才可提交",2);
                     }
                     break;
@@ -441,174 +395,119 @@ public class DetailListActivity extends AppCompatActivity {
     }
 
     //获取显示数据
-    public void getData() {
-        new Thread(new Runnable() {
+    public void getDetailListData() {
+        Observable.create(new ObservableOnSubscribe<String>() {
             @Override
-            public void run() {
-                try{
-                    String strDetailContent = "";
-//                    //初始化网络类型和营运据点
-//                    company=new Company();
-//                    Map<String,String> data=sharedHelper.readShared();
-//                    nerworkType = data.get("network");
-//                    company.setSite(data.get("userSite"));
-                    //设置传入请求参数
-                    StringBuilder strWebRequestConten= new StringBuilder();
-                    strWebRequestConten.append("&lt;Parameter&gt;\n"+
-                            "&lt;Record&gt;\n"+
-                            "&lt;Field name=\"enterprise\" value=\"10\"/&gt;\n"+
-                            "&lt;Field name=\"site\" value=\""+company.getCode()+"\"/&gt;\n"+
-                            "&lt;Field name=\"code\" value=\""+strProductCode+"\"/&gt;\n"+
-                            "&lt;Field name=\"stock\" value=\""+strStockId+"\"/&gt;\n"+
-                            "&lt;Field name=\"type\" value=\""+intIndex+"\"/&gt;\n"+
-                            "&lt;Field name=\"qrcode\" value=\""+strDocno+"\"/&gt;\n"+
-                            "&lt;/Record&gt;\n"+
-                            "&lt;/Parameter&gt;\n"+
-                            "&lt;Document/&gt;\n");
+            public void subscribe(ObservableEmitter<String> e) throws Exception {
+                //初始化T100服务名
+                String webServiceName = "AppGetStockLot";
 
-                    //设置WebService参数
-                    WebServiceHelper webServiceHelper=new WebServiceHelper();
-                    webServiceHelper.setWebKey("16baae6c40b922d8ddb12a0320d8ea1d");
-                    webServiceHelper.setWebTimestamp("20201114083106031");
-                    webServiceHelper.setWebName("AppGetStockLot");
-                    webServiceHelper.setWebUrl(nerworkType);
-                    webServiceHelper.setWebSite(company.getCode());
-                    webServiceHelper.setWebRequestContent(strWebRequestConten);
+                T100ServiceHelper t100ServiceHelper = new T100ServiceHelper();
+                String requestBody = "&lt;Parameter&gt;\n"+
+                        "&lt;Record&gt;\n"+
+                        "&lt;Field name=\"enterprise\" value=\""+UserInfo.getUserEnterprise(getApplicationContext())+"\"/&gt;\n"+
+                        "&lt;Field name=\"site\" value=\""+UserInfo.getUserSiteId(getApplicationContext())+"\"/&gt;\n"+
+                        "&lt;Field name=\"code\" value=\""+strProductCode+"\"/&gt;\n"+
+                        "&lt;Field name=\"stock\" value=\""+strStockId+"\"/&gt;\n"+
+                        "&lt;Field name=\"type\" value=\""+intIndex+"\"/&gt;\n"+
+                        "&lt;Field name=\"qrcode\" value=\""+strDocno+"\"/&gt;\n"+
+                        "&lt;/Record&gt;\n"+
+                        "&lt;/Parameter&gt;\n"+
+                        "&lt;Document/&gt;\n";
+                String strResponse = t100ServiceHelper.getT100Data(requestBody,webServiceName,getApplicationContext());
+                String strContent = strResponse.replaceAll("&amp;quot;","\"");
+                String strDetailContent = strDetailContent = strContent.substring(strContent.indexOf("Detail",1),strContent.indexOf("/Detail",1));
 
-                    //发送WebService请求,并返回结果
-                    String strResponse= null;
-                    try {
-                        strResponse = webServiceHelper.sendWebRequest();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                    //获取WebService相应代码
-                    Integer iResponseCode=webServiceHelper.getWebResponseCode();
-
-                    if(iResponseCode==200){
-                        String strContent = strResponse.replaceAll("&amp;quot;","\"");
-                        strDetailContent = strContent.substring(strContent.indexOf("Detail",1),strContent.indexOf("/Detail",1));
-
-                    }
-
-                    Message message = new Message();
-                    message.obj = strDetailContent;
-                    detailListHandler.sendMessage(message);
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
+                e.onNext(strDetailContent);
+                e.onComplete();
             }
-        }).start();
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<String>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(String s) {
+                T100ServiceHelper t100ServiceHelper =new T100ServiceHelper();
+                //初始化ListView
+                list = t100ServiceHelper.getT100JsonListData(s,"stocklist");
+                detailItemAdapter = new DetailListItemAdapter(list,getApplicationContext(),txtDetailDocno.getText().toString(),intIndex);
+                listView.setAdapter(detailItemAdapter);
+
+                //刷新汇总数
+                refreshCurrentPcs();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
     }
 
     //更新备货完成数据
-    public void sendData() {
-        new Thread(new Runnable() {
+    public void updateDetailListData() {
+        Observable.create(new ObservableOnSubscribe<String>() {
             @Override
-            public void run() {
-                try{
-                    String strDetailContent = "";
-                    //初始化网络类型和营运据点
-//                    company=new Company();
-//                    Map<String,String> data=sharedHelper.readShared();
-//                    nerworkType = data.get("network");
-//                    userCode = data.get("userId");
-//                    company.setSite(data.get("userSite"));
+            public void subscribe(ObservableEmitter<String> e) throws Exception {
+                //初始化T100服务名
+                String webServiceName = "SaleRequestUpdate";
 
-                    //初始化T100服务名
-                    String webServiceName = "SaleRequestUpdate";
-
-                    //设置传入请求参数
-                    StringBuilder strWebRequestConten= new StringBuilder();
-                    strWebRequestConten.append("&lt;Document&gt;\n"+
-                            "&lt;RecordSet id=\"1\"&gt;\n"+
-                            "&lt;Master name=\"xmdk_t\" node_id=\"1\"&gt;\n"+
-                            "&lt;Record&gt;\n"+
-                            "&lt;Field name=\"xmdksite\" value=\""+company.getCode()+"\"/&gt;\n"+
-                            "&lt;Field name=\"xmdkent\" value=\"10\"/&gt;\n"+
-                            "&lt;Field name=\"xmdkdocno\" value=\""+txtDetailDocno.getText()+"\"/&gt;\n"+
-                            "&lt;Field name=\"xmdkud002\" value=\""+userCode+"\"/&gt;\n"+
-                            "&lt;Field name=\"xmdkud003\" value=\""+strStatus+"\"/&gt;\n"+
-                            "&lt;Memo/&gt;\n"+
-                            "&lt;Attachment count=\"0\"/&gt;\n"+
-                            "&lt;/Record&gt;\n"+
-                            "&lt;/Master&gt;\n"+
-                            "&lt;/RecordSet&gt;\n"+
-                            "&lt;/Document&gt;\n");
-
-                    //设置WebService参数
-                    WebServiceHelper webServiceHelper=new WebServiceHelper();
-                    webServiceHelper.setWebKey("16baae6c40b922d8ddb12a0320d8ea1d");
-                    webServiceHelper.setWebTimestamp("20201114083106031");
-                    webServiceHelper.setWebName(webServiceName);
-                    webServiceHelper.setWebUrl(nerworkType);
-                    webServiceHelper.setWebSite(company.getCode());
-                    webServiceHelper.setWebRequestContent(strWebRequestConten);
-
-                    //发送WebService请求,并返回结果
-                    String strResponse = "";
-                    try{
-                        strResponse=webServiceHelper.sendWebRequest();
-
-                        //获取WebService相应代码
-                        Integer iResponseCode=webServiceHelper.getWebResponseCode();
-                        Message message = new Message();
-                        if(iResponseCode==200){
-                            message.what = 1;
-                        }else{
-                            message.what = 0;
-                        }
-                        uHandler.sendMessage(message);
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
-                }catch (Exception e){
-                    e.printStackTrace();
+                T100ServiceHelper t100ServiceHelper = new T100ServiceHelper();
+                String requestBody = "&lt;Document&gt;\n"+
+                        "&lt;RecordSet id=\"1\"&gt;\n"+
+                        "&lt;Master name=\"xmdk_t\" node_id=\"1\"&gt;\n"+
+                        "&lt;Record&gt;\n"+
+                        "&lt;Field name=\"xmdksite\" value=\""+UserInfo.getUserSiteId(getApplicationContext())+"\"/&gt;\n"+
+                        "&lt;Field name=\"xmdkent\" value=\""+UserInfo.getUserEnterprise(getApplicationContext())+"\"/&gt;\n"+
+                        "&lt;Field name=\"xmdkdocno\" value=\""+txtDetailDocno.getText()+"\"/&gt;\n"+
+                        "&lt;Field name=\"xmdkud002\" value=\""+UserInfo.getUserId(getApplicationContext())+"\"/&gt;\n"+
+                        "&lt;Field name=\"xmdkud003\" value=\""+strStatus+"\"/&gt;\n"+
+                        "&lt;Memo/&gt;\n"+
+                        "&lt;Attachment count=\"0\"/&gt;\n"+
+                        "&lt;/Record&gt;\n"+
+                        "&lt;/Master&gt;\n"+
+                        "&lt;/RecordSet&gt;\n"+
+                        "&lt;/Document&gt;\n";
+                String strResponse = t100ServiceHelper.getT100Data(requestBody,webServiceName,getApplicationContext());
+                List<Map<String,Object>> strResponseList = t100ServiceHelper.getT100StatusData(strResponse);
+                for(Map<String,Object> m: strResponseList){
+                    statusCode = m.get("statusCode").toString();
+                    statusDescription = m.get("statusDescription").toString();
                 }
+
+                e.onNext(statusCode);
+                e.onNext(statusDescription);
+                e.onComplete();
             }
-        }).start();
-    }
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<String>() {
+            @Override
+            public void onSubscribe(Disposable d) {
 
-    public List<Map<String,Object>> decodeJsonData(String listJson){
-        List<Map<String,Object>> detailList = new ArrayList<Map<String,Object>>();
-        String strDetailContent = listJson;
-        String xmlIndexStr = "stocklist";
-        Integer iStartId = strDetailContent.indexOf(xmlIndexStr,1);
-        //处理返回xml
-        while(iStartId>-1) {
-            String strSubContent = strDetailContent.substring(iStartId, strDetailContent.length());
-            String strJson = strSubContent.substring(strSubContent.indexOf("value", 1) + 7, strSubContent.indexOf("&gt;", 1) - 2);
-            Map<String, Object> map = new HashMap<String, Object>();
-            try {
-                JSONArray jsonArray = new JSONArray(strJson);
-                JSONObject jsonObject = jsonArray.getJSONObject(0);
-
-                map.put("ProductCode", jsonObject.getString("erpProductCode").trim());
-                map.put("ProductName", jsonObject.getString("erpProductName").trim());
-                map.put("ProductModels", jsonObject.getString("erpProductModels").trim());
-                map.put("StockId", jsonObject.getString("erpStockId").trim());
-                map.put("StockLocationId", jsonObject.getString("erpStockLocationId").trim());
-                map.put("StockLocation", jsonObject.getString("erpStockLocation").trim());
-                map.put("StockBatch", jsonObject.getString("erpStockBatch").trim());
-                map.put("Inventory", jsonObject.getString("erpInventory").trim());
-                map.put("Quantity", jsonObject.getString("erpQuantity").trim());
-                map.put("QuantityPcs", jsonObject.getString("erpQuantityPcs").trim());
-                map.put("PlanDate", jsonObject.getString("erpPlanDate").trim());
-                map.put("Status", jsonObject.getString("erpStatus").trim());
-                detailList.add(map);
-            } catch (Exception e) {
-                e.printStackTrace();
             }
 
-            Integer iCurrentStartId = strSubContent.indexOf("/Record", 1);
-            Integer iCurrentEndId = strSubContent.length();
+            @Override
+            public void onNext(String s) {
+                int intType = Integer.parseInt(statusCode);
+                MyToast.myShow(DetailListActivity.this,statusDescription,intType);
+            }
 
-            strDetailContent = strSubContent.substring(iCurrentStartId, iCurrentEndId);
-            iStartId = strDetailContent.indexOf(xmlIndexStr, 1);
-        }
+            @Override
+            public void onError(Throwable e) {
+                MyToast.myShow(DetailListActivity.this,"更新失败",0);
+            }
 
-        return detailList;
+            @Override
+            public void onComplete() {
+
+            }
+        });
     }
 
     //刷新listview项
@@ -669,7 +568,6 @@ public class DetailListActivity extends AppCompatActivity {
         }
 
         if(intQuantityPcs == intCurrent){
-//            Toast.makeText(DetailListActivity.this,"此备货单已全部检核完成",Toast.LENGTH_SHORT).show();
             MyToast.myShow(DetailListActivity.this,"此备货单已全部检核完成",1);
         }
 

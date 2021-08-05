@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -28,8 +29,10 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.hz.scantool.adapter.MyToast;
 import com.hz.scantool.helper.SharedHelper;
+import com.hz.scantool.helper.T100ServiceHelper;
 import com.hz.scantool.helper.WebServiceHelper;
 import com.hz.scantool.models.Company;
+import com.hz.scantool.models.UserInfo;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -39,6 +42,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 import static com.google.zxing.integration.android.IntentIntegrator.REQUEST_CODE;
 
@@ -52,6 +63,11 @@ public class DetailActivity extends AppCompatActivity {
     private String doctype;
     private String qrSid;
     private String qrType;
+    private String statusCode;
+    private String statusDescription;
+    private String strResult;
+    private String strFlag;
+    private String codeRule;
 
     TextView detailProductModelsTitle;
     TextView detailQuantityNgTitle;
@@ -76,99 +92,12 @@ public class DetailActivity extends AppCompatActivity {
     Button btnSubmit;
     Button btnCancel;
     Button btnScanSubmit;
-    String strResult;
-    private String nerworkType;
-    Company company;
-    Context mContext;
-    SharedHelper sharedHelper;
-    String strFlag;
-    String codeRule;
 
-    //创建Handler
-    private final Handler dHandler = new Handler(Looper.getMainLooper()){
-        @Override
-        public void handleMessage(@NonNull Message msg) {
-            super.handleMessage(msg);
-
-            if(msg.what == 1){
-                List<Map<String,Object>> strTaskList = (List<Map<String,Object>>)msg.obj;
-                Integer lenList = strTaskList.size();
-                if(lenList == 0 ){
-                    finish();
-//                    Toast.makeText(DetailActivity.this,"扫描失败，此条码已扫描完成！",Toast.LENGTH_LONG).show();
-                    MyToast.myShow(DetailActivity.this,"扫描失败，此条码已扫描完成",0);
-                }
-
-                for(Map<String,Object> m: strTaskList){
-                    detailProductName.setText(m.get("ProductName").toString());
-                    detailQuantityNg.setText(m.get("QuantityNg").toString());
-                    detailQuantityNo.setText(m.get("QuantityNo").toString());
-
-                    detailProductCode.setText(m.get("ProductCode").toString());
-                    String strProductCode = m.get("ProductCode").toString();
-                    String strProductType = strProductCode.substring(0,3);
-                    if(strProductType.equals("111")){
-                        detailProductModelsTitle.setText(getResources().getString(R.string.item_title_models));
-                        detailQuantityTitle.setText(getResources().getString(R.string.detail_content_title9));
-                    }
-
-                    detailProductModels.setText(m.get("ProductModels").toString());
-                    detailProcess.setText(m.get("Process").toString());
-                    detailDevice.setText(m.get("Device").toString());
-                    detailStartPlanDate.setText(m.get("PlanDate").toString());
-                    detailEndPlanDate.setText(m.get("PlanDate").toString());
-                    detailQuantity.setText(m.get("Quantity").toString());
-                    detailDocno.setText(m.get("Docno").toString());
-
-                    codeRule = m.get("QrCodeRule").toString();
-                    if(codeRule.isEmpty()){
-                        btnSubmit.setVisibility(View.VISIBLE);
-                        btnScanSubmit.setVisibility(View.GONE);
-                    }else{
-                        btnSubmit.setVisibility(View.GONE);
-                        btnScanSubmit.setVisibility(View.VISIBLE);
-                    }
-
-                    strResult = m.get("Status").toString();
-                    if(strResult.equals("Y")){
-                        imageViewResult.setImageDrawable(getResources().getDrawable(R.drawable.detail_status_ok));
-                        detailQuantityNg.setFocusable(false);
-                        detailQuantityNo.setFocusable(false);
-//                        btnSubmit.setEnabled(false);
-                        strFlag = "Y";
-                    }else{
-                        imageViewResult.setImageDrawable(getResources().getDrawable(R.drawable.detail_status_deal));
-                        strFlag = "N";
-                    }
-
-                }
-            }else if(msg.what == 2){
-                if(msg.arg1 == 1){
-                    imageViewResult.setImageDrawable(getResources().getDrawable(R.drawable.detail_status_ok));
-                    detailQuantityNg.setFocusable(false);
-                    detailQuantityNo.setFocusable(false);
-//                    btnSubmit.setEnabled(false);
-                    strFlag = "Y";
-                    finish();
-//                    Toast.makeText(DetailActivity.this,"更新成功！",Toast.LENGTH_LONG).show();
-                    MyToast.myShow(DetailActivity.this,"更新成功",1);
-                }else{
-                    strFlag = "N";
-//                    Toast.makeText(DetailActivity.this,"更新失败,请联系系统管理员",Toast.LENGTH_LONG).show();
-                    MyToast.myShow(DetailActivity.this,"更新失败,请联系系统管理员",0);
-                }
-            }
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
-
-        //初始化存储信息
-        mContext=getApplicationContext();
-        sharedHelper=new SharedHelper(mContext);
 
         //获取传入参数
         Intent intent=getIntent();
@@ -214,7 +143,7 @@ public class DetailActivity extends AppCompatActivity {
 
         //显示信息
         initView();
-        getDetailItem(qrContent);
+        getDetailItemData(qrContent);
 
         //获取工具栏
         Toolbar toolbar=findViewById(R.id.detailToolBar);
@@ -330,24 +259,22 @@ public class DetailActivity extends AppCompatActivity {
                 case R.id.btnSubmit:
                     if(strFlag.equals("N")){
                         if(checkQty()){
-                            updDetailItem();
+                            updateDetailItemData();
                         }else{
-//                            Toast.makeText(DetailActivity.this,"不良数量不可大于申请数据",Toast.LENGTH_LONG).show();
                             MyToast.myShow(DetailActivity.this,"不良数量不可大于申请数据",2);
                         }
                     }else{
-//                        Toast.makeText(DetailActivity.this,"单据已处理,不可重复提交",Toast.LENGTH_LONG).show();
                         MyToast.myShow(DetailActivity.this,"单据已处理,不可重复提交",2);
                     }
 
                     break;
                 case R.id.btnScanSubmit:
                     //调用zxing扫码界面
-//                    IntentIntegrator intentIntegrator = new IntentIntegrator(DetailActivity.this);
-//                    intentIntegrator.setTimeout(5000);
-//                    intentIntegrator.setDesiredBarcodeFormats();  //IntentIntegrator.QR_CODE
-//                    //开始扫描
-//                    intentIntegrator.initiateScan();
+                    IntentIntegrator intentIntegrator = new IntentIntegrator(DetailActivity.this);
+                    intentIntegrator.setTimeout(5000);
+                    intentIntegrator.setDesiredBarcodeFormats();  //IntentIntegrator.QR_CODE
+                    //开始扫描
+                    intentIntegrator.initiateScan();
                     break;
                 case R.id.btnCancel:
                     finish();
@@ -381,11 +308,10 @@ public class DetailActivity extends AppCompatActivity {
                     }else{
                         if(deCodeQrCode(codeRule,qrContent,erpCode,erpQty)){
                             if(checkQty()){
-                                updDetailItem();
+                                updateDetailItemData();
                                 imageViewResult.setImageDrawable(getResources().getDrawable(R.drawable.detail_status_ok));
                                 strFlag = "Y";
                             }else{
-//                            Toast.makeText(DetailActivity.this,"不良数量不可大于申请数据",Toast.LENGTH_LONG).show();
                                 MyToast.myShow(DetailActivity.this,"不良数量不可大于申请数据",2);
                             }
                         }else{
@@ -395,7 +321,6 @@ public class DetailActivity extends AppCompatActivity {
                     }
 
                 }else{
-//                    Toast.makeText(context,"扫描失败,请重新扫描!"+qrContent,Toast.LENGTH_SHORT).show();
                     MyToast.myShow(DetailActivity.this,"扫描失败,请重新扫描",0);
                 }
             }
@@ -427,7 +352,6 @@ public class DetailActivity extends AppCompatActivity {
                     strFlag = "N";
                 }
             }else{
-//                Toast.makeText(this,"扫描失败,请重新扫描!"+qrContent,Toast.LENGTH_SHORT).show();
                 MyToast.myShow(DetailActivity.this,"扫描失败,请重新扫描",0);
             }
         }
@@ -561,7 +485,6 @@ public class DetailActivity extends AppCompatActivity {
         }catch (Exception e){
             e.printStackTrace();
             iSaleQty = 0;
-//            Toast.makeText(this,"扫描错误，请重新扫描客户标签!",Toast.LENGTH_SHORT).show();
             MyToast.myShow(DetailActivity.this,"扫描错误，请重新扫描客户标签",0);
             return isMatch;
         }
@@ -569,7 +492,6 @@ public class DetailActivity extends AppCompatActivity {
         if(productCode.trim().equals(erpCdoe.trim()) || productCodeNew.trim().equals(erpCdoe.trim()) || productCode.trim().equals(erpCodeNew.trim())){
             if(iSaleQty == iErpQty || code1.equals("2")){
                 isMatch = true;
-//                Toast.makeText(this,"检核成功!",Toast.LENGTH_SHORT).show();
                 MyToast.myShow(DetailActivity.this,"检核成功",1);
             }else{
                 msg = "数量不一致,客户数量:"+saleQty+",系统数量:"+iErpQty;
@@ -604,16 +526,11 @@ public class DetailActivity extends AppCompatActivity {
                             builder.create().show();
     }
 
-    private void getDetailItem(String qrCode){
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                //初始化网络类型和营运据点
-//                company=new Company();
-//                Map<String,String> data=sharedHelper.readShared();
-//                nerworkType = data.get("network");
-//                company.setSite(data.get("userSite"));
+    private void getDetailItemData(String qrCode){
+        Observable.create(new ObservableOnSubscribe<List<Map<String,Object>>>() {
 
+            @Override
+            public void subscribe(ObservableEmitter<List<Map<String, Object>>> e) throws Exception {
                 //初始化T100服务名
                 String webServiceName = "";
                 switch (intIndex){
@@ -643,93 +560,135 @@ public class DetailActivity extends AppCompatActivity {
                         break;
                 }
 
-                //设置传入请求参数
-                StringBuilder strWebRequestConten= new StringBuilder();
-                strWebRequestConten.append("&lt;Parameter&gt;\n"+
-                                            "&lt;Record&gt;\n"+
-                                            "&lt;Field name=\"enterprise\" value=\"10\"/&gt;\n"+
-                                            "&lt;Field name=\"qrcode\" value=\""+qrCode+"\"/&gt;\n"+
-                                            "&lt;Field name=\"site\" value=\""+company.getCode()+"\"/&gt;\n"+
-                                            "&lt;Field name=\"type\" value=\""+intIndex+"\"/&gt;\n"+
-                                            "&lt;/Record&gt;\n"+
-                                            "&lt;/Parameter&gt;\n"+
-                                            "&lt;Document/&gt;\n");
+                //发送服务器请求
+                T100ServiceHelper t100ServiceHelper = new T100ServiceHelper();
+                String requestBody = "&lt;Parameter&gt;\n"+
+                        "&lt;Record&gt;\n"+
+                        "&lt;Field name=\"enterprise\" value=\""+UserInfo.getUserEnterprise(getApplicationContext())+"\"/&gt;\n"+
+                        "&lt;Field name=\"qrcode\" value=\""+qrCode+"\"/&gt;\n"+
+                        "&lt;Field name=\"site\" value=\""+UserInfo.getUserSiteId(getApplicationContext())+"\"/&gt;\n"+
+                        "&lt;Field name=\"type\" value=\""+intIndex+"\"/&gt;\n"+
+                        "&lt;/Record&gt;\n"+
+                        "&lt;/Parameter&gt;\n"+
+                        "&lt;Document/&gt;\n";
+                String strResponse = t100ServiceHelper.getT100Data(requestBody,webServiceName,getApplicationContext());
+                List<Map<String,Object>> mapResponseList = t100ServiceHelper.getT100JsonData(strResponse,"erpqr");
+                List<Map<String,Object>> mapResponseStatus = t100ServiceHelper.getT100StatusData(strResponse);
 
-                //设置WebService参数
-                WebServiceHelper webServiceHelper=new WebServiceHelper();
-                webServiceHelper.setWebKey("16baae6c40b922d8ddb12a0320d8ea1d");
-                webServiceHelper.setWebTimestamp("20201114083106031");
-                webServiceHelper.setWebName(webServiceName);
-                webServiceHelper.setWebUrl(nerworkType);
-                webServiceHelper.setWebSite(company.getCode());
-                webServiceHelper.setWebRequestContent(strWebRequestConten);
-
-                //发送WebService请求,并返回结果
-                String strResponse = "";
-                try{
-                    strResponse=webServiceHelper.sendWebRequest();
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-
-                //获取WebService相应代码
-                Integer iResponseCode=webServiceHelper.getWebResponseCode();
-
-                //存储列表
-                List<Map<String,Object>> taskList = new ArrayList<Map<String,Object>>();
-                System.out.println(strResponse);
-                if(iResponseCode==200){
+                if(mapResponseStatus.size()>0){
                     Map<String,Object> map = new HashMap<String,Object>();
 
-                    //检查索引
-                    Integer iTaskIndex=strResponse.indexOf("erpqr",1);
-                    if (iTaskIndex>-1){
-                        //扫描明晰
-                        String strContent =strResponse.replaceAll("&amp;quot;","\"");
-                        String strQr=strContent.substring(strContent.indexOf("erpqr",1),strContent.length());
-                        String strQrJson=strQr.substring(strQr.indexOf("value",1)+7,strQr.indexOf("&gt;",1)-2);
-                        try{
-                            JSONArray jsonArray = new JSONArray(strQrJson);
-                            JSONObject jsonObject = jsonArray.getJSONObject(0);
-                            map.put("ProductCode",jsonObject.getString("erpProductCode").trim());
-                            map.put("ProductName",jsonObject.getString("erpProductName").trim());
-                            map.put("ProductModels",jsonObject.getString("erpProductModels").trim());
-                            map.put("Process",jsonObject.getString("erpProcess").trim());
-                            map.put("Device",jsonObject.getString("erpDevice").trim());
-                            map.put("PlanDate",jsonObject.getString("erpPlanDate").trim());
-                            map.put("Quantity",jsonObject.getString("erpQuantity").trim());
-                            map.put("Docno",jsonObject.getString("erpDocno").trim());
-                            map.put("QuantityNg",jsonObject.getString("erpQuantityNg").trim());
-                            map.put("QuantityNo",jsonObject.getString("erpQuantityNo").trim());
-                            map.put("QrCodeRule",jsonObject.getString("erpQrCodeRule").trim());
-                            map.put("Status",jsonObject.getString("erpStatus").trim());
-                            taskList.add(map);
-                        }catch (Exception e){
-                            e.printStackTrace();
+                    for(Map<String,Object> m: mapResponseStatus){
+                        map.put("statusCode",m.get("statusCode").toString());
+                        map.put("statusDescription",m.get("statusDescription").toString());
+
+                        if(mapResponseList.isEmpty()){
+                            map.put("ProductCode","");
+                            map.put("ProductName","");
+                            map.put("ProductModels","");
+                            map.put("Process","");
+                            map.put("Device","");
+                            map.put("PlanDate","");
+                            map.put("Quantity","");
+                            map.put("Docno","");
+                            map.put("QuantityNg","");
+                            map.put("QuantityNo","");
+                            map.put("QrCodeRule","");
+                            map.put("Status","");
                         }
+
+                        mapResponseList.add(map);
                     }
                 }
 
-                Message message = new Message();
-                message.obj = taskList;
-                message.what = 1;
-                dHandler.sendMessage(message);
+                e.onNext(mapResponseList);
+                e.onComplete();
             }
-        }).start();
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<List<Map<String, Object>>>() {
+            @Override
+            public void onSubscribe(Disposable d) {
 
+            }
+
+            @Override
+            public void onNext(List<Map<String, Object>> maps) {
+                if(maps.size()> 0){
+                    for(Map<String,Object> m: maps){
+                        statusCode = m.get("statusCode").toString();
+                        statusDescription = m.get("statusDescription").toString();
+
+                        if(statusCode.equals("0")){
+                            String strProductCode = m.get("ProductCode").toString();
+                            if(!strProductCode.isEmpty()){
+                                detailProductName.setText(m.get("ProductName").toString());
+                                detailQuantityNg.setText(m.get("QuantityNg").toString());
+                                detailQuantityNo.setText(m.get("QuantityNo").toString());
+                                detailProductCode.setText(m.get("ProductCode").toString());
+                                String strProductType = strProductCode.substring(0,3);
+                                if(strProductType.equals("111")){
+                                    detailProductModelsTitle.setText(getResources().getString(R.string.item_title_models));
+                                    detailQuantityTitle.setText(getResources().getString(R.string.detail_content_title9));
+                                }
+
+                                detailProductModels.setText(m.get("ProductModels").toString());
+                                detailProcess.setText(m.get("Process").toString());
+                                detailDevice.setText(m.get("Device").toString());
+                                detailStartPlanDate.setText(m.get("PlanDate").toString());
+                                detailEndPlanDate.setText(m.get("PlanDate").toString());
+                                detailQuantity.setText(m.get("Quantity").toString());
+                                detailDocno.setText(m.get("Docno").toString());
+
+                                codeRule = m.get("QrCodeRule").toString();
+                                if(codeRule.isEmpty()){
+                                    btnSubmit.setVisibility(View.VISIBLE);
+                                    btnScanSubmit.setVisibility(View.GONE);
+                                }else{
+                                    btnSubmit.setVisibility(View.GONE);
+                                    btnScanSubmit.setVisibility(View.VISIBLE);
+                                }
+
+                                strResult = m.get("Status").toString();
+                                if(strResult.equals("Y")){
+                                    imageViewResult.setImageDrawable(getResources().getDrawable(R.drawable.detail_status_ok));
+                                    detailQuantityNg.setFocusable(false);
+                                    detailQuantityNo.setFocusable(false);
+                                    strFlag = "Y";
+                                }else{
+                                    imageViewResult.setImageDrawable(getResources().getDrawable(R.drawable.detail_status_deal));
+                                    strFlag = "N";
+                                }
+                            }else{
+                                finish();
+                                MyToast.myShow(DetailActivity.this,statusDescription,0);
+                            }
+                        }else{
+                            finish();
+                            MyToast.myShow(DetailActivity.this,statusDescription,0);
+                        }
+                    }
+                }else{
+                    finish();
+                    MyToast.myShow(DetailActivity.this,"扫描失败，无数据显示",0);
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
     }
 
     //更新ERP数据
-    private void updDetailItem(){
-        new Thread(new Runnable() {
+    private void updateDetailItemData(){
+        Observable.create(new ObservableOnSubscribe<String>() {
             @Override
-            public void run() {
-                //初始化网络类型和营运据点
-//                company=new Company();
-//                Map<String,String> data=sharedHelper.readShared();
-//                nerworkType = data.get("network");
-//                company.setSite(data.get("userSite"));
-
+            public void subscribe(ObservableEmitter<String> e) throws Exception {
                 //初始化T100服务名
                 String webServiceName = "";
                 switch (intIndex){
@@ -756,61 +715,72 @@ public class DetailActivity extends AppCompatActivity {
                         break;
                 }
 
-                //设置传入请求参数
-                StringBuilder strWebRequestConten= new StringBuilder();
-                strWebRequestConten.append("&lt;Document&gt;\n"+
-                                            "&lt;RecordSet id=\"1\"&gt;\n"+
-                                            "&lt;Master name=\"qcba_t\" node_id=\"1\"&gt;\n"+
-                                            "&lt;Record&gt;\n"+
-                                            "&lt;Field name=\"qcbasite\" value=\""+company.getCode()+"\"/&gt;\n"+
-                                            "&lt;Field name=\"qcbaent\" value=\"10\"/&gt;\n"+
-                                            "&lt;Field name=\"qcbadocno\" value=\""+detailDocno.getText().toString().trim()+"\"/&gt;\n"+
-                                            "&lt;Field name=\"qcba010\" value=\""+detailProductCode.getText().toString().trim()+"\"/&gt;\n"+
-                                            "&lt;Field name=\"qcba017\" value=\""+detailQuantity.getText().toString().trim()+"\"/&gt;\n"+
-                                            "&lt;Field name=\"qrsid\" value=\""+qrSid+"\"/&gt;\n"+
-                                            "&lt;Detail name=\"s_detail1\" node_id=\"1_1\"&gt;\n"+
-                                            "&lt;Record&gt;\n"+
-                                            "&lt;Field name=\"qcbdseq\" value=\"1.0\"/&gt;\n"+
-                                            "&lt;Field name=\"qcbd010\" value=\""+detailQuantityNo.getText().toString().trim()+"\"/&gt;\n"+
-                                            "&lt;Field name=\"qcbd021\" value=\""+detailQuantityNg.getText().toString().trim()+"\"/&gt;\n"+
-                                            "&lt;/Record&gt;\n"+
-                                            "&lt;/Detail&gt;\n"+
-                                            "&lt;Memo/&gt;\n"+
-                                            "&lt;Attachment count=\"0\"/&gt;\n"+
-                                            "&lt;/Record&gt;\n"+
-                                            "&lt;/Master&gt;\n"+
-                                            "&lt;/RecordSet&gt;\n"+
-                                            "&lt;/Document&gt;\n");
-
-                //设置WebService参数
-                WebServiceHelper webServiceHelper=new WebServiceHelper();
-                webServiceHelper.setWebKey("16baae6c40b922d8ddb12a0320d8ea1d");
-                webServiceHelper.setWebTimestamp("20201114083106031");
-                webServiceHelper.setWebName(webServiceName);
-                webServiceHelper.setWebUrl(nerworkType);
-                webServiceHelper.setWebSite(company.getCode());
-                webServiceHelper.setWebRequestContent(strWebRequestConten);
-
-                //发送WebService请求,并返回结果
-                String strResponse = "";
-                try{
-                    strResponse=webServiceHelper.sendWebRequest();
-                }catch (Exception e){
-                    e.printStackTrace();
+                //发送服务器请求
+                T100ServiceHelper t100ServiceHelper = new T100ServiceHelper();
+                String requestBody = "&lt;Document&gt;\n"+
+                        "&lt;RecordSet id=\"1\"&gt;\n"+
+                        "&lt;Master name=\"qcba_t\" node_id=\"1\"&gt;\n"+
+                        "&lt;Record&gt;\n"+
+                        "&lt;Field name=\"qcbasite\" value=\""+UserInfo.getUserSiteId(getApplicationContext())+"\"/&gt;\n"+
+                        "&lt;Field name=\"qcbaent\" value=\""+UserInfo.getUserEnterprise(getApplicationContext())+"\"/&gt;\n"+
+                        "&lt;Field name=\"qcbadocno\" value=\""+detailDocno.getText().toString().trim()+"\"/&gt;\n"+
+                        "&lt;Field name=\"qcba010\" value=\""+detailProductCode.getText().toString().trim()+"\"/&gt;\n"+
+                        "&lt;Field name=\"qcba017\" value=\""+detailQuantity.getText().toString().trim()+"\"/&gt;\n"+
+                        "&lt;Field name=\"qrsid\" value=\""+qrSid+"\"/&gt;\n"+
+                        "&lt;Detail name=\"s_detail1\" node_id=\"1_1\"&gt;\n"+
+                        "&lt;Record&gt;\n"+
+                        "&lt;Field name=\"qcbdseq\" value=\"1.0\"/&gt;\n"+
+                        "&lt;Field name=\"qcbd010\" value=\""+detailQuantityNo.getText().toString().trim()+"\"/&gt;\n"+
+                        "&lt;Field name=\"qcbd021\" value=\""+detailQuantityNg.getText().toString().trim()+"\"/&gt;\n"+
+                        "&lt;/Record&gt;\n"+
+                        "&lt;/Detail&gt;\n"+
+                        "&lt;Memo/&gt;\n"+
+                        "&lt;Attachment count=\"0\"/&gt;\n"+
+                        "&lt;/Record&gt;\n"+
+                        "&lt;/Master&gt;\n"+
+                        "&lt;/RecordSet&gt;\n"+
+                        "&lt;/Document&gt;\n";
+                String strResponse = t100ServiceHelper.getT100Data(requestBody,webServiceName,getApplicationContext());
+                List<Map<String,Object>> strResponseList = t100ServiceHelper.getT100StatusData(strResponse);
+                for(Map<String,Object> m: strResponseList){
+                    statusCode = m.get("statusCode").toString();
+                    statusDescription = m.get("statusDescription").toString();
                 }
 
-                //获取WebService相应代码
-                Integer iResponseCode=webServiceHelper.getWebResponseCode();
-
-                Message message = new Message();
-                if(iResponseCode==200){
-                    message.what = 2;
-                    message.arg1 = 1;
-                }else{
-                    message.arg1 = 2;
-                }
-                dHandler.sendMessage(message);
+                e.onNext(statusCode);
+                e.onNext(statusDescription);
+                e.onComplete();
             }
-        }).start();
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<String>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(String s) {
+                if(statusCode.equals("0")){
+                    imageViewResult.setImageDrawable(getResources().getDrawable(R.drawable.detail_status_ok));
+                    detailQuantityNg.setFocusable(false);
+                    detailQuantityNo.setFocusable(false);
+                    strFlag = "Y";
+                    finish();
+                    MyToast.myShow(DetailActivity.this,"更新成功",1);
+                }else{
+                    strFlag = "N";
+                    MyToast.myShow(DetailActivity.this,"更新失败,"+statusDescription,0);
+            }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                MyToast.myShow(DetailActivity.this,"执行异常,请联系管理员",0);
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
     }
 }

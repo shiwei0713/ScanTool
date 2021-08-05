@@ -2,7 +2,6 @@ package com.hz.scantool;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -10,10 +9,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.hz.scantool.helper.SharedHelper;
+import com.hz.scantool.models.UserInfo;
 
 import java.util.Calendar;
-import java.util.Map;
 import java.util.TimeZone;
 
 public class MasterActivity extends AppCompatActivity {
@@ -32,8 +30,7 @@ public class MasterActivity extends AppCompatActivity {
     Button btnAction6;
     Button btnAction7;
     Button btnAction8;
-    SharedHelper sharedHelper;
-    Context mContext;
+
     Calendar calendar;
     String year;
     String month;
@@ -84,14 +81,10 @@ public class MasterActivity extends AppCompatActivity {
 
     //初始化显示数据
     private void initViewData(){
-        //初始化存储信息
-        mContext=getApplicationContext();
-        sharedHelper=new SharedHelper(mContext);
-        Map<String,String> data=sharedHelper.readShared();
 
         //初始化用户信息
         txtMasterUser=findViewById(R.id.txtMasterUser);
-        txtMasterUser.setText(data.get("userName"));
+        txtMasterUser.setText(UserInfo.getUserName(getApplicationContext()));
 
         //初始化日期
         calendar=Calendar.getInstance();
@@ -99,13 +92,12 @@ public class MasterActivity extends AppCompatActivity {
         year=String.valueOf(calendar.get(Calendar.YEAR));
         month=String.valueOf(calendar.get(Calendar.MONTH)+1);
         day=String.valueOf(calendar.get(Calendar.DATE));
-
         txtMasterDate=findViewById(R.id.txtMasterDate);
         txtMasterDate.setText(year+"-"+month+"-"+day);
 
         //初始化公司
         txtMasterSite = findViewById(R.id.txtMasterSite);
-        txtMasterSite.setText(data.get("userSite"));
+        txtMasterSite.setText(UserInfo.getUserSite(getApplicationContext()));
     }
 
     //设置导航按钮样式
