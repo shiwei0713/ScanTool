@@ -248,47 +248,7 @@ public class DetailListActivity extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             if(intent.getAction().equals(SCANACTION)){
                 String qrDetailContent = intent.getStringExtra("scannerdata");
-
-                try{
-                    if(!qrDetailContent.isEmpty()){
-                        String qrFirst = qrDetailContent.substring(1,3);
-
-                        if(qrFirst.equals("XM")){
-                            MyToast.myShow(context,"请扫描零件条码",2);
-                        }else{
-                            Bundle bundle;
-                            switch (intIndex){
-                                //质量检验
-                                case 1:
-                                    intent = new Intent(context,DetailActivity.class);
-                                    //设置传入参数
-                                    bundle=new Bundle();
-                                    bundle.putString("qrCode",qrDetailContent);
-                                    bundle.putString("docno",txtDetailDocno.getText().toString());
-                                    bundle.putInt("index",intIndex);
-                                    intent.putExtras(bundle);
-                                    startActivity(intent);
-                                    getDetailListData();
-                                    break;
-                                case 5:
-                                    //刷新显示数据
-                                    try{
-                                        List<Map<String,Object>> refreshList = refreshData(qrDetailContent);
-                                        //初始化ListView
-                                        detailItemAdapter = new DetailListItemAdapter(refreshList,getApplicationContext(),txtDetailDocno.getText().toString(),intIndex);
-                                        listView.setAdapter(detailItemAdapter);
-                                    }catch (Exception e){
-                                        e.printStackTrace();
-                                    }
-                                    break;
-                            }
-                        }
-                    }else{
-                        MyToast.myShow(context,"扫描结果:"+qrDetailContent,2);
-                    }
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
+                scanResult(qrDetailContent,context,intent);
             }
         }
     };
@@ -306,15 +266,24 @@ public class DetailListActivity extends AppCompatActivity {
 
         if(requestCode==REQUEST_CODE){
             IntentResult intentResult = IntentIntegrator.parseActivityResult(resultCode,data);
-            final String qrDetailContent = intentResult.getContents();
+            String qrDetailContent = intentResult.getContents();
+            scanResult(qrDetailContent,this,data);
+        }
+    }
 
-            try{
-                if(!qrDetailContent.isEmpty()){
+    private void scanResult(String qrDetailContent,Context context,Intent intent){
+        try{
+            if(!qrDetailContent.isEmpty()){
+                String qrFirst = qrDetailContent.substring(1,3);
+
+                if(qrFirst.equals("XM")){
+                    MyToast.myShow(context,"请扫描零件条码",2);
+                }else{
                     Bundle bundle;
                     switch (intIndex){
                         //质量检验
                         case 1:
-                            Intent intent = new Intent(this,DetailActivity.class);
+                            intent = new Intent(context,DetailActivity.class);
                             //设置传入参数
                             bundle=new Bundle();
                             bundle.putString("qrCode",qrDetailContent);
@@ -336,12 +305,12 @@ public class DetailListActivity extends AppCompatActivity {
                             }
                             break;
                     }
-                }else{
-                    MyToast.myShow(this,"扫描结果:"+qrDetailContent,2);
                 }
-            }catch (Exception e){
-                e.printStackTrace();
+            }else{
+                MyToast.myShow(context,"扫描结果:"+qrDetailContent,2);
             }
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 

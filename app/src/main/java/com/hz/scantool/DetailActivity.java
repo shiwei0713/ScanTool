@@ -301,25 +301,7 @@ public class DetailActivity extends AppCompatActivity {
                 String qrContent = intent.getStringExtra("scannerdata");
 
                 if(qrContent!=null && qrContent.length()!=0){
-                    String erpCode = detailProductName.getText().toString().trim();
-                    String erpQty = detailQuantity.getText().toString().trim();
-                    if(codeRule.isEmpty() || codeRule.length() == 0){
-                        MyToast.myShow(DetailActivity.this,"无扫描功能",2);
-                    }else{
-                        if(deCodeQrCode(codeRule,qrContent,erpCode,erpQty)){
-                            if(checkQty()){
-                                updateDetailItemData();
-                                imageViewResult.setImageDrawable(getResources().getDrawable(R.drawable.detail_status_ok));
-                                strFlag = "Y";
-                            }else{
-                                MyToast.myShow(DetailActivity.this,"不良数量不可大于申请数据",2);
-                            }
-                        }else{
-                            imageViewResult.setImageDrawable(getResources().getDrawable(R.drawable.detail_status_ng));
-                            strFlag = "N";
-                        }
-                    }
-
+                    scanResult();
                 }else{
                     MyToast.myShow(DetailActivity.this,"扫描失败,请重新扫描",0);
                 }
@@ -340,19 +322,32 @@ public class DetailActivity extends AppCompatActivity {
 
         if(requestCode==REQUEST_CODE){
             IntentResult intentResult = IntentIntegrator.parseActivityResult(resultCode,data);
-            final String qrContent = intentResult.getContents();
+            String qrContent = intentResult.getContents();
             if(qrContent!=null && qrContent.length()!=0){
-                String erpCode = detailProductName.getText().toString().trim();
-                String erpQty = detailQuantity.getText().toString().trim();
-                if(deCodeQrCode(codeRule,qrContent,erpCode,erpQty)){
+                scanResult();
+            }else{
+                MyToast.myShow(DetailActivity.this,"扫描失败,请重新扫描",0);
+            }
+        }
+    }
+
+    private void scanResult(){
+        String erpCode = detailProductName.getText().toString().trim();
+        String erpQty = detailQuantity.getText().toString().trim();
+        if(codeRule.isEmpty() || codeRule.length() == 0){
+            MyToast.myShow(DetailActivity.this,"无扫描功能",2);
+        }else{
+            if(deCodeQrCode(codeRule,qrContent,erpCode,erpQty)){
+                if(checkQty()){
+                    updateDetailItemData();
                     imageViewResult.setImageDrawable(getResources().getDrawable(R.drawable.detail_status_ok));
                     strFlag = "Y";
                 }else{
-                    imageViewResult.setImageDrawable(getResources().getDrawable(R.drawable.detail_status_ng));
-                    strFlag = "N";
+                    MyToast.myShow(DetailActivity.this,"不良数量不可大于申请数据",2);
                 }
             }else{
-                MyToast.myShow(DetailActivity.this,"扫描失败,请重新扫描",0);
+                imageViewResult.setImageDrawable(getResources().getDrawable(R.drawable.detail_status_ng));
+                strFlag = "N";
             }
         }
     }
