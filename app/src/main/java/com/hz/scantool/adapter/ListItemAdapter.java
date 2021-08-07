@@ -391,6 +391,8 @@ public class ListItemAdapter extends BaseAdapter {
                 switch (typeIndex){
                     case 1:  //IQC
                         strProducerTitle = mContext.getResources().getString(R.string.item_title_supply);
+                        holder.txtListStock.setVisibility(View.VISIBLE);//仓库
+                        holder.txtListStockTitle.setVisibility(View.VISIBLE);//仓库标题
                         break;
                     case 2:  //PQC
                         holder.txtListProcessTitle.setVisibility(View.VISIBLE); //工序标题

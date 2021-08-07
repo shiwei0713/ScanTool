@@ -69,6 +69,9 @@ public class DetailActivity extends AppCompatActivity {
     private String strFlag;
     private String codeRule;
 
+    private List<Map<String,Object>> mapResponseList;
+    private List<Map<String,Object>> mapResponseStatus;
+
     TextView detailProductModelsTitle;
     TextView detailQuantityNgTitle;
     TextView detailQuantityNoTitle;
@@ -567,35 +570,10 @@ public class DetailActivity extends AppCompatActivity {
                         "&lt;/Parameter&gt;\n"+
                         "&lt;Document/&gt;\n";
                 String strResponse = t100ServiceHelper.getT100Data(requestBody,webServiceName,getApplicationContext());
-                List<Map<String,Object>> mapResponseList = t100ServiceHelper.getT100JsonData(strResponse,"erpqr");
-                List<Map<String,Object>> mapResponseStatus = t100ServiceHelper.getT100StatusData(strResponse);
+                mapResponseList = t100ServiceHelper.getT100JsonData(strResponse,"erpqr");
+                mapResponseStatus = t100ServiceHelper.getT100StatusData(strResponse);
 
-                if(mapResponseStatus.size()>0){
-                    Map<String,Object> map = new HashMap<String,Object>();
-
-                    for(Map<String,Object> m: mapResponseStatus){
-                        map.put("statusCode",m.get("statusCode").toString());
-                        map.put("statusDescription",m.get("statusDescription").toString());
-
-                        if(mapResponseList.isEmpty()){
-                            map.put("ProductCode","");
-                            map.put("ProductName","");
-                            map.put("ProductModels","");
-                            map.put("Process","");
-                            map.put("Device","");
-                            map.put("PlanDate","");
-                            map.put("Quantity","");
-                            map.put("Docno","");
-                            map.put("QuantityNg","");
-                            map.put("QuantityNo","");
-                            map.put("QrCodeRule","");
-                            map.put("Status","");
-                        }
-
-                        mapResponseList.add(map);
-                    }
-                }
-
+                e.onNext(mapResponseStatus);
                 e.onNext(mapResponseList);
                 e.onComplete();
             }
@@ -608,54 +586,57 @@ public class DetailActivity extends AppCompatActivity {
             @Override
             public void onNext(List<Map<String, Object>> maps) {
                 if(maps.size()> 0){
-                    for(Map<String,Object> m: maps){
-                        statusCode = m.get("statusCode").toString();
-                        statusDescription = m.get("statusDescription").toString();
+                    for(Map<String,Object> mStatus: mapResponseStatus){
+                        statusCode = mStatus.get("statusCode").toString();
+                        statusDescription = mStatus.get("statusDescription").toString();
 
                         if(statusCode.equals("0")){
-                            String strProductCode = m.get("ProductCode").toString();
-                            if(!strProductCode.isEmpty()){
-                                detailProductName.setText(m.get("ProductName").toString());
-                                detailQuantityNg.setText(m.get("QuantityNg").toString());
-                                detailQuantityNo.setText(m.get("QuantityNo").toString());
-                                detailProductCode.setText(m.get("ProductCode").toString());
-                                String strProductType = strProductCode.substring(0,3);
-                                if(strProductType.equals("111")){
-                                    detailProductModelsTitle.setText(getResources().getString(R.string.item_title_models));
-                                    detailQuantityTitle.setText(getResources().getString(R.string.detail_content_title9));
-                                }
+                            for(Map<String,Object> m: mapResponseList){
+                                String strProductCode = m.get("ProductCode").toString();
+                                if(!strProductCode.isEmpty()){
+                                    detailProductName.setText(m.get("ProductName").toString());
+                                    detailQuantityNg.setText(m.get("QuantityNg").toString());
+                                    detailQuantityNo.setText(m.get("QuantityNo").toString());
+                                    detailProductCode.setText(m.get("ProductCode").toString());
+                                    String strProductType = strProductCode.substring(0,3);
+                                    if(strProductType.equals("111")){
+                                        detailProductModelsTitle.setText(getResources().getString(R.string.item_title_models));
+                                        detailQuantityTitle.setText(getResources().getString(R.string.detail_content_title9));
+                                    }
 
-                                detailProductModels.setText(m.get("ProductModels").toString());
-                                detailProcess.setText(m.get("Process").toString());
-                                detailDevice.setText(m.get("Device").toString());
-                                detailStartPlanDate.setText(m.get("PlanDate").toString());
-                                detailEndPlanDate.setText(m.get("PlanDate").toString());
-                                detailQuantity.setText(m.get("Quantity").toString());
-                                detailDocno.setText(m.get("Docno").toString());
+                                    detailProductModels.setText(m.get("ProductModels").toString());
+                                    detailProcess.setText(m.get("Process").toString());
+                                    detailDevice.setText(m.get("Device").toString());
+                                    detailStartPlanDate.setText(m.get("PlanDate").toString());
+                                    detailEndPlanDate.setText(m.get("PlanDate").toString());
+                                    detailQuantity.setText(m.get("Quantity").toString());
+                                    detailDocno.setText(m.get("Docno").toString());
 
-                                codeRule = m.get("QrCodeRule").toString();
-                                if(codeRule.isEmpty()){
-                                    btnSubmit.setVisibility(View.VISIBLE);
-                                    btnScanSubmit.setVisibility(View.GONE);
+                                    codeRule = m.get("QrCodeRule").toString();
+                                    if(codeRule.isEmpty()){
+                                        btnSubmit.setVisibility(View.VISIBLE);
+                                        btnScanSubmit.setVisibility(View.GONE);
+                                    }else{
+                                        btnSubmit.setVisibility(View.GONE);
+                                        btnScanSubmit.setVisibility(View.VISIBLE);
+                                    }
+
+                                    strResult = m.get("Status").toString();
+                                    if(strResult.equals("Y")){
+                                        imageViewResult.setImageDrawable(getResources().getDrawable(R.drawable.detail_status_ok));
+                                        detailQuantityNg.setFocusable(false);
+                                        detailQuantityNo.setFocusable(false);
+                                        strFlag = "Y";
+                                    }else{
+                                        imageViewResult.setImageDrawable(getResources().getDrawable(R.drawable.detail_status_deal));
+                                        strFlag = "N";
+                                    }
                                 }else{
-                                    btnSubmit.setVisibility(View.GONE);
-                                    btnScanSubmit.setVisibility(View.VISIBLE);
+                                    finish();
+                                    MyToast.myShow(DetailActivity.this,statusDescription,0);
                                 }
-
-                                strResult = m.get("Status").toString();
-                                if(strResult.equals("Y")){
-                                    imageViewResult.setImageDrawable(getResources().getDrawable(R.drawable.detail_status_ok));
-                                    detailQuantityNg.setFocusable(false);
-                                    detailQuantityNo.setFocusable(false);
-                                    strFlag = "Y";
-                                }else{
-                                    imageViewResult.setImageDrawable(getResources().getDrawable(R.drawable.detail_status_deal));
-                                    strFlag = "N";
-                                }
-                            }else{
-                                finish();
-                                MyToast.myShow(DetailActivity.this,statusDescription,0);
                             }
+
                         }else{
                             finish();
                             MyToast.myShow(DetailActivity.this,statusDescription,0);
