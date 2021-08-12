@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".SubListActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/subListToolBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/action_style"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
+
+    <LinearLayout
+        android:id="@+id/linearSubQuery"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/white"
+        android:padding="5dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="5dp">
+
+            <TextView
+                android:id="@+id/txtSubQueryQcNameTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:text="@string/query_title_name" />
+
+            <EditText
+                android:id="@+id/txtSubQueryQcName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/query_style"
+                android:ems="8"
+                android:padding="2dp"
+                android:hint="@string/query_hint_name"
+                android:textColorHint="@color/hint_color"
+                android:textColor="@color/black"
+                android:inputType=""
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/btnSubQuery"
+                android:layout_width="wrap_content"
+                android:layout_height="25dp"
+                android:background="@drawable/list_button_selector"
+                android:layout_marginLeft="10dp"
+                android:textColor="@color/teal_700"
+                android:textStyle="normal"
+                android:focusable="false"
+                android:textSize="@dimen/list_detail_button"
+                android:text="@string/query_button"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp">
+
+            <TextView
+                android:id="@+id/txtSubQueryQcDateTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:text="@string/query_title_date" />
+
+            <EditText
+                android:id="@+id/txtSubQueryQcbDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/query_style"
+                android:padding="2dp"
+                android:ems="5"
+                android:hint="@string/query_hint_bdate"
+                android:textColorHint="@color/hint_color"
+                android:textColor="@color/black"
+                android:inputType="date"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:text="-"
+                android:padding="2dp"
+                android:textColor="@color/black" />
+
+            <EditText
+                android:id="@+id/txtSubQueryQceDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/query_style"
+                android:padding="2dp"
+                android:ems="5"
+                android:hint="@string/query_hint_edate"
+                android:textColorHint="@color/hint_color"
+                android:textColor="@color/black"
+                android:inputType="date"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/txtSubLabel1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:text="@string/query_label1"
+                android:textColor="@color/button_color" />
+
+            <TextView
+                android:id="@+id/txtSubLabel2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:text="@string/query_label2"
+                android:textColor="@color/button_color" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:background="@color/line"
+            android:orientation="vertical">
+
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/subListView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@color/white"
+            android:dividerHeight="5dp"
+            android:padding="5dp" />
+
+    </LinearLayout>
+
+</LinearLayout>

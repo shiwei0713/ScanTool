@@ -167,12 +167,12 @@ public class MasterActivity extends AppCompatActivity {
                     break;
                 //生产领退料
                 case R.id.btnAction5:
-                    intent=new Intent(MasterActivity.this,ListActivity.class);
-                    bundle=new Bundle();
-                    bundle.putString("title",getString(agrTitle[4]));
-                    bundle.putInt("count",4);
-                    bundle.putInt("index",4);
-                    intent.putExtras(bundle);
+                    intent=new Intent(MasterActivity.this,SubListActivity.class);
+//                    bundle=new Bundle();
+//                    bundle.putString("title",getString(agrTitle[4]));
+//                    bundle.putInt("count",4);
+//                    bundle.putInt("index",4);
+//                    intent.putExtras(bundle);
                     startActivity(intent);
                     break;
                 //销售出货

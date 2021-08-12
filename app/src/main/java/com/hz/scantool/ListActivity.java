@@ -138,7 +138,7 @@ public class ListActivity extends AppCompatActivity {
 
         //浮动按钮扫描事件初始化
         FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setVisibility(View.GONE);
+//        fab.setVisibility(View.GONE);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
