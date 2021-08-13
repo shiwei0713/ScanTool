@@ -44,6 +44,7 @@ public class SubListActivity extends AppCompatActivity {
         list = new ArrayList<>();
         Map<String,Object> map = new HashMap<>();
         map.put("StockLocation","1122");
+        map.put("PlanDate","1122");
         map.put("ProductCode","1122");
         map.put("ProductName","1122");
         map.put("ProductModels","1122");

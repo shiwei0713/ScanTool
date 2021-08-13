@@ -61,6 +61,7 @@ public class SubListAdapter extends BaseAdapter {
         }
 
         holder.txtSubListItemStockLocation.setText((String)mData.get(i).get("StockLocation"));
+        holder.txtSubListItemPlanDate.setText((String)mData.get(i).get("PlanDate"));
         holder.txtSubListItemProductCode.setText((String)mData.get(i).get("ProductCode"));
         holder.txtSubListItemProductName.setText((String)mData.get(i).get("ProductName"));
         holder.txtSubListItemProductModels.setText((String)mData.get(i).get("ProductModels"));
