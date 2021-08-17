@@ -569,7 +569,7 @@ public class DetailActivity extends AppCompatActivity {
                         "&lt;/Record&gt;\n"+
                         "&lt;/Parameter&gt;\n"+
                         "&lt;Document/&gt;\n";
-                String strResponse = t100ServiceHelper.getT100Data(requestBody,webServiceName,getApplicationContext());
+                String strResponse = t100ServiceHelper.getT100Data(requestBody,webServiceName,getApplicationContext(),null);
                 mapResponseList = t100ServiceHelper.getT100JsonData(strResponse,"erpqr");
                 mapResponseStatus = t100ServiceHelper.getT100StatusData(strResponse);
 
@@ -716,7 +716,7 @@ public class DetailActivity extends AppCompatActivity {
                         "&lt;/Master&gt;\n"+
                         "&lt;/RecordSet&gt;\n"+
                         "&lt;/Document&gt;\n";
-                String strResponse = t100ServiceHelper.getT100Data(requestBody,webServiceName,getApplicationContext());
+                String strResponse = t100ServiceHelper.getT100Data(requestBody,webServiceName,getApplicationContext(),null);
                 List<Map<String,Object>> strResponseList = t100ServiceHelper.getT100StatusData(strResponse);
                 for(Map<String,Object> m: strResponseList){
                     statusCode = m.get("statusCode").toString();

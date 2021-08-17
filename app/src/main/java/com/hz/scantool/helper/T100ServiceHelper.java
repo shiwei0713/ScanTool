@@ -37,9 +37,18 @@ public class T100ServiceHelper {
     private String userSiteId;
     private Context mContext;
 
-    //设置网络类型
+    //获取网络类型
     private void setRequestUrl(){
         if(UserInfo.getUserNetwork(mContext).equals(ARG_NETWORK_WLAN)){
+            this.requestUrl = SERVICE_WLAN_URL;
+        }else{
+            this.requestUrl = SERVICE_LAN_URL;
+        }
+    }
+
+    //设置网络类型
+    private void setRequestUrl(String netWork){
+        if(netWork.equals(ARG_NETWORK_WLAN)){
             this.requestUrl = SERVICE_WLAN_URL;
         }else{
             this.requestUrl = SERVICE_LAN_URL;
@@ -107,12 +116,16 @@ public class T100ServiceHelper {
     }
 
     //获取返回XML数据
-    public String getT100Data(String requestBody,String requestMethod,Context mContext) throws IOException {
+    public String getT100Data(String requestBody,String requestMethod,Context mContext,String netWork) throws IOException {
         String strResponse="";
 
         //初始化webservice地址
         this.mContext = mContext;
-        setRequestUrl();
+        if(netWork.isEmpty()){
+            setRequestUrl();
+        }else{
+            setRequestUrl(netWork);
+        }
 
         setUserSiteId();  //初始化营运据点
 

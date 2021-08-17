@@ -186,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
                             "&lt;/Record&gt;\n"+
                             "&lt;/Parameter&gt;\n"+
                             "&lt;Document/&gt;\n";
-                    String strResponse = t100ServiceHelper.getT100Data(requestBody,"UserInfoGet",getApplicationContext());
+                    String strResponse = t100ServiceHelper.getT100Data(requestBody,"UserInfoGet",getApplicationContext(),nerworkType);
                     if (strResponse.indexOf("rpxa002",1)>-1){
                         //查找工号
                         String sUserId=strResponse.substring(strResponse.indexOf("rpxa002",1),strResponse.length());

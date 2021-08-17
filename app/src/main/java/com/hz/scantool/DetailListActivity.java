@@ -383,7 +383,7 @@ public class DetailListActivity extends AppCompatActivity {
                         "&lt;/Record&gt;\n"+
                         "&lt;/Parameter&gt;\n"+
                         "&lt;Document/&gt;\n";
-                String strResponse = t100ServiceHelper.getT100Data(requestBody,webServiceName,getApplicationContext());
+                String strResponse = t100ServiceHelper.getT100Data(requestBody,webServiceName,getApplicationContext(),null);
                 String strContent = strResponse.replaceAll("&amp;quot;","\"");
                 String strDetailContent = strDetailContent = strContent.substring(strContent.indexOf("Detail",1),strContent.indexOf("/Detail",1));
 
@@ -444,7 +444,7 @@ public class DetailListActivity extends AppCompatActivity {
                         "&lt;/Master&gt;\n"+
                         "&lt;/RecordSet&gt;\n"+
                         "&lt;/Document&gt;\n";
-                String strResponse = t100ServiceHelper.getT100Data(requestBody,webServiceName,getApplicationContext());
+                String strResponse = t100ServiceHelper.getT100Data(requestBody,webServiceName,getApplicationContext(),null);
                 List<Map<String,Object>> strResponseList = t100ServiceHelper.getT100StatusData(strResponse);
                 for(Map<String,Object> m: strResponseList){
                     statusCode = m.get("statusCode").toString();

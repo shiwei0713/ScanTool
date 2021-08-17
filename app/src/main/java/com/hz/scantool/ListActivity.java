@@ -356,7 +356,7 @@ public class ListActivity extends AppCompatActivity {
                         "&lt;/Master&gt;\n"+
                         "&lt;/RecordSet&gt;\n"+
                         "&lt;/Document&gt;\n";
-                String strResponse = t100ServiceHelper.getT100Data(requestBody,webServiceName,getApplicationContext());
+                String strResponse = t100ServiceHelper.getT100Data(requestBody,webServiceName,getApplicationContext(),null);
 
                 List<Map<String,Object>> strResponseList = t100ServiceHelper.getT100StatusData(strResponse);
                 for(Map<String,Object> m: strResponseList){
