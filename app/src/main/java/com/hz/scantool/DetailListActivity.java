@@ -43,7 +43,7 @@ public class DetailListActivity extends AppCompatActivity {
 
     private static final String SCANACTION="com.android.server.scannerservice.broadcast";
 
-    private Integer intIndex;
+    private int intIndex;
     private String strDocno;
     private String strProductCode;
     private String strProductName;
@@ -277,7 +277,7 @@ public class DetailListActivity extends AppCompatActivity {
                 String qrFirst = qrDetailContent.substring(1,3);
 
                 if(qrFirst.equals("XM")){
-                    MyToast.myShow(context,"请扫描零件条码",2);
+                    MyToast.myShow(context,"请扫描零件条码",2,0);
                 }else{
                     Bundle bundle;
                     switch (intIndex){
@@ -307,7 +307,7 @@ public class DetailListActivity extends AppCompatActivity {
                     }
                 }
             }else{
-                MyToast.myShow(context,"扫描结果:"+qrDetailContent,2);
+                MyToast.myShow(context,"扫描结果:"+qrDetailContent,2,0);
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -325,7 +325,7 @@ public class DetailListActivity extends AppCompatActivity {
                         updateDetailListData();
                     }else{
                         strStatus = "N";
-                        MyToast.myShow(DetailListActivity.this,"所有零件备货完成才可提交",2);
+                        MyToast.myShow(DetailListActivity.this,"所有零件备货完成才可提交",2,0);
                     }
                     break;
                 case R.id.btnCancel:
@@ -383,7 +383,7 @@ public class DetailListActivity extends AppCompatActivity {
                         "&lt;/Record&gt;\n"+
                         "&lt;/Parameter&gt;\n"+
                         "&lt;Document/&gt;\n";
-                String strResponse = t100ServiceHelper.getT100Data(requestBody,webServiceName,getApplicationContext(),null);
+                String strResponse = t100ServiceHelper.getT100Data(requestBody,webServiceName,getApplicationContext(),"");
                 String strContent = strResponse.replaceAll("&amp;quot;","\"");
                 String strDetailContent = strDetailContent = strContent.substring(strContent.indexOf("Detail",1),strContent.indexOf("/Detail",1));
 
@@ -444,7 +444,7 @@ public class DetailListActivity extends AppCompatActivity {
                         "&lt;/Master&gt;\n"+
                         "&lt;/RecordSet&gt;\n"+
                         "&lt;/Document&gt;\n";
-                String strResponse = t100ServiceHelper.getT100Data(requestBody,webServiceName,getApplicationContext(),null);
+                String strResponse = t100ServiceHelper.getT100Data(requestBody,webServiceName,getApplicationContext(),"");
                 List<Map<String,Object>> strResponseList = t100ServiceHelper.getT100StatusData(strResponse);
                 for(Map<String,Object> m: strResponseList){
                     statusCode = m.get("statusCode").toString();
@@ -464,12 +464,12 @@ public class DetailListActivity extends AppCompatActivity {
             @Override
             public void onNext(String s) {
                 int intType = Integer.parseInt(statusCode);
-                MyToast.myShow(DetailListActivity.this,statusDescription,intType);
+                MyToast.myShow(DetailListActivity.this,statusDescription,intType,0);
             }
 
             @Override
             public void onError(Throwable e) {
-                MyToast.myShow(DetailListActivity.this,"更新失败",0);
+                MyToast.myShow(DetailListActivity.this,"更新失败",0,0);
             }
 
             @Override
@@ -537,7 +537,7 @@ public class DetailListActivity extends AppCompatActivity {
         }
 
         if(intQuantityPcs == intCurrent){
-            MyToast.myShow(DetailListActivity.this,"此备货单已全部检核完成",1);
+            MyToast.myShow(DetailListActivity.this,"此备货单已全部检核完成",1,0);
         }
 
         strCurrent = String.valueOf(intCurrent);

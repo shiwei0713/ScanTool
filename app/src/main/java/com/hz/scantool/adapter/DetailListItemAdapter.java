@@ -258,7 +258,7 @@ public class DetailListItemAdapter extends BaseAdapter {
                     holder.strStatus = (String)mData.get(position).put("Status","Y");
                     holder.detailListStatus.setImageDrawable(mContext.getResources().getDrawable(R.drawable.list_status_dealok));
                 }
-                MyToast.myShow(mContext,statusDescription,intType);
+                MyToast.myShow(mContext,statusDescription,intType,1);
             }
 
             @Override

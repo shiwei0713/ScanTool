@@ -264,10 +264,10 @@ public class DetailActivity extends AppCompatActivity {
                         if(checkQty()){
                             updateDetailItemData();
                         }else{
-                            MyToast.myShow(DetailActivity.this,"不良数量不可大于申请数据",2);
+                            MyToast.myShow(DetailActivity.this,"不良数量不可大于申请数据",2,0);
                         }
                     }else{
-                        MyToast.myShow(DetailActivity.this,"单据已处理,不可重复提交",2);
+                        MyToast.myShow(DetailActivity.this,"单据已处理,不可重复提交",2,0);
                     }
 
                     break;
@@ -304,9 +304,9 @@ public class DetailActivity extends AppCompatActivity {
                 String qrContent = intent.getStringExtra("scannerdata");
 
                 if(qrContent!=null && qrContent.length()!=0){
-                    scanResult();
+                    scanResult(qrContent);
                 }else{
-                    MyToast.myShow(DetailActivity.this,"扫描失败,请重新扫描",0);
+                    MyToast.myShow(DetailActivity.this,"扫描失败,请重新扫描",0,0);
                 }
             }
         }
@@ -327,26 +327,26 @@ public class DetailActivity extends AppCompatActivity {
             IntentResult intentResult = IntentIntegrator.parseActivityResult(resultCode,data);
             String qrContent = intentResult.getContents();
             if(qrContent!=null && qrContent.length()!=0){
-                scanResult();
+                scanResult(qrContent);
             }else{
-                MyToast.myShow(DetailActivity.this,"扫描失败,请重新扫描",0);
+                MyToast.myShow(DetailActivity.this,"扫描失败,请重新扫描",0,0);
             }
         }
     }
 
-    private void scanResult(){
+    private void scanResult(String qrScanContent){
         String erpCode = detailProductName.getText().toString().trim();
         String erpQty = detailQuantity.getText().toString().trim();
         if(codeRule.isEmpty() || codeRule.length() == 0){
-            MyToast.myShow(DetailActivity.this,"无扫描功能",2);
+            MyToast.myShow(DetailActivity.this,"无扫描功能",2,0);
         }else{
-            if(deCodeQrCode(codeRule,qrContent,erpCode,erpQty)){
+            if(deCodeQrCode(codeRule,qrScanContent,erpCode,erpQty)){
                 if(checkQty()){
                     updateDetailItemData();
                     imageViewResult.setImageDrawable(getResources().getDrawable(R.drawable.detail_status_ok));
                     strFlag = "Y";
                 }else{
-                    MyToast.myShow(DetailActivity.this,"不良数量不可大于申请数据",2);
+                    MyToast.myShow(DetailActivity.this,"不良数量不可大于申请数据",2,0);
                 }
             }else{
                 imageViewResult.setImageDrawable(getResources().getDrawable(R.drawable.detail_status_ng));
@@ -431,7 +431,7 @@ public class DetailActivity extends AppCompatActivity {
             //本田备件处理
             productCodeNew = productCode.substring(0,productCode.indexOf(' ',1))+productCode.substring(productCode.indexOf(' ',1)+1,productCode.length()-1);
         }else {
-            String strCodeContentUft = null;
+            String strCodeContentUft = "";
             if(code1.equals("1")){
                 strCodeContentUft = codeContent.trim();
             }else{
@@ -483,14 +483,14 @@ public class DetailActivity extends AppCompatActivity {
         }catch (Exception e){
             e.printStackTrace();
             iSaleQty = 0;
-            MyToast.myShow(DetailActivity.this,"扫描错误，请重新扫描客户标签",0);
+            MyToast.myShow(DetailActivity.this,"扫描错误，请重新扫描客户标签",0,0);
             return isMatch;
         }
 
         if(productCode.trim().equals(erpCdoe.trim()) || productCodeNew.trim().equals(erpCdoe.trim()) || productCode.trim().equals(erpCodeNew.trim())){
             if(iSaleQty == iErpQty || code1.equals("2")){
                 isMatch = true;
-                MyToast.myShow(DetailActivity.this,"检核成功",1);
+                MyToast.myShow(DetailActivity.this,"检核成功",1,0);
             }else{
                 msg = "数量不一致,客户数量:"+saleQty+",系统数量:"+iErpQty;
                 showAlertDialog(msg);
@@ -569,7 +569,7 @@ public class DetailActivity extends AppCompatActivity {
                         "&lt;/Record&gt;\n"+
                         "&lt;/Parameter&gt;\n"+
                         "&lt;Document/&gt;\n";
-                String strResponse = t100ServiceHelper.getT100Data(requestBody,webServiceName,getApplicationContext(),null);
+                String strResponse = t100ServiceHelper.getT100Data(requestBody,webServiceName,getApplicationContext(),"");
                 mapResponseList = t100ServiceHelper.getT100JsonData(strResponse,"erpqr");
                 mapResponseStatus = t100ServiceHelper.getT100StatusData(strResponse);
 
@@ -633,18 +633,18 @@ public class DetailActivity extends AppCompatActivity {
                                     }
                                 }else{
                                     finish();
-                                    MyToast.myShow(DetailActivity.this,statusDescription,0);
+                                    MyToast.myShow(DetailActivity.this,statusDescription,0,0);
                                 }
                             }
 
                         }else{
                             finish();
-                            MyToast.myShow(DetailActivity.this,statusDescription,0);
+                            MyToast.myShow(DetailActivity.this,statusDescription,0,0);
                         }
                     }
                 }else{
                     finish();
-                    MyToast.myShow(DetailActivity.this,"扫描失败，无数据显示",0);
+                    MyToast.myShow(DetailActivity.this,"扫描失败，无数据显示",0,0);
                 }
             }
 
@@ -716,7 +716,7 @@ public class DetailActivity extends AppCompatActivity {
                         "&lt;/Master&gt;\n"+
                         "&lt;/RecordSet&gt;\n"+
                         "&lt;/Document&gt;\n";
-                String strResponse = t100ServiceHelper.getT100Data(requestBody,webServiceName,getApplicationContext(),null);
+                String strResponse = t100ServiceHelper.getT100Data(requestBody,webServiceName,getApplicationContext(),"");
                 List<Map<String,Object>> strResponseList = t100ServiceHelper.getT100StatusData(strResponse);
                 for(Map<String,Object> m: strResponseList){
                     statusCode = m.get("statusCode").toString();
@@ -741,16 +741,16 @@ public class DetailActivity extends AppCompatActivity {
                     detailQuantityNo.setFocusable(false);
                     strFlag = "Y";
                     finish();
-                    MyToast.myShow(DetailActivity.this,"更新成功",1);
+                    MyToast.myShow(DetailActivity.this,"更新成功",1,0);
                 }else{
                     strFlag = "N";
-                    MyToast.myShow(DetailActivity.this,"更新失败,"+statusDescription,0);
+                    MyToast.myShow(DetailActivity.this,"更新失败,"+statusDescription,0,0);
             }
             }
 
             @Override
             public void onError(Throwable e) {
-                MyToast.myShow(DetailActivity.this,"执行异常,请联系管理员",0);
+                MyToast.myShow(DetailActivity.this,"执行异常,请联系管理员",0,0);
             }
 
             @Override

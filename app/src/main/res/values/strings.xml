@@ -30,6 +30,7 @@
     <string name="list_flag3">外购件</string>
     <string name="list_flag4">自制件</string>
     <string name="query_title_name">零件号</string>
+    <string name="query_title_dept">领料部门</string>
     <string name="query_hint_name">请输入零件号</string>
     <string name="query_title_date">日期范围</string>
     <string name="query_hint_bdate">开始日期</string>
@@ -118,4 +119,7 @@
     <string name="detail_product_models">零件名称:</string>
     <string name="detail_product_models2">材料尺寸:</string>
     <string name="detail_inventory">库存:</string>
+    <string name="sub_detail_plandate">需求日期:</string>
+    <string name="sub_detail_position">送货位置:</string>
+    <string name="sub_detail_docno">工单单号:</string>
 </resources>

@@ -18,7 +18,7 @@ public class MyToast extends Toast{
         super(context);
     }
 
-    public static void myShow(Context context,String message,int type){
+    public static void myShow(Context context,String message,int type,int interval){
         LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.customize_toast,null);
 
@@ -42,7 +42,11 @@ public class MyToast extends Toast{
 
         myToast = new Toast(context);
         myToast.setView(view);
-        myToast.setDuration(Toast.LENGTH_SHORT);
+        if(interval == 0){
+            myToast.setDuration(Toast.LENGTH_SHORT);
+        }else{
+            myToast.setDuration(Toast.LENGTH_LONG);
+        }
 //        myToast.setGravity(Gravity.CENTER,0,0);
         myToast.show();
     }

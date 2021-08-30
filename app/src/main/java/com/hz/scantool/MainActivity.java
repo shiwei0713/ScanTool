@@ -150,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
             //检查用户是否为空，非空执行获取用户信息线程
             String strUserName = txtUserName.getText().toString();
             if(strUserName.equals("")){
-                MyToast.myShow(MainActivity.this,"请输入用户工号",2);
+                MyToast.myShow(MainActivity.this,"请输入用户工号",2,0);
             }else {
                 getUserLogin();
             }
@@ -230,9 +230,9 @@ public class MainActivity extends AppCompatActivity {
                     finish();
                 }else{
                     if(userStatus.isEmpty()){
-                        MyToast.myShow(MainActivity.this,"用户不存在,请联系系统管理员",0);
+                        MyToast.myShow(MainActivity.this,"用户不存在,请联系系统管理员",0,0);
                     }{
-                        MyToast.myShow(MainActivity.this,userStatus,0);
+                        MyToast.myShow(MainActivity.this,userStatus,0,0);
                     }
                 }
             }
@@ -240,7 +240,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onError(Throwable e) {
                 Log.i(TAG,"Observer onError");
-                MyToast.myShow(MainActivity.this,"网络异常,请联系系统管理员",0);
+                MyToast.myShow(MainActivity.this,"网络异常,请联系系统管理员",0,0);
             }
 
             @Override

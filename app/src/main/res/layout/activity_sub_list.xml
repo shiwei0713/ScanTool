@@ -33,7 +33,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
-                android:text="@string/query_title_name" />
+                android:text="@string/query_title_dept" />
 
             <EditText
                 android:id="@+id/txtSubQueryQcName"
@@ -76,7 +76,7 @@
                 android:text="@string/query_title_date" />
 
             <EditText
-                android:id="@+id/txtSubQueryQcbDate"
+                android:id="@+id/txtSubQuerybDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
@@ -98,7 +98,7 @@
                 android:textColor="@color/black" />
 
             <EditText
-                android:id="@+id/txtSubQueryQceDate"
+                android:id="@+id/txtSubQueryeDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
@@ -116,6 +116,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
+                android:clickable="true"
                 android:text="@string/query_label1"
                 android:textColor="@color/button_color" />
 
@@ -124,6 +125,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
+                android:clickable="true"
                 android:text="@string/query_label2"
                 android:textColor="@color/button_color" />
         </LinearLayout>
@@ -135,6 +137,13 @@
             android:orientation="vertical">
 
         </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:max="100"/>
 
         <ListView
             android:id="@+id/subListView"

@@ -21,7 +21,8 @@
         android:supportsRtl="true"
         android:theme="@style/ThemeNoBar.ScanTool"
         android:usesCleartextTraffic="true">
-        <activity android:name=".SubListActivity"></activity>
+        <activity android:name=".SubDetailListActivity"></activity>
+        <activity android:name=".SubListActivity" />
         <activity android:name=".DetailListActivity" />
         <activity
             android:name="com.journeyapps.barcodescanner.CaptureActivity"

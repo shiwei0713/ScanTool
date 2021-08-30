@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".SubDetailListActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/subDetailListToolBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/action_style"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/txtSubDetailStockTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/detail_title_padding"
+            android:text="@string/detail_title7"
+            android:textColor="@color/list_detail_item" />
+
+        <TextView
+            android:id="@+id/txtSubDetailStock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/detail_title_padding"
+            android:textColor="@color/list_detail_item" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/line"
+        android:orientation="vertical">
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/txtSubDetailDeptTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/detail_title_padding"
+            android:text="@string/detail_title5"
+            android:textColor="@color/list_detail_item" />
+
+        <TextView
+            android:id="@+id/txtSubDetailDeptId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/detail_title_padding"
+            android:textColor="@color/list_detail_item" />
+
+        <TextView
+            android:id="@+id/txtSubDetailDept"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/detail_title_padding"
+            android:textColor="@color/list_detail_item" />
+
+        <ImageView
+            android:id="@+id/imageViewSubDetailLogo"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            app:srcCompat="@drawable/list_status_inside" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/line"
+        android:orientation="vertical">
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/txtSubDetailPlanDateTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/detail_title_padding"
+            android:text="@string/sub_detail_plandate"
+            android:textColor="@color/list_detail_item" />
+
+        <TextView
+            android:id="@+id/txtSubDetailPlanDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/detail_title_padding"
+            android:textColor="@color/list_detail_item" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/line"
+        android:orientation="vertical">
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:padding="5dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/txtSubDetailPositionTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/sub_detail_position"
+            android:padding="@dimen/detail_title_padding"
+            android:textColor="@color/list_detail_item" />
+
+        <TextView
+            android:id="@+id/txtSubDetailPosition"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/detail_title_padding"
+            android:textColor="@color/list_detail_item" />
+
+    </LinearLayout>
+
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="1dp"-->
+<!--        android:background="@color/line"-->
+<!--        android:orientation="vertical">-->
+
+<!--    </LinearLayout>-->
+
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:gravity="top|center"-->
+<!--        android:layout_marginTop="10dp"-->
+<!--        android:orientation="horizontal">-->
+
+<!--        <Button-->
+<!--            android:id="@+id/btnSubDetailSubmit"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="30dp"-->
+<!--            android:background="@drawable/list_button_selector"-->
+<!--            android:textColor="@color/teal_700"-->
+<!--            android:textStyle="normal"-->
+<!--            android:focusable="false"-->
+<!--            android:textSize="@dimen/list_detail_button"-->
+<!--            android:text="@string/detail_submit" />-->
+
+<!--        <Button-->
+<!--            android:id="@+id/btnSubDetailCancel"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="30dp"-->
+<!--            android:layout_marginLeft="30dp"-->
+<!--            android:background="@drawable/list_button_selector"-->
+<!--            android:textColor="@color/teal_700"-->
+<!--            android:textStyle="normal"-->
+<!--            android:focusable="false"-->
+<!--            android:textSize="@dimen/list_detail_button"-->
+<!--            android:text="@string/detail_refresh" />-->
+
+<!--    </LinearLayout>-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:background="@color/line"
+        android:orientation="vertical">
+
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progressSubDetailBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:max="100"/>
+
+    <ListView
+        android:id="@+id/subDetailListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="@color/white"
+        android:dividerHeight="5dp"
+        android:padding="5dp" />
+
+</LinearLayout>

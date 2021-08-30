@@ -185,7 +185,7 @@ public class ListActivity extends AppCompatActivity {
                     scanResult(qrContent,context,intent);
 
                 }else{
-                    MyToast.myShow(context,"扫描失败,请重新扫描",0);
+                    MyToast.myShow(context,"扫描失败,请重新扫描",0,0);
                 }
             }
         }
@@ -211,7 +211,7 @@ public class ListActivity extends AppCompatActivity {
             if(qrContent!=null && qrContent.length()!=0){
                 scanResult(qrContent,this,intent);
             }else{
-                MyToast.myShow(this,"扫描失败,请重新扫描"+qrContent,0);
+                MyToast.myShow(this,"扫描失败,请重新扫描"+qrContent,0,0);
             }
         }
     }
@@ -233,7 +233,7 @@ public class ListActivity extends AppCompatActivity {
         String[] qrCodeValue = qrContent.split("_");
         int qrIndex = qrContent.indexOf("_");
         if(qrIndex==-1){
-            MyToast.myShow(context,"条码错误:"+qrContent,0);
+            MyToast.myShow(context,"条码错误:"+qrContent,0,1);
         }else{
             //单据类别
             Boolean isSale = false;
@@ -356,7 +356,7 @@ public class ListActivity extends AppCompatActivity {
                         "&lt;/Master&gt;\n"+
                         "&lt;/RecordSet&gt;\n"+
                         "&lt;/Document&gt;\n";
-                String strResponse = t100ServiceHelper.getT100Data(requestBody,webServiceName,getApplicationContext(),null);
+                String strResponse = t100ServiceHelper.getT100Data(requestBody,webServiceName,getApplicationContext(),"");
 
                 List<Map<String,Object>> strResponseList = t100ServiceHelper.getT100StatusData(strResponse);
                 for(Map<String,Object> m: strResponseList){
@@ -377,12 +377,12 @@ public class ListActivity extends AppCompatActivity {
             @Override
             public void onNext(String s) {
                 int intType = Integer.parseInt(statusCode);
-                MyToast.myShow(ListActivity.this,statusDescription,intType);
+                MyToast.myShow(ListActivity.this,statusDescription,intType,0);
             }
 
             @Override
             public void onError(Throwable e) {
-                MyToast.myShow(ListActivity.this,"更新失败",0);
+                MyToast.myShow(ListActivity.this,"更新失败",0,0);
             }
 
             @Override

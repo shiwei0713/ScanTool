@@ -3,131 +3,71 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/list_item_styel"
-    android:descendantFocusability="blocksDescendants"
+    android:gravity="left|center"
+    android:background="@drawable/sub_list_item_style"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:padding="5dp">
+        android:layout_height="match_parent"
+        android:gravity="left|center"
+        android:orientation="horizontal">
 
         <ImageView
-            android:id="@+id/imgSubListIcon"
-            android:layout_width="18dp"
-            android:layout_height="18dp"
-            app:srcCompat="@drawable/detail_list_top" />
+            android:id="@+id/imageViewLogo"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            app:srcCompat="@drawable/list_status_inside" />
 
-        <TextView
-            android:id="@+id/txtSubListItemStockLocation"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:textColor="@color/list_item_icon"
-            android:textSize="18sp"
-            android:textStyle="normal" />
+            android:gravity="left|center"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/txtViewDeptId"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"/>
+
+                <TextView
+                    android:id="@+id/txtViewDept"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"/>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/txtViewStock"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"/>
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="right"
-            android:layout_gravity="right|center_vertical"
+            android:gravity="right|center"
             android:orientation="horizontal">
 
-            <ImageView
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_gravity="center"
-                app:srcCompat="@drawable/list_alarm"/>
-
             <TextView
-                android:id="@+id/txtSubListItemPlanDate"
-                android:layout_width="wrap_content"
+                android:id="@+id/txtViewDate"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/list_item_alarm"
-                android:textSize="13sp" />
+                android:layout_gravity="right|center"
+                android:textAlignment="textEnd"/>
 
         </LinearLayout>
 
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/line"
-        android:orientation="horizontal">
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="left"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/txtSubListItemProductCode"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/black"/>
-
-            <TextView
-                android:id="@+id/txtSubListItemProductName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/black"/>
-
-            <TextView
-                android:id="@+id/txtSubListItemProductModels"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/black"/>
-
-            <TextView
-                android:id="@+id/txtSubListItemDept"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/black"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="right"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/txtSubListItemQuantity"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical|right"
-                android:layout_marginRight="10dp"
-                android:textColor="@color/list_item_number"
-                android:textStyle="bold"
-                android:inputType="numberDecimal"
-                android:textSize="24sp" />
-
-            <TextView
-                android:id="@+id/txtSubListItemQuantityPcs"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical|right"
-                android:layout_marginRight="10dp"
-                android:textColor="@color/list_item_number"
-                android:textStyle="bold"
-                android:inputType="numberDecimal"
-                android:textSize="24sp" />
-        </LinearLayout>
-
-    </LinearLayout>
 
 </LinearLayout>
