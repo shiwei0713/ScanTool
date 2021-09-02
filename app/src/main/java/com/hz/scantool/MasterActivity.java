@@ -187,12 +187,12 @@ public class MasterActivity extends AppCompatActivity {
                     break;
                 //生产协同
                 case R.id.btnAction7:
-                    intent=new Intent(MasterActivity.this,ListActivity.class);
-                    bundle=new Bundle();
-                    bundle.putString("title",getString(agrTitle[6]));
-                    bundle.putInt("count",2);
-                    bundle.putInt("index",6);
-                    intent.putExtras(bundle);
+                    intent=new Intent(MasterActivity.this,SubMasterActivity.class);
+//                    bundle=new Bundle();
+//                    bundle.putString("title",getString(agrTitle[6]));
+//                    bundle.putInt("count",2);
+//                    bundle.putInt("index",6);
+//                    intent.putExtras(bundle);
                     startActivity(intent);
                     break;
                 //月末盘点

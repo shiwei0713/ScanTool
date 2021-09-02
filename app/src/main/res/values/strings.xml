@@ -15,7 +15,7 @@
     <string name="master_action2">质量检验</string>
     <string name="master_action3">完工入库</string>
     <string name="master_action4">采购入库</string>
-    <string name="master_action5">生产备料</string>
+    <string name="master_action5">生产备货</string>
     <string name="master_action6">销售出货</string>
     <string name="master_action7">生产协同</string>
     <string name="master_action8">月末盘点</string>
@@ -31,7 +31,7 @@
     <string name="list_flag4">自制件</string>
     <string name="query_title_name">零件号</string>
     <string name="query_title_dept">领料部门</string>
-    <string name="query_hint_name">请输入零件号</string>
+    <string name="query_hint_name">请输入部门/供应商</string>
     <string name="query_title_date">日期范围</string>
     <string name="query_hint_bdate">开始日期</string>
     <string name="query_hint_edate">结束日期</string>
@@ -58,8 +58,10 @@
     <string name="tab_stock6">任务分配</string>
     <string name="tab_stock7">销售备货</string>
     <string name="tab_stock8">客户退回</string>
-    <string name="tab_product1">收料确认</string>
+    <string name="tab_product1">车间退料</string>
     <string name="tab_product2">模具安装</string>
+    <string name="tab_product3">缺料明细</string>
+    <string name="tab_product4">计划超时</string>
     <string name="tab_query1">失败明细</string>
     <string name="item_title_product_code">料件编码:</string>
     <string name="item_title_product_name">品名:</string>
@@ -122,4 +124,9 @@
     <string name="sub_detail_plandate">需求日期:</string>
     <string name="sub_detail_position">送货位置:</string>
     <string name="sub_detail_docno">工单单号:</string>
+    <string name="sub_list_flag_query">类型:</string>
+    <string name="sub_list_flag1">生产备货</string>
+    <string name="sub_list_flag2">生产退货</string>
+    <string name="sub_master_title1">常用</string>
+    <string name="sub_master_title2">异常</string>
 </resources>

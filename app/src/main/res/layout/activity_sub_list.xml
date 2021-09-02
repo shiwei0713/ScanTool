@@ -19,8 +19,56 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="@color/white"
-        android:padding="5dp">
+        android:background="@color/white">
+
+        <LinearLayout
+            android:id="@+id/linearFlag"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:background="@color/white"
+            android:layout_marginLeft="10dp"
+            android:gravity="left|center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/teal_700"
+                android:text="@string/sub_list_flag_query"/>
+
+            <Button
+                android:id="@+id/btnFlag1"
+                android:layout_width="80dp"
+                android:layout_height="25dp"
+                android:background="@drawable/list_flag_selector"
+                android:textColor="@color/teal_700"
+                android:layout_marginLeft="10dp"
+                android:textStyle="normal"
+                android:focusable="false"
+                android:textSize="@dimen/list_detail_button"
+                android:text="@string/sub_list_flag1"/>
+
+            <Button
+                android:id="@+id/btnFlag2"
+                android:layout_width="80dp"
+                android:layout_height="25dp"
+                android:background="@drawable/list_flag_selector"
+                android:layout_marginLeft="20dp"
+                android:textColor="@color/teal_700"
+                android:textStyle="normal"
+                android:focusable="false"
+                android:textSize="@dimen/list_detail_button"
+                android:text="@string/sub_list_flag2"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/line"
+            android:orientation="vertical">
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"

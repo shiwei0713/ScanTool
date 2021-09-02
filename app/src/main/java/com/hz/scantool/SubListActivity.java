@@ -7,6 +7,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -16,6 +17,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.zxing.integration.android.IntentIntegrator;
 import com.hz.scantool.adapter.MyToast;
 import com.hz.scantool.adapter.SubListAdapter;
 import com.hz.scantool.helper.T100ServiceHelper;
@@ -52,6 +54,8 @@ public class SubListActivity extends AppCompatActivity {
     private List<Map<String,Object>> mapResponseList;
     private List<Map<String,Object>> mapResponseStatus;
 
+    private Button btnFlag1;
+    private Button btnFlag2;
     private Button btnSubQuery;
     private TextView txtSubLabel1;
     private TextView txtSubLabel2;
@@ -112,6 +116,8 @@ public class SubListActivity extends AppCompatActivity {
     }
 
     private void initView(){
+        btnFlag1 = findViewById(R.id.btnFlag1);
+        btnFlag2 = findViewById(R.id.btnFlag2);
         btnSubQuery = findViewById(R.id.btnSubQuery);
         txtSubQuerybDate=findViewById(R.id.txtSubQuerybDate);
         txtSubQueryeDate=findViewById(R.id.txtSubQueryeDate);
@@ -120,11 +126,17 @@ public class SubListActivity extends AppCompatActivity {
         listView = findViewById(R.id.subListView);
         progressBar = findViewById(R.id.progressBar);
 
+        //初始化flag按钮状态
+        btnFlag1.setSelected(true);
+        btnFlag2.setSelected(false);
+
         //初始化日期
         txtSubQuerybDate.setText(setQueryDate(1));
         txtSubQueryeDate.setText(setQueryDate(1));
 
         //绑定事件
+        btnFlag1.setOnClickListener(new queryClickListener());
+        btnFlag2.setOnClickListener(new queryClickListener());
         btnSubQuery.setOnClickListener(new queryClickListener());
         txtSubLabel1.setOnClickListener(new queryClickListener());
         txtSubLabel2.setOnClickListener(new queryClickListener());
@@ -142,6 +154,14 @@ public class SubListActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             switch (view.getId()){
+                case R.id.btnFlag1:
+                    btnFlag1.setSelected(true);
+                    btnFlag2.setSelected(false);
+                    break;
+                case R.id.btnFlag2:
+                    btnFlag1.setSelected(false);
+                    btnFlag2.setSelected(true);
+                    break;
                 case R.id.btnSubQuery:
                     break;
                 case R.id.txtSubLabel1:
@@ -241,6 +261,7 @@ public class SubListActivity extends AppCompatActivity {
             @Override
             public void onError(Throwable e) {
                 MyToast.myShow(SubListActivity.this,"网络错误",0,0);
+                progressBar.setVisibility(View.GONE);
             }
 
             @Override
