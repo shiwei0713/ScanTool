@@ -147,20 +147,18 @@ public class MasterActivity extends AppCompatActivity {
                     break;
                 //完工入库
                 case R.id.btnAction3:
-                    intent=new Intent(MasterActivity.this,ListActivity.class);
+                    intent=new Intent(MasterActivity.this,SubListActivity.class);
                     bundle=new Bundle();
                     bundle.putString("title",getString(agrTitle[2]));
-                    bundle.putInt("count",1);
                     bundle.putInt("index",2);
                     intent.putExtras(bundle);
                     startActivity(intent);
                     break;
                 //采购入库
                 case R.id.btnAction4:
-                    intent=new Intent(MasterActivity.this,ListActivity.class);
+                    intent=new Intent(MasterActivity.this,SubListActivity.class);
                     bundle=new Bundle();
                     bundle.putString("title",getString(agrTitle[3]));
-                    bundle.putInt("count",3);
                     bundle.putInt("index",3);
                     intent.putExtras(bundle);
                     startActivity(intent);
@@ -168,11 +166,10 @@ public class MasterActivity extends AppCompatActivity {
                 //生产领退料
                 case R.id.btnAction5:
                     intent=new Intent(MasterActivity.this,SubListActivity.class);
-//                    bundle=new Bundle();
-//                    bundle.putString("title",getString(agrTitle[4]));
-//                    bundle.putInt("count",4);
-//                    bundle.putInt("index",4);
-//                    intent.putExtras(bundle);
+                    bundle=new Bundle();
+                    bundle.putString("title",getString(agrTitle[4]));
+                    bundle.putInt("index",1);
+                    intent.putExtras(bundle);
                     startActivity(intent);
                     break;
                 //销售出货
@@ -188,11 +185,10 @@ public class MasterActivity extends AppCompatActivity {
                 //生产协同
                 case R.id.btnAction7:
                     intent=new Intent(MasterActivity.this,SubMasterActivity.class);
-//                    bundle=new Bundle();
-//                    bundle.putString("title",getString(agrTitle[6]));
-//                    bundle.putInt("count",2);
-//                    bundle.putInt("index",6);
-//                    intent.putExtras(bundle);
+                    bundle=new Bundle();
+                    bundle.putString("title",getString(agrTitle[6]));
+                    bundle.putInt("index",6);
+                    intent.putExtras(bundle);
                     startActivity(intent);
                     break;
                 //月末盘点

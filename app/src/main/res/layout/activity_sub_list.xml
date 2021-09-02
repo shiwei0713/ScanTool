@@ -77,14 +77,14 @@
             android:padding="5dp">
 
             <TextView
-                android:id="@+id/txtSubQueryQcNameTitle"
+                android:id="@+id/txtSubQueryDeptNameTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
                 android:text="@string/query_title_dept" />
 
             <EditText
-                android:id="@+id/txtSubQueryQcName"
+                android:id="@+id/txtSubQueryDeptName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"

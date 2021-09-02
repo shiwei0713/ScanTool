@@ -7,7 +7,6 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -17,18 +16,14 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.google.zxing.integration.android.IntentIntegrator;
 import com.hz.scantool.adapter.MyToast;
 import com.hz.scantool.adapter.SubListAdapter;
 import com.hz.scantool.helper.T100ServiceHelper;
 import com.hz.scantool.models.UserInfo;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -45,6 +40,7 @@ import io.reactivex.schedulers.Schedulers;
 public class SubListActivity extends AppCompatActivity {
 
     private int intIndex;
+    private String strTitle;
     private String strWhere;
     private String statusCode;
     private String statusDescription;
@@ -57,6 +53,7 @@ public class SubListActivity extends AppCompatActivity {
     private Button btnFlag1;
     private Button btnFlag2;
     private Button btnSubQuery;
+    private TextView txtSubQueryDeptNameTitle;
     private TextView txtSubLabel1;
     private TextView txtSubLabel2;
     private EditText txtSubQuerybDate;
@@ -68,6 +65,9 @@ public class SubListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sub_list);
 
+        //初始化参数
+        initBundle();
+
         //获取工具栏
         Toolbar toolbar=findViewById(R.id.subListToolBar);
         setSupportActionBar(toolbar);
@@ -75,14 +75,10 @@ public class SubListActivity extends AppCompatActivity {
         //工具栏增加返回按钮和标题显示
         ActionBar actionBar=getSupportActionBar();
         if(actionBar!=null){
-            actionBar.setTitle(getResources().getString(R.string.master_action5));
+            actionBar.setTitle(strTitle);
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-
-        //初始化类型
-        intIndex = 1;
-        strWhere = "";
 
         //初始化控件
         initView();
@@ -115,10 +111,19 @@ public class SubListActivity extends AppCompatActivity {
         return strDate;
     }
 
+    //初始化传入参数
+    private void initBundle(){
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        intIndex = bundle.getInt("index");
+        strTitle = bundle.getString("title");
+    }
+
     private void initView(){
         btnFlag1 = findViewById(R.id.btnFlag1);
         btnFlag2 = findViewById(R.id.btnFlag2);
         btnSubQuery = findViewById(R.id.btnSubQuery);
+        txtSubQueryDeptNameTitle = findViewById(R.id.txtSubQueryDeptNameTitle);
         txtSubQuerybDate=findViewById(R.id.txtSubQuerybDate);
         txtSubQueryeDate=findViewById(R.id.txtSubQueryeDate);
         txtSubLabel1 = findViewById(R.id.txtSubLabel1);
@@ -129,6 +134,11 @@ public class SubListActivity extends AppCompatActivity {
         //初始化flag按钮状态
         btnFlag1.setSelected(true);
         btnFlag2.setSelected(false);
+
+        //初始化文本
+        if(intIndex == 2){
+            txtSubQueryDeptNameTitle.setText(getString(R.string.query_title_dept_in));
+        }
 
         //初始化日期
         txtSubQuerybDate.setText(setQueryDate(1));

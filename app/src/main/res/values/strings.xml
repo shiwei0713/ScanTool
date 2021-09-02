@@ -31,6 +31,7 @@
     <string name="list_flag4">自制件</string>
     <string name="query_title_name">零件号</string>
     <string name="query_title_dept">领料部门</string>
+    <string name="query_title_dept_in">入库部门</string>
     <string name="query_hint_name">请输入部门/供应商</string>
     <string name="query_title_date">日期范围</string>
     <string name="query_hint_bdate">开始日期</string>

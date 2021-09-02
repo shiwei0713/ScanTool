@@ -26,7 +26,7 @@
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp"
+        android:padding="5dp"
         android:orientation="horizontal">
 
         <TableRow>
@@ -34,15 +34,34 @@
                 android:id="@+id/subMasterAction1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawableTop="@drawable/sub_master1"
                 android:text="@string/tab_product1" />
 
             <Button
                 android:id="@+id/subMasterAction2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawableTop="@drawable/sub_master2"
                 android:text="@string/tab_product2" />
+
+            <Button
+                android:id="@+id/subMasterAction5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tab_product2" />
+
+            <Button
+                android:id="@+id/subMasterAction6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tab_product2" />
+
+        </TableRow>
+
+        <TableRow>
+            <Button
+                android:id="@+id/subMasterAction7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tab_product1" />
 
         </TableRow>
 
@@ -61,7 +80,7 @@
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp"
+        android:padding="5dp"
         android:orientation="horizontal">
 
         <TableRow>
@@ -69,14 +88,12 @@
                 android:id="@+id/subMasterAction3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawableTop="@drawable/sub_master3"
                 android:text="@string/tab_product3" />
 
             <Button
                 android:id="@+id/subMasterAction4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawableTop="@drawable/sub_master4"
                 android:text="@string/tab_product4" />
 
         </TableRow>
