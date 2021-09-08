@@ -40,6 +40,7 @@ public class SubDetailListActivity extends AppCompatActivity {
     private static final String SCANACTION="com.android.server.scannerservice.broadcast";
 
     private ListView listDetailView;
+    private TextView txtSubDetailStockId;
     private TextView txtSubDetailStock;
     private TextView txtSubDetailDeptId;
     private TextView txtSubDetailDept;
@@ -143,6 +144,7 @@ public class SubDetailListActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
 
+        txtSubDetailStockId = findViewById(R.id.txtSubDetailStockId);
         txtSubDetailStock = findViewById(R.id.txtSubDetailStock);
         txtSubDetailDeptId = findViewById(R.id.txtSubDetailDeptId);
         txtSubDetailDept = findViewById(R.id.txtSubDetailDept);
@@ -152,11 +154,13 @@ public class SubDetailListActivity extends AppCompatActivity {
         progressSubDetailBar = findViewById(R.id.progressSubDetailBar);
         imageViewSubDetailLogo = findViewById(R.id.imageViewSubDetailLogo);
 
+        txtSubDetailStockId.setText(bundle.getString("StockId"));
         txtSubDetailStock.setText(bundle.getString("Stock"));
         txtSubDetailDeptId.setText(bundle.getString("DeptId"));
         txtSubDetailDept.setText(bundle.getString("Dept"));
         txtSubDetailPlanDate.setText(bundle.getString("PlanDate"));
         strDocType = bundle.getString("DocType");
+        intIndex = bundle.getInt("Type");
 
         if(strDocType.equals("1")){
             imageViewSubDetailLogo.setImageDrawable(getResources().getDrawable(R.drawable.sub_detail_inside));
@@ -167,9 +171,11 @@ public class SubDetailListActivity extends AppCompatActivity {
 
     //初始化查询条件
     private void initQueryCondition(){
-        intIndex = 4;
-//        strWhere = " sfaadocno='"+txtSubDetailDocno.getText().toString()+"'";
-        strWhere = " sfaa017 = '"+txtSubDetailDeptId.getText().toString()+"' AND sfaa019 = to_date('"+txtSubDetailPlanDate.getText().toString()+"','YYYY-MM-DD')";
+        if(intIndex == 41){
+            strWhere = " indd032 = '"+txtSubDetailStockId.getText().toString()+"' AND indcdocdt = to_date('"+txtSubDetailPlanDate.getText().toString()+"','YYYY-MM-DD')";
+        }else{
+            strWhere = " sfaa017 = '"+txtSubDetailDeptId.getText().toString()+"' AND sfaa019 = to_date('"+txtSubDetailPlanDate.getText().toString()+"','YYYY-MM-DD')";
+        }
     }
 
     //获取发料储位明细
@@ -190,7 +196,7 @@ public class SubDetailListActivity extends AppCompatActivity {
                         "&lt;Field name=\"enterprise\" value=\""+ UserInfo.getUserEnterprise(getApplicationContext())+"\"/&gt;\n"+
                         "&lt;Field name=\"site\" value=\""+UserInfo.getUserSiteId(getApplicationContext())+"\"/&gt;\n"+
                         "&lt;Field name=\"type\" value=\""+intIndex+"\"/&gt;\n"+
-                        "&lt;Field name=\"stock\" value=\""+txtSubDetailStock.getText().toString()+"\"/&gt;\n"+
+                        "&lt;Field name=\"stock\" value=\""+txtSubDetailStockId.getText().toString()+"\"/&gt;\n"+
                         "&lt;Field name=\"where\" value=\""+strWhere+"\"/&gt;\n"+
                         "&lt;/Record&gt;\n"+
                         "&lt;/Parameter&gt;\n"+

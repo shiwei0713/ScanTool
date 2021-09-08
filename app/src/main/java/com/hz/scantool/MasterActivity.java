@@ -137,10 +137,10 @@ public class MasterActivity extends AppCompatActivity {
                     break;
                 //质量检验
                 case R.id.btnAction2:
-                    intent=new Intent(MasterActivity.this,ListActivity.class);
+                    intent=new Intent(MasterActivity.this,SubMasterActivity.class);
                     bundle=new Bundle();
                     bundle.putString("title",getString(agrTitle[1]));
-                    bundle.putInt("count",4);
+//                    bundle.putInt("count",4);
                     bundle.putInt("index",1);
                     intent.putExtras(bundle);
                     startActivity(intent);
@@ -168,7 +168,7 @@ public class MasterActivity extends AppCompatActivity {
                     intent=new Intent(MasterActivity.this,SubListActivity.class);
                     bundle=new Bundle();
                     bundle.putString("title",getString(agrTitle[4]));
-                    bundle.putInt("index",1);
+                    bundle.putInt("index",4);
                     intent.putExtras(bundle);
                     startActivity(intent);
                     break;
@@ -193,10 +193,10 @@ public class MasterActivity extends AppCompatActivity {
                     break;
                 //月末盘点
                 case R.id.btnAction8:
-                    intent=new Intent(MasterActivity.this,ListActivity.class);
+                    intent=new Intent(MasterActivity.this,CheckStockActivity.class);
                     bundle=new Bundle();
                     bundle.putString("title",getString(agrTitle[7]));
-                    bundle.putInt("count",1);
+//                    bundle.putInt("count",1);
                     bundle.putInt("index",7);
                     intent.putExtras(bundle);
                     startActivity(intent);

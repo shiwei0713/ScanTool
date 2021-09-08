@@ -22,8 +22,8 @@
     <string name="master_message_title">公告</string>
     <string name="master_message_content">欢迎使用华滋东江智能制造系统，系统异常请咨询信息室：\n\u2000\u2000联系人：施巍\n\u2000\u2000联系电话：13164661960</string>
     <string name="list_task1">总数:</string>
-    <string name="list_task2">成功:</string>
-    <string name="list_task3">失败:</string>
+    <string name="list_task2">合格:</string>
+    <string name="list_task3">差异:</string>
     <string name="list_flag_query">筛选:</string>
     <string name="list_flag1">原材料</string>
     <string name="list_flag2">标准件</string>
@@ -32,6 +32,7 @@
     <string name="query_title_name">零件号</string>
     <string name="query_title_dept">领料部门</string>
     <string name="query_title_dept_in">入库部门</string>
+    <string name="query_title_dept_out">退料部门</string>
     <string name="query_hint_name">请输入部门/供应商</string>
     <string name="query_title_date">日期范围</string>
     <string name="query_hint_bdate">开始日期</string>
@@ -63,6 +64,11 @@
     <string name="tab_product2">模具安装</string>
     <string name="tab_product3">缺料明细</string>
     <string name="tab_product4">计划超时</string>
+    <string name="tab_product5">IQC检验</string>
+    <string name="tab_product6">PQC检验</string>
+    <string name="tab_product7">FQC检验</string>
+    <string name="tab_product8">OQC检验</string>
+    <string name="tab_product9">库存检验</string>
     <string name="tab_query1">失败明细</string>
     <string name="item_title_product_code">料件编码:</string>
     <string name="item_title_product_name">品名:</string>
@@ -128,6 +134,17 @@
     <string name="sub_list_flag_query">类型:</string>
     <string name="sub_list_flag1">生产备货</string>
     <string name="sub_list_flag2">生产退货</string>
+    <string name="sub_list_flag21">生产入库</string>
+    <string name="sub_list_flag31">采购入库</string>
+    <string name="sub_list_flag32">委外入库</string>
     <string name="sub_master_title1">常用</string>
     <string name="sub_master_title2">异常</string>
+    <string name="sub_list_dept_title3">送货:</string>
+    <string name="sub_list_stock_title3">单号:</string>
+    <string name="sub_list_dept_title31">加工:</string>
+    <string name="sub_list_stock_title31">单号:</string>
+    <string name="sub_list_dept_title41">退:</string>
+    <string name="sub_list_stock_title41">入:</string>
+    <string name="sub_list_dept_title4">领:</string>
+    <string name="sub_list_stock_title4">出:</string>
 </resources>

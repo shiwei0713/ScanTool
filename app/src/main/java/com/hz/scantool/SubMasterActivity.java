@@ -68,15 +68,18 @@ public class SubMasterActivity extends AppCompatActivity {
         //声明按钮ID和图片ID
         int[] btnId;
         int[] imgId;
+        int[] titleId;
 
         //按照不同导航显示对应按钮
         //生产协同：6；质量检验：1
         if(intIndex == 1) {
-            btnId = new int[]{R.id.subMasterAction1, R.id.subMasterAction2, R.id.subMasterAction5, R.id.subMasterAction6};
-            imgId = new int[]{R.drawable.sub_master5, R.drawable.sub_master6, R.drawable.sub_master7, R.drawable.sub_master8};
+            btnId = new int[]{R.id.subMasterAction1, R.id.subMasterAction2, R.id.subMasterAction5, R.id.subMasterAction6,R.id.subMasterAction7};
+            imgId = new int[]{R.drawable.sub_master5, R.drawable.sub_master6, R.drawable.sub_master7, R.drawable.sub_master8, R.drawable.sub_master9};
+            titleId = new int[]{R.string.tab_product5,R.string.tab_product6,R.string.tab_product7,R.string.tab_product8,R.string.tab_product9};
         }else{
             btnId= new int[]{R.id.subMasterAction1, R.id.subMasterAction2, R.id.subMasterAction3, R.id.subMasterAction4};
             imgId= new int[]{R.drawable.sub_master1, R.drawable.sub_master2, R.drawable.sub_master3, R.drawable.sub_master4};
+            titleId = new int[]{R.string.tab_product1,R.string.tab_product2,R.string.tab_product3,R.string.tab_product4};
         }
 
         //初始化按钮和图片
@@ -90,6 +93,7 @@ public class SubMasterActivity extends AppCompatActivity {
             drawable.setBounds(0,0,128,128);
             btnAction.setCompoundDrawables(null,drawable,null,null);
             btnAction.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+            btnAction.setText(getResources().getString(titleId[i]));
         }
     }
 
@@ -114,6 +118,9 @@ public class SubMasterActivity extends AppCompatActivity {
         subMasterAction2.setOnClickListener(new btnActionListener());
         subMasterAction3.setOnClickListener(new btnActionListener());
         subMasterAction4.setOnClickListener(new btnActionListener());
+        subMasterAction5.setOnClickListener(new btnActionListener());
+        subMasterAction6.setOnClickListener(new btnActionListener());
+        subMasterAction7.setOnClickListener(new btnActionListener());
 
         //按照不同导航显示对应按钮
         //生产协同：6；质量检验：1
@@ -121,6 +128,9 @@ public class SubMasterActivity extends AppCompatActivity {
             subMasterAction5.setVisibility(View.GONE);
             subMasterAction6.setVisibility(View.GONE);
             subMasterAction7.setVisibility(View.GONE);
+        }else{
+            subMasterAction3.setVisibility(View.GONE);
+            subMasterAction4.setVisibility(View.GONE);
         }
     }
 
@@ -149,6 +159,18 @@ public class SubMasterActivity extends AppCompatActivity {
                 case R.id.subMasterAction4:
                     bundle.putInt("btnId",R.id.subMasterAction4);
                     bundle.putString("title",subMasterAction4.getText().toString());
+                    break;
+                case R.id.subMasterAction5:
+                    bundle.putInt("btnId",R.id.subMasterAction5);
+                    bundle.putString("title",subMasterAction5.getText().toString());
+                    break;
+                case R.id.subMasterAction6:
+                    bundle.putInt("btnId",R.id.subMasterAction6);
+                    bundle.putString("title",subMasterAction6.getText().toString());
+                    break;
+                case R.id.subMasterAction7:
+                    bundle.putInt("btnId",R.id.subMasterAction7);
+                    bundle.putString("title",subMasterAction7.getText().toString());
                     break;
             }
 
