@@ -268,6 +268,7 @@ public class T100ServiceHelper {
                 map.put("Dept", jsonObject.getString("erpDept").trim());
                 map.put("StockId", jsonObject.getString("erpStockId").trim());
                 map.put("Stock", jsonObject.getString("erpStock").trim());
+                map.put("Docno", jsonObject.getString("erpDocno").trim());
                 map.put("PlanDate", jsonObject.getString("erpPlanDate").trim());
                 detailList.add(map);
             } catch (Exception e) {
@@ -308,6 +309,8 @@ public class T100ServiceHelper {
                 map.put("Inventory", jsonObject.getString("erpInventory").trim());
                 map.put("Quantity", jsonObject.getString("erpQuantity").trim());
                 map.put("QuantityPcs", jsonObject.getString("erpQuantityPcs").trim());
+                map.put("ScanQuantity", jsonObject.getString("erpScanQuantity").trim());
+                map.put("ScanQuantityPcs", jsonObject.getString("erpScanQuantityPcs").trim());
                 map.put("PlanDate", jsonObject.getString("erpPlanDate").trim());
                 map.put("Status", jsonObject.getString("erpStatus").trim());
                 detailList.add(map);
@@ -352,6 +355,39 @@ public class T100ServiceHelper {
                 map.put("Storage",jsonObject.getString("erpStorage").trim());
                 map.put("Lot",jsonObject.getString("erpLot").trim());
                 map.put("Status", jsonObject.getString("erpStatus").trim());
+                detailList.add(map);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            int iCurrentStartId = strSubContent.indexOf("/Record", 1);
+            int iCurrentEndId = strSubContent.length();
+
+            strDetailContent = strSubContent.substring(iCurrentStartId, iCurrentEndId);
+            iStartId = strDetailContent.indexOf(xmlIndexStr, 1);
+        }
+
+        return detailList;
+    }
+
+    //解析扫描二维码xml结果数据
+    public List<Map<String,Object>> getT100JsonQrCodeData(String listJson, String xmlIndexStr){
+        List<Map<String,Object>> detailList = new ArrayList<Map<String,Object>>();
+        String strDetailContent = listJson.replaceAll("&amp;quot;","\"");
+        int iStartId = strDetailContent.indexOf(xmlIndexStr,1);
+        //处理返回xml
+        while(iStartId>-1) {
+            String strSubContent = strDetailContent.substring(iStartId, strDetailContent.length());
+            String strJson = strSubContent.substring(strSubContent.indexOf("value", 1) + 7, strSubContent.indexOf("&gt;", 1) - 2);
+            Map<String, Object> map = new HashMap<String, Object>();
+            try {
+                JSONArray jsonArray = new JSONArray(strJson);
+                JSONObject jsonObject = jsonArray.getJSONObject(0);
+
+                map.put("ProductCode",jsonObject.getString("erpProductCode").trim());
+                map.put("StockId",jsonObject.getString("erpStockId").trim());
+                map.put("StockLocationId",jsonObject.getString("erpStockLocationId").trim());
+                map.put("Quantity",jsonObject.getString("erpQuantity").trim());
                 detailList.add(map);
             } catch (Exception e) {
                 e.printStackTrace();

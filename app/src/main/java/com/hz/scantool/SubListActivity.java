@@ -40,7 +40,7 @@ import io.reactivex.schedulers.Schedulers;
 public class SubListActivity extends AppCompatActivity {
 
     private int intIndex;
-    private int intType;
+    private String strType;
     private String strTitle;
     private String strWhere;
     private String statusCode;
@@ -133,7 +133,7 @@ public class SubListActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
 
         //初始化flag按钮状态
-        setIntType(true);
+        setStrType(true);
         btnFlag1.setSelected(true);
         btnFlag2.setSelected(false);
         initFlagTitle();
@@ -174,7 +174,7 @@ public class SubListActivity extends AppCompatActivity {
                 break;
             //生产备货
             case 4:
-                if(intType ==4){
+                if(strType.equals("4")){
                     txtSubQueryDeptNameTitle.setText(getString(R.string.query_title_dept));
                 }else{
                     txtSubQueryDeptNameTitle.setText(getString(R.string.query_title_dept_out));
@@ -189,30 +189,30 @@ public class SubListActivity extends AppCompatActivity {
     }
 
     //设置接口类型
-    private void setIntType(Boolean bool){
+    private void setStrType(Boolean bool){
         switch (intIndex){
             //完工入库
             case 2:
                 if(bool){
-                    intType = 2;
+                    strType = "2";
                 }else{
-                    intType = 21;
+                    strType = "21";
                 }
                 break;
             //采购入库
             case 3:
                 if(bool){
-                    intType = 3;
+                    strType = "3";
                 }else{
-                    intType = 31;
+                    strType = "31";
                 }
                 break;
             //生产备货
             case 4:
                 if(bool){
-                    intType = 4;
+                    strType = "4";
                 }else{
-                    intType = 41;
+                    strType = "41";
                 }
                 break;
         }
@@ -227,12 +227,16 @@ public class SubListActivity extends AppCompatActivity {
                 case R.id.btnFlag1:
                     btnFlag1.setSelected(true);
                     btnFlag2.setSelected(false);
-                    setIntType(true);
+                    setStrType(true);
+                    if(strType.equals("4")){
+                        txtSubQuerybDate.setText(setQueryDate(1));
+                        txtSubQueryeDate.setText(setQueryDate(1));
+                    }
                     break;
                 case R.id.btnFlag2:
                     btnFlag1.setSelected(false);
                     btnFlag2.setSelected(true);
-                    setIntType(false);
+                    setStrType(false);
                     txtSubQuerybDate.setText(setQueryDate(0));
                     txtSubQueryeDate.setText(setQueryDate(0));
                     break;
@@ -266,15 +270,17 @@ public class SubListActivity extends AppCompatActivity {
             TextView txtViewStock = view.findViewById(R.id.txtViewStock);
             TextView txtViewStockId = view.findViewById(R.id.txtViewStockId);
             TextView txtViewDate = view.findViewById(R.id.txtViewDate);
+            TextView textViewDocno = view.findViewById(R.id.txtViewDocno);
             String strDocType = subDetailAdapter.getItem(i,"DocType");
 
+            bundle.putString("Docno",textViewDocno.getText().toString());
             bundle.putString("Dept",txtViewDept.getText().toString());
             bundle.putString("DeptId",txtViewDeptId.getText().toString());
             bundle.putString("Stock",txtViewStock.getText().toString());
             bundle.putString("StockId",txtViewStockId.getText().toString());
             bundle.putString("PlanDate",txtViewDate.getText().toString());
             bundle.putString("DocType",strDocType);
-            bundle.putInt("Type",intType);
+            bundle.putString("Type", strType);
             intent.putExtras(bundle);
             startActivity(intent);
         }
@@ -296,7 +302,7 @@ public class SubListActivity extends AppCompatActivity {
                         "&lt;Record&gt;\n"+
                         "&lt;Field name=\"enterprise\" value=\""+ UserInfo.getUserEnterprise(getApplicationContext())+"\"/&gt;\n"+
                         "&lt;Field name=\"site\" value=\""+UserInfo.getUserSiteId(getApplicationContext())+"\"/&gt;\n"+
-                        "&lt;Field name=\"type\" value=\""+intType+"\"/&gt;\n"+
+                        "&lt;Field name=\"type\" value=\""+ strType +"\"/&gt;\n"+
                         "&lt;Field name=\"where\" value=\""+strWhere+"\"/&gt;\n"+
                         "&lt;/Record&gt;\n"+
                         "&lt;/Parameter&gt;\n"+
@@ -343,7 +349,7 @@ public class SubListActivity extends AppCompatActivity {
 
             @Override
             public void onComplete() {
-                subDetailAdapter = new SubListAdapter(mapResponseList,getApplicationContext(),intType);
+                subDetailAdapter = new SubListAdapter(mapResponseList,getApplicationContext(), strType);
                 listView.setAdapter(subDetailAdapter);
 
                 progressBar.setVisibility(View.GONE);

@@ -105,27 +105,84 @@
             android:gravity="right"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/txtSubListItemQuantity"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical|right"
-                android:layout_marginRight="10dp"
-                android:textColor="@color/list_item_number"
-                android:textStyle="bold"
-                android:inputType="numberDecimal"
-                android:textSize="24sp" />
+                android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/txtSubListItemQuantityPcs"
+                <TextView
+                    android:id="@+id/txtSubListItemQuantity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|right"
+                    android:layout_marginRight="10dp"
+                    android:textColor="@color/list_item_number"
+                    android:textStyle="bold"
+                    android:inputType="numberDecimal"
+                    android:textSize="24sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|right"
+                    android:layout_marginRight="10dp"
+                    android:textColor="@color/list_item_number"
+                    android:textStyle="bold"
+                    android:textSize="24sp"
+                    android:text="/"/>
+
+                <TextView
+                    android:id="@+id/txtSubListItemScanQuantity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|right"
+                    android:layout_marginRight="10dp"
+                    android:textColor="@color/master_loginout"
+                    android:textStyle="bold"
+                    android:inputType="numberDecimal"
+                    android:textSize="24sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical|right"
-                android:layout_marginRight="10dp"
-                android:textColor="@color/list_item_number"
-                android:textStyle="bold"
-                android:inputType="numberDecimal"
-                android:textSize="24sp" />
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/txtSubListItemQuantityPcs"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|right"
+                    android:layout_marginRight="10dp"
+                    android:textColor="@color/list_item_number"
+                    android:textStyle="bold"
+                    android:inputType="numberDecimal"
+                    android:textSize="24sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|right"
+                    android:layout_marginRight="10dp"
+                    android:textColor="@color/list_item_number"
+                    android:textStyle="bold"
+                    android:textSize="24sp"
+                    android:text="/"/>
+
+                <TextView
+                    android:id="@+id/txtSubListItemScanQuantityPcs"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|right"
+                    android:layout_marginRight="10dp"
+                    android:textColor="@color/master_loginout"
+                    android:textStyle="bold"
+                    android:inputType="numberDecimal"
+                    android:textSize="24sp" />
+
+            </LinearLayout>
+
         </LinearLayout>
 
     </LinearLayout>

@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.hz.scantool.R;
@@ -53,6 +54,8 @@ public class SubListDetailAdapter extends BaseAdapter {
             holder.txtSubListItemDept = view.findViewById(R.id.txtSubListItemDept);
             holder.txtSubListItemQuantity = view.findViewById(R.id.txtSubListItemQuantity);
             holder.txtSubListItemQuantityPcs = view.findViewById(R.id.txtSubListItemQuantityPcs);
+            holder.txtSubListItemScanQuantity = view.findViewById(R.id.txtSubListItemScanQuantity);
+            holder.txtSubListItemScanQuantityPcs = view.findViewById(R.id.txtSubListItemScanQuantityPcs);
 
             holder.imgSubListIcon=view.findViewById(R.id.imgSubListIcon);
 
@@ -68,11 +71,63 @@ public class SubListDetailAdapter extends BaseAdapter {
         holder.txtSubListItemProductCode.setText((String)mData.get(i).get("ProductCode"));
         holder.txtSubListItemProductName.setText((String)mData.get(i).get("ProductName"));
         holder.txtSubListItemProductModels.setText((String)mData.get(i).get("ProductModels"));
-//        holder.txtSubListItemDept.setText((String)mData.get(i).get("Dept"));
         holder.txtSubListItemQuantity.setText((String)mData.get(i).get("Quantity"));
         holder.txtSubListItemQuantityPcs.setText((String)mData.get(i).get("QuantityPcs"));
 
+        holder.txtSubListItemScanQuantity.setText((String)mData.get(i).get("ScanQuantity"));
+        holder.txtSubListItemScanQuantityPcs.setText((String)mData.get(i).get("ScanQuantityPcs"));
+
+        int fScanQuantity = Integer.parseInt(mData.get(i).get("ScanQuantity").toString());
+        if(fScanQuantity>0){
+            holder.txtSubListItemStockLocation.setTextColor(mContext.getResources().getColor(R.color.master_loginout));
+        }
+
         return view;
+    }
+
+    //更新数据
+    public String updateData(int index, ListView listView){
+        //获取第一个可见item项的位置
+        int visiblePosition = listView.getFirstVisiblePosition();
+
+        //获取指定位置的视图
+        View view = listView.getChildAt(index-visiblePosition);
+        SubListDetailViewHolder holder = (SubListDetailViewHolder)view.getTag();
+        holder.txtSubListItemStockLocation = view.findViewById(R.id.txtSubListItemStockLocation);
+        holder.txtSubListItemQuantity = view.findViewById(R.id.txtSubListItemQuantity);
+        holder.txtSubListItemScanQuantity = view.findViewById(R.id.txtSubListItemScanQuantity);
+        holder.txtSubListItemScanQuantityPcs = view.findViewById(R.id.txtSubListItemScanQuantityPcs);
+
+        return setmData(holder,index);
+    }
+
+    private String setmData(SubListDetailViewHolder holder,int index){
+        String strStatus;
+        int fScanQuantityOld;
+        int fScanQuantityNew;
+        int fScanQuantity;
+        int fQuantity;
+
+        Map<String, Object> map = mData.get(index);
+        fQuantity = Integer.valueOf(holder.txtSubListItemQuantity.getText().toString());
+        fScanQuantityOld = Integer.valueOf(holder.txtSubListItemScanQuantity.getText().toString());
+        fScanQuantityNew = Integer.valueOf(map.get("ScanQuantity").toString());
+        fScanQuantity = fScanQuantityOld + fScanQuantityNew;
+
+        if(fQuantity>=fScanQuantity){
+            holder.txtSubListItemStockLocation.setTextColor(mContext.getResources().getColor(R.color.master_loginout));
+            holder.txtSubListItemScanQuantity.setText(String.valueOf(fScanQuantity));
+            holder.txtSubListItemScanQuantityPcs.setText(map.get("ScanQuantityPcs").toString());
+            strStatus = "Y";
+            if(fQuantity==fScanQuantity){
+                strStatus = "S";
+            }
+        }else{
+            strStatus = "X";
+        }
+
+        return strStatus;
+
     }
 
     public static class SubListDetailViewHolder {
@@ -84,7 +139,13 @@ public class SubListDetailAdapter extends BaseAdapter {
         TextView txtSubListItemDept;
         TextView txtSubListItemQuantity;
         TextView txtSubListItemQuantityPcs;
+        TextView txtSubListItemScanQuantity;
+        TextView txtSubListItemScanQuantityPcs;
 
         ImageView imgSubListIcon;
+
+        String strStockLocation;
+        String strProductCode;
+        Float fQuantity;
     }
 }

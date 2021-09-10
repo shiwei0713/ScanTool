@@ -139,12 +139,22 @@
     <string name="sub_list_flag32">委外入库</string>
     <string name="sub_master_title1">常用</string>
     <string name="sub_master_title2">异常</string>
+    <string name="sub_list_dept_title2">完工:</string>
+    <string name="sub_list_stock_title2">入库:</string>
     <string name="sub_list_dept_title3">送货:</string>
-    <string name="sub_list_stock_title3">单号:</string>
-    <string name="sub_list_dept_title31">加工:</string>
-    <string name="sub_list_stock_title31">单号:</string>
+    <string name="sub_list_stock_title3">收货:</string>
+    <string name="sub_list_dept_title31">送货:</string>
+    <string name="sub_list_stock_title31">收货:</string>
     <string name="sub_list_dept_title41">退:</string>
     <string name="sub_list_stock_title41">入:</string>
     <string name="sub_list_dept_title4">领:</string>
     <string name="sub_list_stock_title4">出:</string>
+    <string name="sub_list_dept_docno">单号:</string>
+    <string name="sub_detail_list_stock2">收货仓库:</string>
+    <string name="sub_detail_list_dept2">入库部门:</string>
+    <string name="sub_detail_list_stock3">收货仓库:</string>
+    <string name="sub_detail_list_dept3">供应商:</string>
+    <string name="sub_detail_list_stock41">收货仓库:</string>
+    <string name="sub_detail_list_dept41">退料部门:</string>
+    <string name="sub_detail_list_docno">单据编号:</string>
 </resources>

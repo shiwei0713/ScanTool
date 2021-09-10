@@ -15,11 +15,11 @@ import java.util.Map;
 
 public class SubListAdapter extends BaseAdapter {
 
-    private int mType;
+    private String mType;
     private List<Map<String,Object>> mData;
     private Context mContext;
 
-    public SubListAdapter(List<Map<String,Object>> mData, Context mContext,int mType){
+    public SubListAdapter(List<Map<String,Object>> mData, Context mContext,String mType){
         this.mData = mData;
         this.mContext = mContext;
         this.mType = mType;
@@ -56,6 +56,8 @@ public class SubListAdapter extends BaseAdapter {
             holder.txtViewStockId= view.findViewById(R.id.txtViewStockId);
             holder.txtViewStock = view.findViewById(R.id.txtViewStock);
             holder.txtViewDate = view.findViewById(R.id.txtViewDate);
+            holder.txtViewDocnoTitle = view.findViewById(R.id.txtViewDocnoTitle);
+            holder.txtViewDocno = view.findViewById(R.id.txtViewDocno);
 
             view.setTag(holder);
         }else{
@@ -63,27 +65,27 @@ public class SubListAdapter extends BaseAdapter {
         }
 
         //标题显示
-        switch (mType){
-            case 2:
-                break;
-            case 21:
-                break;
-            case 3:
-                holder.txtViewDeptTtile.setText(mContext.getResources().getString(R.string.sub_list_dept_title3));
-                holder.txtViewStockTitle.setText(mContext.getResources().getString(R.string.sub_list_stock_title3));
-                break;
-            case 31:
-                holder.txtViewDeptTtile.setText(mContext.getResources().getString(R.string.sub_list_dept_title31));
-                holder.txtViewStockTitle.setText(mContext.getResources().getString(R.string.sub_list_stock_title31));
-                break;
-            case 4:
-                holder.txtViewDeptTtile.setText(mContext.getResources().getString(R.string.sub_list_dept_title4));
-                holder.txtViewStockTitle.setText(mContext.getResources().getString(R.string.sub_list_stock_title4));
-                break;
-            case 41:
-                holder.txtViewDeptTtile.setText(mContext.getResources().getString(R.string.sub_list_dept_title41));
-                holder.txtViewStockTitle.setText(mContext.getResources().getString(R.string.sub_list_stock_title41));
-                break;
+        holder.txtViewDocnoTitle.setVisibility(View.GONE);
+        holder.txtViewDocno.setVisibility(View.GONE);
+        if(mType.equals("2")){
+            holder.txtViewDeptTtile.setText(mContext.getResources().getString(R.string.sub_list_dept_title2));
+            holder.txtViewStockTitle.setText(mContext.getResources().getString(R.string.sub_list_stock_title2));
+            holder.txtViewDocnoTitle.setVisibility(View.VISIBLE);
+            holder.txtViewDocno.setVisibility(View.VISIBLE);
+        }else if(mType.equals("3")){
+            holder.txtViewDeptTtile.setText(mContext.getResources().getString(R.string.sub_list_dept_title3));
+            holder.txtViewStockTitle.setText(mContext.getResources().getString(R.string.sub_list_stock_title3));
+            holder.txtViewDocnoTitle.setVisibility(View.VISIBLE);
+            holder.txtViewDocno.setVisibility(View.VISIBLE);
+        }else if(mType.equals("31")){
+            holder.txtViewDeptTtile.setText(mContext.getResources().getString(R.string.sub_list_dept_title31));
+            holder.txtViewStockTitle.setText(mContext.getResources().getString(R.string.sub_list_stock_title31));
+        }else if(mType.equals("4")){
+            holder.txtViewDeptTtile.setText(mContext.getResources().getString(R.string.sub_list_dept_title4));
+            holder.txtViewStockTitle.setText(mContext.getResources().getString(R.string.sub_list_stock_title4));
+        }else if(mType.equals("41")){
+            holder.txtViewDeptTtile.setText(mContext.getResources().getString(R.string.sub_list_dept_title41));
+            holder.txtViewStockTitle.setText(mContext.getResources().getString(R.string.sub_list_stock_title41));
         }
 
         //值显示
@@ -92,6 +94,7 @@ public class SubListAdapter extends BaseAdapter {
         holder.txtViewStockId.setText((String)mData.get(i).get("StockId"));
         holder.txtViewStock.setText((String)mData.get(i).get("Stock"));
         holder.txtViewDate.setText((String)mData.get(i).get("PlanDate"));
+        holder.txtViewDocno.setText((String)mData.get(i).get("Docno"));
         holder.status = (String)mData.get(i).get("DocType");
 
         if(holder.status.equals("1")){
@@ -116,6 +119,8 @@ public class SubListAdapter extends BaseAdapter {
         TextView txtViewStockId;
         TextView txtViewStock;
         TextView txtViewDate;
+        TextView txtViewDocnoTitle;
+        TextView txtViewDocno;
         String status;
     }
 }
