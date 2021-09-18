@@ -51,6 +51,7 @@ public class SubListDetailAdapter extends BaseAdapter {
             holder.txtSubListItemProductCode = view.findViewById(R.id.txtSubListItemProductCode);
             holder.txtSubListItemProductName = view.findViewById(R.id.txtSubListItemProductName);
             holder.txtSubListItemProductModels = view.findViewById(R.id.txtSubListItemProductModels);
+            holder.txtSubListItemProductSize = view.findViewById(R.id.txtSubListItemProductSize);
             holder.txtSubListItemDept = view.findViewById(R.id.txtSubListItemDept);
             holder.txtSubListItemQuantity = view.findViewById(R.id.txtSubListItemQuantity);
             holder.txtSubListItemQuantityPcs = view.findViewById(R.id.txtSubListItemQuantityPcs);
@@ -71,6 +72,7 @@ public class SubListDetailAdapter extends BaseAdapter {
         holder.txtSubListItemProductCode.setText((String)mData.get(i).get("ProductCode"));
         holder.txtSubListItemProductName.setText((String)mData.get(i).get("ProductName"));
         holder.txtSubListItemProductModels.setText((String)mData.get(i).get("ProductModels"));
+        holder.txtSubListItemProductSize.setText((String)mData.get(i).get("ProductSize"));
         holder.txtSubListItemQuantity.setText((String)mData.get(i).get("Quantity"));
         holder.txtSubListItemQuantityPcs.setText((String)mData.get(i).get("QuantityPcs"));
 
@@ -136,6 +138,7 @@ public class SubListDetailAdapter extends BaseAdapter {
         TextView txtSubListItemProductCode;
         TextView txtSubListItemProductName;
         TextView txtSubListItemProductModels;
+        TextView txtSubListItemProductSize;
         TextView txtSubListItemDept;
         TextView txtSubListItemQuantity;
         TextView txtSubListItemQuantityPcs;
@@ -143,9 +146,5 @@ public class SubListDetailAdapter extends BaseAdapter {
         TextView txtSubListItemScanQuantityPcs;
 
         ImageView imgSubListIcon;
-
-        String strStockLocation;
-        String strProductCode;
-        Float fQuantity;
     }
 }

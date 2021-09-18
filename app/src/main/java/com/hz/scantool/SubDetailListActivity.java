@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -26,6 +27,7 @@ import com.hz.scantool.adapter.SubListDetailAdapter;
 import com.hz.scantool.helper.T100ServiceHelper;
 import com.hz.scantool.models.UserInfo;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -53,10 +55,18 @@ public class SubDetailListActivity extends AppCompatActivity {
     private TextView txtSubDetailDeptId;
     private TextView txtSubDetailDept;
     private TextView txtSubDetailPlanDate;
+    private TextView txtSubDetailPositionTitle;
     private TextView txtSubDetailPosition;
+    private Button btnSubmit;
+    private Button btnCancel;
     private ImageView imageViewSubDetailLogo;
     private ProgressBar progressSubDetailBar;
 
+    private String strSlip;
+    private String strStockType;
+    private String strProg;
+    private String strLocationId;
+    private String strTitle="";
     private String strWhere;
     private String strDocType;
     private String strIndex;
@@ -72,6 +82,11 @@ public class SubDetailListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sub_detail_list);
 
+        //初始化
+        initView();
+        setTitle();
+        initQueryCondition();
+
         //获取工具栏
         Toolbar toolbar=findViewById(R.id.subDetailListToolBar);
         setSupportActionBar(toolbar);
@@ -79,15 +94,10 @@ public class SubDetailListActivity extends AppCompatActivity {
         //工具栏增加返回按钮和标题显示
         ActionBar actionBar=getSupportActionBar();
         if(actionBar!=null){
-            actionBar.setTitle(getResources().getString(R.string.master_action5));
+            actionBar.setTitle(strTitle);
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-
-        //初始化
-        initView();
-        setTitle();
-        initQueryCondition();
 
         //显示储位清单
         getSubDetailListData();
@@ -189,10 +199,13 @@ public class SubDetailListActivity extends AppCompatActivity {
         txtSubDetailDeptId = findViewById(R.id.txtSubDetailDeptId);
         txtSubDetailDept = findViewById(R.id.txtSubDetailDept);
         txtSubDetailPlanDate = findViewById(R.id.txtSubDetailPlanDate);
+        txtSubDetailPositionTitle = findViewById(R.id.txtSubDetailPositionTitle);
         txtSubDetailPosition = findViewById(R.id.txtSubDetailPosition);
         listDetailView = findViewById(R.id.subDetailListView);
         progressSubDetailBar = findViewById(R.id.progressSubDetailBar);
         imageViewSubDetailLogo = findViewById(R.id.imageViewSubDetailLogo);
+        btnSubmit = findViewById(R.id.btnSubmit);
+        btnCancel = findViewById(R.id.btnCancel);
 
         txtSubDetailStockId.setText(bundle.getString("StockId"));
         txtSubDetailStock.setText(bundle.getString("Stock"));
@@ -208,26 +221,40 @@ public class SubDetailListActivity extends AppCompatActivity {
         }else{
             imageViewSubDetailLogo.setImageDrawable(getResources().getDrawable(R.drawable.sub_detail_outside));
         }
+
+        //绑定事件
+        btnSubmit.setOnClickListener(new btnActionListener());
+        btnCancel.setOnClickListener(new btnActionListener());
     }
 
     private void setTitle(){
         txtSubDetailDocnoTitle.setVisibility(View.GONE);
         txtSubDetailDocno.setVisibility(View.GONE);
+        txtSubDetailPositionTitle.setVisibility(View.GONE);
+        txtSubDetailPosition.setVisibility(View.GONE);
+        btnSubmit.setVisibility(View.GONE);
+        btnCancel.setVisibility(View.GONE);
+        strTitle = getResources().getString(R.string.master_action5);
 
         if(strIndex.equals("2")){
             //完工入库
+            strTitle = getResources().getString(R.string.master_action3);
             txtSubDetailStockTitle.setText(getString(R.string.sub_detail_list_stock2));
             txtSubDetailDeptTitle.setText(getString(R.string.sub_detail_list_dept2));
             txtSubDetailDocnoTitle.setVisibility(View.VISIBLE);
             txtSubDetailDocno.setVisibility(View.VISIBLE);
         }else if(strIndex.equals("3")){
             //采购入库
+            strTitle = getResources().getString(R.string.master_action4);
             txtSubDetailStockTitle.setText(getString(R.string.sub_detail_list_stock3));
             txtSubDetailDeptTitle.setText(getString(R.string.sub_detail_list_dept3));
             txtSubDetailDocnoTitle.setVisibility(View.VISIBLE);
             txtSubDetailDocno.setVisibility(View.VISIBLE);
+            btnSubmit.setVisibility(View.VISIBLE);
+            btnCancel.setVisibility(View.VISIBLE);
         }else if(strIndex.equals("41")){
             //生产退货
+            strTitle = getResources().getString(R.string.master_action51);
             txtSubDetailStockTitle.setText(getString(R.string.sub_detail_list_stock41));
             txtSubDetailDeptTitle.setText(getString(R.string.sub_detail_list_dept41));
         }
@@ -237,15 +264,75 @@ public class SubDetailListActivity extends AppCompatActivity {
     private void initQueryCondition(){
         if(strIndex.equals("2")){
             //完工入库
+
         }else if(strIndex.equals("3")){
             //采购入库
             strWhere = " pmdudocno = '"+txtSubDetailDocno.getText().toString()+"'";
         }else if(strIndex.equals("4")){
             //生产备货
-            strWhere = " sfaa017 = '"+txtSubDetailDeptId.getText().toString()+"' AND sfaa019 = to_date('"+txtSubDetailPlanDate.getText().toString()+"','YYYY-MM-DD')";
+            strWhere = " sfba019 = '"+txtSubDetailDeptId.getText().toString()+"' AND sfaa019 = to_date('"+txtSubDetailPlanDate.getText().toString()+"','YYYY-MM-DD')";
         }else if(strIndex.equals("41")){
             //生产退货
             strWhere = " indd032 = '"+txtSubDetailStockId.getText().toString()+"' AND indcdocdt = to_date('"+txtSubDetailPlanDate.getText().toString()+"','YYYY-MM-DD')";
+        }
+    }
+
+    //初始化单别参数
+    private void initDocno(){
+        if(strIndex.equals("2")){
+            //完工入库
+
+        }else if(strIndex.equals("3")){
+            //采购入库
+            //初始化单据参数
+            if(strDocType.equals("1")){
+                //采购入库
+                strSlip = "PM28";
+                strStockType = "6";
+                strProg = "apmt570";
+                strLocationId = "";
+            }else{
+                //委外入库
+                strSlip = "PM35";
+                strStockType = "12";
+                strProg = "apmt571";
+                strLocationId = "";
+            }
+        }else if(strIndex.equals("4")){
+            //生产备货
+            //初始化单据参数
+            if(strDocType.equals("1")){
+                //厂内发料
+                strSlip = "IN17";
+                strStockType = "1";
+                strProg = "cint335";    //cint335
+                strLocationId = "";
+            }else{
+                //委外发料
+                strSlip = "IN19";
+                strStockType = "1";
+                strProg = "cint336";           //cint336
+                strLocationId = "";
+            }
+        }else if(strIndex.equals("41")){
+            //生产退货
+
+        }
+    }
+
+    public class btnActionListener implements View.OnClickListener{
+
+        @Override
+        public void onClick(View view) {
+            switch (view.getId()) {
+                case R.id.btnSubmit:
+                    initDocno();
+                    Map<String,Object> map = new HashMap<String,Object>();
+                    genT100Doc(map);
+                    break;
+                case R.id.btnCancel:
+                    break;
+            }
         }
     }
 
@@ -257,6 +344,7 @@ public class SubDetailListActivity extends AppCompatActivity {
         if(qrIndex==-1){
             MyToast.myShow(context,"条码错误:"+qrContent,0,1);
         }else{
+            initDocno();
             getScanQrData(qrCodeValue[0]);
         }
     }
@@ -420,7 +508,7 @@ public class SubDetailListActivity extends AppCompatActivity {
                                 mData.put("ScanQuantityPcs","1");
                                 String strStatus = subListDetailAdapter.updateData(index,listDetailView);
                                 if(strStatus.equals("S")){
-                                    MyToast.myShow(SubDetailListActivity.this,"扫描成功"+mData.get("ProductCode"),0,0);
+                                    genT100Doc(mData);
                                 }else{
                                     if(strStatus.equals("X")){
                                         MyToast.myShow(SubDetailListActivity.this,"扫描数量不可大于备货数量",0,0);
@@ -438,6 +526,101 @@ public class SubDetailListActivity extends AppCompatActivity {
                         MyToast.myShow(SubDetailListActivity.this,"标签错误，本次备货清单中无此零件",0,0);
                     }
                 }
+            }
+        });
+    }
+
+    //生成T100单据
+    private void genT100Doc(Map<String,Object> mInputData){
+        Observable.create(new ObservableOnSubscribe<List<Map<String,Object>>>() {
+            @Override
+            public void subscribe(ObservableEmitter<List<Map<String, Object>>> e) throws Exception {
+                //初始化T100服务名
+                String webServiceName = "InventoryBillRequestGen";
+
+                //初始化字段
+                String strProductCode = "";
+                String strProductSize = "";
+                String strStockId= "";
+                String strStockLocationId = "";
+                String strQuantity = "0";
+                if(!mInputData.isEmpty()){
+                    strProductCode = mInputData.get("ProductCode").toString();
+                    strProductSize = mInputData.get("ProductSize").toString();
+                    strStockId = mInputData.get("StockId").toString();
+                    strStockLocationId = mInputData.get("StockLocationId").toString();
+                    strQuantity = mInputData.get("Quantity").toString();
+                }
+
+                //发送服务器请求
+                T100ServiceHelper t100ServiceHelper = new T100ServiceHelper();
+                String requestBody = "&lt;Document&gt;\n"+
+                        "&lt;RecordSet id=\"1\"&gt;\n"+
+                        "&lt;Master name=\"inaj_t\" node_id=\"1\"&gt;\n"+
+                        "&lt;Record&gt;\n"+
+                        "&lt;Field name=\"inajsite\" value=\""+ UserInfo.getUserSiteId(getApplicationContext())+"\"/&gt;\n"+
+                        "&lt;Field name=\"inajent\" value=\""+UserInfo.getUserEnterprise(getApplicationContext())+"\"/&gt;\n"+
+                        "&lt;Field name=\"inaj001\" value=\""+strSlip+"\"/&gt;\n"+
+                        "&lt;Field name=\"inaj004\" value=\""+strStockType+"\"/&gt;\n"+
+                        "&lt;Field name=\"inaj015\" value=\""+strProg+"\"/&gt;\n"+
+                        "&lt;Field name=\"inaj044\" value=\""+txtSubDetailDocno.getText()+"\"/&gt;\n"+
+                        "&lt;Field name=\"inajuser\" value=\""+ UserInfo.getUserId(getApplicationContext()) +"\"/&gt;\n"+
+                        "&lt;Detail name=\"s_detail1\" node_id=\"1_1\"&gt;\n"+
+                        "&lt;Record&gt;\n"+
+                        "&lt;Field name=\"inaj002\" value=\"1.0\"/&gt;\n"+
+                        "&lt;Field name=\"inaj005\" value=\""+strProductCode+"\"/&gt;\n"+    //料件编码
+                        "&lt;Field name=\"inaj006\" value=\""+strProductSize+"\"/&gt;\n"+    //产品特征
+                        "&lt;Field name=\"inaj008\" value=\""+strStockId+"\"/&gt;\n"+    //拨出库位编号
+                        "&lt;Field name=\"inaj009\" value=\""+strStockLocationId+"\"/&gt;\n"+    //拨出储位编号
+                        "&lt;Field name=\"inaj0081\" value=\""+txtSubDetailDeptId.getText()+"\"/&gt;\n"+   //拨入库位编号
+                        "&lt;Field name=\"inaj0091\" value=\""+strLocationId+"\"/&gt;\n"+   //拨入储位编号
+                        "&lt;Field name=\"inaj011\" value=\""+strQuantity+"\"/&gt;\n"+       //交易数量
+                        "&lt;/Record&gt;\n"+
+                        "&lt;/Detail&gt;\n"+
+                        "&lt;Memo/&gt;\n"+
+                        "&lt;Attachment count=\"0\"/&gt;\n"+
+                        "&lt;/Record&gt;\n"+
+                        "&lt;/Master&gt;\n"+
+                        "&lt;/RecordSet&gt;\n"+
+                        "&lt;/Document&gt;\n";
+                String strResponse = t100ServiceHelper.getT100Data(requestBody,webServiceName,getApplicationContext(),"");
+                mapResponseStatus = t100ServiceHelper.getT100StatusData(strResponse);
+
+                e.onNext(mapResponseStatus);
+                e.onComplete();
+            }
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<List<Map<String, Object>>>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(List<Map<String, Object>> maps) {
+                if(mapResponseStatus.size()> 0){
+                    for(Map<String,Object> mStatus: mapResponseStatus){
+                        statusCode = mStatus.get("statusCode").toString();
+                        statusDescription = mStatus.get("statusDescription").toString();
+
+                        if(!statusCode.equals("0")) {
+                            MyToast.myShow(SubDetailListActivity.this, statusDescription, 0, 0);
+                        }else{
+                            MyToast.myShow(SubDetailListActivity.this, statusDescription, 1, 0);
+                        }
+                    }
+                }else{
+                    MyToast.myShow(SubDetailListActivity.this,"执行接口错误",2,0);
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                MyToast.myShow(SubDetailListActivity.this,"网络错误",0,0);
+            }
+
+            @Override
+            public void onComplete() {
+
             }
         });
     }

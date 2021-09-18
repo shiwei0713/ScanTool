@@ -16,6 +16,7 @@
     <string name="master_action3">完工入库</string>
     <string name="master_action4">采购入库</string>
     <string name="master_action5">生产备货</string>
+    <string name="master_action51">生产退货</string>
     <string name="master_action6">销售出货</string>
     <string name="master_action7">生产协同</string>
     <string name="master_action8">月末盘点</string>

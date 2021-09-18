@@ -7,6 +7,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -16,6 +17,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.zxing.integration.android.IntentIntegrator;
 import com.hz.scantool.adapter.MyToast;
 import com.hz.scantool.adapter.SubListAdapter;
 import com.hz.scantool.helper.T100ServiceHelper;
@@ -69,6 +71,10 @@ public class SubListActivity extends AppCompatActivity {
         //初始化参数
         initBundle();
 
+        //初始化控件
+        initView();
+        initQueryCondition();
+
         //获取工具栏
         Toolbar toolbar=findViewById(R.id.subListToolBar);
         setSupportActionBar(toolbar);
@@ -81,20 +87,34 @@ public class SubListActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        //初始化控件
-        initView();
-        initQueryCondition();
-
         //初始化数据
         getSubListData();
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if(intIndex != 4){
+            getMenuInflater().inflate(R.menu.sub_menu,menu);
+        }
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        //工具栏返回按钮事件定义
-        if(item.getItemId()==android.R.id.home){
-            finish();
-            return true;
+        //工具栏按钮事件定义
+        switch (item.getItemId()){
+            case R.id.action_scan:
+                //调用zxing扫码界面
+                IntentIntegrator intentIntegrator = new IntentIntegrator(SubListActivity.this);
+                intentIntegrator.setTimeout(5000);
+                intentIntegrator.setDesiredBarcodeFormats();  //IntentIntegrator.QR_CODE
+                //开始扫描
+                intentIntegrator.initiateScan();
+                break;
+            case android.R.id.home:
+                finish();
+                break;
         }
 
         return super.onOptionsItemSelected(item);
