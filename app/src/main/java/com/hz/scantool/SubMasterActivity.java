@@ -25,6 +25,7 @@ public class SubMasterActivity extends AppCompatActivity {
     private Intent intent;
     private Bundle bundle;
     private int intIndex;
+    private int intType;
     private String strTitle;
 
     @Override
@@ -71,15 +72,21 @@ public class SubMasterActivity extends AppCompatActivity {
         int[] titleId;
 
         //按照不同导航显示对应按钮
-        //生产协同：6；质量检验：1
+        //生产协同：6;质量检验：1;销售出货：5
         if(intIndex == 1) {
             btnId = new int[]{R.id.subMasterAction1, R.id.subMasterAction2, R.id.subMasterAction5, R.id.subMasterAction6,R.id.subMasterAction7};
             imgId = new int[]{R.drawable.sub_master5, R.drawable.sub_master6, R.drawable.sub_master7, R.drawable.sub_master8, R.drawable.sub_master9};
             titleId = new int[]{R.string.tab_product5,R.string.tab_product6,R.string.tab_product7,R.string.tab_product8,R.string.tab_product9};
         }else{
-            btnId= new int[]{R.id.subMasterAction1, R.id.subMasterAction2, R.id.subMasterAction3, R.id.subMasterAction4};
-            imgId= new int[]{R.drawable.sub_master1, R.drawable.sub_master2, R.drawable.sub_master3, R.drawable.sub_master4};
-            titleId = new int[]{R.string.tab_product1,R.string.tab_product2,R.string.tab_product3,R.string.tab_product4};
+            if(intIndex == 6){
+                btnId= new int[]{R.id.subMasterAction1, R.id.subMasterAction2, R.id.subMasterAction5,R.id.subMasterAction3, R.id.subMasterAction4};
+                imgId= new int[]{R.drawable.sub_master1, R.drawable.sub_master10,R.drawable.sub_master2, R.drawable.sub_master3, R.drawable.sub_master4};
+                titleId = new int[]{R.string.tab_product1,R.string.tab_product10,R.string.tab_product2,R.string.tab_product3,R.string.tab_product4};
+            }else{
+                btnId= new int[]{R.id.subMasterAction1, R.id.subMasterAction2, R.id.subMasterAction5};
+                imgId= new int[]{R.drawable.sub_master11, R.drawable.sub_master12,R.drawable.sub_master13};
+                titleId = new int[]{R.string.tab_product11,R.string.tab_product12,R.string.tab_product13};
+            }
         }
 
         //初始化按钮和图片
@@ -123,14 +130,20 @@ public class SubMasterActivity extends AppCompatActivity {
         subMasterAction7.setOnClickListener(new btnActionListener());
 
         //按照不同导航显示对应按钮
-        //生产协同：6；质量检验：1
+        //生产协同：6;质量检验：1;销售出货：5
         if(intIndex == 6) {
-            subMasterAction5.setVisibility(View.GONE);
             subMasterAction6.setVisibility(View.GONE);
             subMasterAction7.setVisibility(View.GONE);
         }else{
-            subMasterAction3.setVisibility(View.GONE);
-            subMasterAction4.setVisibility(View.GONE);
+            if(intIndex==1){
+                subMasterAction3.setVisibility(View.GONE);
+                subMasterAction4.setVisibility(View.GONE);
+            }else{
+                subMasterAction3.setVisibility(View.GONE);
+                subMasterAction4.setVisibility(View.GONE);
+                subMasterAction6.setVisibility(View.GONE);
+                subMasterAction7.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -140,42 +153,108 @@ public class SubMasterActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
 
-            intent = new Intent(SubMasterActivity.this,SubMasterContentActivity.class);
+            int btnId = 0;
             bundle = new Bundle();
 
             switch (view.getId()){
                 case R.id.subMasterAction1:
-                    bundle.putInt("btnId",R.id.subMasterAction1);
+                    //生产协同：6;质量检验：1;销售出货：5
+                    if(intIndex == 6) {
+                        //车间退料
+                        intent = new Intent(SubMasterActivity.this,SubMasterDetailActivity.class);
+                        btnId = 61;
+                    }else{
+                        //IQC检验
+                        intent = new Intent(SubMasterActivity.this,SubMasterQcActivity.class);
+                        btnId = 11;
+                    }
+                    bundle.putInt("btnId",btnId);
                     bundle.putString("title",subMasterAction1.getText().toString());
+                    intent.putExtras(bundle);
+                    startActivity(intent);
                     break;
                 case R.id.subMasterAction2:
-                    bundle.putInt("btnId",R.id.subMasterAction2);
+                    //生产协同：6;质量检验：1;销售出货：5
+                    if(intIndex == 6) {
+                        //生产入库
+                        intent = new Intent(SubMasterActivity.this,SubMasterContentActivity.class);
+                        btnId = 62;
+                    }else{
+                        //PQC检验
+                        intent = new Intent(SubMasterActivity.this,SubMasterQcActivity.class);
+                        btnId = 12;
+                    }
+                    bundle.putInt("btnId",btnId);
                     bundle.putString("title",subMasterAction2.getText().toString());
+                    intent.putExtras(bundle);
+                    startActivity(intent);
                     break;
                 case R.id.subMasterAction3:
-                    bundle.putInt("btnId",R.id.subMasterAction3);
-                    bundle.putString("title",subMasterAction3.getText().toString());
+                    //生产协同：6;质量检验：1;销售出货：5
+                    if(intIndex == 6) {
+                        //缺料明细
+                        intent = new Intent(SubMasterActivity.this,SubMasterDetailActivity.class);
+                        btnId = 63;
+                        bundle.putInt("btnId",btnId);
+                        bundle.putString("title",subMasterAction3.getText().toString());
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                    }
                     break;
                 case R.id.subMasterAction4:
-                    bundle.putInt("btnId",R.id.subMasterAction4);
-                    bundle.putString("title",subMasterAction4.getText().toString());
+                    //生产协同：6;质量检验：1;销售出货：5
+                    if(intIndex == 6) {
+                        //计划超时
+                        intent = new Intent(SubMasterActivity.this,SubMasterDetailActivity.class);
+                        btnId = 64;
+                        bundle.putInt("btnId",btnId);
+                        bundle.putString("title",subMasterAction4.getText().toString());
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                    }
                     break;
                 case R.id.subMasterAction5:
-                    bundle.putInt("btnId",R.id.subMasterAction5);
+                    //生产协同：6;质量检验：1;销售出货：5
+                    if(intIndex == 6) {
+                        //模具安装
+                        intent = new Intent(SubMasterActivity.this,SubMasterDetailActivity.class);
+                        btnId = 65;
+                    }else{
+                        //FQC检验
+                        intent = new Intent(SubMasterActivity.this,SubMasterQcActivity.class);
+                        btnId = 15;
+                    }
+                    bundle.putInt("btnId",btnId);
                     bundle.putString("title",subMasterAction5.getText().toString());
+                    intent.putExtras(bundle);
+                    startActivity(intent);
                     break;
                 case R.id.subMasterAction6:
-                    bundle.putInt("btnId",R.id.subMasterAction6);
-                    bundle.putString("title",subMasterAction6.getText().toString());
+                    //生产协同：6;质量检验：1;销售出货：5
+                    if(intIndex == 1) {
+                        //OQC检验
+                        intent = new Intent(SubMasterActivity.this,SubMasterQcActivity.class);
+                        btnId = 16;
+                        bundle.putInt("btnId",btnId);
+                        bundle.putString("title",subMasterAction6.getText().toString());
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                    }
                     break;
                 case R.id.subMasterAction7:
-                    bundle.putInt("btnId",R.id.subMasterAction7);
-                    bundle.putString("title",subMasterAction7.getText().toString());
+                    //生产协同：6;质量检验：1;销售出货：5
+                    if(intIndex == 1) {
+                        //库存检验
+                        intent = new Intent(SubMasterActivity.this,SubMasterQcActivity.class);
+                        btnId = 17;
+                        bundle.putInt("btnId",btnId);
+                        bundle.putString("title",subMasterAction7.getText().toString());
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                    }
                     break;
             }
 
-            intent.putExtras(bundle);
-            startActivity(intent);
         }
     }
 }

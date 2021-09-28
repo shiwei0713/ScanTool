@@ -140,7 +140,6 @@ public class MasterActivity extends AppCompatActivity {
                     intent=new Intent(MasterActivity.this,SubMasterActivity.class);
                     bundle=new Bundle();
                     bundle.putString("title",getString(agrTitle[1]));
-//                    bundle.putInt("count",4);
                     bundle.putInt("index",1);
                     intent.putExtras(bundle);
                     startActivity(intent);
@@ -174,10 +173,10 @@ public class MasterActivity extends AppCompatActivity {
                     break;
                 //销售出货
                 case R.id.btnAction6:
-                    intent=new Intent(MasterActivity.this,ListActivity.class);
+                    intent=new Intent(MasterActivity.this,SubMasterActivity.class);
                     bundle=new Bundle();
                     bundle.putString("title",getString(agrTitle[5]));
-                    bundle.putInt("count",3);
+//                    bundle.putInt("count",3);
                     bundle.putInt("index",5);
                     intent.putExtras(bundle);
                     startActivity(intent);
@@ -196,7 +195,6 @@ public class MasterActivity extends AppCompatActivity {
                     intent=new Intent(MasterActivity.this,CheckStockActivity.class);
                     bundle=new Bundle();
                     bundle.putString("title",getString(agrTitle[7]));
-//                    bundle.putInt("count",1);
                     bundle.putInt("index",7);
                     intent.putExtras(bundle);
                     startActivity(intent);

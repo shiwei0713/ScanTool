@@ -21,7 +21,9 @@
         android:supportsRtl="true"
         android:theme="@style/ThemeNoBar.ScanTool"
         android:usesCleartextTraffic="true">
-        <activity android:name=".CheckStockActivity"></activity>
+        <activity android:name=".SubMasterQcActivity"></activity>
+        <activity android:name=".SubMasterDetailActivity" />
+        <activity android:name=".CheckStockActivity" />
         <activity android:name=".SubMasterContentActivity" />
         <activity android:name=".SubMasterActivity" />
         <activity android:name=".SubDetailListActivity" />

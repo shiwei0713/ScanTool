@@ -530,33 +530,7 @@ public class DetailActivity extends AppCompatActivity {
             @Override
             public void subscribe(ObservableEmitter<List<Map<String, Object>>> e) throws Exception {
                 //初始化T100服务名
-                String webServiceName = "";
-                switch (intIndex){
-                    case 0:
-                        webServiceName = "";
-                        break;
-                    case 1:
-                        webServiceName = "AppListGet";
-                        break;
-                    case 2:
-                        webServiceName = "";
-                        break;
-                    case 3:
-                        webServiceName = "";
-                        break;
-                    case 4:
-                        webServiceName = "";
-                        break;
-                    case 5:
-                        webServiceName = "";
-                        break;
-                    case 6:
-                        webServiceName = "";
-                        break;
-                    case 7:
-                        webServiceName = "AppListGet";
-                        break;
-                }
+                String webServiceName = "AppListGet";
 
                 //发送服务器请求
                 T100ServiceHelper t100ServiceHelper = new T100ServiceHelper();
@@ -666,30 +640,7 @@ public class DetailActivity extends AppCompatActivity {
             @Override
             public void subscribe(ObservableEmitter<String> e) throws Exception {
                 //初始化T100服务名
-                String webServiceName = "";
-                switch (intIndex){
-                    case 0:
-                        webServiceName = "";
-                        break;
-                    case 1:
-                        webServiceName = "QcRequestUpdate";
-                        break;
-                    case 2:
-                        webServiceName = "";
-                        break;
-                    case 3:
-                        webServiceName = "";
-                        break;
-                    case 4:
-                        webServiceName = "";
-                        break;
-                    case 5:
-                        webServiceName = "";
-                        break;
-                    case 6:
-                        webServiceName = "";
-                        break;
-                }
+                String webServiceName = "QcRequestUpdate";
 
                 //发送服务器请求
                 T100ServiceHelper t100ServiceHelper = new T100ServiceHelper();
