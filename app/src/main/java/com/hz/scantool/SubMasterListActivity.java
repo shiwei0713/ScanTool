@@ -10,12 +10,14 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -45,20 +47,25 @@ import io.reactivex.schedulers.Schedulers;
 
 import static com.google.zxing.integration.android.IntentIntegrator.REQUEST_CODE;
 
-public class SubMasterQcActivity extends AppCompatActivity {
+public class SubMasterListActivity extends AppCompatActivity {
 
     private static final String SCANACTION="com.android.server.scannerservice.broadcast";
     private String strTitle="";
     private String strType;
     private String strWhere;
     private String strJsonType;
-    private int btnId;
+    private int actionId;
     private String statusCode;
     private String statusDescription;
     private Bundle bundle;
     private List<Map<String,Object>> mapResponseList;
     private List<Map<String,Object>> mapResponseStatus;
 
+    private LinearLayout toolFlag;
+    private LinearLayout toolQuery;
+    private LinearLayout toolCount;
+
+    private TextView btnSubMasterListTitle;
     private Button btnSubMasterQcFlag1;
     private Button btnSubMasterQcFlag2;
     private Button btnSubMasterQcFlag3;
@@ -69,6 +76,8 @@ public class SubMasterQcActivity extends AppCompatActivity {
     private EditText txtQueryQceDate;
     private TextView txtLabel1;
     private TextView txtLabel2;
+    private TextView txtSubListTask1;
+    private TextView txtSubListTask2;
     private ProgressBar subMasterQcProgressBar;
     private ListView subMasterQcView;
     private SubMasterListItemAdapter subMasterListItemAdapter;
@@ -76,7 +85,7 @@ public class SubMasterQcActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sub_master_qc);
+        setContentView(R.layout.activity_sub_master_list);
 
         //初始化传入参数
         //初始化控件
@@ -113,7 +122,7 @@ public class SubMasterQcActivity extends AppCompatActivity {
         switch (item.getItemId()){
             case R.id.action_scan:
                 //调用zxing扫码界面
-                IntentIntegrator intentIntegrator = new IntentIntegrator(SubMasterQcActivity.this);
+                IntentIntegrator intentIntegrator = new IntentIntegrator(SubMasterListActivity.this);
                 intentIntegrator.setTimeout(5000);
                 intentIntegrator.setDesiredBarcodeFormats();  //IntentIntegrator.QR_CODE
                 //开始扫描
@@ -131,31 +140,8 @@ public class SubMasterQcActivity extends AppCompatActivity {
     private void initBundle(){
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
-        btnId = bundle.getInt("btnId");
+        actionId = bundle.getInt("btnId");
         strTitle = bundle.getString("title");
-        strType = "1";
-        switch (btnId){
-            //IQC检验
-            case 11:
-                strJsonType = "iqc";
-                break;
-            //PQC检验
-            case 12:
-                strJsonType = "pqc";
-                break;
-            //FQC检验
-            case 15:
-                strJsonType = "fqc";
-                break;
-            //OQC检验
-            case 16:
-                strJsonType = "oqc";
-                break;
-            //库存检验
-            case 17:
-                strJsonType = "Inventoryqc";
-                break;
-        }
     }
 
     //设置查询日期
@@ -171,6 +157,11 @@ public class SubMasterQcActivity extends AppCompatActivity {
     }
 
     private void initView(){
+        toolFlag = findViewById(R.id.toolFlag);
+        toolQuery = findViewById(R.id.toolQuery);
+        toolCount = findViewById(R.id.toolCount);
+
+        btnSubMasterListTitle =  findViewById(R.id.btnSubMasterListTitle);
         btnSubMasterQcFlag1 = findViewById(R.id.btnSubMasterQcFlag1);
         btnSubMasterQcFlag2 = findViewById(R.id.btnSubMasterQcFlag2);
         btnSubMasterQcFlag3 = findViewById(R.id.btnSubMasterQcFlag3);
@@ -181,12 +172,82 @@ public class SubMasterQcActivity extends AppCompatActivity {
         txtQueryQceDate = findViewById(R.id.txtQueryQceDate);
         txtLabel1 = findViewById(R.id.txtLabel1);
         txtLabel2 = findViewById(R.id.txtLabel2);
+        txtSubListTask1 = findViewById(R.id.txtSubListTask1);
+        txtSubListTask2 = findViewById(R.id.txtSubListTask2);
         subMasterQcProgressBar = findViewById(R.id.subMasterQcProgressBar);
         subMasterQcView = findViewById(R.id.subMasterQcView);
 
-        //初始化日期
-        txtQueryQcbDate.setText(setQueryDate(0));
-        txtQueryQceDate.setText(setQueryDate(2));
+        //声明按钮ID和图片ID
+        int[] btnId = new int[]{R.id.txtSubListTask1, R.id.txtSubListTask2};
+        int[] imgId = new int[]{R.drawable.task1, R.drawable.task2};
+        int[] titleId = new int[]{R.string.sub_master_content_quantity,R.string.sub_master_content_quantitypcs};
+
+        //初始化按钮和图片
+        TextView textAction;
+        Drawable drawable;
+
+        //设置按钮样式
+        for(int i=0;i<btnId.length;i++){
+            textAction=findViewById(btnId[i]);
+            drawable=getResources().getDrawable(imgId[i]);
+            drawable.setBounds(0,0,50,50);
+            textAction.setCompoundDrawables(drawable,null,null,null);
+            textAction.setCompoundDrawablePadding(10);
+            textAction.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+            textAction.setText(getResources().getString(titleId[i]));
+        }
+
+        toolCount.setVisibility(View.GONE);
+        switch (actionId){
+            //IQC检验
+            case 11:
+                strJsonType = "iqc";
+                strType = "1";
+                break;
+            //PQC检验
+            case 12:
+                strJsonType = "pqc";
+                strType = "1";
+                break;
+            //FQC检验
+            case 15:
+                strJsonType = "fqc";
+                strType = "1";
+                break;
+            //OQC检验
+            case 16:
+                strJsonType = "oqc";
+                strType = "1";
+                break;
+            //库存检验
+            case 17:
+                strJsonType = "Inventoryqc";
+                strType = "1";
+                break;
+            //任务分配
+            case 51:
+                strType = "5";
+                strJsonType = "salelist";
+                break;
+            //销售备货
+            case 52:
+                strType = "5";
+                strJsonType = "stocklist";
+                toolFlag.setVisibility(View.GONE);
+                break;
+            //异常备货
+            case 53:
+                strType = "53";
+                strJsonType = "erpqr";
+                toolFlag.setVisibility(View.GONE);
+                toolQuery.setVisibility(View.GONE);
+                toolCount.setVisibility(View.VISIBLE);
+                break;
+            //销售退回
+            case 55:
+                strType = "5";
+                break;
+        }
 
         btnSubMasterQcFlag1.setOnClickListener(new queryClickListener());
         btnSubMasterQcFlag2.setOnClickListener(new queryClickListener());
@@ -202,10 +263,15 @@ public class SubMasterQcActivity extends AppCompatActivity {
         if(isAll == 0){
             strWhere = "1=1";
         }else{
-            strWhere = "qcbadocdt BETWEEN to_date('"+txtQueryQcbDate.getText().toString()+"','YYYY-MM-DD') AND to_date('"+txtQueryQceDate.getText().toString()+"','YYYY-MM-DD')";
+            //异常备货
+            if(actionId == 53){
+                strWhere = "to_char(bcaamoddt,'YYYY-MM-DD') = '"+setQueryDate(0)+"'";
+            }else{
+                strWhere = "qcbadocdt BETWEEN to_date('"+txtQueryQcbDate.getText().toString()+"','YYYY-MM-DD') AND to_date('"+txtQueryQceDate.getText().toString()+"','YYYY-MM-DD')";
+            }
         }
 
-        switch (btnId){
+        switch (actionId){
             //IQC检验
             case 11:
                 strWhere = strWhere+" AND qcba000='1'";
@@ -227,6 +293,37 @@ public class SubMasterQcActivity extends AppCompatActivity {
                 strWhere = strWhere+" AND qcba000='5'";
                 break;
         }
+    }
+
+    //刷新统计数
+    private void refreshCount(){
+        int iQuantity = 0;
+        int iQuantityPcs=0;
+        int iQuantityTotal = 0;
+        int iQuantityPcsTotal=0;
+
+        for(Map<String,Object> mData: mapResponseList) {
+            String sQuantity = mData.get("Quantity").toString();
+            String sQuantityPcs = mData.get("QuantityPcs").toString();
+
+            if(!sQuantity.isEmpty()){
+                iQuantity =Integer.parseInt(sQuantity);
+            }else{
+                iQuantity = 0;
+            }
+
+            if(!sQuantityPcs.isEmpty()){
+                iQuantityPcs = Integer.parseInt(sQuantityPcs);
+            }else{
+                iQuantityPcs = 0;
+            }
+
+            iQuantityTotal = iQuantityTotal + iQuantity;
+            iQuantityPcsTotal = iQuantityPcsTotal + iQuantityPcs;
+        }
+
+        txtSubListTask1.setText(getResources().getString(R.string.sub_master_content_quantity)+String.valueOf(iQuantityTotal));
+        txtSubListTask2.setText(getResources().getString(R.string.sub_master_content_quantitypcs)+String.valueOf(iQuantityPcsTotal));
     }
 
     private class queryClickListener implements View.OnClickListener{
@@ -299,6 +396,15 @@ public class SubMasterQcActivity extends AppCompatActivity {
         unregisterReceiver(scanReceiver);
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+
+        //执行接口显示数据
+        initQueryCondition(53);
+        getSubQcListData();
+    }
+
     //PDA扫描数据接收
     private BroadcastReceiver scanReceiver = new BroadcastReceiver() {
         @Override
@@ -354,7 +460,17 @@ public class SubMasterQcActivity extends AppCompatActivity {
                 }
             }
 
-            if(btnId == 16){
+            int index = 0;
+            //16:OQC检验;11:IQC检验;15:FQC检验
+            if(actionId == 16 || actionId == 11 || actionId == 15){
+                index=1;
+            }else if(actionId ==52){
+                index=5;
+            }else{
+                index=actionId;
+            }
+
+            if(actionId == 16 || actionId ==52){
                 if(isOqc){
                     intent = new Intent(context,DetailListActivity.class);
                     //设置传入参数
@@ -368,23 +484,23 @@ public class SubMasterQcActivity extends AppCompatActivity {
                     bundle.putString("txtListStockId",qrCodeValue[3].trim());
                     bundle.putString("txtListStock",qrCodeValue[4].trim());
                     bundle.putString("txtListQuantity","");
-                    bundle.putInt("index",1);
+                    bundle.putInt("index",index);
 
                     intent.putExtras(bundle);
                     startActivity(intent);
                 }else{
-                    MyToast.myShow(SubMasterQcActivity.this,"OQC需先扫描备货单,请重新扫描",0,0);
+                    MyToast.myShow(SubMasterListActivity.this,"OQC需先扫描备货单,请重新扫描",0,0);
                 }
             }else{
                 if(isOqc){
-                    MyToast.myShow(SubMasterQcActivity.this,"只有OQC才可扫描备货单,请重新扫描",0,0);
+                    MyToast.myShow(SubMasterListActivity.this,"只有OQC才可扫描备货单,请重新扫描",0,0);
                 }else{
                     intent = new Intent(context,DetailActivity.class);
                     //设置传入参数
                     bundle=new Bundle();
                     bundle.putString("qrCode",qrContent);
                     bundle.putString("docno",docno);
-                    bundle.putInt("index",1);
+                    bundle.putInt("index",index);
                     intent.putExtras(bundle);
                     startActivity(intent);
                 }
@@ -436,7 +552,7 @@ public class SubMasterQcActivity extends AppCompatActivity {
                         statusDescription = mStatus.get("statusDescription").toString();
 
                         if(!statusCode.equals("0")){
-                            MyToast.myShow(SubMasterQcActivity.this,statusDescription,0,0);
+                            MyToast.myShow(SubMasterListActivity.this,statusDescription,0,0);
                         }else{
                             int progress = subMasterQcProgressBar.getProgress();
                             progress = progress + 50;
@@ -444,13 +560,13 @@ public class SubMasterQcActivity extends AppCompatActivity {
                         }
                     }
                 }else{
-                    MyToast.myShow(SubMasterQcActivity.this,"无入库数据",2,0);
+                    MyToast.myShow(SubMasterListActivity.this,"无入库数据",2,0);
                 }
             }
 
             @Override
             public void onError(Throwable e) {
-                MyToast.myShow(SubMasterQcActivity.this,"网络错误",0,0);
+                MyToast.myShow(SubMasterListActivity.this,"网络错误",0,0);
                 subMasterQcProgressBar.setVisibility(View.GONE);
             }
 
@@ -460,6 +576,7 @@ public class SubMasterQcActivity extends AppCompatActivity {
                 subMasterQcView.setAdapter(subMasterListItemAdapter);
 
                 subMasterQcProgressBar.setVisibility(View.GONE);
+                refreshCount();
             }
         });
     }

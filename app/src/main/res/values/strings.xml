@@ -74,6 +74,7 @@
     <string name="tab_product11">任务分配</string>
     <string name="tab_product12">销售备货</string>
     <string name="tab_product13">销售退回</string>
+    <string name="tab_product14">异常备货</string>
     <string name="tab_query1">失败明细</string>
     <string name="item_title_product_code">料件编码:</string>
     <string name="item_title_product_name">品名:</string>
@@ -164,9 +165,10 @@
     <string name="sub_detail_list_docno">单据编号:</string>
     <string name="sub_master_content_quantity">总个数:</string>
     <string name="sub_master_content_quantitypcs">总箱数:</string>
-    <string name="sub_master_content_button1">取消入库</string>
+    <string name="sub_master_content_button1">托盘完成</string>
     <string name="sub_master_flag1">未检验</string>
     <string name="sub_master_flag2">未入库</string>
     <string name="sub_master_label1">当天</string>
     <string name="sub_master_label2">所有</string>
+    <string name="sub_master_list_button1">取消出库</string>
 </resources>

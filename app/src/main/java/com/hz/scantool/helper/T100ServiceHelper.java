@@ -421,6 +421,7 @@ public class T100ServiceHelper {
                 map.put("Docno", jsonObject.getString("erpDocno").trim());
                 map.put("PlanDate", jsonObject.getString("erpPlanDate").trim());
                 map.put("ProductCode", jsonObject.getString("erpProductCode").trim());
+                map.put("ProductName",jsonObject.getString("erpProductName").trim());
                 map.put("ProductModels", jsonObject.getString("erpProductModels").trim());
                 map.put("ProducerId", jsonObject.getString("erpProducerId").trim());
                 map.put("Producer", jsonObject.getString("erpProducer").trim());
@@ -430,6 +431,7 @@ public class T100ServiceHelper {
                 map.put("Quantity", jsonObject.getString("erpQuantity").trim());
                 map.put("QuantityPcs", jsonObject.getString("erpQuantityPcs").trim());
                 map.put("Status", jsonObject.getString("erpStatus").trim());
+                map.put("DocStatus", jsonObject.getString("erpDocStatus").trim());
                 detailList.add(map);
             } catch (Exception e) {
                 e.printStackTrace();

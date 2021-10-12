@@ -14,16 +14,25 @@ import com.hz.scantool.R;
 import java.util.List;
 import java.util.Map;
 
+
 public class SubMasterListItemAdapter extends BaseAdapter {
 
     private List<Map<String,Object>> mData;
     private Context mContext;
-    private String strType;
+    private String mType;
+    private ConfirmClickListener mConfirmClickListener;
 
-    public SubMasterListItemAdapter(List<Map<String,Object>> mData, Context mContext,String strType){
+    public SubMasterListItemAdapter(List<Map<String,Object>> mData, Context mContext,String mType){
         this.mData = mData;
         this.mContext = mContext;
-        this.strType = strType;
+        this.mType = mType;
+    }
+
+    public SubMasterListItemAdapter(List<Map<String,Object>> mData, Context mContext,String mType,ConfirmClickListener mConfirmClickListener){
+        this.mData = mData;
+        this.mContext = mContext;
+        this.mType = mType;
+        this.mConfirmClickListener = mConfirmClickListener;
     }
 
     @Override
@@ -43,7 +52,68 @@ public class SubMasterListItemAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        if(mType.equals("53")){
+            convertView = initSaleViewHolder(position,convertView,parent);
+        }else{
+            convertView = initViewHolder(position,convertView,parent);
+        }
 
+        return convertView;
+    }
+
+    public static class ViewHolder{
+        TextView txtSubContentListDocno;
+        TextView txtSubContentListDate;
+        TextView txtSubContentListProductCodeTitle;
+        TextView txtSubContentListProductCode;
+        TextView txtSubContentListProductNameTitle;
+        TextView txtSubContentListProductName;
+        TextView txtSubContentListProductModelsTitle;
+        TextView txtSubContentListProductModels;
+        TextView txtSubContentListProducerTitle;
+        TextView txtSubContentListProducerId;
+        TextView txtSubContentListProducer;
+        TextView txtSubContentListStockId;
+        TextView txtSubContentListStockTitle;
+
+        TextView txtSubContentListStock;
+        TextView txtSubContentListPlannoTitle;
+        TextView txtSubContentListPlanno;
+        TextView txtSubContentListQuantityTitle;
+        TextView txtSubContentListQuantity;
+        TextView txtSubContentListQuantityPcsTitle;
+        TextView txtSubContentListQuantityPcs;
+
+        Button txtSubContentListBtnDelete;
+
+        ImageView imgSubContentList;
+        ImageView imgSubContentListAlarm;
+        ImageView txtSubContentListStatus;
+        String strStatus;
+        String strDocStatus;
+    }
+
+    public static class SaleViewHolder{
+        ImageView imgSubList;
+        TextView txtSubListDocno;
+        ImageView imgSubListAlarm;
+        TextView txtSubListDate;
+        TextView txtSubListProductCodeTitle;
+        TextView txtSubListProductCode;
+        TextView txtSubListProductNameTitle;
+        TextView txtSubListProductName;
+        TextView txtSubListProductModelsTitle;
+        TextView txtSubListProductModels;
+        TextView txtSubListProducerTitle;
+        TextView txtSubListProducerId;
+        TextView txtSubListProducer;
+        TextView txtSubListQuantityTitle;
+        TextView txtSubListQuantity;
+        TextView txtSubListQuantityPcsTitle;
+        TextView txtSubListQuantityPcs;
+    }
+
+    private View initViewHolder(int position, View convertView, ViewGroup parent){
         ViewHolder holder = null;
 
         if(convertView == null) {
@@ -55,6 +125,8 @@ public class SubMasterListItemAdapter extends BaseAdapter {
             holder.txtSubContentListDate = convertView.findViewById(R.id.txtSubContentListDate);
             holder.txtSubContentListProductCodeTitle = convertView.findViewById(R.id.txtSubContentListProductCodeTitle);
             holder.txtSubContentListProductCode = convertView.findViewById(R.id.txtSubContentListProductCode);
+            holder.txtSubContentListProductNameTitle = convertView.findViewById(R.id.txtSubContentListProductNameTitle);
+            holder.txtSubContentListProductName = convertView.findViewById(R.id.txtSubContentListProductName);
             holder.txtSubContentListProductModelsTitle = convertView.findViewById(R.id.txtSubContentListProductModelsTitle);
             holder.txtSubContentListProductModels = convertView.findViewById(R.id.txtSubContentListProductModels);
             holder.txtSubContentListProducerTitle = convertView.findViewById(R.id.txtSubContentListProducerTitle);
@@ -84,6 +156,7 @@ public class SubMasterListItemAdapter extends BaseAdapter {
         holder.txtSubContentListDocno.setText((String)mData.get(position).get("Docno"));
         holder.txtSubContentListDate.setText((String)mData.get(position).get("PlanDate"));
         holder.txtSubContentListProductCode.setText((String)mData.get(position).get("ProductCode"));
+        holder.txtSubContentListProductName.setText((String)mData.get(position).get("ProductName"));
         holder.txtSubContentListProductModels.setText((String)mData.get(position).get("ProductModels"));
         holder.txtSubContentListProducerId.setText((String)mData.get(position).get("ProducerId"));
         holder.txtSubContentListProducer.setText((String)mData.get(position).get("Producer"));
@@ -99,7 +172,7 @@ public class SubMasterListItemAdapter extends BaseAdapter {
             holder.txtSubContentListBtnDelete.setVisibility(View.GONE);
             holder.txtSubContentListStatus.setImageDrawable(convertView.getResources().getDrawable(R.drawable.list_status_check));
         }else{
-            if(strType.equals("1")){
+            if(mType.equals("1")){
                 holder.txtSubContentListBtnDelete.setVisibility(View.GONE);
             }else{
                 holder.txtSubContentListBtnDelete.setVisibility(View.VISIBLE);
@@ -112,90 +185,78 @@ public class SubMasterListItemAdapter extends BaseAdapter {
         holder.imgSubContentList.setImageDrawable(convertView.getResources().getDrawable(R.drawable.list_top_icon));
         holder.imgSubContentListAlarm.setImageDrawable(convertView.getResources().getDrawable(R.drawable.list_alarm));
 
-        //空值控件隐藏
-        initView(holder,position);
+        //按钮状态
+        holder.strDocStatus = (String)mData.get(position).get("DocStatus");
+        if(holder.strDocStatus.equals("Y")) {
+            holder.txtSubContentListBtnDelete.setVisibility(View.GONE);
+        }else{
+            holder.txtSubContentListBtnDelete.setVisibility(View.VISIBLE);
+        }
+
+        //按钮事件绑定
+        holder.txtSubContentListBtnDelete.setOnClickListener(mConfirmClickListener);
+        holder.txtSubContentListBtnDelete.setTag(position);
 
         return convertView;
     }
 
-    //空值控件隐藏
-    private void initView(ViewHolder holder,int position){
-        //供应商/部门ID
-        String strProducerId=(String)mData.get(position).get("ProducerId");
-        if(strProducerId.isEmpty()){
-            holder.txtSubContentListProducerId.setVisibility(View.GONE);
+    private View initSaleViewHolder(int position, View convertView, ViewGroup parent){
+        SaleViewHolder saleViewHolder = null;
+
+        if(convertView == null) {
+            saleViewHolder = new SaleViewHolder();
+            //实例化组件,获取组件
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.sub_master_list_item, parent, false);
+
+            saleViewHolder.txtSubListDocno = convertView.findViewById(R.id.txtSubListDocno);
+            saleViewHolder.txtSubListDate = convertView.findViewById(R.id.txtSubListDate);
+            saleViewHolder.txtSubListProductCodeTitle = convertView.findViewById(R.id.txtSubListProductCodeTitle);
+            saleViewHolder.txtSubListProductCode = convertView.findViewById(R.id.txtSubListProductCode);
+            saleViewHolder.txtSubListProductNameTitle = convertView.findViewById(R.id.txtSubListProductNameTitle);
+            saleViewHolder.txtSubListProductName = convertView.findViewById(R.id.txtSubListProductName);
+            saleViewHolder.txtSubListProductModelsTitle = convertView.findViewById(R.id.txtSubListProductModelsTitle);
+            saleViewHolder.txtSubListProductModels = convertView.findViewById(R.id.txtSubListProductModels);
+            saleViewHolder.txtSubListProducerTitle = convertView.findViewById(R.id.txtSubListProducerTitle);
+            saleViewHolder.txtSubListProducerId = convertView.findViewById(R.id.txtSubListProducerId);
+            saleViewHolder.txtSubListProducer = convertView.findViewById(R.id.txtSubListProducer);
+            saleViewHolder.txtSubListQuantityTitle = convertView.findViewById(R.id.txtSubListQuantityTitle);
+            saleViewHolder.txtSubListQuantity = convertView.findViewById(R.id.txtSubListQuantity);
+            saleViewHolder.txtSubListQuantityPcsTitle = convertView.findViewById(R.id.txtSubListQuantityPcsTitle);
+            saleViewHolder.txtSubListQuantityPcs = convertView.findViewById(R.id.txtSubListQuantityPcs);
+
+            saleViewHolder.imgSubList = convertView.findViewById(R.id.imgSubList);
+            saleViewHolder.imgSubListAlarm = convertView.findViewById(R.id.imgSubListAlarm);
+
+            convertView.setTag(saleViewHolder);
         }else{
-            holder.txtSubContentListProducerId.setVisibility(View.VISIBLE);
+            saleViewHolder = (SaleViewHolder)convertView.getTag();
         }
 
-        //供应商/部门名称
-        String strProducer = (String)mData.get(position).get("Producer");
-        if(strProducer.isEmpty()){
-            holder.txtSubContentListProducer.setVisibility(View.GONE);
-        }else{
-            holder.txtSubContentListProducer.setVisibility(View.VISIBLE);
-        }
+        //设置组件显示值
+        saleViewHolder.txtSubListDocno.setText((String)mData.get(position).get("Docno"));
+        saleViewHolder.txtSubListDate.setText((String)mData.get(position).get("PlanDate"));
+        saleViewHolder.txtSubListProductCode.setText((String)mData.get(position).get("ProductCode"));
+        saleViewHolder.txtSubListProductName.setText((String)mData.get(position).get("ProductName"));
+        saleViewHolder.txtSubListProductModels.setText((String)mData.get(position).get("ProductModels"));
+        saleViewHolder.txtSubListProducerId.setText((String)mData.get(position).get("ProducerId"));
+        saleViewHolder.txtSubListProducer.setText((String)mData.get(position).get("Producer"));
+        saleViewHolder.txtSubListQuantity.setText((String)mData.get(position).get("Quantity"));
+        saleViewHolder.txtSubListQuantityPcs.setText((String)mData.get(position).get("QuantityPcs"));
 
-        //库位ID
-        String strStockId = (String)mData.get(position).get("StockId");
-        if(strStockId.isEmpty()){
-            holder.txtSubContentListStockId.setVisibility(View.GONE);
-        }else{
-            holder.txtSubContentListStockId.setVisibility(View.VISIBLE);
-        }
+        //导肮logo显示
+        saleViewHolder.imgSubList.setImageDrawable(convertView.getResources().getDrawable(R.drawable.list_top_icon));
+        saleViewHolder.imgSubListAlarm.setImageDrawable(convertView.getResources().getDrawable(R.drawable.list_alarm));
 
-        //库位名称
-        String strStock = (String)mData.get(position).get("Stock");
-        if(strStock.isEmpty()){
-            holder.txtSubContentListStock.setVisibility(View.GONE);
-        }else{
-            holder.txtSubContentListStock.setVisibility(View.VISIBLE);
-        }
-
-//        //工单单号
-//        String strPlanno = (String)mData.get(position).get("Planno");
-//        if(strPlanno.isEmpty()){
-//            holder.txtSubContentListPlanno.setVisibility(View.GONE);
-//        }else{
-//            holder.txtSubContentListPlanno.setVisibility(View.VISIBLE);
-//        }
-
-        //片数
-        String strQuantityPcs = (String)mData.get(position).get("QuantityPcs");
-        if(strQuantityPcs.isEmpty()){
-            holder.txtSubContentListQuantityPcs.setVisibility(View.GONE);
-        }else{
-            holder.txtSubContentListQuantityPcs.setVisibility(View.VISIBLE);
-        }
+        return convertView;
     }
 
-    public static class ViewHolder{
-        TextView txtSubContentListDocno;
-        TextView txtSubContentListDate;
-        TextView txtSubContentListProductCodeTitle;
-        TextView txtSubContentListProductCode;
-        TextView txtSubContentListProductModelsTitle;
-        TextView txtSubContentListProductModels;
-        TextView txtSubContentListProducerTitle;
-        TextView txtSubContentListProducerId;
-        TextView txtSubContentListProducer;
-        TextView txtSubContentListStockId;
-        TextView txtSubContentListStockTitle;
+    public static abstract class ConfirmClickListener implements View.OnClickListener{
+        @Override
+        public void onClick(View view) {
+            ConfirmOnClick((Integer) view.getTag(),view);
+        }
 
-        TextView txtSubContentListStock;
-        TextView txtSubContentListPlannoTitle;
-        TextView txtSubContentListPlanno;
-        TextView txtSubContentListQuantityTitle;
-        TextView txtSubContentListQuantity;
-        TextView txtSubContentListQuantityPcsTitle;
-        TextView txtSubContentListQuantityPcs;
-
-        Button txtSubContentListBtnDelete;
-
-        ImageView imgSubContentList;
-        ImageView imgSubContentListAlarm;
-        ImageView txtSubContentListStatus;
-        String strStatus;
+        public abstract void ConfirmOnClick(int position,View v);
     }
 }
 

@@ -96,7 +96,6 @@ public class DetailActivity extends AppCompatActivity {
     Button btnCancel;
     Button btnScanSubmit;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -137,6 +136,9 @@ public class DetailActivity extends AppCompatActivity {
                 strTitle = getResources().getString(R.string.master_detail4);
                 break;
             case 5:
+                strTitle = getResources().getString(R.string.master_detail5);
+                break;
+            case 53:
                 strTitle = getResources().getString(R.string.master_detail5);
                 break;
             case 6:
@@ -262,7 +264,11 @@ public class DetailActivity extends AppCompatActivity {
                 case R.id.btnSubmit:
                     if(strFlag.equals("N")){
                         if(checkQty()){
-                            updateDetailItemData();
+                            if(intIndex == 53){
+                                getScanQrData(detailDocno.getText().toString().trim());
+                            }else{
+                                updateDetailItemData();
+                            }
                         }else{
                             MyToast.myShow(DetailActivity.this,"不良数量不可大于申请数据",2,0);
                         }
@@ -335,6 +341,7 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void scanResult(String qrScanContent){
+        String erpDocno = detailDocno.getText().toString().trim();
         String erpCode = detailProductName.getText().toString().trim();
         String erpQty = detailQuantity.getText().toString().trim();
         if(codeRule.isEmpty() || codeRule.length() == 0){
@@ -342,7 +349,11 @@ public class DetailActivity extends AppCompatActivity {
         }else{
             if(deCodeQrCode(codeRule,qrScanContent,erpCode,erpQty)){
                 if(checkQty()){
-                    updateDetailItemData();
+                    if(intIndex == 53){
+                        getScanQrData(erpDocno);
+                    }else{
+                        updateDetailItemData();
+                    }
                     imageViewResult.setImageDrawable(getResources().getDrawable(R.drawable.detail_status_ok));
                     strFlag = "Y";
                 }else{
@@ -559,59 +570,12 @@ public class DetailActivity extends AppCompatActivity {
 
             @Override
             public void onNext(List<Map<String, Object>> maps) {
-                if(maps.size()> 0){
+                if(mapResponseStatus.size()> 0){
                     for(Map<String,Object> mStatus: mapResponseStatus){
                         statusCode = mStatus.get("statusCode").toString();
                         statusDescription = mStatus.get("statusDescription").toString();
 
-                        if(statusCode.equals("0")){
-                            for(Map<String,Object> m: mapResponseList){
-                                String strProductCode = m.get("ProductCode").toString();
-                                if(!strProductCode.isEmpty()){
-                                    detailProductName.setText(m.get("ProductName").toString());
-                                    detailQuantityNg.setText(m.get("QuantityNg").toString());
-                                    detailQuantityNo.setText(m.get("QuantityNo").toString());
-                                    detailProductCode.setText(m.get("ProductCode").toString());
-                                    String strProductType = strProductCode.substring(0,3);
-                                    if(strProductType.equals("111")){
-                                        detailProductModelsTitle.setText(getResources().getString(R.string.item_title_models));
-                                        detailQuantityTitle.setText(getResources().getString(R.string.detail_content_title9));
-                                    }
-
-                                    detailProductModels.setText(m.get("ProductModels").toString());
-                                    detailProcess.setText(m.get("Process").toString());
-                                    detailDevice.setText(m.get("Device").toString());
-                                    detailStartPlanDate.setText(m.get("PlanDate").toString());
-                                    detailEndPlanDate.setText(m.get("PlanDate").toString());
-                                    detailQuantity.setText(m.get("Quantity").toString());
-                                    detailDocno.setText(m.get("Docno").toString());
-
-                                    codeRule = m.get("QrCodeRule").toString();
-                                    if(codeRule.isEmpty()){
-                                        btnSubmit.setVisibility(View.VISIBLE);
-                                        btnScanSubmit.setVisibility(View.GONE);
-                                    }else{
-                                        btnSubmit.setVisibility(View.GONE);
-                                        btnScanSubmit.setVisibility(View.VISIBLE);
-                                    }
-
-                                    strResult = m.get("Status").toString();
-                                    if(strResult.equals("Y")){
-                                        imageViewResult.setImageDrawable(getResources().getDrawable(R.drawable.detail_status_ok));
-                                        detailQuantityNg.setFocusable(false);
-                                        detailQuantityNo.setFocusable(false);
-                                        strFlag = "Y";
-                                    }else{
-                                        imageViewResult.setImageDrawable(getResources().getDrawable(R.drawable.detail_status_deal));
-                                        strFlag = "N";
-                                    }
-                                }else{
-                                    finish();
-                                    MyToast.myShow(DetailActivity.this,statusDescription,0,0);
-                                }
-                            }
-
-                        }else{
+                        if(!statusCode.equals("0")){
                             finish();
                             MyToast.myShow(DetailActivity.this,statusDescription,0,0);
                         }
@@ -629,7 +593,53 @@ public class DetailActivity extends AppCompatActivity {
 
             @Override
             public void onComplete() {
+                if(mapResponseList.size()> 0){
+                    for(Map<String,Object> m: mapResponseList){
+                        String strProductCode = m.get("ProductCode").toString();
+                        if(!strProductCode.isEmpty()){
+                            detailProductName.setText(m.get("ProductName").toString());
+                            detailQuantityNg.setText(m.get("QuantityNg").toString());
+                            detailQuantityNo.setText(m.get("QuantityNo").toString());
+                            detailProductCode.setText(m.get("ProductCode").toString());
+                            String strProductType = strProductCode.substring(0,3);
+                            if(strProductType.equals("111")){
+                                detailProductModelsTitle.setText(getResources().getString(R.string.item_title_models));
+                                detailQuantityTitle.setText(getResources().getString(R.string.detail_content_title9));
+                            }
 
+                            detailProductModels.setText(m.get("ProductModels").toString());
+                            detailProcess.setText(m.get("Process").toString());
+                            detailDevice.setText(m.get("Device").toString());
+                            detailStartPlanDate.setText(m.get("PlanDate").toString());
+                            detailEndPlanDate.setText(m.get("PlanDate").toString());
+                            detailQuantity.setText(m.get("Quantity").toString());
+                            detailDocno.setText(m.get("Docno").toString());
+
+                            codeRule = m.get("QrCodeRule").toString();
+                            if(codeRule.isEmpty()){
+                                btnSubmit.setVisibility(View.VISIBLE);
+                                btnScanSubmit.setVisibility(View.GONE);
+                            }else{
+                                btnSubmit.setVisibility(View.GONE);
+                                btnScanSubmit.setVisibility(View.VISIBLE);
+                            }
+
+                            strResult = m.get("Status").toString();
+                            if(strResult.equals("Y")){
+                                imageViewResult.setImageDrawable(getResources().getDrawable(R.drawable.detail_status_ok));
+                                detailQuantityNg.setFocusable(false);
+                                detailQuantityNo.setFocusable(false);
+                                strFlag = "Y";
+                            }else{
+                                imageViewResult.setImageDrawable(getResources().getDrawable(R.drawable.detail_status_deal));
+                                strFlag = "N";
+                            }
+                        }else{
+                            finish();
+                            MyToast.myShow(DetailActivity.this,statusDescription,0,0);
+                        }
+                    }
+                }
             }
         });
     }
@@ -696,7 +706,7 @@ public class DetailActivity extends AppCompatActivity {
                 }else{
                     strFlag = "N";
                     MyToast.myShow(DetailActivity.this,"更新失败,"+statusDescription,0,0);
-            }
+                }
             }
 
             @Override
@@ -707,6 +717,84 @@ public class DetailActivity extends AppCompatActivity {
             @Override
             public void onComplete() {
 
+            }
+        });
+    }
+
+    //获取扫描条码信息
+    private void getScanQrData(String qrCode){
+        Observable.create(new ObservableOnSubscribe<List<Map<String,Object>>>() {
+            @Override
+            public void subscribe(ObservableEmitter<List<Map<String, Object>>> e) throws Exception {
+                //初始化T100服务名
+                String webServiceName = "GetQrCode";
+                String qrStatus = "X";
+
+                //发送服务器请求
+                T100ServiceHelper t100ServiceHelper = new T100ServiceHelper();
+                String requestBody = "&lt;Document&gt;\n"+
+                        "&lt;RecordSet id=\"1\"&gt;\n"+
+                        "&lt;Master name=\"bcaa_t\" node_id=\"1\"&gt;\n"+
+                        "&lt;Record&gt;\n"+
+                        "&lt;Field name=\"bcaasite\" value=\""+ UserInfo.getUserSiteId(getApplicationContext())+"\"/&gt;\n"+
+                        "&lt;Field name=\"bcaaent\" value=\""+UserInfo.getUserEnterprise(getApplicationContext())+"\"/&gt;\n"+
+                        "&lt;Field name=\"bcaa011\" value=\""+qrCode+"\"/&gt;\n"+
+                        "&lt;Field name=\"bcaamodid\" value=\""+ UserInfo.getUserId(getApplicationContext()) +"\"/&gt;\n"+
+                        "&lt;Field name=\"bcaa016\" value=\""+qrStatus+"\"/&gt;\n"+
+                        "&lt;Detail name=\"s_detail1\" node_id=\"1_1\"&gt;\n"+
+                        "&lt;Record&gt;\n"+
+                        "&lt;Field name=\"bcaa000\" value=\"1.0\"/&gt;\n"+
+                        "&lt;/Record&gt;\n"+
+                        "&lt;/Detail&gt;\n"+
+                        "&lt;Memo/&gt;\n"+
+                        "&lt;Attachment count=\"0\"/&gt;\n"+
+                        "&lt;/Record&gt;\n"+
+                        "&lt;/Master&gt;\n"+
+                        "&lt;/RecordSet&gt;\n"+
+                        "&lt;/Document&gt;\n";
+                String strResponse = t100ServiceHelper.getT100Data(requestBody,webServiceName,getApplicationContext(),"");
+                mapResponseStatus = t100ServiceHelper.getT100StatusData(strResponse);
+
+                e.onNext(mapResponseStatus);
+                e.onComplete();
+            }
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<List<Map<String, Object>>>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(List<Map<String, Object>> maps) {
+                if(mapResponseStatus.size()> 0){
+                    for(Map<String,Object> mStatus: mapResponseStatus){
+                        statusCode = mStatus.get("statusCode").toString();
+                        statusDescription = mStatus.get("statusDescription").toString();
+
+                        if(!statusCode.equals("0")){
+                            MyToast.myShow(DetailActivity.this,statusDescription,0,0);
+                        }
+                    }
+                }else{
+                    MyToast.myShow(DetailActivity.this,"执行接口错误",2,0);
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                MyToast.myShow(DetailActivity.this,"网络错误",0,0);
+            }
+
+            @Override
+            public void onComplete() {
+                if(statusCode.equals("0")){
+                    imageViewResult.setImageDrawable(getResources().getDrawable(R.drawable.detail_status_ok));
+                    detailQuantityNg.setFocusable(false);
+                    detailQuantityNo.setFocusable(false);
+                    strFlag = "Y";
+                    finish();
+                    MyToast.myShow(DetailActivity.this,"更新成功",1,0);
+                }
             }
         });
     }

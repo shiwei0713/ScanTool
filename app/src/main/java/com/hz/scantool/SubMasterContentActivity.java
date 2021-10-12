@@ -54,8 +54,8 @@ public class SubMasterContentActivity extends AppCompatActivity {
     private String strWhere;
     private String statusCode;
     private String statusDescription;
-    private int btnId;
-
+    private int actionId;
+    private Bundle bundle;
     private TextView txtSubTask1;
     private TextView txtSubTask2;
     private Button btnMasterFlag1;
@@ -91,7 +91,7 @@ public class SubMasterContentActivity extends AppCompatActivity {
         }
 
         //显示数据
-        if(btnId==62){
+        if(actionId ==62){
             //完工入庫
             initQueryCondition(4);
             getSubContentWorkOrderListData();
@@ -186,8 +186,12 @@ public class SubMasterContentActivity extends AppCompatActivity {
         if(qrIndex==-1){
             MyToast.myShow(context,"条码错误:"+qrContent,0,1);
         }else{
-            initQueryCondition(3);
-            genT100Doc(qrContent);
+            if(actionId ==62){
+                //完工入库
+                //初始化查询条件为当天，同时生成asft340单据为审核状态
+                initQueryCondition(3);
+                genT100Doc(qrContent);
+            }
         }
     }
 
@@ -195,7 +199,7 @@ public class SubMasterContentActivity extends AppCompatActivity {
     private void initBundle(){
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
-        btnId = bundle.getInt("btnId");
+        actionId = bundle.getInt("btnId");
         strTitle = bundle.getString("title");
     }
 
@@ -242,7 +246,11 @@ public class SubMasterContentActivity extends AppCompatActivity {
         btnMasterFlag3.setOnClickListener(new queryClickListener());
         btnMasterFlag4.setOnClickListener(new queryClickListener());
 
-        strType = "21";
+        if(actionId==62){
+            //完工入库
+            strType = "21";
+        }
+
     }
 
     private class queryClickListener implements View.OnClickListener{
@@ -412,7 +420,7 @@ public class SubMasterContentActivity extends AppCompatActivity {
 
             @Override
             public void onComplete() {
-                subMasterListItemAdapter = new SubMasterListItemAdapter(mapResponseList,getApplicationContext(),strType);
+                subMasterListItemAdapter = new SubMasterListItemAdapter(mapResponseList,getApplicationContext(),strType, mConfirmClickListener);
                 subMasterContentView.setAdapter(subMasterListItemAdapter);
 
                 subMasterContentProgressBar.setVisibility(View.GONE);
@@ -493,4 +501,81 @@ public class SubMasterContentActivity extends AppCompatActivity {
             }
         });
     }
+
+    //托盘完成
+    private SubMasterListItemAdapter.ConfirmClickListener mConfirmClickListener = new SubMasterListItemAdapter.ConfirmClickListener() {
+        @Override
+        public void ConfirmOnClick(int position, View v) {
+            Observable.create(new ObservableOnSubscribe<List<Map<String,Object>>>() {
+                @Override
+                public void subscribe(ObservableEmitter<List<Map<String, Object>>> e) throws Exception {
+                    //初始化T100服务名
+                    String webServiceName = "InventoryBillRequestConfirm";
+                    String strProg = "asft340";
+                    String strDocno = mapResponseList.get(position).get("Docno").toString();
+
+                    //发送服务器请求
+                    T100ServiceHelper t100ServiceHelper = new T100ServiceHelper();
+                    String requestBody = "&lt;Document&gt;\n"+
+                            "&lt;RecordSet id=\"1\"&gt;\n"+
+                            "&lt;Master name=\"inaj_t\" node_id=\"1\"&gt;\n"+
+                            "&lt;Record&gt;\n"+
+                            "&lt;Field name=\"inajsite\" value=\""+ UserInfo.getUserSiteId(getApplicationContext())+"\"/&gt;\n"+
+                            "&lt;Field name=\"inajent\" value=\""+UserInfo.getUserEnterprise(getApplicationContext())+"\"/&gt;\n"+
+                            "&lt;Field name=\"inaj001\" value=\""+strDocno+"\"/&gt;\n"+
+                            "&lt;Field name=\"inaj015\" value=\""+strProg+"\"/&gt;\n"+
+                            "&lt;Field name=\"inajuser\" value=\""+ UserInfo.getUserId(getApplicationContext()) +"\"/&gt;\n"+  //异动人员
+                            "&lt;Detail name=\"s_detail1\" node_id=\"1_1\"&gt;\n"+
+                            "&lt;Record&gt;\n"+
+                            "&lt;Field name=\"inaj002\" value=\"1.0\"/&gt;\n"+
+                            "&lt;/Record&gt;\n"+
+                            "&lt;/Detail&gt;\n"+
+                            "&lt;Memo/&gt;\n"+
+                            "&lt;Attachment count=\"0\"/&gt;\n"+
+                            "&lt;/Record&gt;\n"+
+                            "&lt;/Master&gt;\n"+
+                            "&lt;/RecordSet&gt;\n"+
+                            "&lt;/Document&gt;\n";
+                    String strResponse = t100ServiceHelper.getT100Data(requestBody,webServiceName,getApplicationContext(),"");
+                    mapResponseStatus = t100ServiceHelper.getT100StatusData(strResponse);
+
+                    e.onNext(mapResponseStatus);
+                    e.onComplete();
+                }
+            }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<List<Map<String, Object>>>() {
+                @Override
+                public void onSubscribe(Disposable d) {
+
+                }
+
+                @Override
+                public void onNext(List<Map<String, Object>> maps) {
+                    if(mapResponseStatus.size()> 0){
+                        for(Map<String,Object> mStatus: mapResponseStatus){
+                            statusCode = mStatus.get("statusCode").toString();
+                            statusDescription = mStatus.get("statusDescription").toString();
+
+                            if(!statusCode.equals("0")) {
+                                MyToast.myShow(SubMasterContentActivity.this, statusDescription, 0, 1);
+                            }else{
+                                MyToast.myShow(SubMasterContentActivity.this, statusDescription, 1, 0);
+                            }
+                        }
+                    }else{
+                        MyToast.myShow(SubMasterContentActivity.this,"执行接口错误",2,0);
+                    }
+                }
+
+                @Override
+                public void onError(Throwable e) {
+                    MyToast.myShow(SubMasterContentActivity.this,"网络错误",0,0);
+                }
+
+                @Override
+                public void onComplete() {
+                    getSubContentWorkOrderListData();
+                }
+            });
+        }
+    };
 }
