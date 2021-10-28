@@ -431,6 +431,9 @@ public class SubMasterContentActivity extends AppCompatActivity {
 
     //生成T100单据
     private void genT100Doc(String qrCode){
+        //显示进度条
+        subMasterContentProgressBar.setVisibility(View.VISIBLE);
+
         Observable.create(new ObservableOnSubscribe<List<Map<String,Object>>>() {
             @Override
             public void subscribe(ObservableEmitter<List<Map<String, Object>>> e) throws Exception {
@@ -462,8 +465,10 @@ public class SubMasterContentActivity extends AppCompatActivity {
                         "&lt;/Document&gt;\n";
                 String strResponse = t100ServiceHelper.getT100Data(requestBody,webServiceName,getApplicationContext(),"");
                 mapResponseStatus = t100ServiceHelper.getT100StatusData(strResponse);
+                mapResponseList = t100ServiceHelper.getT100ResponseDocno(strResponse,"docno");
 
                 e.onNext(mapResponseStatus);
+                e.onNext(mapResponseList);
                 e.onComplete();
             }
         }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<List<Map<String, Object>>>() {
@@ -482,6 +487,9 @@ public class SubMasterContentActivity extends AppCompatActivity {
                         if(!statusCode.equals("0")) {
                             MyToast.myShow(SubMasterContentActivity.this, statusDescription, 0, 1);
                         }else{
+                            int progress = subMasterContentProgressBar.getProgress();
+                            progress = progress + 50;
+                            subMasterContentProgressBar.setProgress(progress);
                             MyToast.myShow(SubMasterContentActivity.this, statusDescription, 1, 0);
                         }
                     }
@@ -493,11 +501,25 @@ public class SubMasterContentActivity extends AppCompatActivity {
             @Override
             public void onError(Throwable e) {
                 MyToast.myShow(SubMasterContentActivity.this,"网络错误",0,0);
+                subMasterContentProgressBar.setVisibility(View.GONE);
             }
 
             @Override
             public void onComplete() {
-                getSubContentWorkOrderListData();
+                if(statusCode.equals("0")){
+                    String strDocno="";
+
+                    if(mapResponseList.size()> 0) {
+                        for (Map<String, Object> mResponse : mapResponseList) {
+                            strDocno = mResponse.get("Docno").toString();
+                        }
+                    }
+                    if(!strDocno.isEmpty()){
+                        strWhere = "sfeadocno='"+strDocno+"'";
+                    }
+                    getSubContentWorkOrderListData();
+                }
+                subMasterContentProgressBar.setVisibility(View.GONE);
             }
         });
     }
@@ -506,13 +528,17 @@ public class SubMasterContentActivity extends AppCompatActivity {
     private SubMasterListItemAdapter.ConfirmClickListener mConfirmClickListener = new SubMasterListItemAdapter.ConfirmClickListener() {
         @Override
         public void ConfirmOnClick(int position, View v) {
+            //显示进度条
+            subMasterContentProgressBar.setVisibility(View.VISIBLE);
+
             Observable.create(new ObservableOnSubscribe<List<Map<String,Object>>>() {
                 @Override
                 public void subscribe(ObservableEmitter<List<Map<String, Object>>> e) throws Exception {
                     //初始化T100服务名
                     String webServiceName = "InventoryBillRequestConfirm";
                     String strProg = "asft340";
-                    String strDocno = mapResponseList.get(position).get("Docno").toString();
+//                    String strDocno = mapResponseList.get(position).get("Docno").toString();
+                    String strDocno = subMasterListItemAdapter.getItemValue(position);
 
                     //发送服务器请求
                     T100ServiceHelper t100ServiceHelper = new T100ServiceHelper();
@@ -558,6 +584,11 @@ public class SubMasterContentActivity extends AppCompatActivity {
                             if(!statusCode.equals("0")) {
                                 MyToast.myShow(SubMasterContentActivity.this, statusDescription, 0, 1);
                             }else{
+                                Button listBtn = v.findViewById(R.id.txtSubContentListBtnDelete);
+                                listBtn.setVisibility(View.INVISIBLE);
+                                int progress = subMasterContentProgressBar.getProgress();
+                                progress = progress + 50;
+                                subMasterContentProgressBar.setProgress(progress);
                                 MyToast.myShow(SubMasterContentActivity.this, statusDescription, 1, 0);
                             }
                         }
@@ -568,12 +599,15 @@ public class SubMasterContentActivity extends AppCompatActivity {
 
                 @Override
                 public void onError(Throwable e) {
-                    MyToast.myShow(SubMasterContentActivity.this,"网络错误",0,0);
+                    MyToast.myShow(SubMasterContentActivity.this,mapResponseStatus.toString(),0,0);
+                    getSubContentWorkOrderListData();
+                    subMasterContentProgressBar.setVisibility(View.GONE);
                 }
 
                 @Override
                 public void onComplete() {
                     getSubContentWorkOrderListData();
+                    subMasterContentProgressBar.setVisibility(View.GONE);
                 }
             });
         }

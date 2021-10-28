@@ -1,0 +1,373 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".SubMasterListDetailActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/subMasterListDetailToolBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/action_style"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/txtSubListDetailDocnoTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/detail_title_padding"
+            android:text="@string/detail_docno"
+            android:textColor="@color/list_detail_item" />
+
+        <TextView
+            android:id="@+id/txtSubListDetailDocno"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/detail_title_padding"
+            android:textColor="@color/list_detail_item" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/line"
+        android:orientation="vertical">
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/txtSubListDetailStockTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/detail_title_padding"
+            android:text="@string/sub_detail_list_stock2"
+            android:textColor="@color/list_detail_item" />
+
+        <TextView
+            android:id="@+id/txtSubListDetailStockId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/detail_title_padding"
+            android:textColor="@color/list_detail_item" />
+
+        <TextView
+            android:id="@+id/txtSubListDetailStock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/detail_title_padding"
+            android:textColor="@color/list_detail_item" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/line"
+        android:orientation="vertical">
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/txtSubListDetailDeptTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/detail_title_padding"
+            android:text="@string/sub_detail_list_dept2"
+            android:textColor="@color/list_detail_item" />
+
+        <TextView
+            android:id="@+id/txtSubListDetailDeptId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/detail_title_padding"
+            android:textColor="@color/list_detail_item" />
+
+        <TextView
+            android:id="@+id/txtSubListDetailDept"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/detail_title_padding"
+            android:textColor="@color/list_detail_item" />
+
+        <ImageView
+            android:id="@+id/imageViewSubListDetailLogo"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            app:srcCompat="@drawable/list_status_inside" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/line"
+        android:orientation="vertical">
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/detail_title_padding"
+            android:text="@string/sub_master_list_detail_title2"
+            android:textColor="@color/list_detail_item" />
+
+        <TextView
+            android:id="@+id/txtSubListDetailProductName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/detail_title_padding"
+            android:textColor="@color/list_detail_item" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/line"
+        android:orientation="vertical">
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/txtSubListDetailPlanDateTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/detail_title_padding"
+            android:text="@string/sub_detail_list_date"
+            android:textColor="@color/list_detail_item" />
+
+        <TextView
+            android:id="@+id/txtSubListDetailPlanDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/detail_title_padding"
+            android:textColor="@color/list_detail_item" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/line"
+        android:orientation="vertical">
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/txtSubListDetailContainerTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/detail_title_padding"
+            android:text="@string/sub_detail_list_container"
+            android:textColor="@color/list_detail_item" />
+
+        <TextView
+            android:id="@+id/txtSubListDetailContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/detail_title_padding"
+            android:textColor="@color/list_detail_item" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/line"
+        android:orientation="vertical">
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/txtSubListDetailPlanQuantityTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/detail_title_padding"
+            android:text="@string/sub_detail_list_planquantity"
+            android:textColor="@color/list_detail_item" />
+
+        <TextView
+            android:id="@+id/txtSubListDetailPlanQuantity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/detail_title_padding"
+            android:textStyle="bold"
+            android:textSize="@dimen/list_detil_qty"
+            android:textColor="@color/master_message" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textColor="@color/master_message"
+            android:textSize="@dimen/list_detil_qty"
+            android:text="/"/>
+
+        <TextView
+            android:id="@+id/txtSubListDetailPlanQuantityPcs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/detail_title_padding"
+            android:textStyle="bold"
+            android:textSize="@dimen/list_detil_qty"
+            android:textColor="@color/master_message" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/line"
+        android:orientation="vertical">
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:padding="5dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnSubmit"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:background="@drawable/list_button_selector"
+            android:layout_marginRight="30dp"
+            android:textColor="@color/teal_700"
+            android:textStyle="normal"
+            android:focusable="false"
+            android:textSize="@dimen/list_detail_button"
+            android:text="@string/detail_submit" />
+
+        <Button
+            android:id="@+id/btnCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:background="@drawable/list_button_selector"
+            android:textColor="@color/teal_700"
+            android:textStyle="normal"
+            android:focusable="false"
+            android:textSize="@dimen/list_detail_button"
+            android:text="@string/sub_detail_list_cancel" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/line"
+        android:orientation="vertical">
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/detail_title_padding"
+        android:background="@drawable/sub_list_item_style"
+        android:layout_marginTop="15dp"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/backgroud"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/list_detil_title"
+                    android:textStyle="bold"
+                    android:layout_gravity="center_horizontal"
+                    android:textColor="@color/white"
+                    android:text="@string/sub_master_list_detail_title1"/>
+
+                <TextView
+                    android:id="@+id/txtSubListDetailQuantity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/list_detil_title"
+                    android:textStyle="bold"
+                    android:layout_gravity="center_horizontal"
+                    android:textColor="@color/white" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/txtSubListDetailPosition"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/list_detil_title"
+            android:textStyle="bold"
+            android:layout_gravity="center_horizontal"
+            android:textColor="@color/list_item_number" />
+
+    </LinearLayout>
+
+</LinearLayout>

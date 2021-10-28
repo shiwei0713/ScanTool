@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -101,6 +102,9 @@ public class T100ServiceHelper {
     private Response executeT100Service() throws IOException {
 
         OkHttpClient client = new OkHttpClient().newBuilder()
+                .connectTimeout(20, TimeUnit.SECONDS)  //连接超时
+                .readTimeout(20,TimeUnit.SECONDS)      //读取超时
+                .writeTimeout(20,TimeUnit.SECONDS)     //写入超时
                 .build();
         MediaType mediaType = MediaType.parse("text/xml");
         RequestBody body = RequestBody.create(mediaType, webXmlContent.toString());
@@ -270,6 +274,9 @@ public class T100ServiceHelper {
                 map.put("Stock", jsonObject.getString("erpStock").trim());
                 map.put("Docno", jsonObject.getString("erpDocno").trim());
                 map.put("PlanDate", jsonObject.getString("erpPlanDate").trim());
+                map.put("ProductName", jsonObject.getString("erpProductName").trim());
+                map.put("Quantity", jsonObject.getString("erpQuantity").trim());
+                map.put("Status", jsonObject.getString("erpStatus").trim());
                 detailList.add(map);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -484,6 +491,67 @@ public class T100ServiceHelper {
 
             strDetailContent = strSubContent.substring(iCurrentStartId, iCurrentEndId);
             iStartId = strDetailContent.indexOf(xmlIndexStr, 1);
+        }
+
+        return detailList;
+    }
+
+    //解析回传结果数据
+    public List<Map<String,Object>> getT100ResponseData(String listJson, String xmlIndexStr){
+        List<Map<String,Object>> detailList = new ArrayList<Map<String,Object>>();
+        Map<String,Object> map = new HashMap<String,Object>();
+
+        //检查索引
+        int iTaskIndex=listJson.indexOf(xmlIndexStr,1);
+        if (iTaskIndex>-1){
+            //扫描明细
+            String strContent =listJson.replaceAll("&amp;quot;","\"");
+            String strQr=strContent.substring(strContent.indexOf(xmlIndexStr,1),strContent.length());
+            String strQrJson=strQr.substring(strQr.indexOf("value",1)+7,strQr.indexOf("&gt;",1)-2);
+            try{
+                JSONArray jsonArray = new JSONArray(strQrJson);
+                JSONObject jsonObject = jsonArray.getJSONObject(0);
+                map.put("Docno",jsonObject.getString("erpDocno").trim());
+                map.put("Producer",jsonObject.getString("erpProducer").trim());
+                map.put("PlanDate",jsonObject.getString("erpPlanDate").trim());
+                map.put("Stock",jsonObject.getString("erpStock").trim());
+                map.put("Storage",jsonObject.getString("erpStorage").trim());
+                map.put("Quantity",jsonObject.getString("erpQuantity").trim());
+                map.put("QuantityPcs",jsonObject.getString("erpQuantityPcs").trim());
+                map.put("PlanQuantity",jsonObject.getString("erpPlanQuantity").trim());
+                map.put("PlanQuantityPcs",jsonObject.getString("erpPlanQuantityPcs").trim());
+                map.put("Status",jsonObject.getString("erpStatus").trim());
+                map.put("ProductName",jsonObject.getString("erpProductName").trim());
+                map.put("Container",jsonObject.getString("erpContainer").trim());
+                detailList.add(map);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+
+        return detailList;
+    }
+
+    //解析回传结果数据
+    public List<Map<String,Object>> getT100ResponseDocno(String listJson, String xmlIndexStr){
+        List<Map<String,Object>> detailList = new ArrayList<Map<String,Object>>();
+        Map<String,Object> map = new HashMap<String,Object>();
+
+        //检查索引
+        int iTaskIndex=listJson.indexOf(xmlIndexStr,1);
+        if (iTaskIndex>-1){
+            //扫描明细
+            String strContent =listJson.replaceAll("&amp;quot;","\"");
+            String strQr=strContent.substring(strContent.indexOf(xmlIndexStr,1),strContent.length());
+            String strQrJson=strQr.substring(strQr.indexOf("value",1)+7,strQr.indexOf("&gt;",1)-2);
+            try{
+                JSONArray jsonArray = new JSONArray(strQrJson);
+                JSONObject jsonObject = jsonArray.getJSONObject(0);
+                map.put("Docno",jsonObject.getString("erpDocno").trim());
+                detailList.add(map);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
         }
 
         return detailList;

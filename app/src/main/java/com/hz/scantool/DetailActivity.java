@@ -126,6 +126,10 @@ public class DetailActivity extends AppCompatActivity {
                 strTitle = getResources().getString(R.string.master_detail2);
                 qrType = "aqct300";
                 break;
+            case 13:
+                strTitle = getResources().getString(R.string.master_detail2);
+                qrType = "aqct300";
+                break;
             case 2:
                 strTitle = getResources().getString(R.string.master_detail3);
                 break;
@@ -542,6 +546,10 @@ public class DetailActivity extends AppCompatActivity {
             public void subscribe(ObservableEmitter<List<Map<String, Object>>> e) throws Exception {
                 //初始化T100服务名
                 String webServiceName = "AppListGet";
+                String strIndexStr = "erpqr";
+                if(intIndex==13){
+                    strIndexStr = "fqc";
+                }
 
                 //发送服务器请求
                 T100ServiceHelper t100ServiceHelper = new T100ServiceHelper();
@@ -555,7 +563,7 @@ public class DetailActivity extends AppCompatActivity {
                         "&lt;/Parameter&gt;\n"+
                         "&lt;Document/&gt;\n";
                 String strResponse = t100ServiceHelper.getT100Data(requestBody,webServiceName,getApplicationContext(),"");
-                mapResponseList = t100ServiceHelper.getT100JsonData(strResponse,"erpqr");
+                mapResponseList = t100ServiceHelper.getT100JsonData(strResponse,strIndexStr);
                 mapResponseStatus = t100ServiceHelper.getT100StatusData(strResponse);
 
                 e.onNext(mapResponseStatus);
@@ -646,6 +654,8 @@ public class DetailActivity extends AppCompatActivity {
 
     //更新ERP数据
     private void updateDetailItemData(){
+        btnSubmit.setVisibility(View.INVISIBLE);
+
         Observable.create(new ObservableOnSubscribe<String>() {
             @Override
             public void subscribe(ObservableEmitter<String> e) throws Exception {
@@ -661,6 +671,7 @@ public class DetailActivity extends AppCompatActivity {
                         "&lt;Field name=\"qcbasite\" value=\""+UserInfo.getUserSiteId(getApplicationContext())+"\"/&gt;\n"+
                         "&lt;Field name=\"qcbaent\" value=\""+UserInfo.getUserEnterprise(getApplicationContext())+"\"/&gt;\n"+
                         "&lt;Field name=\"qcbadocno\" value=\""+detailDocno.getText().toString().trim()+"\"/&gt;\n"+
+                        "&lt;Field name=\"qcba000\" value=\""+intIndex+"\"/&gt;\n"+
                         "&lt;Field name=\"qcba010\" value=\""+detailProductCode.getText().toString().trim()+"\"/&gt;\n"+
                         "&lt;Field name=\"qcba017\" value=\""+detailQuantity.getText().toString().trim()+"\"/&gt;\n"+
                         "&lt;Field name=\"qrsid\" value=\""+qrSid+"\"/&gt;\n"+
@@ -728,7 +739,7 @@ public class DetailActivity extends AppCompatActivity {
             public void subscribe(ObservableEmitter<List<Map<String, Object>>> e) throws Exception {
                 //初始化T100服务名
                 String webServiceName = "GetQrCode";
-                String qrStatus = "X";
+                String qrStatus = "E";
 
                 //发送服务器请求
                 T100ServiceHelper t100ServiceHelper = new T100ServiceHelper();

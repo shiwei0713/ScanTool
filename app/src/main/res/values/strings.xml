@@ -156,6 +156,8 @@
     <string name="sub_list_dept_title4">领:</string>
     <string name="sub_list_stock_title4">出:</string>
     <string name="sub_list_dept_docno">单号:</string>
+    <string name="sub_list_productname">零件:</string>
+    <string name="sub_list_quantity">数量:</string>
     <string name="sub_detail_list_stock2">收货仓库:</string>
     <string name="sub_detail_list_dept2">入库部门:</string>
     <string name="sub_detail_list_stock3">收货仓库:</string>
@@ -163,6 +165,8 @@
     <string name="sub_detail_list_stock41">收货仓库:</string>
     <string name="sub_detail_list_dept41">退料部门:</string>
     <string name="sub_detail_list_docno">单据编号:</string>
+    <string name="sub_detail_list_date">入库日期:</string>
+    <string name="sub_detail_list_planquantity">申请数量/箱数:</string>
     <string name="sub_master_content_quantity">总个数:</string>
     <string name="sub_master_content_quantitypcs">总箱数:</string>
     <string name="sub_master_content_button1">托盘完成</string>
@@ -171,4 +175,8 @@
     <string name="sub_master_label1">当天</string>
     <string name="sub_master_label2">所有</string>
     <string name="sub_master_list_button1">取消出库</string>
+    <string name="sub_master_list_detail_title1">数量:</string>
+    <string name="sub_master_list_detail_title2">零件号:</string>
+    <string name="sub_detail_list_container">容器型号:</string>
+    <string name="sub_detail_list_cancel">关闭</string>
 </resources>

@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.hz.scantool.adapter.MyToast;
 import com.hz.scantool.models.UserInfo;
 
 import java.util.Calendar;
@@ -37,6 +38,14 @@ public class MasterActivity extends AppCompatActivity {
     String day;
     Bundle bundle;
     Intent intent;
+    private boolean btnAction1Power;
+    private boolean btnAction2Power;
+    private boolean btnAction3Power;
+    private boolean btnAction4Power;
+    private boolean btnAction5Power;
+    private boolean btnAction6Power;
+    private boolean btnAction7Power;
+    private boolean btnAction8Power;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +107,16 @@ public class MasterActivity extends AppCompatActivity {
         //初始化公司
         txtMasterSite = findViewById(R.id.txtMasterSite);
         txtMasterSite.setText(UserInfo.getUserSite(getApplicationContext()));
+
+        //初始化权限
+        btnAction1Power =true;
+        btnAction2Power =true;
+        btnAction3Power =true;
+        btnAction4Power =true;
+        btnAction5Power =true;
+        btnAction6Power =true;
+        btnAction7Power =true;
+        btnAction8Power =true;
     }
 
     //设置导航按钮样式
@@ -127,77 +146,109 @@ public class MasterActivity extends AppCompatActivity {
             switch (v.getId()){
                 //工序报工
                 case R.id.btnAction1:
-                    intent=new Intent(MasterActivity.this,ListActivity.class);
-                    bundle=new Bundle();
-                    bundle.putString("title",getString(agrTitle[0]));
-                    bundle.putInt("count",1);
-                    bundle.putInt("index",0);
-                    intent.putExtras(bundle);
-                    startActivity(intent);
+                    if(btnAction1Power){
+                        intent=new Intent(MasterActivity.this,ListActivity.class);
+                        bundle=new Bundle();
+                        bundle.putString("title",getString(agrTitle[0]));
+                        bundle.putInt("count",1);
+                        bundle.putInt("index",0);
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                    }else{
+                        MyToast.myShow(MasterActivity.this,"无此功能权限",2,0);
+                    }
                     break;
                 //质量检验
                 case R.id.btnAction2:
-                    intent=new Intent(MasterActivity.this,SubMasterActivity.class);
-                    bundle=new Bundle();
-                    bundle.putString("title",getString(agrTitle[1]));
-                    bundle.putInt("index",1);
-                    intent.putExtras(bundle);
-                    startActivity(intent);
+                    if(btnAction2Power){
+                        intent=new Intent(MasterActivity.this,SubMasterActivity.class);
+                        bundle=new Bundle();
+                        bundle.putString("title",getString(agrTitle[1]));
+                        bundle.putInt("index",1);
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                    }else{
+                        MyToast.myShow(MasterActivity.this,"无此功能权限",2,0);
+                    }
                     break;
                 //完工入库
                 case R.id.btnAction3:
-                    intent=new Intent(MasterActivity.this,SubListActivity.class);
-                    bundle=new Bundle();
-                    bundle.putString("title",getString(agrTitle[2]));
-                    bundle.putInt("index",2);
-                    intent.putExtras(bundle);
-                    startActivity(intent);
+                    if(btnAction3Power){
+                        intent=new Intent(MasterActivity.this,SubListActivity.class);
+                        bundle=new Bundle();
+                        bundle.putString("title",getString(agrTitle[2]));
+                        bundle.putInt("index",2);
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                    }else{
+                        MyToast.myShow(MasterActivity.this,"无此功能权限",2,0);
+                    }
                     break;
                 //采购入库
                 case R.id.btnAction4:
-                    intent=new Intent(MasterActivity.this,SubListActivity.class);
-                    bundle=new Bundle();
-                    bundle.putString("title",getString(agrTitle[3]));
-                    bundle.putInt("index",3);
-                    intent.putExtras(bundle);
-                    startActivity(intent);
+                    if(btnAction4Power){
+                        intent=new Intent(MasterActivity.this,SubListActivity.class);
+                        bundle=new Bundle();
+                        bundle.putString("title",getString(agrTitle[3]));
+                        bundle.putInt("index",3);
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                    }else{
+                        MyToast.myShow(MasterActivity.this,"无此功能权限",2,0);
+                    }
                     break;
                 //生产领退料
                 case R.id.btnAction5:
-                    intent=new Intent(MasterActivity.this,SubListActivity.class);
-                    bundle=new Bundle();
-                    bundle.putString("title",getString(agrTitle[4]));
-                    bundle.putInt("index",4);
-                    intent.putExtras(bundle);
-                    startActivity(intent);
+                    if(btnAction5Power){
+                        intent=new Intent(MasterActivity.this,SubListActivity.class);
+                        bundle=new Bundle();
+                        bundle.putString("title",getString(agrTitle[4]));
+                        bundle.putInt("index",4);
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                    }else{
+                        MyToast.myShow(MasterActivity.this,"无此功能权限",2,0);
+                    }
                     break;
                 //销售出货
                 case R.id.btnAction6:
-                    intent=new Intent(MasterActivity.this,SubMasterActivity.class);
-                    bundle=new Bundle();
-                    bundle.putString("title",getString(agrTitle[5]));
+                    if(btnAction6Power){
+                        intent=new Intent(MasterActivity.this,SubMasterActivity.class);
+                        bundle=new Bundle();
+                        bundle.putString("title",getString(agrTitle[5]));
 //                    bundle.putInt("count",3);
-                    bundle.putInt("index",5);
-                    intent.putExtras(bundle);
-                    startActivity(intent);
+                        bundle.putInt("index",5);
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                    }else{
+                        MyToast.myShow(MasterActivity.this,"无此功能权限",2,0);
+                    }
                     break;
                 //生产协同
                 case R.id.btnAction7:
-                    intent=new Intent(MasterActivity.this,SubMasterActivity.class);
-                    bundle=new Bundle();
-                    bundle.putString("title",getString(agrTitle[6]));
-                    bundle.putInt("index",6);
-                    intent.putExtras(bundle);
-                    startActivity(intent);
+                    if(btnAction7Power){
+                        intent=new Intent(MasterActivity.this,SubMasterActivity.class);
+                        bundle=new Bundle();
+                        bundle.putString("title",getString(agrTitle[6]));
+                        bundle.putInt("index",6);
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                    }else{
+                        MyToast.myShow(MasterActivity.this,"无此功能权限",2,0);
+                    }
                     break;
                 //月末盘点
                 case R.id.btnAction8:
-                    intent=new Intent(MasterActivity.this,CheckStockActivity.class);
-                    bundle=new Bundle();
-                    bundle.putString("title",getString(agrTitle[7]));
-                    bundle.putInt("index",7);
-                    intent.putExtras(bundle);
-                    startActivity(intent);
+                    if(btnAction8Power){
+                        intent=new Intent(MasterActivity.this,CheckStockActivity.class);
+                        bundle=new Bundle();
+                        bundle.putString("title",getString(agrTitle[7]));
+                        bundle.putInt("index",7);
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                    }else{
+                        MyToast.myShow(MasterActivity.this,"无此功能权限",2,0);
+                    }
                     break;
             }
         }

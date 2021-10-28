@@ -99,6 +99,13 @@
 
             <TextView
                 android:id="@+id/txtSubListItemDept"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"/>
+
+            <TextView
+                android:id="@+id/txtSubListItemBatch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"/>

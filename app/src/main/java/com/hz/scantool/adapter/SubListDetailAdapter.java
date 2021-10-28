@@ -57,6 +57,7 @@ public class SubListDetailAdapter extends BaseAdapter {
             holder.txtSubListItemQuantityPcs = view.findViewById(R.id.txtSubListItemQuantityPcs);
             holder.txtSubListItemScanQuantity = view.findViewById(R.id.txtSubListItemScanQuantity);
             holder.txtSubListItemScanQuantityPcs = view.findViewById(R.id.txtSubListItemScanQuantityPcs);
+            holder.txtSubListItemBatch = view.findViewById(R.id.txtSubListItemBatch);
 
             holder.imgSubListIcon=view.findViewById(R.id.imgSubListIcon);
 
@@ -75,6 +76,7 @@ public class SubListDetailAdapter extends BaseAdapter {
         holder.txtSubListItemProductSize.setText((String)mData.get(i).get("ProductSize"));
         holder.txtSubListItemQuantity.setText((String)mData.get(i).get("Quantity"));
         holder.txtSubListItemQuantityPcs.setText((String)mData.get(i).get("QuantityPcs"));
+        holder.txtSubListItemBatch.setText((String)mData.get(i).get("StockBatch"));
 
         holder.txtSubListItemScanQuantity.setText((String)mData.get(i).get("ScanQuantity"));
         holder.txtSubListItemScanQuantityPcs.setText((String)mData.get(i).get("ScanQuantityPcs"));
@@ -144,6 +146,7 @@ public class SubListDetailAdapter extends BaseAdapter {
         TextView txtSubListItemQuantityPcs;
         TextView txtSubListItemScanQuantity;
         TextView txtSubListItemScanQuantityPcs;
+        TextView txtSubListItemBatch;
 
         ImageView imgSubListIcon;
     }

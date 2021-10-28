@@ -212,7 +212,7 @@ public class SubMasterListActivity extends AppCompatActivity {
             //FQC检验
             case 15:
                 strJsonType = "fqc";
-                strType = "1";
+                strType = "13";
                 break;
             //OQC检验
             case 16:
@@ -268,6 +268,11 @@ public class SubMasterListActivity extends AppCompatActivity {
                 strWhere = "to_char(bcaamoddt,'YYYY-MM-DD') = '"+setQueryDate(0)+"'";
             }else{
                 strWhere = "qcbadocdt BETWEEN to_date('"+txtQueryQcbDate.getText().toString()+"','YYYY-MM-DD') AND to_date('"+txtQueryQceDate.getText().toString()+"','YYYY-MM-DD')";
+            }
+
+            //如果查询条件为空则查询所有
+            if(txtQueryQcbDate.getText().toString().isEmpty() || txtQueryQceDate.getText().toString().isEmpty()){
+                strWhere = "1=1";
             }
         }
 
@@ -462,9 +467,11 @@ public class SubMasterListActivity extends AppCompatActivity {
 
             int index = 0;
             //16:OQC检验;11:IQC检验;15:FQC检验
-            if(actionId == 16 || actionId == 11 || actionId == 15){
+            if(actionId == 16 || actionId == 11){
                 index=1;
-            }else if(actionId ==52){
+            }else if(actionId == 15){
+                index=13;
+            } else if(actionId ==52){
                 index=5;
             }else{
                 index=actionId;

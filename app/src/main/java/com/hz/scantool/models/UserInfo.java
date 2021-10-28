@@ -4,6 +4,10 @@ import android.content.Context;
 
 import com.hz.scantool.helper.SharedHelper;
 
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.util.Enumeration;
 import java.util.Map;
 
 public class UserInfo {
@@ -15,6 +19,7 @@ public class UserInfo {
     private static Integer userSiteCode;
     private static String userNetwork;
     private static String userEnterprise;
+    private static String macAddress;
 
     private static SharedHelper sharedHelper;
     private static Map<String,String> userData;
@@ -82,5 +87,55 @@ public class UserInfo {
         userEnterprise = "12";
 
         return userEnterprise;
+    }
+
+    //设备网卡地址
+    public static String getMacAddress(){
+        macAddress = "";
+        try{
+            InetAddress inetAddress = getLocalInetAddress();
+            byte[] bytes = NetworkInterface.getByInetAddress(inetAddress).getHardwareAddress();
+            StringBuilder stringBuilder = new StringBuilder();
+            for(int i=0;i<bytes.length;i++){
+                if(i!=0){
+                    stringBuilder.append(":");
+                }
+
+                String str = Integer.toHexString(bytes[i]&0xFF);
+                stringBuilder.append(str.length()==1?0+str:str);
+            }
+            macAddress = stringBuilder.toString().toUpperCase();
+        }catch (SocketException e){
+            e.printStackTrace();
+        }
+
+        return macAddress;
+    }
+
+    private static InetAddress getLocalInetAddress() {
+        InetAddress inetAddress = null;
+        try{
+            Enumeration enumeration = NetworkInterface.getNetworkInterfaces();
+            while(enumeration.hasMoreElements()){
+                NetworkInterface networkInterface = (NetworkInterface) enumeration.nextElement();
+                Enumeration enumerationIp = networkInterface.getInetAddresses();
+                while (enumerationIp.hasMoreElements()){
+                    inetAddress = (InetAddress) enumerationIp.nextElement();
+                    if(!inetAddress.isLoopbackAddress()&&inetAddress.getHostAddress().indexOf(":")==-1){
+                        break;
+                    }else{
+                        inetAddress = null;
+                    }
+                }
+
+                if(inetAddress !=null){
+                    break;
+                }
+            }
+        }catch (SocketException e){
+            e.printStackTrace();
+        }
+
+        return inetAddress;
     }
 }

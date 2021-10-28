@@ -153,6 +153,7 @@ public class MainActivity extends AppCompatActivity {
                 MyToast.myShow(MainActivity.this,"请输入用户工号",2,0);
             }else {
                 getUserLogin();
+                Log.i("MACADDRESS",UserInfo.getMacAddress());
             }
         }
     }
@@ -216,12 +217,11 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onSubscribe(Disposable d) {
-                Log.i(TAG,"Observer onSubscribe");
+
             }
 
             @Override
             public void onNext(String s) {
-                Log.i(TAG,"Observer onNext");
                 if(!userId.isEmpty()){
                     txtUserName.setText(userId);
                     sharedHelper.saveShared(userId,userName,txtUserPassword.getText().toString(),spinnerSite.getSelectedItem().toString(),nerworkType);
@@ -239,13 +239,12 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onError(Throwable e) {
-                Log.i(TAG,"Observer onError");
                 MyToast.myShow(MainActivity.this,"网络异常,请联系系统管理员",0,0);
             }
 
             @Override
             public void onComplete() {
-                Log.i(TAG,"Observer onComplete");
+
             }
         });
     }

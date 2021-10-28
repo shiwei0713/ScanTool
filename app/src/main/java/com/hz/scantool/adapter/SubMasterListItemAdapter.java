@@ -1,6 +1,7 @@
 package com.hz.scantool.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,6 +60,10 @@ public class SubMasterListItemAdapter extends BaseAdapter {
         }
 
         return convertView;
+    }
+
+    public String getItemValue(int position){
+        return  (String)mData.get(position).get("Docno");
     }
 
     public static class ViewHolder{
@@ -186,11 +191,16 @@ public class SubMasterListItemAdapter extends BaseAdapter {
         holder.imgSubContentListAlarm.setImageDrawable(convertView.getResources().getDrawable(R.drawable.list_alarm));
 
         //按钮状态
-        holder.strDocStatus = (String)mData.get(position).get("DocStatus");
-        if(holder.strDocStatus.equals("Y")) {
-            holder.txtSubContentListBtnDelete.setVisibility(View.GONE);
+        Log.i("strWhere",mType);
+        if(mType.equals("21")){
+            holder.strDocStatus = (String)mData.get(position).get("DocStatus");
+            if(holder.strDocStatus.equals("Y")) {
+                holder.txtSubContentListBtnDelete.setVisibility(View.GONE);
+            }else{
+                holder.txtSubContentListBtnDelete.setVisibility(View.VISIBLE);
+            }
         }else{
-            holder.txtSubContentListBtnDelete.setVisibility(View.VISIBLE);
+            holder.txtSubContentListBtnDelete.setVisibility(View.GONE);
         }
 
         //按钮事件绑定
