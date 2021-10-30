@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -151,6 +152,7 @@ public class SubListActivity extends AppCompatActivity {
     protected void onRestart() {
         super.onRestart();
 
+        Log.i("MACADDRESS",strWhere);
         initQueryCondition(9);
         getSubListData();
     }
@@ -571,6 +573,7 @@ public class SubListActivity extends AppCompatActivity {
             String strPlanQuantityPcs = "";
             String strStatus = "";
             String strContainer = "";
+            String strDocStatus = "";
 
             if(mapResponseList.size()> 0){
                 for(Map<String,Object> mResponse: mapResponseList){
@@ -584,6 +587,7 @@ public class SubListActivity extends AppCompatActivity {
                     strPlanQuantity = mResponse.get("PlanQuantity").toString();
                     strPlanQuantityPcs = mResponse.get("PlanQuantityPcs").toString();
                     strStatus = mResponse.get("Status").toString();
+                    strDocStatus = mResponse.get("DocStatus").toString();
                     strProductName = mResponse.get("ProductName").toString();
                     strContainer = mResponse.get("Container").toString();
                 }
@@ -602,6 +606,7 @@ public class SubListActivity extends AppCompatActivity {
                 bundle.putString("PlanQuantity", strPlanQuantity);
                 bundle.putString("PlanQuantityPcs", strPlanQuantityPcs);
                 bundle.putString("Status", strStatus);
+                bundle.putString("DocStatus", strDocStatus);
                 bundle.putString("Container", strContainer);
                 bundle.putString("Type", strType);
                 intent.putExtras(bundle);

@@ -293,7 +293,7 @@
             android:textStyle="normal"
             android:focusable="false"
             android:textSize="@dimen/list_detail_button"
-            android:text="@string/detail_submit" />
+            android:text="@string/sub_detail_list_post" />
 
         <Button
             android:id="@+id/btnCancel"

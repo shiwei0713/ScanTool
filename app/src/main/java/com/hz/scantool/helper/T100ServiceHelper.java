@@ -521,6 +521,7 @@ public class T100ServiceHelper {
                 map.put("PlanQuantity",jsonObject.getString("erpPlanQuantity").trim());
                 map.put("PlanQuantityPcs",jsonObject.getString("erpPlanQuantityPcs").trim());
                 map.put("Status",jsonObject.getString("erpStatus").trim());
+                map.put("DocStatus",jsonObject.getString("erpDocStatus").trim());
                 map.put("ProductName",jsonObject.getString("erpProductName").trim());
                 map.put("Container",jsonObject.getString("erpContainer").trim());
                 detailList.add(map);

@@ -10,6 +10,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -46,6 +47,7 @@ public class SubMasterListDetailActivity extends AppCompatActivity {
     private String statusCode;
     private String statusDescription;
     private String strStatus;
+    private String strDocStatus;
 
     private TextView txtSubListDetailDocno;
     private TextView txtSubListDetailStock;
@@ -144,11 +146,15 @@ public class SubMasterListDetailActivity extends AppCompatActivity {
         txtSubListDetailProductName.setText(bundle.getString("ProductName"));
         txtSubListDetailContainer.setText(bundle.getString("Container"));
         strStatus = bundle.getString("Status");
+        strDocStatus = bundle.getString("DocStatus");
 
-        if(strStatus.equals("N")){
-            btnSubmit.setVisibility(View.GONE);
+        if(strDocStatus.equals("Y")){
+            btnSubmit.setVisibility(View.VISIBLE);
+            btnCancel.setVisibility(View.GONE);
         }else{
             btnSubmit.setVisibility(View.GONE);
+            btnCancel.setVisibility(View.VISIBLE);
+            txtSubListDetailPosition.setTextColor(Color.RED);
         }
 
         if(strType.equals("2")){
@@ -185,7 +191,7 @@ public class SubMasterListDetailActivity extends AppCompatActivity {
         public void onClick(View view) {
             switch (view.getId()){
                 case R.id.btnSubmit:
-//                    checkConfirm();
+                    checkConfirm();
                     finish();
                     break;
                 case R.id.btnCancel:
