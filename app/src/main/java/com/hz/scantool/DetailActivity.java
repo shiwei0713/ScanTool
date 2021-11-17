@@ -27,6 +27,7 @@ import android.widget.TextView;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+import com.hz.scantool.adapter.LoadingDialog;
 import com.hz.scantool.adapter.MyToast;
 import com.hz.scantool.helper.SharedHelper;
 import com.hz.scantool.helper.T100ServiceHelper;
@@ -68,9 +69,28 @@ public class DetailActivity extends AppCompatActivity {
     private String strResult;
     private String strFlag;
     private String codeRule;
+    private String strSubmitTitle;
+    private String strCancelTitle;
+    private String strInspeciton;
+
+    private String strProductCode="";
+    private String strProductName="";
+    private String strQuantityNg="";
+    private String strQuantityNo="";
+    private String strProductModels="";
+    private String strProcess="";
+    private String strDevice="";
+    private String strPlanDate="";
+    private String strQuantity="";
+    private String strDocno="";
+    private String strQrCodeRule="";
+    private String strStatus="";
 
     private List<Map<String,Object>> mapResponseList;
     private List<Map<String,Object>> mapResponseStatus;
+
+    private Intent intent;
+    private Bundle bundle;
 
     TextView detailProductModelsTitle;
     TextView detailQuantityNgTitle;
@@ -95,6 +115,7 @@ public class DetailActivity extends AppCompatActivity {
     Button btnSubmit;
     Button btnCancel;
     Button btnScanSubmit;
+    private LoadingDialog loadingDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,21 +123,17 @@ public class DetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail);
 
         //获取传入参数
-        Intent intent=getIntent();
-        Bundle bundle=intent.getExtras();
-        qrCode=bundle.getString("qrCode");
-        docno=bundle.getString("docno");
-        intIndex=bundle.getInt("index");
-
-        //单据类别
-        if(!docno.isEmpty()){
-            doctype = docno.substring(1,3);
+        initBundle();
+        if(intIndex==53){
+            initErrorBundle();
         }else{
-            doctype = "";
+            initNormalBundle();
         }
 
         //设置标题
         String strTitle = "";
+        strSubmitTitle= getResources().getString(R.string.detail_submit);
+        strCancelTitle = getResources().getString(R.string.detail_cancel);
         switch (intIndex){
             case 0:
                 strTitle = getResources().getString(R.string.master_detail1);
@@ -128,6 +145,13 @@ public class DetailActivity extends AppCompatActivity {
                 break;
             case 13:
                 strTitle = getResources().getString(R.string.master_detail2);
+                strSubmitTitle = getResources().getString(R.string.detail_qc_submit);
+                strCancelTitle = getResources().getString(R.string.detail_qc_cancel);
+                qrType = "aqct300";
+                break;
+            case 14:
+                strTitle = getResources().getString(R.string.master_detail2);
+                strSubmitTitle = getResources().getString(R.string.detail_qc_submit);
                 qrType = "aqct300";
                 break;
             case 2:
@@ -152,7 +176,13 @@ public class DetailActivity extends AppCompatActivity {
 
         //显示信息
         initView();
-        getDetailItemData(qrContent);
+        if(intIndex==13){
+            getDetailItemData(qrCode);
+        }else if(intIndex==53){
+            showDetail();
+        }else{
+            getDetailItemData(qrContent);
+        }
 
         //获取工具栏
         Toolbar toolbar=findViewById(R.id.detailToolBar);
@@ -179,8 +209,42 @@ public class DetailActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void initView(){
+    private void initBundle(){
+        intent=getIntent();
+        bundle=intent.getExtras();
+        intIndex=bundle.getInt("index");
+    }
 
+    //传入正常数据
+    private void initNormalBundle(){
+        qrCode=bundle.getString("qrCode");
+        docno=bundle.getString("docno");
+
+        //单据类别
+        if(!docno.isEmpty()){
+            doctype = docno.substring(1,3);
+        }else{
+            doctype = "";
+        }
+    }
+
+    //传入异常出货数据
+    private void initErrorBundle(){
+        strProductCode = bundle.getString("ProductCode");
+        strProductName = bundle.getString("ProductName");
+        strQuantityNg = bundle.getString("QuantityNg");
+        strQuantityNo = bundle.getString("QuantityNo");
+        strProductModels = bundle.getString("ProductModels");
+        strProcess = bundle.getString("Process");
+        strDevice = bundle.getString("Device");
+        strPlanDate = bundle.getString("PlanDate");
+        strQuantity = bundle.getString("Quantity");
+        strDocno = bundle.getString("Docno");
+        strQrCodeRule = bundle.getString("QrCodeRule");
+        strStatus = bundle.getString("Status");
+    }
+
+    private void initView(){
         //初始化控件
         imageViewInput = findViewById(R.id.imageViewInput);
         detailQuantityNgTitle = findViewById(R.id.detailQuantityNgTitle);
@@ -203,48 +267,62 @@ public class DetailActivity extends AppCompatActivity {
         detailDocno = findViewById(R.id.detailDocno);
         imageViewResult = findViewById(R.id.imageViewResult);
 
-        //初始化传入值
-        String[] strQrCode = qrCode.split("_");
-        qrSid = strQrCode[0].trim();
-
         //按钮事件绑定
         btnSubmit=findViewById(R.id.btnSubmit);
         btnCancel=findViewById(R.id.btnCancel);
         btnScanSubmit=findViewById(R.id.btnScanSubmit);
+        btnSubmit.setText(strSubmitTitle);
+        btnCancel.setText(strCancelTitle);
         btnScanSubmit.setVisibility(View.GONE);
         btnSubmit.setVisibility(View.GONE);
         btnSubmit.setOnClickListener(new detailClickListener());
         btnScanSubmit.setOnClickListener(new detailClickListener());
         btnCancel.setOnClickListener(new detailClickListener());
 
-        //隐藏控件
-        if(doctype.equals("XM")){
-            try{
-                qrContent = docno+"_"+strQrCode[1].trim()+"_"+strQrCode[5].trim()+"_"+strQrCode[0].trim();
-            }catch (Exception e){
-                e.printStackTrace();
-            }
+        //初始化传入值
+        if(intIndex!=53){
+            String[] strQrCode = qrCode.split("_");
+            qrSid = strQrCode[0].trim();
 
-            imageViewInput.setVisibility(View.GONE);
-            detailQuantityNgTitle.setVisibility(View.GONE);
-            detailQuantityNoTitle.setVisibility(View.GONE);
-            detailLinearProcess.setVisibility(View.GONE);
-            detailLinearDevice.setVisibility(View.GONE);
-            detailQuantityNg.setVisibility(View.GONE);
-            detailQuantityNo.setVisibility(View.GONE);
-            detailProcess.setVisibility(View.GONE);
-            detailDevice.setVisibility(View.GONE);
-        }else{
-            try{
-                if(qrSid.isEmpty() || qrSid.length() == 0){
-                    qrContent = "";
-                }else{
-                    qrContent = qrType+"_"+strQrCode[1].trim()+"_"+strQrCode[2].trim()+"_"+strQrCode[0].trim();
+            //隐藏控件
+            if(doctype.equals("XM")){
+                try{
+                    qrContent = docno+"_"+strQrCode[1].trim()+"_"+0+"_"+strQrCode[0].trim();
+                }catch (Exception e){
+                    e.printStackTrace();
                 }
-            }catch (Exception e){
-                e.printStackTrace();
-            }
 
+                imageViewInput.setVisibility(View.GONE);
+                detailQuantityNgTitle.setVisibility(View.GONE);
+                detailQuantityNoTitle.setVisibility(View.GONE);
+                detailLinearProcess.setVisibility(View.GONE);
+                detailLinearDevice.setVisibility(View.GONE);
+                detailQuantityNg.setVisibility(View.GONE);
+                detailQuantityNo.setVisibility(View.GONE);
+                detailProcess.setVisibility(View.GONE);
+                detailDevice.setVisibility(View.GONE);
+            }else{
+                try{
+                    if(qrSid.isEmpty() || qrSid.length() == 0){
+                        qrContent = "";
+                    }else{
+                        qrContent = qrType+"_"+strQrCode[1].trim()+"_"+strQrCode[2].trim()+"_"+strQrCode[0].trim();
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
+                imageViewInput.setVisibility(View.GONE);
+                detailQuantityNgTitle.setVisibility(View.GONE);
+                detailQuantityNoTitle.setVisibility(View.GONE);
+                detailLinearProcess.setVisibility(View.GONE);
+                detailLinearDevice.setVisibility(View.GONE);
+                detailQuantityNg.setVisibility(View.GONE);
+                detailQuantityNo.setVisibility(View.GONE);
+                detailProcess.setVisibility(View.GONE);
+                detailDevice.setVisibility(View.GONE);
+            }
+        }else {
             imageViewInput.setVisibility(View.GONE);
             detailQuantityNgTitle.setVisibility(View.GONE);
             detailQuantityNoTitle.setVisibility(View.GONE);
@@ -260,12 +338,57 @@ public class DetailActivity extends AppCompatActivity {
         imageViewResult = findViewById(R.id.imageViewResult);
     }
 
+    private void showDetail(){
+        if(!strProductCode.isEmpty()){
+            detailProductName.setText(strProductName);
+            detailQuantityNg.setText(strQuantityNg);
+            detailQuantityNo.setText(strQuantityNo);
+            detailProductCode.setText(strProductCode);
+            String strProductType = strProductCode.substring(0,3);
+            if(strProductType.equals("111")){
+                detailProductModelsTitle.setText(getResources().getString(R.string.item_title_models));
+                detailQuantityTitle.setText(getResources().getString(R.string.detail_content_title9));
+            }
+
+            detailProductModels.setText(strProductModels);
+            detailProcess.setText(strProcess);
+            detailDevice.setText(strDevice);
+            detailStartPlanDate.setText(strPlanDate);
+            detailEndPlanDate.setText(strPlanDate);
+            detailQuantity.setText(strQuantity);
+            detailDocno.setText(strDocno);
+
+            codeRule = strQrCodeRule;
+            if(codeRule.isEmpty()){
+                btnSubmit.setVisibility(View.VISIBLE);
+                btnScanSubmit.setVisibility(View.GONE);
+            }else{
+                btnSubmit.setVisibility(View.GONE);
+                btnScanSubmit.setVisibility(View.VISIBLE);
+            }
+
+            strResult = strStatus;
+            if(strResult.equals("Y")){
+                imageViewResult.setImageDrawable(getResources().getDrawable(R.drawable.detail_status_ok));
+                detailQuantityNg.setFocusable(false);
+                detailQuantityNo.setFocusable(false);
+                strFlag = "Y";
+            }else{
+                imageViewResult.setImageDrawable(getResources().getDrawable(R.drawable.detail_status_deal));
+                strFlag = "N";
+            }
+        }else{
+            finish();
+        }
+    }
+
     private class detailClickListener implements View.OnClickListener{
 
         @Override
         public void onClick(View v) {
             switch (v.getId()){
                 case R.id.btnSubmit:
+                    strInspeciton = "OK";
                     if(strFlag.equals("N")){
                         if(checkQty()){
                             if(intIndex == 53){
@@ -282,6 +405,7 @@ public class DetailActivity extends AppCompatActivity {
 
                     break;
                 case R.id.btnScanSubmit:
+                    strInspeciton = "OK";
                     //调用zxing扫码界面
                     IntentIntegrator intentIntegrator = new IntentIntegrator(DetailActivity.this);
                     intentIntegrator.setTimeout(5000);
@@ -290,6 +414,10 @@ public class DetailActivity extends AppCompatActivity {
                     intentIntegrator.initiateScan();
                     break;
                 case R.id.btnCancel:
+                    strInspeciton = "NG";
+//                    if(intIndex==13){
+//                        updateDetailItemData();
+//                    }
                     finish();
                     break;
             }
@@ -400,7 +528,7 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     //解析客户产品条码和内部条码
-    private Boolean deCodeQrCode(String codeRule,String codeContent,String erpCdoe,String erpQty) {
+    private boolean deCodeQrCode(String codeRule,String codeContent,String erpCdoe,String erpQty) {
         boolean isMatch = false;
         String poNo="";
         String productCode="";
@@ -408,80 +536,90 @@ public class DetailActivity extends AppCompatActivity {
         String erpCodeNew = "";
         String saleQty="";
         String msg="";
+        String code1="";
+
+        if(qrCode.equals(codeContent)){
+            MyToast.myShow(DetailActivity.this,"请扫描客户标签",2,0);
+            return false;
+        }
 
         if(codeRule.isEmpty() || codeRule.length() == 0){
             return false;
         }
 
-        //获取分隔索引
-        int index1 = codeRule.indexOf(',',0);
-        int index2 = codeRule.indexOf(',',index1+1);
-        int index3 = codeRule.indexOf(',',index2+1);
-        int indexLen = codeRule.length();
+        try{
+            //获取分隔索引
+            int index1 = codeRule.indexOf(',',0);
+            int index2 = codeRule.indexOf(',',index1+1);
+            int index3 = codeRule.indexOf(',',index2+1);
+            int indexLen = codeRule.length();
 
-        //获取索引值
-        String sIndex1 = codeRule.substring(index1 + 1,index2);
-        String sIndex2 = codeRule.substring(index2 + 1,index3);
-        String sIndex3 = codeRule.substring(index3 + 1,indexLen);
+            //获取索引值
+            String sIndex1 = codeRule.substring(index1 + 1,index2);
+            String sIndex2 = codeRule.substring(index2 + 1,index3);
+            String sIndex3 = codeRule.substring(index3 + 1,indexLen);
 
-        //获取第一码值
-        String code1 = codeRule.substring(0,index1);
+            //获取第一码值
+            code1 = codeRule.substring(0,index1);
 
-        //第一码为0,代表无分隔符,则分割索引按照规则中数字
-        //第一码不为0，代表有分隔符，则分隔索引按照规则中分割符号所在索引位置
-        //0,0-23,23-51,51-56:分隔符,PO单号,零件号,数量;|,1,7,3:分隔符,PO单号,零件号,数量
-        if(code1.equals("0")){
-            //解析开始和结束索引
-            int codeIndexStart1 = Integer.parseInt(sIndex1.substring(0,sIndex1.indexOf('-',1)));
-            int codeIndexEnd1 = Integer.parseInt(sIndex1.substring(sIndex1.indexOf('-',1)+1,sIndex1.length()));
-            int codeIndexStart2 = Integer.parseInt(sIndex2.substring(0,sIndex2.indexOf('-',1)));
-            int codeIndexEnd2 = Integer.parseInt(sIndex2.substring(sIndex2.indexOf('-',1)+1,sIndex2.length()));
-            int codeIndexStart3 = Integer.parseInt(sIndex3.substring(0,sIndex3.indexOf('-',1)));
-            int codeIndexEnd3 = Integer.parseInt(sIndex3.substring(sIndex3.indexOf('-',1)+1,sIndex3.length()));
+            //第一码为0,代表无分隔符,则分割索引按照规则中数字
+            //第一码不为0，代表有分隔符，则分隔索引按照规则中分割符号所在索引位置
+            //0,0-23,23-51,51-56:分隔符,PO单号,零件号,数量;|,1,7,3:分隔符,PO单号,零件号,数量
+            if(code1.equals("0")){
+                //解析开始和结束索引
+                int codeIndexStart1 = Integer.parseInt(sIndex1.substring(0,sIndex1.indexOf('-',1)));
+                int codeIndexEnd1 = Integer.parseInt(sIndex1.substring(sIndex1.indexOf('-',1)+1,sIndex1.length()));
+                int codeIndexStart2 = Integer.parseInt(sIndex2.substring(0,sIndex2.indexOf('-',1)));
+                int codeIndexEnd2 = Integer.parseInt(sIndex2.substring(sIndex2.indexOf('-',1)+1,sIndex2.length()));
+                int codeIndexStart3 = Integer.parseInt(sIndex3.substring(0,sIndex3.indexOf('-',1)));
+                int codeIndexEnd3 = Integer.parseInt(sIndex3.substring(sIndex3.indexOf('-',1)+1,sIndex3.length()));
 
-            poNo = codeContent.substring(codeIndexStart1,codeIndexEnd1).trim();
-            productCode = codeContent.substring(codeIndexStart2,codeIndexEnd2).trim();
-            saleQty = codeContent.substring(codeIndexStart3,codeIndexEnd3).trim();
+                poNo = codeContent.substring(codeIndexStart1,codeIndexEnd1).trim();
+                productCode = codeContent.substring(codeIndexStart2,codeIndexEnd2).trim();
+                saleQty = codeContent.substring(codeIndexStart3,codeIndexEnd3).trim();
 
-            //本田备件处理
-            productCodeNew = productCode.substring(0,productCode.indexOf(' ',1))+productCode.substring(productCode.indexOf(' ',1)+1,productCode.length()-1);
-        }else {
-            String strCodeContentUft = "";
-            if(code1.equals("1")){
-                strCodeContentUft = codeContent.trim();
-            }else{
-                if(code1.equals("2")){
-                    strCodeContentUft = "P"+codeContent.trim();
+                //本田备件处理
+                productCodeNew = productCode.substring(0,productCode.indexOf(' ',1))+productCode.substring(productCode.indexOf(' ',1)+1,productCode.length()-1);
+            }else {
+                String strCodeContentUft = "";
+                if(code1.equals("1")){
+                    strCodeContentUft = codeContent.trim();
                 }else{
-                    String strCodeContent = codeContent.trim().replace(code1,",");
+                    if(code1.equals("2")){
+                        strCodeContentUft = "P"+codeContent.trim();
+                    }else{
+                        String strCodeContent = codeContent.trim().replace(code1,",");
 
-                    try{
-                        strCodeContentUft = new String(strCodeContent.getBytes("gb2312"),"gb2312");
-                    }catch (UnsupportedEncodingException e){
-                        e.printStackTrace();
+                        try{
+                            strCodeContentUft = new String(strCodeContent.getBytes("gb2312"),"gb2312");
+                        }catch (UnsupportedEncodingException e){
+                            e.printStackTrace();
+                        }
                     }
+
                 }
 
-            }
+                int poNoIndex = Integer.parseInt(sIndex1);
+                int productCodeIndex = Integer.parseInt(sIndex2);
+                int saleQtyIndex = Integer.parseInt(sIndex3);
+                String[] arrayCodeContent = strCodeContentUft.split(",");
+                for(int i=0;i<arrayCodeContent.length;i++){
+                    poNo = arrayCodeContent[poNoIndex].trim();
+                    productCode = arrayCodeContent[productCodeIndex].trim();
+                    saleQty = arrayCodeContent[saleQtyIndex].trim();
 
-            int poNoIndex = Integer.parseInt(sIndex1);
-            int productCodeIndex = Integer.parseInt(sIndex2);
-            int saleQtyIndex = Integer.parseInt(sIndex3);
-            String[] arrayCodeContent = strCodeContentUft.split(",");
-            for(int i=0;i<arrayCodeContent.length;i++){
-                poNo = arrayCodeContent[poNoIndex].trim();
-                productCode = arrayCodeContent[productCodeIndex].trim();
-                saleQty = arrayCodeContent[saleQtyIndex].trim();
+                    //模冲零件开头为C0230
+                    productCodeNew = productCode.substring(4,productCode.length());
+                }
 
-                //模冲零件开头为C0230
-                productCodeNew = productCode.substring(4,productCode.length());
+                //乘用车DFPV零件处理
+                int iDfpv = erpCdoe.indexOf("-DFPV",1);
+                if(iDfpv>0){
+                    erpCodeNew = erpCdoe.substring(0,iDfpv);
+                }
             }
-
-            //乘用车DFPV零件处理
-            int iDfpv = erpCdoe.indexOf("-DFPV",1);
-            if(iDfpv>0){
-                erpCodeNew = erpCdoe.substring(0,iDfpv);
-            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
 
         if(saleQty.equals(" ") || saleQty.length()==0){
@@ -549,6 +687,8 @@ public class DetailActivity extends AppCompatActivity {
                 String strIndexStr = "erpqr";
                 if(intIndex==13){
                     strIndexStr = "fqc";
+                }else if(intIndex==14){
+                    strIndexStr = "oqc";
                 }
 
                 //发送服务器请求
@@ -655,6 +795,9 @@ public class DetailActivity extends AppCompatActivity {
     //更新ERP数据
     private void updateDetailItemData(){
         btnSubmit.setVisibility(View.INVISIBLE);
+        btnCancel.setVisibility(View.INVISIBLE);
+        loadingDialog = new LoadingDialog(this,"数据提交中",R.drawable.dialog_loading);
+        loadingDialog.show();
 
         Observable.create(new ObservableOnSubscribe<String>() {
             @Override
@@ -675,6 +818,7 @@ public class DetailActivity extends AppCompatActivity {
                         "&lt;Field name=\"qcba010\" value=\""+detailProductCode.getText().toString().trim()+"\"/&gt;\n"+
                         "&lt;Field name=\"qcba017\" value=\""+detailQuantity.getText().toString().trim()+"\"/&gt;\n"+
                         "&lt;Field name=\"qrsid\" value=\""+qrSid+"\"/&gt;\n"+
+                        "&lt;Field name=\"qcba022\" value=\""+strInspeciton+"\"/&gt;\n"+
                         "&lt;Detail name=\"s_detail1\" node_id=\"1_1\"&gt;\n"+
                         "&lt;Record&gt;\n"+
                         "&lt;Field name=\"qcbdseq\" value=\"1.0\"/&gt;\n"+
@@ -723,11 +867,12 @@ public class DetailActivity extends AppCompatActivity {
             @Override
             public void onError(Throwable e) {
                 MyToast.myShow(DetailActivity.this,"执行异常,请联系管理员",0,0);
+                loadingDialog.dismiss();
             }
 
             @Override
             public void onComplete() {
-
+                loadingDialog.dismiss();
             }
         });
     }

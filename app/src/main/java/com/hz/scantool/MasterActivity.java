@@ -109,14 +109,14 @@ public class MasterActivity extends AppCompatActivity {
         txtMasterSite.setText(UserInfo.getUserSite(getApplicationContext()));
 
         //初始化权限
-        btnAction1Power =true;
-        btnAction2Power =true;
-        btnAction3Power =true;
-        btnAction4Power =true;
-        btnAction5Power =true;
-        btnAction6Power =true;
-        btnAction7Power =true;
-        btnAction8Power =true;
+        btnAction1Power =false;     //工序报工
+        btnAction2Power =false;     //质量检验
+        btnAction3Power =true;     //完工入库
+        btnAction4Power =true;     //采购入库
+        btnAction5Power =true;     //生产备料
+        btnAction6Power =true;     //销售出货
+        btnAction7Power =false;     //生产协同
+        btnAction8Power =true;     //期末盘点
     }
 
     //设置导航按钮样式

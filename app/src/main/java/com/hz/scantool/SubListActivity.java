@@ -24,6 +24,8 @@ import android.widget.TextView;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+import com.hz.scantool.adapter.LoadingDialog;
+import com.hz.scantool.adapter.MyAlertDialog;
 import com.hz.scantool.adapter.MyToast;
 import com.hz.scantool.adapter.SubListAdapter;
 import com.hz.scantool.helper.T100ServiceHelper;
@@ -57,6 +59,7 @@ public class SubListActivity extends AppCompatActivity {
     private String statusCode;
     private String statusDescription;
     private String strProg;
+    private String strScanContent;
 
     private ListView listView;
     private SubListAdapter subDetailAdapter;
@@ -72,6 +75,7 @@ public class SubListActivity extends AppCompatActivity {
     private EditText txtSubQuerybDate;
     private EditText txtSubQueryeDate;
     private ProgressBar progressBar;
+    private LoadingDialog loadingDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -152,9 +156,9 @@ public class SubListActivity extends AppCompatActivity {
     protected void onRestart() {
         super.onRestart();
 
-        Log.i("MACADDRESS",strWhere);
         initQueryCondition(9);
         getSubListData();
+        strScanContent="";
     }
 
     //PDA扫描数据接收
@@ -199,7 +203,12 @@ public class SubListActivity extends AppCompatActivity {
             MyToast.myShow(context,"条码错误:"+qrContent,0,1);
         }else{
             if(intIndex == 2){
-                genT100StockLot(qrContent);
+                if(qrContent.equals(strScanContent)){
+                    MyToast.myShow(context,"重复扫描",2,1);
+                }else{
+                    genT100StockLot(qrContent);
+                }
+                strScanContent=qrContent;
             }else{
                 MyToast.myShow(context,"只有入库才可扫描产品条码",2,1);
             }
@@ -224,6 +233,7 @@ public class SubListActivity extends AppCompatActivity {
         Bundle bundle = intent.getExtras();
         intIndex = bundle.getInt("index");
         strTitle = bundle.getString("title");
+        strScanContent="";
     }
 
     private void initView(){
@@ -479,7 +489,9 @@ public class SubListActivity extends AppCompatActivity {
     //产生仓储批
     private void genT100StockLot(String qrContent){
         //显示进度条
-        progressBar.setVisibility(View.VISIBLE);
+//        progressBar.setVisibility(View.VISIBLE);
+        loadingDialog = new LoadingDialog(this,"数据请求中",R.drawable.dialog_loading);
+        loadingDialog.show();
 
         Observable.create(new ObservableOnSubscribe<List<Map<String,Object>>>(){
             @Override
@@ -533,10 +545,9 @@ public class SubListActivity extends AppCompatActivity {
                         if(!statusCode.equals("0")){
                             MyToast.myShow(SubListActivity.this,statusDescription,0,0);
                         }else{
-                            int progress = progressBar.getProgress();
-                            progress = progress + 50;
-                            progressBar.setProgress(progress);
-//                            MyToast.myShow(SubListActivity.this,statusDescription,1,0);
+//                            int progress = progressBar.getProgress();
+//                            progress = progress + 50;
+//                            progressBar.setProgress(progress);
                         }
                     }
                 }else{
@@ -546,15 +557,17 @@ public class SubListActivity extends AppCompatActivity {
 
             @Override
             public void onError(Throwable e) {
-//                MyToast.myShow(SubListActivity.this,"网络错误",0,0);
-                showDetail();
-                progressBar.setVisibility(View.GONE);
+                MyToast.myShow(SubListActivity.this,"网络错误",0,0);
+//                showDetail();
+//                progressBar.setVisibility(View.GONE);
+                loadingDialog.dismiss();
             }
 
             @Override
             public void onComplete() {
                 showDetail();
-                progressBar.setVisibility(View.GONE);
+//                progressBar.setVisibility(View.GONE);
+                loadingDialog.dismiss();
             }
         });
     }

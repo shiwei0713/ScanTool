@@ -22,10 +22,12 @@ import android.widget.TextView;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.hz.scantool.adapter.DetailListItemAdapter;
+import com.hz.scantool.adapter.LoadingDialog;
 import com.hz.scantool.adapter.MyToast;
 import com.hz.scantool.helper.T100ServiceHelper;
 import com.hz.scantool.models.UserInfo;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -88,9 +90,9 @@ public class DetailListActivity extends AppCompatActivity {
     private ListView listView;
     private List<Map<String,Object>> list;
     private DetailListItemAdapter detailItemAdapter;
-
     Context mContext;
     private String strStatus = "Y";
+    private LoadingDialog loadingDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,7 +125,7 @@ public class DetailListActivity extends AppCompatActivity {
         //设置标题
         String strTitle = "备货信息";
         switch (intIndex){
-            case 1:
+            case 14:
                 strTitle = "检验信息";
                 break;
             case 5:
@@ -203,7 +205,7 @@ public class DetailListActivity extends AppCompatActivity {
         listView = (ListView) findViewById(R.id.detailListView);
 
         switch (intIndex){
-            case 1:
+            case 14:
                 linearDetailProductName.setVisibility(View.GONE);
                 linearDetailProductModels.setVisibility(View.GONE);
                 linearDetailStock.setVisibility(View.GONE);
@@ -282,7 +284,7 @@ public class DetailListActivity extends AppCompatActivity {
                     Bundle bundle;
                     switch (intIndex){
                         //质量检验
-                        case 1:
+                        case 14:
                             intent = new Intent(context,DetailActivity.class);
                             //设置传入参数
                             bundle=new Bundle();
@@ -406,6 +408,9 @@ public class DetailListActivity extends AppCompatActivity {
 
                 //刷新汇总数
                 refreshCurrentPcs();
+
+                //刷新列表
+                refreshList();
             }
 
             @Override
@@ -422,6 +427,10 @@ public class DetailListActivity extends AppCompatActivity {
 
     //更新备货完成数据
     public void updateDetailListData() {
+        //显示进度条
+        loadingDialog = new LoadingDialog(this,"数据提交中",R.drawable.dialog_loading);
+        loadingDialog.show();
+
         Observable.create(new ObservableOnSubscribe<String>() {
             @Override
             public void subscribe(ObservableEmitter<String> e) throws Exception {
@@ -463,18 +472,24 @@ public class DetailListActivity extends AppCompatActivity {
 
             @Override
             public void onNext(String s) {
-                int intType = Integer.parseInt(statusCode);
-                MyToast.myShow(DetailListActivity.this,statusDescription,intType,0);
+
             }
 
             @Override
             public void onError(Throwable e) {
                 MyToast.myShow(DetailListActivity.this,"更新失败",0,0);
+                loadingDialog.dismiss();
             }
 
             @Override
             public void onComplete() {
-
+                if(!statusCode.equals("0")){
+                    MyToast.myShow(DetailListActivity.this,statusDescription,0,0);
+                }else{
+                    MyToast.myShow(DetailListActivity.this,statusDescription,1,0);
+                    finish();
+                }
+                loadingDialog.dismiss();
             }
         });
     }
@@ -491,6 +506,21 @@ public class DetailListActivity extends AppCompatActivity {
         }
 
         return list;
+    }
+
+    //隐藏已扫描项
+    public void refreshList(){
+        Iterator<Map<String,Object>> listItem = list.iterator();
+        while (listItem.hasNext()){
+            Map<String,Object> map = listItem.next();
+            if(map.get("Status").equals("S")){
+                listItem.remove();
+            }
+        }
+
+        //初始化ListView
+        detailItemAdapter = new DetailListItemAdapter(list,getApplicationContext(),txtDetailDocno.getText().toString(),intIndex);
+        listView.setAdapter(detailItemAdapter);
     }
 
     //刷新当前备货箱数
@@ -524,9 +554,8 @@ public class DetailListActivity extends AppCompatActivity {
                 intQuantityPcs = 0;
             }
 
-
-            if(intIndex == 1){
-                if(erpStatus.equals("S")){
+            if(intIndex == 14){
+                if(erpStatus.equals("Y")){
                     intCurrent = intCurrent + Integer.parseInt(erpQuantityPcs);
                 }
             }else{

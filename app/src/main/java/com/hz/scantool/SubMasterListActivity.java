@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -217,7 +218,7 @@ public class SubMasterListActivity extends AppCompatActivity {
             //OQC检验
             case 16:
                 strJsonType = "oqc";
-                strType = "1";
+                strType = "14";
                 break;
             //库存检验
             case 17:
@@ -452,7 +453,7 @@ public class SubMasterListActivity extends AppCompatActivity {
         if(qrIndex==-1){
             MyToast.myShow(context,"条码错误:"+qrContent,0,1);
         }else{
-            Boolean isOqc = false;
+            boolean isOqc = false;  //是否OQC
             String doctype = "";
             String docno = qrCodeValue[0].trim();
             if(!docno.isEmpty()) {
@@ -467,11 +468,14 @@ public class SubMasterListActivity extends AppCompatActivity {
 
             int index = 0;
             //16:OQC检验;11:IQC检验;15:FQC检验
-            if(actionId == 16 || actionId == 11){
+            if(actionId == 11){
                 index=1;
-            }else if(actionId == 15){
+            } else if(actionId == 15){
                 index=13;
-            } else if(actionId ==52){
+            } else if(actionId == 16){
+                index=14;
+            }
+            else if(actionId ==52){
                 index=5;
             }else{
                 index=actionId;
@@ -502,14 +506,18 @@ public class SubMasterListActivity extends AppCompatActivity {
                 if(isOqc){
                     MyToast.myShow(SubMasterListActivity.this,"只有OQC才可扫描备货单,请重新扫描",0,0);
                 }else{
-                    intent = new Intent(context,DetailActivity.class);
-                    //设置传入参数
-                    bundle=new Bundle();
-                    bundle.putString("qrCode",qrContent);
-                    bundle.putString("docno",docno);
-                    bundle.putInt("index",index);
-                    intent.putExtras(bundle);
-                    startActivity(intent);
+                    if(actionId == 53){
+                        updErrorDocData(qrCodeValue[0].toString());
+                    }else{
+                        intent = new Intent(context,DetailActivity.class);
+                        //设置传入参数
+                        bundle=new Bundle();
+                        bundle.putString("qrCode",qrContent);
+                        bundle.putString("docno",docno);
+                        bundle.putInt("index",index);
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                    }
                 }
             }
         }
@@ -586,5 +594,143 @@ public class SubMasterListActivity extends AppCompatActivity {
                 refreshCount();
             }
         });
+    }
+
+    //异常出货扫描
+    private void updErrorDocData(String qrcode){
+        //显示进度条
+        subMasterQcProgressBar.setVisibility(View.VISIBLE);
+
+        Observable.create(new ObservableOnSubscribe<List<Map<String,Object>>>(){
+            @Override
+            public void subscribe(ObservableEmitter<List<Map<String, Object>>> e) throws Exception {
+                //初始化T100服务名
+                String webServiceName = "InventoryBillRequestConfirm";
+                String strProg = "errpost";
+                String strDocno = "";
+                String strIndexStr = "docno";
+
+                //发送服务器请求
+                T100ServiceHelper t100ServiceHelper = new T100ServiceHelper();
+                String requestBody = "&lt;Document&gt;\n"+
+                        "&lt;RecordSet id=\"1\"&gt;\n"+
+                        "&lt;Master name=\"inaj_t\" node_id=\"1\"&gt;\n"+
+                        "&lt;Record&gt;\n"+
+                        "&lt;Field name=\"inajsite\" value=\""+ UserInfo.getUserSiteId(getApplicationContext())+"\"/&gt;\n"+
+                        "&lt;Field name=\"inajent\" value=\""+UserInfo.getUserEnterprise(getApplicationContext())+"\"/&gt;\n"+
+                        "&lt;Field name=\"inaj001\" value=\""+strDocno+"\"/&gt;\n"+
+                        "&lt;Field name=\"inaj015\" value=\""+strProg+"\"/&gt;\n"+
+                        "&lt;Field name=\"inajuser\" value=\""+ UserInfo.getUserId(getApplicationContext()) +"\"/&gt;\n"+  //异动人员
+                        "&lt;Field name=\"qrcode\" value=\""+ qrcode +"\"/&gt;\n"+
+                        "&lt;Detail name=\"s_detail1\" node_id=\"1_1\"&gt;\n"+
+                        "&lt;Record&gt;\n"+
+                        "&lt;Field name=\"inaj002\" value=\"1.0\"/&gt;\n"+
+                        "&lt;/Record&gt;\n"+
+                        "&lt;/Detail&gt;\n"+
+                        "&lt;Memo/&gt;\n"+
+                        "&lt;Attachment count=\"0\"/&gt;\n"+
+                        "&lt;/Record&gt;\n"+
+                        "&lt;/Master&gt;\n"+
+                        "&lt;/RecordSet&gt;\n"+
+                        "&lt;/Document&gt;\n";
+                String strResponse = t100ServiceHelper.getT100Data(requestBody,webServiceName,getApplicationContext(),"");
+                mapResponseStatus = t100ServiceHelper.getT100StatusData(strResponse);
+                mapResponseList = t100ServiceHelper.getT100JsonData(strResponse,strIndexStr);
+
+                e.onNext(mapResponseStatus);
+                e.onNext(mapResponseList);
+                e.onComplete();
+            }
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<List<Map<String, Object>>>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(List<Map<String, Object>> maps) {
+                if(mapResponseStatus.size()> 0){
+                    for(Map<String,Object> mStatus: mapResponseStatus){
+                        statusCode = mStatus.get("statusCode").toString();
+                        statusDescription = mStatus.get("statusDescription").toString();
+
+                        if(!statusCode.equals("0")){
+                            MyToast.myShow(SubMasterListActivity.this,statusDescription,0,0);
+                        }else{
+                            int progress = subMasterQcProgressBar.getProgress();
+                            progress = progress + 50;
+                            subMasterQcProgressBar.setProgress(progress);
+                        }
+                    }
+                }else{
+                    MyToast.myShow(SubMasterListActivity.this,"无数据",2,0);
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                MyToast.myShow(SubMasterListActivity.this,"网络错误",0,0);
+                subMasterQcProgressBar.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onComplete() {
+                showDetail();
+                subMasterQcProgressBar.setVisibility(View.GONE);
+            }
+        });
+    }
+
+    private void showDetail(){
+        if(!statusCode.equals("0")){
+            String strProductCode="";
+            String strProductName="";
+            String strQuantityNg="";
+            String strQuantityNo="";
+            String strProductModels="";
+            String strProcess="";
+            String strDevice="";
+            String strPlanDate="";
+            String strQuantity="";
+            String strDocno="";
+            String strQrCodeRule="";
+            String strStatus="";
+
+            if(mapResponseList.size()> 0){
+                for(Map<String,Object> mResponse: mapResponseList){
+                    strProductCode = mResponse.get("ProductCode").toString();
+                    strProductName = mResponse.get("ProductName").toString();
+                    strQuantityNg = mResponse.get("QuantityNg").toString();
+                    strQuantityNo = mResponse.get("QuantityNo").toString();
+                    strProductModels = mResponse.get("ProductModels").toString();
+                    strProcess = mResponse.get("Process").toString();
+                    strDevice = mResponse.get("Device").toString();
+                    strPlanDate = mResponse.get("PlanDate").toString();
+                    strQuantity = mResponse.get("Quantity").toString();
+                    strDocno = mResponse.get("Docno").toString();
+                    strQrCodeRule = mResponse.get("QrCodeRule").toString();
+                    strStatus = mResponse.get("Status").toString();
+                }
+            }
+
+            Intent intent = new Intent(SubMasterListActivity.this,DetailActivity.class);
+            //设置传入参数
+            bundle=new Bundle();
+            bundle.putString("ProductCode",strProductCode);
+            bundle.putString("ProductName",strProductName);
+            bundle.putString("QuantityNg",strQuantityNg);
+            bundle.putString("QuantityNo",strQuantityNo);
+            bundle.putString("ProductModels",strProductModels);
+            bundle.putString("Process",strProcess);
+            bundle.putString("Device",strDevice);
+            bundle.putString("PlanDate",strPlanDate);
+            bundle.putString("Quantity",strQuantity);
+            bundle.putString("Docno",strDocno);
+            bundle.putString("QrCodeRule",strQrCodeRule);
+            bundle.putString("Status",strStatus);
+            bundle.putInt("index",actionId);
+            intent.putExtras(bundle);
+            startActivity(intent);
+        }
     }
 }

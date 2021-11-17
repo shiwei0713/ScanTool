@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+import com.hz.scantool.adapter.LoadingDialog;
 import com.hz.scantool.adapter.MyToast;
 import com.hz.scantool.adapter.SubMasterListItemAdapter;
 import com.hz.scantool.helper.T100ServiceHelper;
@@ -54,6 +55,7 @@ public class SubMasterContentActivity extends AppCompatActivity {
     private String strWhere;
     private String statusCode;
     private String statusDescription;
+    private String strScanContent;
     private int actionId;
     private Bundle bundle;
     private TextView txtSubTask1;
@@ -67,6 +69,7 @@ public class SubMasterContentActivity extends AppCompatActivity {
     private List<Map<String,Object>> mapResponseList;
     private List<Map<String,Object>> mapResponseStatus;
     private SubMasterListItemAdapter subMasterListItemAdapter;
+    private LoadingDialog loadingDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -144,6 +147,13 @@ public class SubMasterContentActivity extends AppCompatActivity {
         unregisterReceiver(scanReceiver);
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+
+        strScanContent="";
+    }
+
     //PDA扫描数据接收
     private BroadcastReceiver scanReceiver = new BroadcastReceiver() {
         @Override
@@ -189,8 +199,13 @@ public class SubMasterContentActivity extends AppCompatActivity {
             if(actionId ==62){
                 //完工入库
                 //初始化查询条件为当天，同时生成asft340单据为审核状态
-                initQueryCondition(3);
-                genT100Doc(qrContent);
+                if(qrContent.equals(strScanContent)){
+                    MyToast.myShow(context,"重复扫描",2,1);
+                }else{
+                    initQueryCondition(3);
+                    genT100Doc(qrContent);
+                }
+                strScanContent=qrContent;
             }
         }
     }
@@ -201,6 +216,7 @@ public class SubMasterContentActivity extends AppCompatActivity {
         Bundle bundle = intent.getExtras();
         actionId = bundle.getInt("btnId");
         strTitle = bundle.getString("title");
+        strScanContent="";
     }
 
     //初始化控件
@@ -529,7 +545,8 @@ public class SubMasterContentActivity extends AppCompatActivity {
         @Override
         public void ConfirmOnClick(int position, View v) {
             //显示进度条
-            subMasterContentProgressBar.setVisibility(View.VISIBLE);
+            loadingDialog = new LoadingDialog(SubMasterContentActivity.this,"数据提交中",R.drawable.dialog_loading);
+            loadingDialog.show();
 
             Observable.create(new ObservableOnSubscribe<List<Map<String,Object>>>() {
                 @Override
@@ -586,9 +603,9 @@ public class SubMasterContentActivity extends AppCompatActivity {
                             }else{
                                 Button listBtn = v.findViewById(R.id.txtSubContentListBtnDelete);
                                 listBtn.setVisibility(View.INVISIBLE);
-                                int progress = subMasterContentProgressBar.getProgress();
-                                progress = progress + 50;
-                                subMasterContentProgressBar.setProgress(progress);
+//                                int progress = subMasterContentProgressBar.getProgress();
+//                                progress = progress + 50;
+//                                subMasterContentProgressBar.setProgress(progress);
                                 MyToast.myShow(SubMasterContentActivity.this, statusDescription, 1, 0);
                             }
                         }
@@ -601,13 +618,15 @@ public class SubMasterContentActivity extends AppCompatActivity {
                 public void onError(Throwable e) {
                     MyToast.myShow(SubMasterContentActivity.this,mapResponseStatus.toString(),0,0);
                     getSubContentWorkOrderListData();
-                    subMasterContentProgressBar.setVisibility(View.GONE);
+//                    subMasterContentProgressBar.setVisibility(View.GONE);
+                    loadingDialog.dismiss();
                 }
 
                 @Override
                 public void onComplete() {
                     getSubContentWorkOrderListData();
-                    subMasterContentProgressBar.setVisibility(View.GONE);
+//                    subMasterContentProgressBar.setVisibility(View.GONE);
+                    loadingDialog.dismiss();
                 }
             });
         }

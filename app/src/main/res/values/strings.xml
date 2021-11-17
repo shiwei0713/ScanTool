@@ -75,6 +75,7 @@
     <string name="tab_product12">销售备货</string>
     <string name="tab_product13">销售退回</string>
     <string name="tab_product14">异常备货</string>
+    <string name="tab_product15">清除扫码</string>
     <string name="tab_query1">失败明细</string>
     <string name="item_title_product_code">料件编码:</string>
     <string name="item_title_product_name">品名:</string>
@@ -98,7 +99,9 @@
     <string name="item_title_date">入库日期:</string>
     <string name="detail_submit">完成</string>
     <string name="detail_scan_submit">扫描核对</string>
+    <string name="detail_qc_submit">合格</string>
     <string name="detail_cancel">取消</string>
+    <string name="detail_qc_cancel">不合格</string>
     <string name="detail_refresh">刷新</string>
     <string name="detail_title1">良品:</string>
     <string name="detail_title2">不良:</string>
@@ -180,4 +183,5 @@
     <string name="sub_detail_list_container">容器型号:</string>
     <string name="sub_detail_list_cancel">关闭</string>
     <string name="sub_detail_list_post">过账</string>
+    <string name="loading">数据请求中</string>
 </resources>

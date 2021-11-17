@@ -14,6 +14,7 @@ import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.hz.scantool.adapter.LoadingDialog;
 import com.hz.scantool.adapter.MyToast;
 import com.hz.scantool.helper.SharedHelper;
 import com.hz.scantool.helper.T100ServiceHelper;
@@ -45,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     private SharedHelper sharedHelper;
     private Context mContext;
     private String nerworkType;
+    private LoadingDialog loadingDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -169,6 +171,9 @@ public class MainActivity extends AppCompatActivity {
 
     //获取用户信息
     private void getUserLogin(){
+        loadingDialog = new LoadingDialog(this,"正在登录,请稍后",R.drawable.dialog_loading);
+        loadingDialog.show();
+
         Observable.create(new ObservableOnSubscribe<String>(){
 
             @Override
@@ -240,11 +245,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onError(Throwable e) {
                 MyToast.myShow(MainActivity.this,"网络异常,请联系系统管理员",0,0);
+                loadingDialog.dismiss();
             }
 
             @Override
             public void onComplete() {
-
+                loadingDialog.dismiss();
             }
         });
     }

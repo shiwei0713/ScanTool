@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+import com.hz.scantool.adapter.LoadingDialog;
 import com.hz.scantool.adapter.MyToast;
 import com.hz.scantool.helper.T100ServiceHelper;
 import com.hz.scantool.models.UserInfo;
@@ -54,6 +55,7 @@ public class SubMasterListDetailActivity extends AppCompatActivity {
     private TextView txtSubListDetailDept;
     private TextView txtSubListDetailPlanDate;
     private TextView txtSubListDetailPosition;
+    private TextView txtSubListDetailQuantityTitle;
     private TextView txtSubListDetailQuantity;
     private TextView txtSubListDetailProductName;
     private TextView txtSubListDetailPlanQuantity;
@@ -62,6 +64,7 @@ public class SubMasterListDetailActivity extends AppCompatActivity {
     private Button btnSubmit;
     private Button btnCancel;
     private Bundle bundle;
+    private LoadingDialog loadingDialog;
 
     private List<Map<String,Object>> mapResponseStatus;
 
@@ -127,6 +130,7 @@ public class SubMasterListDetailActivity extends AppCompatActivity {
         txtSubListDetailDept = findViewById(R.id.txtSubListDetailDept);
         txtSubListDetailPlanDate = findViewById(R.id.txtSubListDetailPlanDate);
         txtSubListDetailPosition = findViewById(R.id.txtSubListDetailPosition);
+        txtSubListDetailQuantityTitle =findViewById(R.id.txtSubListDetailQuantityTitle);
         txtSubListDetailQuantity = findViewById(R.id.txtSubListDetailQuantity);
         txtSubListDetailProductName = findViewById(R.id.txtSubListDetailProductName);
         txtSubListDetailPlanQuantity = findViewById(R.id.txtSubListDetailPlanQuantity);
@@ -154,7 +158,13 @@ public class SubMasterListDetailActivity extends AppCompatActivity {
         }else{
             btnSubmit.setVisibility(View.GONE);
             btnCancel.setVisibility(View.VISIBLE);
-            txtSubListDetailPosition.setTextColor(Color.RED);
+            if(strDocStatus.equals("X")){
+                txtSubListDetailQuantityTitle.setVisibility(View.GONE);
+                txtSubListDetailQuantity.setVisibility(View.GONE);
+                txtSubListDetailPosition.setTextColor(Color.RED);
+            }else{
+                txtSubListDetailPosition.setTextColor(Color.RED);
+            }
         }
 
         if(strType.equals("2")){
@@ -261,7 +271,7 @@ public class SubMasterListDetailActivity extends AppCompatActivity {
         int iQuantity = Integer.parseInt(strQuantity);
         int iPlanQuantity = Integer.parseInt(strPlanQuantity);
         if(iQuantity==iPlanQuantity && iQuantity>0 && iPlanQuantity>0){
-            confirmInventoryBillRequest();
+//            confirmInventoryBillRequest();
         }else{
             MyToast.myShow(SubMasterListDetailActivity.this,"申请量和扫描量不一致，无法提交",0,0);
         }
@@ -269,6 +279,9 @@ public class SubMasterListDetailActivity extends AppCompatActivity {
 
     //过账入库单并产生倒扣
     private void confirmInventoryBillRequest(){
+        loadingDialog = new LoadingDialog(this,"单据过账中",R.drawable.dialog_loading);
+        loadingDialog.show();
+
         Observable.create(new ObservableOnSubscribe<List<Map<String,Object>>>() {
             @Override
             public void subscribe(ObservableEmitter<List<Map<String, Object>>> e) throws Exception {
@@ -332,7 +345,7 @@ public class SubMasterListDetailActivity extends AppCompatActivity {
             @Override
             public void onError(Throwable e) {
                 MyToast.myShow(SubMasterListDetailActivity.this,"网络错误",0,0);
-                finish();
+                loadingDialog.dismiss();
             }
 
             @Override
@@ -340,6 +353,7 @@ public class SubMasterListDetailActivity extends AppCompatActivity {
                 if(statusCode.equals("0")){
                     finish();
                 }
+                loadingDialog.dismiss();
             }
         });
     }

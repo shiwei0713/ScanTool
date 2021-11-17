@@ -25,7 +25,7 @@ public class T100ServiceHelper {
 
     private static final String SERVICE_IP="192.168.210.3";
     private static final String SERVICE_LISTENER="topprd";   //toptst
-    private static final String SERVICE_ENTERPRISE="12";
+    private static final String SERVICE_ENTERPRISE="10";
     private static final String ARG_NETWORK_WLAN="外部网络";
     private static final String SERVICE_LAN_URL="http://192.168.210.3/wtopprd/ws/r/awsp900?WSDL";  //wtoptst
     private static final String SERVICE_WLAN_URL="http://119.97.210.146:8089/wtopprd/ws/r/awsp900?WSDL";  //wtoptst
@@ -102,9 +102,6 @@ public class T100ServiceHelper {
     private Response executeT100Service() throws IOException {
 
         OkHttpClient client = new OkHttpClient().newBuilder()
-                .connectTimeout(20, TimeUnit.SECONDS)  //连接超时
-                .readTimeout(20,TimeUnit.SECONDS)      //读取超时
-                .writeTimeout(20,TimeUnit.SECONDS)     //写入超时
                 .build();
         MediaType mediaType = MediaType.parse("text/xml");
         RequestBody body = RequestBody.create(mediaType, webXmlContent.toString());
