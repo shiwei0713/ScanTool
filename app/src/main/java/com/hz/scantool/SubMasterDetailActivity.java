@@ -14,7 +14,9 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
@@ -44,6 +46,16 @@ public class SubMasterDetailActivity extends AppCompatActivity {
 
     private String statusCode;
     private String statusDescription;
+
+    private TextView subDetailProductCode;
+    private TextView subDetailProductModels;
+    private TextView subDetailModel;
+    private TextView subDetailStartPlanDate;
+    private TextView subDetailEndPlanDate;
+    private TextView subDetailQuantity;
+    private TextView subDetailDocno;
+    private Button btnDetailSubmit;
+    private Button btnDetailCancel;
 
     private ProgressBar subMasterDetailProgressBar;
     private List<Map<String,Object>> mapResponseList;
@@ -159,6 +171,33 @@ public class SubMasterDetailActivity extends AppCompatActivity {
 
     private void intiView(){
         subMasterDetailProgressBar = findViewById(R.id.subMasterDetailProgressBar);
+        subDetailProductCode = findViewById(R.id.subDetailProductCode);
+        subDetailProductModels= findViewById(R.id.subDetailProductModels);
+        subDetailModel= findViewById(R.id.subDetailModel);
+        subDetailStartPlanDate= findViewById(R.id.subDetailStartPlanDate);
+        subDetailEndPlanDate= findViewById(R.id.subDetailEndPlanDate);
+        subDetailQuantity= findViewById(R.id.subDetailQuantity);
+        subDetailDocno= findViewById(R.id.subDetailDocno);
+
+        btnDetailSubmit= findViewById(R.id.btnDetailSubmit);
+        btnDetailCancel= findViewById(R.id.btnDetailCancel);
+
+        btnDetailSubmit.setOnClickListener(new masterDetailClickListener());
+        btnDetailCancel.setOnClickListener(new masterDetailClickListener());
+    }
+
+    private class masterDetailClickListener implements View.OnClickListener{
+
+        @Override
+        public void onClick(View view) {
+            switch (view.getId()){
+                case R.id.btnDetailSubmit:
+                    break;
+                case R.id. btnDetailCancel:
+                    finish();
+                    break;
+            }
+        }
     }
 
     //扫描结果解析
@@ -172,6 +211,8 @@ public class SubMasterDetailActivity extends AppCompatActivity {
             if(btnId==68){
                 //清除扫码
                 clearQrCode(qrCodeValue[0].toString());
+            }else if(btnId==69){
+                getScanQrData(qrCodeValue[0].toString());
             }
         }
     }
@@ -252,6 +293,97 @@ public class SubMasterDetailActivity extends AppCompatActivity {
             @Override
             public void onComplete() {
                 subMasterDetailProgressBar.setVisibility(View.GONE);
+            }
+        });
+    }
+
+    //获取扫描条码信息
+    private void getScanQrData(String qrCode){
+        Observable.create(new ObservableOnSubscribe<List<Map<String,Object>>>() {
+            @Override
+            public void subscribe(ObservableEmitter<List<Map<String, Object>>> e) throws Exception {
+                //初始化T100服务名
+                String webServiceName = "GetQrCode";
+                String qrStatus = "B";   //扫描状态记录，B代表车间确认收料，无其他管控
+
+                //发送服务器请求
+                T100ServiceHelper t100ServiceHelper = new T100ServiceHelper();
+                String requestBody = "&lt;Document&gt;\n"+
+                        "&lt;RecordSet id=\"1\"&gt;\n"+
+                        "&lt;Master name=\"bcaa_t\" node_id=\"1\"&gt;\n"+
+                        "&lt;Record&gt;\n"+
+                        "&lt;Field name=\"bcaasite\" value=\""+ UserInfo.getUserSiteId(getApplicationContext())+"\"/&gt;\n"+
+                        "&lt;Field name=\"bcaaent\" value=\""+UserInfo.getUserEnterprise(getApplicationContext())+"\"/&gt;\n"+
+                        "&lt;Field name=\"bcaa011\" value=\""+qrCode+"\"/&gt;\n"+
+                        "&lt;Field name=\"bcaamodid\" value=\""+ UserInfo.getUserId(getApplicationContext()) +"\"/&gt;\n"+
+                        "&lt;Field name=\"bcaa016\" value=\""+qrStatus+"\"/&gt;\n"+
+                        "&lt;Detail name=\"s_detail1\" node_id=\"1_1\"&gt;\n"+
+                        "&lt;Record&gt;\n"+
+                        "&lt;Field name=\"bcaa000\" value=\"1.0\"/&gt;\n"+
+                        "&lt;/Record&gt;\n"+
+                        "&lt;/Detail&gt;\n"+
+                        "&lt;Memo/&gt;\n"+
+                        "&lt;Attachment count=\"0\"/&gt;\n"+
+                        "&lt;/Record&gt;\n"+
+                        "&lt;/Master&gt;\n"+
+                        "&lt;/RecordSet&gt;\n"+
+                        "&lt;/Document&gt;\n";
+                String strResponse = t100ServiceHelper.getT100Data(requestBody,webServiceName,getApplicationContext(),"");
+                mapResponseList = t100ServiceHelper.getT100JsonQrCodeData(strResponse,"qrcode");
+                mapResponseStatus = t100ServiceHelper.getT100StatusData(strResponse);
+
+                e.onNext(mapResponseStatus);
+                e.onNext(mapResponseList);
+                e.onComplete();
+            }
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<List<Map<String, Object>>>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(List<Map<String, Object>> maps) {
+                if(mapResponseStatus.size()> 0){
+                    for(Map<String,Object> mStatus: mapResponseStatus){
+                        statusCode = mStatus.get("statusCode").toString();
+                        statusDescription = mStatus.get("statusDescription").toString();
+
+                        if(!statusCode.equals("0")){
+                            MyToast.myShow(SubMasterDetailActivity.this,statusDescription,0,0);
+                        }
+                    }
+                }else{
+                    MyToast.myShow(SubMasterDetailActivity.this,"执行接口错误",2,0);
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                MyToast.myShow(SubMasterDetailActivity.this,"网络错误",0,0);
+            }
+
+            @Override
+            public void onComplete() {
+                if(mapResponseList.size()>0){
+                    for(Map<String,Object> mData: mapResponseList){
+                        String sProductCode = mData.get("ProductCode").toString();
+                        String sProductName = mData.get("ProductName").toString();
+                        String sProductModels = mData.get("ProductModels").toString();
+                        String sProductSize = mData.get("ProductSize").toString();
+                        String sDocno = mData.get("Docno").toString();
+                        String sPlanDate = mData.get("PlanDate").toString();
+                        String sQuantity = mData.get("Quantity").toString();
+                        String sWeight = mData.get("Weight").toString();
+                        subDetailProductCode.setText(sProductCode);
+                        subDetailProductModels.setText(sProductName);
+                        subDetailModel.setText(sProductSize+"/"+sProductModels);
+                        subDetailStartPlanDate.setText(sPlanDate);
+                        subDetailEndPlanDate.setText(sPlanDate);
+                        subDetailQuantity.setText(sQuantity+" PCS/"+sWeight+" KGK");
+                        subDetailDocno.setText(sDocno);
+                    }
+                }
             }
         });
     }

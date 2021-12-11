@@ -1,3 +1,5 @@
+
+
 package com.hz.scantool;
 
 import androidx.annotation.NonNull;
@@ -645,10 +647,12 @@ public class DetailActivity extends AppCompatActivity {
                 isMatch = true;
                 MyToast.myShow(DetailActivity.this,"检核成功",1,0);
             }else{
+                isMatch = false;
                 msg = "数量不一致,客户数量:"+saleQty+",系统数量:"+iErpQty;
                 showAlertDialog(msg);
             }
         }else{
+            isMatch = false;
             if(iSaleQty == iErpQty || code1.equals("2")){
                 msg = "零件号不一致,客户零件号:"+productCode+",系统零件号:"+erpCdoe;
             }else{
@@ -749,11 +753,11 @@ public class DetailActivity extends AppCompatActivity {
                             detailQuantityNg.setText(m.get("QuantityNg").toString());
                             detailQuantityNo.setText(m.get("QuantityNo").toString());
                             detailProductCode.setText(m.get("ProductCode").toString());
-                            String strProductType = strProductCode.substring(0,3);
-                            if(strProductType.equals("111")){
-                                detailProductModelsTitle.setText(getResources().getString(R.string.item_title_models));
-                                detailQuantityTitle.setText(getResources().getString(R.string.detail_content_title9));
-                            }
+//                            String strProductType = strProductCode.substring(0,3);
+//                            if(strProductType.equals("111")){
+//                                detailProductModelsTitle.setText(getResources().getString(R.string.item_title_models));
+//                                detailQuantityTitle.setText(getResources().getString(R.string.detail_content_title9));
+//                            }
 
                             detailProductModels.setText(m.get("ProductModels").toString());
                             detailProcess.setText(m.get("Process").toString());
@@ -799,9 +803,9 @@ public class DetailActivity extends AppCompatActivity {
         loadingDialog = new LoadingDialog(this,"数据提交中",R.drawable.dialog_loading);
         loadingDialog.show();
 
-        Observable.create(new ObservableOnSubscribe<String>() {
+        Observable.create(new ObservableOnSubscribe<List<Map<String,Object>>>() {
             @Override
-            public void subscribe(ObservableEmitter<String> e) throws Exception {
+            public void subscribe(ObservableEmitter<List<Map<String, Object>>> e) throws Exception {
                 //初始化T100服务名
                 String webServiceName = "QcRequestUpdate";
 
@@ -833,34 +837,40 @@ public class DetailActivity extends AppCompatActivity {
                         "&lt;/RecordSet&gt;\n"+
                         "&lt;/Document&gt;\n";
                 String strResponse = t100ServiceHelper.getT100Data(requestBody,webServiceName,getApplicationContext(),"");
-                List<Map<String,Object>> strResponseList = t100ServiceHelper.getT100StatusData(strResponse);
-                for(Map<String,Object> m: strResponseList){
-                    statusCode = m.get("statusCode").toString();
-                    statusDescription = m.get("statusDescription").toString();
-                }
+                mapResponseStatus = t100ServiceHelper.getT100StatusData(strResponse);
+                mapResponseList = t100ServiceHelper.getT100ResponseData(strResponse,"docno");
 
-                e.onNext(statusCode);
-                e.onNext(statusDescription);
+                e.onNext(mapResponseStatus);
+                e.onNext(mapResponseList);
                 e.onComplete();
             }
-        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<String>() {
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<List<Map<String, Object>>>() {
             @Override
             public void onSubscribe(Disposable d) {
 
             }
 
             @Override
-            public void onNext(String s) {
-                if(statusCode.equals("0")){
-                    imageViewResult.setImageDrawable(getResources().getDrawable(R.drawable.detail_status_ok));
-                    detailQuantityNg.setFocusable(false);
-                    detailQuantityNo.setFocusable(false);
-                    strFlag = "Y";
-                    finish();
-                    MyToast.myShow(DetailActivity.this,"更新成功",1,0);
+            public void onNext(List<Map<String, Object>> maps) {
+                if(mapResponseStatus.size()> 0){
+                    for(Map<String,Object> mStatus: mapResponseStatus){
+                        statusCode = mStatus.get("statusCode").toString();
+                        statusDescription = mStatus.get("statusDescription").toString();
+
+                        if(!statusCode.equals("0")){
+                            strFlag = "N";
+                            MyToast.myShow(DetailActivity.this,"更新失败,"+statusDescription,0,0);
+                        }else{
+                            imageViewResult.setImageDrawable(getResources().getDrawable(R.drawable.detail_status_ok));
+                            detailQuantityNg.setFocusable(false);
+                            detailQuantityNo.setFocusable(false);
+                            strFlag = "Y";
+                            finish();
+                            MyToast.myShow(DetailActivity.this,"更新成功",1,0);
+                        }
+                    }
                 }else{
-                    strFlag = "N";
-                    MyToast.myShow(DetailActivity.this,"更新失败,"+statusDescription,0,0);
+                    MyToast.myShow(DetailActivity.this,"接口执行异常",2,0);
                 }
             }
 
@@ -872,6 +882,9 @@ public class DetailActivity extends AppCompatActivity {
 
             @Override
             public void onComplete() {
+//                if(mapResponseList.size()>0){
+//                    showListDetail();
+//                }
                 loadingDialog.dismiss();
             }
         });
@@ -953,5 +966,63 @@ public class DetailActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void showListDetail(){
+        if(statusCode.equals("0")){
+            String strDocno="";
+            String strProducer="";
+            String strPlanDate="";
+            String strStock="";
+            String strStorage="";
+            String strQuantity="";
+            String strQuantityPcs="";
+            String strProductName = "";
+            String strPlanQuantity = "";
+            String strPlanQuantityPcs = "";
+            String strStatus = "";
+            String strContainer = "";
+            String strDocStatus = "";
+
+            if(mapResponseList.size()> 0){
+                for(Map<String,Object> mResponse: mapResponseList){
+                    strDocno = mResponse.get("Docno").toString();
+                    strProducer = mResponse.get("Producer").toString();
+                    strPlanDate = mResponse.get("PlanDate").toString();
+                    strStock = mResponse.get("Stock").toString();
+                    strStorage = mResponse.get("Storage").toString();
+                    strQuantity = mResponse.get("Quantity").toString();
+                    strQuantityPcs = mResponse.get("QuantityPcs").toString();
+                    strPlanQuantity = mResponse.get("PlanQuantity").toString();
+                    strPlanQuantityPcs = mResponse.get("PlanQuantityPcs").toString();
+                    strStatus = mResponse.get("Status").toString();
+                    strDocStatus = mResponse.get("DocStatus").toString();
+                    strProductName = mResponse.get("ProductName").toString();
+                    strContainer = mResponse.get("Container").toString();
+                }
+            }
+            if(strStatus.equals("Y")){
+                Intent intent = new Intent(DetailActivity.this,SubMasterListDetailActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("Docno", strDocno);
+                bundle.putString("Producer", strProducer);
+                bundle.putString("PlanDate", strPlanDate);
+                bundle.putString("Stock", strStock);
+                bundle.putString("Storage", strStorage);
+                bundle.putString("Quantity", strQuantity);
+                bundle.putString("QuantityPcs", strQuantityPcs);
+                bundle.putString("ProductName", strProductName);
+                bundle.putString("PlanQuantity", strPlanQuantity);
+                bundle.putString("PlanQuantityPcs", strPlanQuantityPcs);
+                bundle.putString("Status", strStatus);
+                bundle.putString("DocStatus", strDocStatus);
+                bundle.putString("Container", strContainer);
+                bundle.putString("Type", "2");
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }else{
+                MyToast.myShow(DetailActivity.this,"过账失败",1,1);
+            }
+        }
     }
 }

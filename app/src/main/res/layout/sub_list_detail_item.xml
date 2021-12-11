@@ -110,6 +110,18 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"/>
 
+            <TextView
+                android:id="@+id/txtSubListItemProduct"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"/>
+
+            <TextView
+                android:id="@+id/txtSubListItemDocno"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"/>
+
         </LinearLayout>
 
         <LinearLayout
@@ -130,9 +142,8 @@
                     android:layout_gravity="center_vertical|right"
                     android:layout_marginRight="10dp"
                     android:textColor="@color/list_item_number"
-                    android:textStyle="bold"
-                    android:inputType="numberDecimal"
-                    android:textSize="24sp" />
+                    android:textStyle="italic"
+                    android:inputType="numberDecimal"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -140,8 +151,7 @@
                     android:layout_gravity="center_vertical|right"
                     android:layout_marginRight="10dp"
                     android:textColor="@color/list_item_number"
-                    android:textStyle="bold"
-                    android:textSize="24sp"
+                    android:textStyle="italic"
                     android:text="/"/>
 
                 <TextView
@@ -151,9 +161,8 @@
                     android:layout_gravity="center_vertical|right"
                     android:layout_marginRight="10dp"
                     android:textColor="@color/master_loginout"
-                    android:textStyle="bold"
-                    android:inputType="numberDecimal"
-                    android:textSize="24sp" />
+                    android:textStyle="italic"
+                    android:inputType="numberDecimal"/>
 
             </LinearLayout>
 
@@ -169,9 +178,8 @@
                     android:layout_gravity="center_vertical|right"
                     android:layout_marginRight="10dp"
                     android:textColor="@color/list_item_number"
-                    android:textStyle="bold"
-                    android:inputType="numberDecimal"
-                    android:textSize="24sp" />
+                    android:textStyle="italic"
+                    android:inputType="numberDecimal"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -179,8 +187,7 @@
                     android:layout_gravity="center_vertical|right"
                     android:layout_marginRight="10dp"
                     android:textColor="@color/list_item_number"
-                    android:textStyle="bold"
-                    android:textSize="24sp"
+                    android:textStyle="italic"
                     android:text="/"/>
 
                 <TextView
@@ -190,9 +197,32 @@
                     android:layout_gravity="center_vertical|right"
                     android:layout_marginRight="10dp"
                     android:textColor="@color/master_loginout"
-                    android:textStyle="bold"
-                    android:inputType="numberDecimal"
-                    android:textSize="24sp" />
+                    android:textStyle="italic"
+                    android:inputType="numberDecimal"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/txtSubListItemWeight"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|right"
+                    android:layout_marginRight="10dp"
+                    android:textColor="@color/list_item_number"
+                    android:textStyle="italic"
+                    android:inputType="numberDecimal"/>
+
+                <TextView
+                    android:id="@+id/txtSubListItemStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="italic"
+                    android:textColor="@color/black"/>
 
             </LinearLayout>
 

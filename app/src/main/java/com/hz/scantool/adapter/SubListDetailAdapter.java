@@ -58,6 +58,9 @@ public class SubListDetailAdapter extends BaseAdapter {
             holder.txtSubListItemScanQuantity = view.findViewById(R.id.txtSubListItemScanQuantity);
             holder.txtSubListItemScanQuantityPcs = view.findViewById(R.id.txtSubListItemScanQuantityPcs);
             holder.txtSubListItemBatch = view.findViewById(R.id.txtSubListItemBatch);
+            holder.txtSubListItemWeight = view.findViewById(R.id.txtSubListItemWeight);
+            holder.txtSubListItemStatus = view.findViewById(R.id.txtSubListItemStatus);
+            holder.txtSubListItemProduct = view.findViewById(R.id.txtSubListItemProduct);
 
             holder.imgSubListIcon=view.findViewById(R.id.imgSubListIcon);
 
@@ -77,9 +80,12 @@ public class SubListDetailAdapter extends BaseAdapter {
         holder.txtSubListItemQuantity.setText((String)mData.get(i).get("Quantity"));
         holder.txtSubListItemQuantityPcs.setText((String)mData.get(i).get("QuantityPcs"));
         holder.txtSubListItemBatch.setText((String)mData.get(i).get("StockBatch"));
+        holder.txtSubListItemWeight.setText((String)mData.get(i).get("Weight"));
 
         holder.txtSubListItemScanQuantity.setText((String)mData.get(i).get("ScanQuantity"));
         holder.txtSubListItemScanQuantityPcs.setText((String)mData.get(i).get("ScanQuantityPcs"));
+        holder.txtSubListItemStatus.setText((String)mData.get(i).get("Status"));   //是否已经扫描成功
+        holder.txtSubListItemProduct.setText((String)mData.get(i).get("Product"));
 
         int fScanQuantity = Integer.parseInt(mData.get(i).get("ScanQuantity").toString());
         if(fScanQuantity>0){
@@ -101,37 +107,87 @@ public class SubListDetailAdapter extends BaseAdapter {
         holder.txtSubListItemQuantity = view.findViewById(R.id.txtSubListItemQuantity);
         holder.txtSubListItemScanQuantity = view.findViewById(R.id.txtSubListItemScanQuantity);
         holder.txtSubListItemScanQuantityPcs = view.findViewById(R.id.txtSubListItemScanQuantityPcs);
+        holder.txtSubListItemWeight = view.findViewById(R.id.txtSubListItemWeight);
 
         return setmData(holder,index);
     }
 
     private String setmData(SubListDetailViewHolder holder,int index){
-        String strStatus;
-        int fScanQuantityOld;
-        int fScanQuantityNew;
-        int fScanQuantity;
-        int fQuantity;
+        String strStatus = "";
+        float fScanQuantityOld = 0;
+        float fScanQuantityNew= 0;
+        float fScanQuantity= 0;
+        float fQuantity= 0;
+        float fScanWeight= 0;
+        float fWeight= 0;
 
         Map<String, Object> map = mData.get(index);
-        fQuantity = Integer.valueOf(holder.txtSubListItemQuantity.getText().toString());
-        fScanQuantityOld = Integer.valueOf(holder.txtSubListItemScanQuantity.getText().toString());
-        fScanQuantityNew = Integer.valueOf(map.get("ScanQuantity").toString());
+        String strQuantity = holder.txtSubListItemQuantity.getText().toString();
+        String strScanQuantity = holder.txtSubListItemScanQuantity.getText().toString();
+        String strScanQuantityNew = map.get("ScanQuantity").toString();
+        String strWeight = holder.txtSubListItemWeight.getText().toString();
+        String strScanWeight = map.get("Weight").toString();
+        String strItemStatus = map.get("Status").toString();
+        if(strQuantity.isEmpty()){
+            strQuantity = "0";
+        }
+        if(strScanQuantity.isEmpty()){
+            strScanQuantity = "0";
+        }
+        if(strScanQuantityNew.isEmpty()){
+            strScanQuantityNew = "0";
+        }
+        if(strWeight.isEmpty()){
+            strWeight = "0";
+        }
+        if(strScanWeight.isEmpty()){
+            strScanWeight = "0";
+        }
+        if(strItemStatus.isEmpty()){
+            strItemStatus = "N";
+        }
+
+        fQuantity = Float.valueOf(strQuantity);
+        fScanQuantityOld = Float.valueOf(strScanQuantity);
+        fScanQuantityNew = Float.valueOf(strScanQuantityNew);
         fScanQuantity = fScanQuantityOld + fScanQuantityNew;
 
-        if(fQuantity>=fScanQuantity){
-            holder.txtSubListItemStockLocation.setTextColor(mContext.getResources().getColor(R.color.master_loginout));
-            holder.txtSubListItemScanQuantity.setText(String.valueOf(fScanQuantity));
-            holder.txtSubListItemScanQuantityPcs.setText(map.get("ScanQuantityPcs").toString());
-            strStatus = "Y";
-            if(fQuantity==fScanQuantity){
-                strStatus = "S";
+        fWeight = Float.valueOf(strWeight);
+        fScanWeight = Float.valueOf(strScanWeight);
+
+        if(strItemStatus.equals("N")){
+            if(fWeight>=fScanWeight){
+                holder.txtSubListItemStockLocation.setTextColor(mContext.getResources().getColor(R.color.master_loginout));
+                holder.txtSubListItemScanQuantity.setText(String.valueOf(fScanQuantity));
+                holder.txtSubListItemScanQuantityPcs.setText(map.get("ScanQuantityPcs").toString());
+                strStatus = "Y";
+                if(fWeight==fScanWeight){
+                    strStatus = "S";
+                    strItemStatus = "Y";
+                    mData.get(index).put("Status",strItemStatus);
+                    holder.txtSubListItemStatus.setText(map.get("Status").toString());
+                }
+            }else{
+                strStatus = "X";
             }
         }else{
-            strStatus = "X";
+            strStatus = "Z";
         }
 
         return strStatus;
 
+    }
+
+    //更新单号数据
+    public void updateDocno(int index, ListView listView,String strDocno){
+        //获取第一个可见item项的位置
+        int visiblePosition = listView.getFirstVisiblePosition();
+
+        //获取指定位置的视图
+        View view = listView.getChildAt(index-visiblePosition);
+        SubListDetailViewHolder holder = (SubListDetailViewHolder)view.getTag();
+        holder.txtSubListItemDocno = view.findViewById(R.id.txtSubListItemDocno);
+        holder.txtSubListItemDocno.setText(strDocno);
     }
 
     public static class SubListDetailViewHolder {
@@ -147,6 +203,10 @@ public class SubListDetailAdapter extends BaseAdapter {
         TextView txtSubListItemScanQuantity;
         TextView txtSubListItemScanQuantityPcs;
         TextView txtSubListItemBatch;
+        TextView txtSubListItemWeight;
+        TextView txtSubListItemStatus;
+        TextView txtSubListItemDocno;
+        TextView txtSubListItemProduct;
 
         ImageView imgSubListIcon;
     }

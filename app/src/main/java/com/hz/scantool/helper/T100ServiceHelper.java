@@ -25,7 +25,7 @@ public class T100ServiceHelper {
 
     private static final String SERVICE_IP="192.168.210.3";
     private static final String SERVICE_LISTENER="topprd";   //toptst
-    private static final String SERVICE_ENTERPRISE="10";
+    private static final String SERVICE_ENTERPRISE="12";
     private static final String ARG_NETWORK_WLAN="外部网络";
     private static final String SERVICE_LAN_URL="http://192.168.210.3/wtopprd/ws/r/awsp900?WSDL";  //wtoptst
     private static final String SERVICE_WLAN_URL="http://119.97.210.146:8089/wtopprd/ws/r/awsp900?WSDL";  //wtoptst
@@ -102,6 +102,7 @@ public class T100ServiceHelper {
     private Response executeT100Service() throws IOException {
 
         OkHttpClient client = new OkHttpClient().newBuilder()
+                .retryOnConnectionFailure(false)
                 .build();
         MediaType mediaType = MediaType.parse("text/xml");
         RequestBody body = RequestBody.create(mediaType, webXmlContent.toString());
@@ -316,7 +317,9 @@ public class T100ServiceHelper {
                 map.put("QuantityPcs", jsonObject.getString("erpQuantityPcs").trim());
                 map.put("ScanQuantity", jsonObject.getString("erpScanQuantity").trim());
                 map.put("ScanQuantityPcs", jsonObject.getString("erpScanQuantityPcs").trim());
+                map.put("Weight", jsonObject.getString("erpWeight").trim());
                 map.put("PlanDate", jsonObject.getString("erpPlanDate").trim());
+                map.put("Product", jsonObject.getString("erpProduct").trim());
                 map.put("Status", jsonObject.getString("erpStatus").trim());
                 detailList.add(map);
             } catch (Exception e) {
@@ -393,6 +396,12 @@ public class T100ServiceHelper {
                 map.put("StockId",jsonObject.getString("erpStockId").trim());
                 map.put("StockLocationId",jsonObject.getString("erpStockLocationId").trim());
                 map.put("Quantity",jsonObject.getString("erpQuantity").trim());
+                map.put("ProductName",jsonObject.getString("erpProductName").trim());
+                map.put("ProductModels",jsonObject.getString("erpProductModels").trim());
+                map.put("ProductSize",jsonObject.getString("erpProductSize").trim());
+                map.put("Docno",jsonObject.getString("erpDocno").trim());
+                map.put("PlanDate",jsonObject.getString("erpPlanDate").trim());
+                map.put("Weight",jsonObject.getString("erpWeight").trim());
                 detailList.add(map);
             } catch (Exception e) {
                 e.printStackTrace();

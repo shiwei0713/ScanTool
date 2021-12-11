@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,12 +23,15 @@ import android.widget.TextView;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+import com.hz.scantool.adapter.DetailListItemAdapter;
+import com.hz.scantool.adapter.LoadingDialog;
 import com.hz.scantool.adapter.MyToast;
 import com.hz.scantool.adapter.SubListDetailAdapter;
 import com.hz.scantool.helper.T100ServiceHelper;
 import com.hz.scantool.models.UserInfo;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -57,6 +61,8 @@ public class SubDetailListActivity extends AppCompatActivity {
     private TextView txtSubDetailPlanDate;
     private TextView txtSubDetailPositionTitle;
     private TextView txtSubDetailPosition;
+    private TextView txtSubDetailPlanCount;
+    private TextView txtSubDetailScanCount;
     private Button btnSubmit;
     private Button btnCancel;
     private ImageView imageViewSubDetailLogo;
@@ -76,6 +82,7 @@ public class SubDetailListActivity extends AppCompatActivity {
     private List<Map<String,Object>> mapResponseStatus;
     private List<Map<String,Object>> mapResponseScanList;
     private SubListDetailAdapter subListDetailAdapter;
+    private LoadingDialog loadingDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -201,6 +208,8 @@ public class SubDetailListActivity extends AppCompatActivity {
         txtSubDetailPlanDate = findViewById(R.id.txtSubDetailPlanDate);
         txtSubDetailPositionTitle = findViewById(R.id.txtSubDetailPositionTitle);
         txtSubDetailPosition = findViewById(R.id.txtSubDetailPosition);
+        txtSubDetailPlanCount = findViewById(R.id.txtSubDetailPlanCount);
+        txtSubDetailScanCount = findViewById(R.id.txtSubDetailScanCount);
         listDetailView = findViewById(R.id.subDetailListView);
         progressSubDetailBar = findViewById(R.id.progressSubDetailBar);
         imageViewSubDetailLogo = findViewById(R.id.imageViewSubDetailLogo);
@@ -228,12 +237,12 @@ public class SubDetailListActivity extends AppCompatActivity {
     }
 
     private void setTitle(){
-        txtSubDetailDocnoTitle.setVisibility(View.GONE);
-        txtSubDetailDocno.setVisibility(View.GONE);
+//        txtSubDetailDocnoTitle.setVisibility(View.GONE);
+//        txtSubDetailDocno.setVisibility(View.GONE);
         txtSubDetailPositionTitle.setVisibility(View.GONE);
         txtSubDetailPosition.setVisibility(View.GONE);
-        btnSubmit.setVisibility(View.GONE);
-        btnCancel.setVisibility(View.GONE);
+//        btnSubmit.setVisibility(View.GONE);
+//        btnCancel.setVisibility(View.GONE);
         strTitle = getResources().getString(R.string.master_action5);
 
         if(strIndex.equals("2")){
@@ -326,11 +335,11 @@ public class SubDetailListActivity extends AppCompatActivity {
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.btnSubmit:
-                    initDocno();
-                    Map<String,Object> map = new HashMap<String,Object>();
-                    genT100Doc(map);
+//                    confirmInventoryBillRequest(txtSubDetailDocno.getText().toString());
+                    finish();
                     break;
                 case R.id.btnCancel:
+                    finish();
                     break;
             }
         }
@@ -409,10 +418,14 @@ public class SubDetailListActivity extends AppCompatActivity {
             @Override
             public void onError(Throwable e) {
                 MyToast.myShow(SubDetailListActivity.this,"网络错误",0,0);
+                //隐藏滚动条
+                progressSubDetailBar.setVisibility(View.GONE);
             }
 
             @Override
             public void onComplete() {
+                refreshList();
+
                 subListDetailAdapter = new SubListDetailAdapter(mapResponseList,getApplicationContext());
                 listDetailView.setAdapter(subListDetailAdapter);
 
@@ -429,7 +442,7 @@ public class SubDetailListActivity extends AppCompatActivity {
             public void subscribe(ObservableEmitter<List<Map<String, Object>>> e) throws Exception {
                 //初始化T100服务名
                 String webServiceName = "GetQrCode";
-                String qrStatus = "Y";
+                String qrStatus = "A";   //扫描状态记录，A代表出库扫描过，无其他管控
 
                 //发送服务器请求
                 T100ServiceHelper t100ServiceHelper = new T100ServiceHelper();
@@ -492,34 +505,39 @@ public class SubDetailListActivity extends AppCompatActivity {
             public void onComplete() {
                 if(mapResponseScanList.size()>0){
                     boolean isSuccess = false;
+                    int index = 0;
                     for(Map<String,Object> mScanData: mapResponseScanList){
+                        String strStatus = "";
                         String sProductCode = mScanData.get("ProductCode").toString();
                         String sStockId = mScanData.get("StockId").toString();
                         String sStockLocationId = mScanData.get("StockLocationId").toString();
                         String sQuantity = mScanData.get("Quantity").toString();
+                        String sWeight = mScanData.get("Weight").toString();
+                        boolean isFailure = false;
 
-                        int index = 0;
                         for(Map<String,Object> mData: mapResponseList){
                             String mProductCode = mData.get("ProductCode").toString();
                             String mStockLocationId = mData.get("StockLocationId").toString();
-                            if(sProductCode.equals(mProductCode) && sStockLocationId.equals(mStockLocationId)){
+                            String mWeight  =  mData.get("Weight").toString();
+                            if(sProductCode.equals(mProductCode) && sStockLocationId.equals(mStockLocationId) && sWeight.equals(mWeight)){
                                 isSuccess = true;
-                                mData.put("ScanQuantity",sQuantity);
-                                mData.put("ScanQuantityPcs","1");
-                                String strStatus = subListDetailAdapter.updateData(index,listDetailView);
-                                if(strStatus.equals("S")){
-                                    genT100Doc(mData);
-                                }else{
-                                    if(strStatus.equals("X")){
-                                        MyToast.myShow(SubDetailListActivity.this,"扫描数量不可大于备货数量",0,0);
-                                    }
-                                }
-
-                                break;
+//                                mData.put("ScanQuantity",sQuantity);
+//                                mData.put("ScanQuantityPcs","1");
+//                                mData.put("Weight",sWeight);
+//                                strStatus = subListDetailAdapter.updateData(index,listDetailView);
+//                                if(strStatus.equals("S")){
+//                                    isFailure = false;
+                                    genT100Doc(mData,qrCode,index);
+//                                }else{
+//                                    isFailure = true;
+//                                }
                             }
-
-                            index += 1;
+//                            index += 1;
                         }
+
+//                        if(isFailure && !strStatus.equals("Z")){
+//                            MyToast.myShow(SubDetailListActivity.this,"扫描数量不可大于备货数量",0,0);
+//                        }
                     }
 
                     if(!isSuccess){
@@ -531,7 +549,11 @@ public class SubDetailListActivity extends AppCompatActivity {
     }
 
     //生成T100单据
-    private void genT100Doc(Map<String,Object> mInputData){
+    private void genT100Doc(Map<String,Object> mInputData,String qrCode,int index){
+        //显示进度条
+        loadingDialog = new LoadingDialog(SubDetailListActivity.this,"数据提交中",R.drawable.dialog_loading);
+        loadingDialog.show();
+
         Observable.create(new ObservableOnSubscribe<List<Map<String,Object>>>() {
             @Override
             public void subscribe(ObservableEmitter<List<Map<String, Object>>> e) throws Exception {
@@ -544,12 +566,37 @@ public class SubDetailListActivity extends AppCompatActivity {
                 String strStockId= "";
                 String strStockLocationId = "";
                 String strQuantity = "0";
+                String strWeight = "0";
                 if(!mInputData.isEmpty()){
                     strProductCode = mInputData.get("ProductCode").toString();
                     strProductSize = mInputData.get("ProductSize").toString();
                     strStockId = mInputData.get("StockId").toString();
                     strStockLocationId = mInputData.get("StockLocationId").toString();
-                    strQuantity = mInputData.get("Quantity").toString();
+
+                    if(!strProductSize.isEmpty()){
+                        strQuantity = mInputData.get("Weight").toString();
+                        strWeight = mInputData.get("Quantity").toString();
+                    }else{
+                        strQuantity = mInputData.get("Quantity").toString();
+                    }
+
+                }
+
+                //区分原材料单据，如果是原材料则程式为cint331，厂内单别为:IN14；厂外单别为：IN37
+                if(!strProductSize.isEmpty()){
+                    if(strIndex.equals("4")) {
+                        //生产备货
+                        //初始化单据参数
+                        if (strDocType.equals("1")) {
+                            //原材料厂内发料
+                            strSlip = "IN14";
+                            strProg = "cint331";
+                        } else {
+                            //原材料委外发料
+                            strSlip = "IN37";
+                            strProg = "cint331";
+                        }
+                    }
                 }
 
                 //发送服务器请求
@@ -565,6 +612,7 @@ public class SubDetailListActivity extends AppCompatActivity {
                         "&lt;Field name=\"inaj015\" value=\""+strProg+"\"/&gt;\n"+
                         "&lt;Field name=\"inaj044\" value=\""+txtSubDetailDocno.getText()+"\"/&gt;\n"+
                         "&lt;Field name=\"inajuser\" value=\""+ UserInfo.getUserId(getApplicationContext()) +"\"/&gt;\n"+
+                        "&lt;Field name=\"qrcode\" value=\""+ qrCode +"\"/&gt;\n"+  //二维码
                         "&lt;Detail name=\"s_detail1\" node_id=\"1_1\"&gt;\n"+
                         "&lt;Record&gt;\n"+
                         "&lt;Field name=\"inaj002\" value=\"1.0\"/&gt;\n"+
@@ -575,6 +623,7 @@ public class SubDetailListActivity extends AppCompatActivity {
                         "&lt;Field name=\"inaj0081\" value=\""+txtSubDetailDeptId.getText()+"\"/&gt;\n"+   //拨入库位编号
                         "&lt;Field name=\"inaj0091\" value=\""+strLocationId+"\"/&gt;\n"+   //拨入储位编号
                         "&lt;Field name=\"inaj011\" value=\""+strQuantity+"\"/&gt;\n"+       //交易数量
+                        "&lt;Field name=\"inaj027\" value=\""+strWeight+"\"/&gt;\n"+       //交易重量
                         "&lt;/Record&gt;\n"+
                         "&lt;/Detail&gt;\n"+
                         "&lt;Memo/&gt;\n"+
@@ -606,6 +655,113 @@ public class SubDetailListActivity extends AppCompatActivity {
                             MyToast.myShow(SubDetailListActivity.this, statusDescription, 0, 0);
                         }else{
                             MyToast.myShow(SubDetailListActivity.this, statusDescription, 1, 0);
+                            subListDetailAdapter.updateDocno(index,listDetailView,statusDescription);
+                            txtSubDetailDocno.setText(statusDescription);
+                        }
+                    }
+                }else{
+                    MyToast.myShow(SubDetailListActivity.this,"执行接口错误",2,0);
+                }
+                loadingDialog.dismiss();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                MyToast.myShow(SubDetailListActivity.this,"网络错误",0,0);
+                loadingDialog.dismiss();
+            }
+
+            @Override
+            public void onComplete() {
+                getSubDetailListData();
+                loadingDialog.dismiss();
+            }
+        });
+    }
+
+    //隐藏已扫描项
+    public void refreshList(){
+        int intCurrent = 0;
+        int intScan = 0;
+        int intCurrentTotal=0;
+        int intScanTotal=0;
+
+        Iterator<Map<String,Object>> listItem = mapResponseList.iterator();
+        while (listItem.hasNext()){
+            Map<String,Object> map = listItem.next();
+            if(map.get("Status").equals("Y")){
+                intScan ++;
+                listItem.remove();
+            }
+
+            intCurrent ++;
+        }
+
+        txtSubDetailScanCount.setText(String.valueOf(intCurrent - intScan));
+        txtSubDetailPlanCount.setText(String.valueOf(intCurrent));
+
+//        //初始化ListView
+//        subListDetailAdapter = new SubListDetailAdapter(mapResponseList,getApplicationContext());
+//        listDetailView.setAdapter(subListDetailAdapter);
+    }
+
+    //过账调拨单
+    private void confirmInventoryBillRequest(String strDocno){
+        loadingDialog = new LoadingDialog(this,"单据过账中",R.drawable.dialog_loading);
+        loadingDialog.show();
+
+        Observable.create(new ObservableOnSubscribe<List<Map<String,Object>>>() {
+            @Override
+            public void subscribe(ObservableEmitter<List<Map<String, Object>>> e) throws Exception {
+                //初始化T100服务名
+                String webServiceName = "InventoryBillRequestConfirm";
+                String strProg = "post330";
+
+                //发送服务器请求
+                T100ServiceHelper t100ServiceHelper = new T100ServiceHelper();
+                String requestBody = "&lt;Document&gt;\n"+
+                        "&lt;RecordSet id=\"1\"&gt;\n"+
+                        "&lt;Master name=\"inaj_t\" node_id=\"1\"&gt;\n"+
+                        "&lt;Record&gt;\n"+
+                        "&lt;Field name=\"inajsite\" value=\""+ UserInfo.getUserSiteId(getApplicationContext())+"\"/&gt;\n"+
+                        "&lt;Field name=\"inajent\" value=\""+UserInfo.getUserEnterprise(getApplicationContext())+"\"/&gt;\n"+
+                        "&lt;Field name=\"inaj001\" value=\""+strDocno+"\"/&gt;\n"+
+                        "&lt;Field name=\"inaj015\" value=\""+strProg+"\"/&gt;\n"+
+                        "&lt;Field name=\"inajuser\" value=\""+ UserInfo.getUserId(getApplicationContext()) +"\"/&gt;\n"+  //异动人员
+                        "&lt;Detail name=\"s_detail1\" node_id=\"1_1\"&gt;\n"+
+                        "&lt;Record&gt;\n"+
+                        "&lt;Field name=\"inaj002\" value=\"1.0\"/&gt;\n"+
+                        "&lt;/Record&gt;\n"+
+                        "&lt;/Detail&gt;\n"+
+                        "&lt;Memo/&gt;\n"+
+                        "&lt;Attachment count=\"0\"/&gt;\n"+
+                        "&lt;/Record&gt;\n"+
+                        "&lt;/Master&gt;\n"+
+                        "&lt;/RecordSet&gt;\n"+
+                        "&lt;/Document&gt;\n";
+                String strResponse = t100ServiceHelper.getT100Data(requestBody,webServiceName,getApplicationContext(),"");
+                mapResponseStatus = t100ServiceHelper.getT100StatusData(strResponse);
+
+                e.onNext(mapResponseStatus);
+                e.onComplete();
+            }
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<List<Map<String, Object>>>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(List<Map<String, Object>> maps) {
+                if(mapResponseStatus.size()> 0){
+                    for(Map<String,Object> mStatus: mapResponseStatus){
+                        statusCode = mStatus.get("statusCode").toString();
+                        statusDescription = mStatus.get("statusDescription").toString();
+
+                        if(!statusCode.equals("0")) {
+                            MyToast.myShow(SubDetailListActivity.this, statusDescription, 0, 1);
+                        }else{
+                            MyToast.myShow(SubDetailListActivity.this, statusDescription, 1, 0);
                         }
                     }
                 }else{
@@ -616,11 +772,15 @@ public class SubDetailListActivity extends AppCompatActivity {
             @Override
             public void onError(Throwable e) {
                 MyToast.myShow(SubDetailListActivity.this,"网络错误",0,0);
+                loadingDialog.dismiss();
             }
 
             @Override
             public void onComplete() {
-
+                if(statusCode.equals("0")){
+                    finish();
+                }
+                loadingDialog.dismiss();
             }
         });
     }

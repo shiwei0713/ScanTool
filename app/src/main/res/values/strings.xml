@@ -13,7 +13,7 @@
     <string name="master_logout">注销</string>
     <string name="master_action1">工序报工</string>
     <string name="master_action2">质量检验</string>
-    <string name="master_action3">完工入库</string>
+    <string name="master_action3">FQC检验入库</string>
     <string name="master_action4">采购入库</string>
     <string name="master_action5">生产备货</string>
     <string name="master_action51">生产退货</string>
@@ -76,6 +76,7 @@
     <string name="tab_product13">销售退回</string>
     <string name="tab_product14">异常备货</string>
     <string name="tab_product15">清除扫码</string>
+    <string name="tab_product16">收料确认</string>
     <string name="tab_query1">失败明细</string>
     <string name="item_title_product_code">料件编码:</string>
     <string name="item_title_product_name">品名:</string>
@@ -108,6 +109,7 @@
     <string name="detail_title3">废品:</string>
     <string name="detail_content_title1">料件编码:</string>
     <string name="detail_content_title2">零件名:</string>
+    <string name="detail_content_title21">产品尺寸:</string>
     <string name="detail_content_title3">工序:</string>
     <string name="detail_content_title4">设备:</string>
     <string name="detail_content_title5">开始日期:</string>
@@ -184,4 +186,5 @@
     <string name="sub_detail_list_cancel">关闭</string>
     <string name="sub_detail_list_post">过账</string>
     <string name="loading">数据请求中</string>
+    <string name="loading_btn">关闭</string>
 </resources>

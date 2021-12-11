@@ -22,6 +22,7 @@ public class SubMasterActivity extends AppCompatActivity {
     Button subMasterAction6;
     Button subMasterAction7;
     Button subMasterAction8;
+    Button subMasterAction9;
 
     private Intent intent;
     private Bundle bundle;
@@ -80,9 +81,9 @@ public class SubMasterActivity extends AppCompatActivity {
             titleId = new int[]{R.string.tab_product5,R.string.tab_product6,R.string.tab_product7,R.string.tab_product9};
         }else{
             if(intIndex == 6){
-                btnId= new int[]{R.id.subMasterAction1, R.id.subMasterAction2, R.id.subMasterAction5,R.id.subMasterAction3, R.id.subMasterAction4,R.id.subMasterAction8};
-                imgId= new int[]{R.drawable.sub_master1, R.drawable.sub_master10,R.drawable.sub_master2, R.drawable.sub_master3, R.drawable.sub_master4,R.drawable.sub_master15};
-                titleId = new int[]{R.string.tab_product1,R.string.tab_product10,R.string.tab_product2,R.string.tab_product3,R.string.tab_product4,R.string.tab_product15};
+                btnId= new int[]{R.id.subMasterAction1, R.id.subMasterAction2, R.id.subMasterAction5,R.id.subMasterAction3, R.id.subMasterAction4,R.id.subMasterAction8,R.id.subMasterAction9};
+                imgId= new int[]{R.drawable.sub_master1, R.drawable.sub_master10,R.drawable.sub_master2, R.drawable.sub_master3, R.drawable.sub_master4,R.drawable.sub_master15,R.drawable.sub_master16};
+                titleId = new int[]{R.string.tab_product1,R.string.tab_product10,R.string.tab_product2,R.string.tab_product3,R.string.tab_product4,R.string.tab_product15,R.string.tab_product16};
             }else{
                 btnId= new int[]{R.id.subMasterAction1, R.id.subMasterAction2, R.id.subMasterAction5,R.id.subMasterAction6,R.id.subMasterAction3};
                 imgId= new int[]{R.drawable.sub_master11, R.drawable.sub_master12,R.drawable.sub_master13,R.drawable.sub_master8,R.drawable.sub_master14};
@@ -122,6 +123,7 @@ public class SubMasterActivity extends AppCompatActivity {
         subMasterAction6 = findViewById(R.id.subMasterAction6);
         subMasterAction7 = findViewById(R.id.subMasterAction7);
         subMasterAction8 = findViewById(R.id.subMasterAction8);
+        subMasterAction9 = findViewById(R.id.subMasterAction9);
 
         subMasterAction1.setOnClickListener(new btnActionListener());
         subMasterAction2.setOnClickListener(new btnActionListener());
@@ -131,6 +133,7 @@ public class SubMasterActivity extends AppCompatActivity {
         subMasterAction6.setOnClickListener(new btnActionListener());
         subMasterAction7.setOnClickListener(new btnActionListener());
         subMasterAction8.setOnClickListener(new btnActionListener());
+        subMasterAction9.setOnClickListener(new btnActionListener());
 
         //按照不同导航显示对应按钮
         //生产协同：6;质量检验：1;销售出货：5
@@ -141,12 +144,15 @@ public class SubMasterActivity extends AppCompatActivity {
             if(intIndex==1){
                 subMasterAction3.setVisibility(View.GONE);
                 subMasterAction4.setVisibility(View.GONE);
+                subMasterAction5.setVisibility(View.GONE);   //FQC
                 subMasterAction6.setVisibility(View.GONE);
                 subMasterAction8.setVisibility(View.GONE);
+                subMasterAction9.setVisibility(View.GONE);
             }else{
                 subMasterAction4.setVisibility(View.GONE);
                 subMasterAction7.setVisibility(View.GONE);
                 subMasterAction8.setVisibility(View.GONE);
+                subMasterAction9.setVisibility(View.GONE);
             }
         }
     }
@@ -293,6 +299,17 @@ public class SubMasterActivity extends AppCompatActivity {
                         btnId = 68;
                         bundle.putInt("btnId",btnId);
                         bundle.putString("title",subMasterAction8.getText().toString());
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                    }
+                    break;
+                case R.id.subMasterAction9:
+                    if(intIndex == 6) {
+                        //清除扫码
+                        intent = new Intent(SubMasterActivity.this, SubMasterDetailActivity.class);
+                        btnId = 69;
+                        bundle.putInt("btnId",btnId);
+                        bundle.putString("title",subMasterAction9.getText().toString());
                         intent.putExtras(bundle);
                         startActivity(intent);
                     }

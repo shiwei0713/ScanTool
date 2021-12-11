@@ -84,7 +84,7 @@ public class UserInfo {
 
     //企业编号
     public static String getUserEnterprise(Context mContext){
-        userEnterprise = "10";
+        userEnterprise = "12";
 
         return userEnterprise;
     }
@@ -138,4 +138,5 @@ public class UserInfo {
 
         return inetAddress;
     }
+
 }

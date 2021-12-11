@@ -287,7 +287,7 @@ public class CheckStockActivity extends AppCompatActivity {
                 String strResponse = t100ServiceHelper.getT100Data(requestBody,webServiceName,getApplicationContext(),"");
                 mapResponseStatus = t100ServiceHelper.getT100StatusData(strResponse);
                 mapResponseList = t100ServiceHelper.getT100JsonCheckStockData(strResponse,"checklist");
-                System.out.println(strWhere);
+
                 e.onNext(mapResponseStatus);
                 e.onNext(mapResponseList);
                 e.onComplete();
@@ -328,16 +328,15 @@ public class CheckStockActivity extends AppCompatActivity {
                 if(mapResponseList.size()>0){
                     mainListItemAdapter = new MainListItemAdapter(mapResponseList,getApplicationContext());
                     checkStockListView.setAdapter(mainListItemAdapter);
+
+                    //刷新总数
+                    refreshCount();
                 }else{
                     MyToast.myShow(CheckStockActivity.this,"无盘点数据",2,0);
                 }
-
-
+                
                 //隐藏滚动条
                 checkStockProgressBar.setVisibility(View.GONE);
-
-                //刷新总数
-                refreshCount();
             }
         });
 
@@ -398,9 +397,10 @@ public class CheckStockActivity extends AppCompatActivity {
                             int progress = checkStockProgressBar.getProgress();
                             progress = progress + 50;
                             checkStockProgressBar.setProgress(progress);
+                            MyToast.myShow(CheckStockActivity.this,statusDescription,1,0);
+                        }else{
+                            MyToast.myShow(CheckStockActivity.this,statusDescription,0,0);
                         }
-
-                        MyToast.myShow(CheckStockActivity.this,statusDescription,0,0);
                     }
                 }else{
                     MyToast.myShow(CheckStockActivity.this,"接口执行失败",2,0);

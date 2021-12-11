@@ -138,6 +138,8 @@ public class SubListActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
+        loadingDialog=null;
+
         //注册广播接收器
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(SCANACTION);
@@ -302,10 +304,10 @@ public class SubListActivity extends AppCompatActivity {
     //初始化查询条件
     private void initQueryCondition(int iCondition){
         if(iCondition==0){
-            strWhere = "1=1 AND sfeastus = 'Y'";
+            strWhere = "1=1 ";
         }else{
             if(iCondition!=9){
-                strWhere = "sfaa019 BETWEEN to_date('"+txtSubQuerybDate.getText().toString()+"','YYYY-MM-DD') AND to_date('"+txtSubQueryeDate.getText().toString()+"','YYYY-MM-DD') AND sfeastus = 'Y'";
+                strWhere = "sfaa019 BETWEEN to_date('"+txtSubQuerybDate.getText().toString()+"','YYYY-MM-DD') AND to_date('"+txtSubQueryeDate.getText().toString()+"','YYYY-MM-DD')";
             }
         }
     }
@@ -490,8 +492,10 @@ public class SubListActivity extends AppCompatActivity {
     private void genT100StockLot(String qrContent){
         //显示进度条
 //        progressBar.setVisibility(View.VISIBLE);
-        loadingDialog = new LoadingDialog(this,"数据请求中",R.drawable.dialog_loading);
-        loadingDialog.show();
+        if(loadingDialog==null){
+            loadingDialog = new LoadingDialog(this,"数据请求中",R.drawable.dialog_loading);
+            loadingDialog.show();
+        }
 
         Observable.create(new ObservableOnSubscribe<List<Map<String,Object>>>(){
             @Override
@@ -557,8 +561,8 @@ public class SubListActivity extends AppCompatActivity {
 
             @Override
             public void onError(Throwable e) {
-                MyToast.myShow(SubListActivity.this,"网络错误",0,0);
-//                showDetail();
+//                MyToast.myShow(SubListActivity.this,"网络错误",0,0);
+                showDetail();
 //                progressBar.setVisibility(View.GONE);
                 loadingDialog.dismiss();
             }

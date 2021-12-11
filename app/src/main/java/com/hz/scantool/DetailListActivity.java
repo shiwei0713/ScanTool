@@ -293,7 +293,7 @@ public class DetailListActivity extends AppCompatActivity {
                             bundle.putInt("index",intIndex);
                             intent.putExtras(bundle);
                             startActivity(intent);
-                            getDetailListData();
+//                            getDetailListData();
                             break;
                         case 5:
                             //刷新显示数据
@@ -565,7 +565,7 @@ public class DetailListActivity extends AppCompatActivity {
             }
         }
 
-        if(intQuantityPcs == intCurrent){
+        if(intCurrent == 0){
             MyToast.myShow(DetailListActivity.this,"此备货单已全部检核完成",1,0);
         }
 

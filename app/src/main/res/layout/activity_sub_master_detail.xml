@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".SubMasterDetailActivity">
 
     <androidx.appcompat.widget.Toolbar
@@ -19,5 +20,43 @@
         android:layout_height="wrap_content"
         android:visibility="gone"
         android:max="100"/>
+
+    <include
+        layout="@layout/sub_detail_content"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="bottom|center"
+        android:layout_marginBottom="20dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnDetailSubmit"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:background="@drawable/list_button_selector"
+            android:textColor="@color/teal_700"
+            android:textStyle="normal"
+            android:focusable="false"
+            android:textSize="@dimen/list_detail_button"
+            android:visibility="gone"
+            android:text="@string/detail_submit" />
+
+        <Button
+            android:id="@+id/btnDetailCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_marginLeft="30dp"
+            android:background="@drawable/list_button_selector"
+            android:textColor="@color/teal_700"
+            android:textStyle="normal"
+            android:focusable="false"
+            android:textSize="@dimen/list_detail_button"
+            android:text="@string/detail_cancel" />
+
+    </LinearLayout>
 
 </LinearLayout>

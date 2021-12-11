@@ -25,7 +25,7 @@ public class LoadingDialog extends Dialog {
         this(context, R.style.LoadingDialog,message,imageId,false);
     }
 
-    public  LoadingDialog(@NonNull Context context,int themeResId,String message,int imageId,boolean cancelable){
+    public LoadingDialog(@NonNull Context context,int themeResId,String message,int imageId,boolean cancelable){
         super(context,themeResId);
 
         mMessage=message;
@@ -73,6 +73,8 @@ public class LoadingDialog extends Dialog {
     @Override
     public boolean onKeyDown(int keyCode, @NonNull KeyEvent event) {
         if(keyCode==KeyEvent.KEYCODE_BACK){
+            return mCancelable;
+        }else if(keyCode==KeyEvent.KEYCODE_ENTER){
             return mCancelable;
         }
 

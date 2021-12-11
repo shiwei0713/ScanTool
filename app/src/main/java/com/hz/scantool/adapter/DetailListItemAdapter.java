@@ -143,7 +143,6 @@ public class DetailListItemAdapter extends BaseAdapter {
 
         //按钮事件
         holder.listDetailBtnConfirm.setOnClickListener(new listDetailOnClick(holder,position));
-        Log.i("QRCODE","getView:strStockLocationId:"+holder.txtDetailStockLocation.getText()+",strStatus:"+holder.strStatus);
 
         return convertView;
     }
