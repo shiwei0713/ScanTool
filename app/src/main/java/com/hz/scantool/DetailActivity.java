@@ -141,7 +141,7 @@ public class DetailActivity extends AppCompatActivity {
                 strTitle = getResources().getString(R.string.master_detail1);
                 qrType = "asft335";
                 break;
-            case 1:
+            case 11:
                 strTitle = getResources().getString(R.string.master_detail2);
                 qrType = "aqct300";
                 break;
@@ -178,7 +178,7 @@ public class DetailActivity extends AppCompatActivity {
 
         //显示信息
         initView();
-        if(intIndex==13){
+        if(intIndex==13 || intIndex==11){
             getDetailItemData(qrCode);
         }else if(intIndex==53){
             showDetail();
@@ -244,6 +244,7 @@ public class DetailActivity extends AppCompatActivity {
         strDocno = bundle.getString("Docno");
         strQrCodeRule = bundle.getString("QrCodeRule");
         strStatus = bundle.getString("Status");
+        qrCode=bundle.getString("qrCode");
     }
 
     private void initView(){
@@ -540,7 +541,7 @@ public class DetailActivity extends AppCompatActivity {
         String msg="";
         String code1="";
 
-        if(qrCode.equals(codeContent)){
+        if(qrCode.equals(codeContent) || qrCode.isEmpty() || codeContent.isEmpty()){
             MyToast.myShow(DetailActivity.this,"请扫描客户标签",2,0);
             return false;
         }
@@ -596,6 +597,7 @@ public class DetailActivity extends AppCompatActivity {
                             strCodeContentUft = new String(strCodeContent.getBytes("gb2312"),"gb2312");
                         }catch (UnsupportedEncodingException e){
                             e.printStackTrace();
+                            return false;
                         }
                     }
 
@@ -622,6 +624,7 @@ public class DetailActivity extends AppCompatActivity {
             }
         }catch (Exception e){
             e.printStackTrace();
+            return false;
         }
 
         if(saleQty.equals(" ") || saleQty.length()==0){
@@ -693,6 +696,8 @@ public class DetailActivity extends AppCompatActivity {
                     strIndexStr = "fqc";
                 }else if(intIndex==14){
                     strIndexStr = "oqc";
+                }else if(intIndex==11){
+                    strIndexStr = "iqc";
                 }
 
                 //发送服务器请求

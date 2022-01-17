@@ -308,24 +308,28 @@ public class SubMasterListActivity extends AppCompatActivity {
         int iQuantityTotal = 0;
         int iQuantityPcsTotal=0;
 
-        for(Map<String,Object> mData: mapResponseList) {
-            String sQuantity = mData.get("Quantity").toString();
-            String sQuantityPcs = mData.get("QuantityPcs").toString();
+        try{
+            for(Map<String,Object> mData: mapResponseList) {
+                String sQuantity = mData.get("Quantity").toString();
+                String sQuantityPcs = mData.get("QuantityPcs").toString();
 
-            if(!sQuantity.isEmpty()){
-                iQuantity =Integer.parseInt(sQuantity);
-            }else{
-                iQuantity = 0;
+                if(!sQuantity.isEmpty()){
+                    iQuantity =Integer.parseInt(sQuantity);
+                }else{
+                    iQuantity = 0;
+                }
+
+                if(!sQuantityPcs.isEmpty()){
+                    iQuantityPcs = Integer.parseInt(sQuantityPcs);
+                }else{
+                    iQuantityPcs = 0;
+                }
+
+                iQuantityTotal = iQuantityTotal + iQuantity;
+                iQuantityPcsTotal = iQuantityPcsTotal + iQuantityPcs;
             }
-
-            if(!sQuantityPcs.isEmpty()){
-                iQuantityPcs = Integer.parseInt(sQuantityPcs);
-            }else{
-                iQuantityPcs = 0;
-            }
-
-            iQuantityTotal = iQuantityTotal + iQuantity;
-            iQuantityPcsTotal = iQuantityPcsTotal + iQuantityPcs;
+        }catch (Exception e){
+            e.printStackTrace();
         }
 
         txtSubListTask1.setText(getResources().getString(R.string.sub_master_content_quantity)+String.valueOf(iQuantityTotal));
@@ -469,7 +473,7 @@ public class SubMasterListActivity extends AppCompatActivity {
             int index = 0;
             //16:OQC检验;11:IQC检验;15:FQC检验
             if(actionId == 11){
-                index=1;
+                index=11;
             } else if(actionId == 15){
                 index=13;
             } else if(actionId == 16){
@@ -675,13 +679,14 @@ public class SubMasterListActivity extends AppCompatActivity {
 
             @Override
             public void onComplete() {
-                showDetail();
+//                showDetail(qrcode);
                 subMasterQcProgressBar.setVisibility(View.GONE);
+                MyToast.myShow(SubMasterListActivity.this,statusDescription,1,0);
             }
         });
     }
 
-    private void showDetail(){
+    private void showDetail(String qrcode){
         if(!statusCode.equals("0")){
             String strProductCode="";
             String strProductName="";
@@ -708,7 +713,7 @@ public class SubMasterListActivity extends AppCompatActivity {
                     strPlanDate = mResponse.get("PlanDate").toString();
                     strQuantity = mResponse.get("Quantity").toString();
                     strDocno = mResponse.get("Docno").toString();
-                    strQrCodeRule = mResponse.get("QrCodeRule").toString();
+//                    strQrCodeRule = mResponse.get("QrCodeRule").toString();
                     strStatus = mResponse.get("Status").toString();
                 }
             }
@@ -729,6 +734,7 @@ public class SubMasterListActivity extends AppCompatActivity {
             bundle.putString("QrCodeRule",strQrCodeRule);
             bundle.putString("Status",strStatus);
             bundle.putInt("index",actionId);
+            bundle.putString("qrCode",qrcode);
             intent.putExtras(bundle);
             startActivity(intent);
         }

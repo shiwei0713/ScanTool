@@ -314,6 +314,19 @@
                     android:focusable="false"
                     android:textSize="@dimen/list_detail_button"
                     android:text="@string/sub_master_content_button1"/>
+
+<!--                <Button-->
+<!--                    android:id="@+id/txtSubContentListBtnStockin"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="@dimen/list_button_size"-->
+<!--                    android:layout_marginStart="5dp"-->
+<!--                    android:layout_marginLeft="5dp"-->
+<!--                    android:background="@drawable/list_button_selector"-->
+<!--                    android:focusable="false"-->
+<!--                    android:text="@string/sub_master_content_button2"-->
+<!--                    android:textColor="@color/teal_700"-->
+<!--                    android:textSize="@dimen/list_detail_button"-->
+<!--                    android:textStyle="normal" />-->
             </LinearLayout>
 
         </LinearLayout>

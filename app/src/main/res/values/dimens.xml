@@ -20,4 +20,5 @@
     <dimen name="detail_title_padding">3dp</dimen>
     <dimen name="list_detil_title">55sp</dimen>
     <dimen name="list_detil_qty">20sp</dimen>
+    <dimen name="error">20sp</dimen>
 </resources>

@@ -201,6 +201,11 @@ public class SubListActivity extends AppCompatActivity {
         //解析二维码
         String[] qrCodeValue = qrContent.split("_");
         int qrIndex = qrContent.indexOf("_");
+        if(intIndex == 4){
+            qrIndex = 0;
+            qrContent= qrContent.trim();
+        }
+
         if(qrIndex==-1){
             MyToast.myShow(context,"条码错误:"+qrContent,0,1);
         }else{
@@ -211,6 +216,8 @@ public class SubListActivity extends AppCompatActivity {
                     genT100StockLot(qrContent);
                 }
                 strScanContent=qrContent;
+            }else if(intIndex == 4){
+                showDetailList(qrContent);
             }else{
                 MyToast.myShow(context,"只有入库才可扫描产品条码",2,1);
             }
@@ -414,6 +421,21 @@ public class SubListActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         }
+    }
+
+    private void showDetailList(String docno){
+        Intent intent = new Intent(SubListActivity.this,SubDetailListActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("Docno",docno);
+        bundle.putString("Dept","");
+        bundle.putString("DeptId","");
+        bundle.putString("Stock","");
+        bundle.putString("StockId","");
+        bundle.putString("PlanDate","");
+        bundle.putString("DocType","");
+        bundle.putString("Type", strType);
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
 
     //获取清单

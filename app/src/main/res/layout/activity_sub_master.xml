@@ -63,6 +63,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
+            <Button
+                android:id="@+id/subMasterAction11"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
         </TableRow>
 
     </TableLayout>
@@ -101,6 +106,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/tab_product15" />
+
+            <Button
+                android:id="@+id/subMasterAction10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tab_product17" />
 
         </TableRow>
 

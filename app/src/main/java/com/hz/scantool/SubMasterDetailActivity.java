@@ -213,6 +213,8 @@ public class SubMasterDetailActivity extends AppCompatActivity {
                 clearQrCode(qrCodeValue[0].toString());
             }else if(btnId==69){
                 getScanQrData(qrCodeValue[0].toString());
+            }else if(btnId==110){
+                getScanQrData(qrCodeValue[0].toString());
             }
         }
     }
@@ -304,7 +306,13 @@ public class SubMasterDetailActivity extends AppCompatActivity {
             public void subscribe(ObservableEmitter<List<Map<String, Object>>> e) throws Exception {
                 //初始化T100服务名
                 String webServiceName = "GetQrCode";
-                String qrStatus = "B";   //扫描状态记录，B代表车间确认收料，无其他管控
+                String qrStatus = "";
+                if(btnId==69){
+                    qrStatus = "B";   //扫描状态记录，B代表车间确认收料，无其他管控
+                }else{
+                    qrStatus = "C";   //状态记录，FQC是否扫描
+                }
+
 
                 //发送服务器请求
                 T100ServiceHelper t100ServiceHelper = new T100ServiceHelper();

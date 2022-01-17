@@ -100,6 +100,8 @@ public class SubListAdapter extends BaseAdapter {
             holder.txtViewDeptTtile.setText(mContext.getResources().getString(R.string.sub_list_dept_title31));
             holder.txtViewStockTitle.setText(mContext.getResources().getString(R.string.sub_list_stock_title31));
         }else if(mType.equals("4")){
+            holder.txtViewDocnoTitle.setVisibility(View.VISIBLE);
+            holder.txtViewDocno.setVisibility(View.VISIBLE);
             holder.txtViewDeptTtile.setText(mContext.getResources().getString(R.string.sub_list_dept_title4));
             holder.txtViewStockTitle.setText(mContext.getResources().getString(R.string.sub_list_stock_title4));
         }else if(mType.equals("41")){

@@ -79,7 +79,10 @@ public class SubListDetailAdapter extends BaseAdapter {
         holder.txtSubListItemProductSize.setText((String)mData.get(i).get("ProductSize"));
         holder.txtSubListItemQuantity.setText((String)mData.get(i).get("Quantity"));
         holder.txtSubListItemQuantityPcs.setText((String)mData.get(i).get("QuantityPcs"));
-        holder.txtSubListItemBatch.setText((String)mData.get(i).get("StockBatch"));
+
+        String strBatch = (String)mData.get(i).get("StockBatch");
+        String strBatchChange = strBatch.replaceAll("amp;","");
+        holder.txtSubListItemBatch.setText(strBatchChange);
         holder.txtSubListItemWeight.setText((String)mData.get(i).get("Weight"));
 
         holder.txtSubListItemScanQuantity.setText((String)mData.get(i).get("ScanQuantity"));
@@ -87,7 +90,11 @@ public class SubListDetailAdapter extends BaseAdapter {
         holder.txtSubListItemStatus.setText((String)mData.get(i).get("Status"));   //是否已经扫描成功
         holder.txtSubListItemProduct.setText((String)mData.get(i).get("Product"));
 
-        int fScanQuantity = Integer.parseInt(mData.get(i).get("ScanQuantity").toString());
+        String strScanQuantity = mData.get(i).get("ScanQuantity").toString();
+        if(strScanQuantity.isEmpty()){
+            strScanQuantity = "0";
+        }
+        int fScanQuantity = Integer.parseInt(strScanQuantity);
         if(fScanQuantity>0){
             holder.txtSubListItemStockLocation.setTextColor(mContext.getResources().getColor(R.color.master_loginout));
         }
@@ -179,7 +186,7 @@ public class SubListDetailAdapter extends BaseAdapter {
     }
 
     //更新单号数据
-    public void updateDocno(int index, ListView listView,String strDocno){
+    public void updateDocno(int index, ListView listView,String strDocno,String strStatus){
         //获取第一个可见item项的位置
         int visiblePosition = listView.getFirstVisiblePosition();
 
@@ -188,6 +195,8 @@ public class SubListDetailAdapter extends BaseAdapter {
         SubListDetailViewHolder holder = (SubListDetailViewHolder)view.getTag();
         holder.txtSubListItemDocno = view.findViewById(R.id.txtSubListItemDocno);
         holder.txtSubListItemDocno.setText(strDocno);
+        holder.txtSubListItemStatus = view.findViewById(R.id.txtSubListItemStatus);
+        holder.txtSubListItemStatus.setText(strStatus);
     }
 
     public static class SubListDetailViewHolder {

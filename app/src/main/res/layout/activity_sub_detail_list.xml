@@ -250,7 +250,7 @@
             android:textStyle="normal"
             android:focusable="false"
             android:textSize="@dimen/list_detail_button"
-            android:text="@string/detail_cancel" />
+            android:text="@string/detail_refresh" />
 
     </LinearLayout>
 

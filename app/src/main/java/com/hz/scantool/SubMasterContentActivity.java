@@ -516,7 +516,15 @@ public class SubMasterContentActivity extends AppCompatActivity {
 
             @Override
             public void onError(Throwable e) {
-                MyToast.myShow(SubMasterContentActivity.this,"网络错误",0,0);
+//                MyToast.myShow(SubMasterContentActivity.this,"网络错误",0,0);
+                //解析二维码
+                String[] qrCodeValue = qrCode.split("_");
+                Intent intent = new Intent(SubMasterContentActivity.this,ErrorActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("qrCode", qrCodeValue[0]);
+                intent.putExtras(bundle);
+                startActivity(intent);
+
                 subMasterContentProgressBar.setVisibility(View.GONE);
             }
 

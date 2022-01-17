@@ -109,13 +109,13 @@ public class MasterActivity extends AppCompatActivity {
         txtMasterSite.setText(UserInfo.getUserSite(getApplicationContext()));
 
         //初始化权限
-        btnAction1Power =false;     //工序报工
-        btnAction2Power =false;     //质量检验
-        btnAction3Power =false;     //完工入库  //FQC
+        btnAction1Power =false;    //工序报工
+        btnAction2Power =false;    //质量检验
+        btnAction3Power =true;    //完工入库  //FQC
         btnAction4Power =true;     //采购入库
         btnAction5Power =true;     //生产备料
         btnAction6Power =true;     //销售出货
-        btnAction7Power =false;     //生产协同
+        btnAction7Power =true;    //生产协同
         btnAction8Power =true;     //期末盘点
     }
 

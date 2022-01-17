@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ErrorActivity">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/detail_title_padding"
+        android:layout_marginTop="15dp"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:orientation="vertical">
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:max="100"/>
+
+        <TextView
+            android:id="@+id/errorCode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/error"
+            android:textStyle="bold"
+            android:layout_gravity="center"
+            android:textColor="@color/red" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/error"
+            android:textStyle="bold"
+            android:text="@string/loading"
+            android:layout_gravity="center"
+            android:textColor="@color/red" />
+
+        <TextView
+            android:id="@+id/errorResult"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/error"
+            android:textStyle="bold"
+            android:layout_gravity="center"
+            android:textColor="@color/red"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="15dp"
+        android:layout_gravity="center"
+        android:padding="5dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnSubmit"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:background="@drawable/list_button_selector"
+            android:layout_marginRight="30dp"
+            android:textColor="@color/teal_700"
+            android:textStyle="normal"
+            android:focusable="false"
+            android:textSize="@dimen/list_detail_button"
+            android:text="@string/detail_refresh" />
+
+        <Button
+            android:id="@+id/btnCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:background="@drawable/list_button_selector"
+            android:textColor="@color/teal_700"
+            android:textStyle="normal"
+            android:focusable="false"
+            android:textSize="@dimen/list_detail_button"
+            android:text="@string/sub_detail_list_cancel" />
+
+    </LinearLayout>
+
+</LinearLayout>
