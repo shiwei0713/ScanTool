@@ -115,7 +115,7 @@ public class MasterActivity extends AppCompatActivity {
         btnAction4Power =true;     //采购入库
         btnAction5Power =true;     //生产备料
         btnAction6Power =true;     //销售出货
-        btnAction7Power =true;    //生产协同
+        btnAction7Power =false;    //生产协同
         btnAction8Power =true;     //期末盘点
     }
 

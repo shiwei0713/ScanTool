@@ -60,6 +60,18 @@
                 android:textSize="@dimen/list_detail_button"
                 android:text="@string/sub_list_flag2"/>
 
+            <Button
+                android:id="@+id/btnFlag3"
+                android:layout_width="80dp"
+                android:layout_height="25dp"
+                android:background="@drawable/list_flag_selector"
+                android:layout_marginLeft="20dp"
+                android:textColor="@color/teal_700"
+                android:textStyle="normal"
+                android:focusable="false"
+                android:textSize="@dimen/list_detail_button"
+                android:text="@string/sub_list_flag3"/>
+
         </LinearLayout>
 
         <LinearLayout

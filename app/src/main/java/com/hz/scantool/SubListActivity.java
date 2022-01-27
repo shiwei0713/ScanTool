@@ -68,6 +68,7 @@ public class SubListActivity extends AppCompatActivity {
 
     private Button btnFlag1;
     private Button btnFlag2;
+    private Button btnFlag3;
     private Button btnSubQuery;
     private TextView txtSubQueryDeptNameTitle;
     private TextView txtSubLabel1;
@@ -248,6 +249,7 @@ public class SubListActivity extends AppCompatActivity {
     private void initView(){
         btnFlag1 = findViewById(R.id.btnFlag1);
         btnFlag2 = findViewById(R.id.btnFlag2);
+        btnFlag3 = findViewById(R.id.btnFlag3);
         btnSubQuery = findViewById(R.id.btnSubQuery);
         txtSubQueryDeptNameTitle = findViewById(R.id.txtSubQueryDeptNameTitle);
         txtSubQuerybDate=findViewById(R.id.txtSubQuerybDate);
@@ -275,6 +277,7 @@ public class SubListActivity extends AppCompatActivity {
         //绑定事件
         btnFlag1.setOnClickListener(new queryClickListener());
         btnFlag2.setOnClickListener(new queryClickListener());
+        btnFlag3.setOnClickListener(new queryClickListener());
         btnSubQuery.setOnClickListener(new queryClickListener());
         txtSubLabel1.setOnClickListener(new queryClickListener());
         txtSubLabel2.setOnClickListener(new queryClickListener());
@@ -283,12 +286,15 @@ public class SubListActivity extends AppCompatActivity {
 
     //初始化标题
     private void initFlagTitle(){
+        btnFlag3.setVisibility(View.GONE);
+
         switch (intIndex){
             //完工入库
             case 2:
                 btnFlag1.setText(getString(R.string.sub_list_flag21));
                 btnFlag2.setVisibility(View.GONE);
                 txtSubQueryDeptNameTitle.setText(getString(R.string.query_title_dept_in));
+                btnFlag3.setVisibility(View.VISIBLE);
                 break;
             //采购入库
             case 3:
@@ -374,6 +380,15 @@ public class SubListActivity extends AppCompatActivity {
                     setStrType(false);
                     txtSubQuerybDate.setText(setQueryDate(0));
                     txtSubQueryeDate.setText(setQueryDate(0));
+                    break;
+                case R.id.btnFlag3:
+                    int btnId = 62;
+                    Bundle bundle = new Bundle();
+                    Intent intent = new Intent(SubListActivity.this,SubMasterContentActivity.class);
+                    bundle.putInt("btnId",btnId);
+                    bundle.putString("title","车间入库");
+                    intent.putExtras(bundle);
+                    startActivity(intent);
                     break;
                 case R.id.btnSubQuery:
                     break;

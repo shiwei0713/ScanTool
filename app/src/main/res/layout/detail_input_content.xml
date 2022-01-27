@@ -206,6 +206,102 @@
             android:background="@color/line"
             android:orientation="vertical" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/detail_content_height"
+            android:gravity="center|left"
+            android:layout_marginLeft="@dimen/detail_content_margin"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/inputDetailFeaturesTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/detail_content_title11"
+                android:textColor="@color/list_item_icon"
+                android:textSize="@dimen/detail_content_textsize" />
+
+            <TextView
+                android:id="@+id/inputDetailFeatures"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/detail_content_input_margin"
+                android:textColor="@color/red"
+                android:textStyle="italic"
+                android:textSize="@dimen/detail_content_textsize" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/line"
+            android:orientation="vertical" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/detail_content_height"
+            android:gravity="center|left"
+            android:layout_marginLeft="@dimen/detail_content_margin"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/inputDetailFeaturesNameTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/detail_content_title12"
+                android:textColor="@color/list_item_icon"
+                android:textSize="@dimen/detail_content_textsize" />
+
+            <TextView
+                android:id="@+id/inputDetailFeaturesName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/detail_content_input_margin"
+                android:textColor="@color/red"
+                android:textStyle="italic"
+                android:textSize="@dimen/detail_content_textsize" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/line"
+            android:orientation="vertical" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/detail_content_height"
+            android:gravity="center|left"
+            android:layout_marginLeft="@dimen/detail_content_margin"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/inputDetailFeaturesModelsTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/detail_content_title13"
+                android:textColor="@color/list_item_icon"
+                android:textSize="@dimen/detail_content_textsize" />
+
+            <TextView
+                android:id="@+id/inputDetailFeaturesModels"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/detail_content_input_margin"
+                android:textColor="@color/red"
+                android:textStyle="italic"
+                android:textSize="@dimen/detail_content_textsize" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/line"
+            android:orientation="vertical" />
+
     </LinearLayout>
 
 </ScrollView>

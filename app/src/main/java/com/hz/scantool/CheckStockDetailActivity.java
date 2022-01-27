@@ -54,6 +54,9 @@ public class CheckStockDetailActivity extends AppCompatActivity {
     private TextView inputDetailStartPlanDate;
     private EditText inputDetailQuantity;
     private TextView inputDetailDocno;
+    private TextView inputDetailFeatures;
+    private TextView inputDetailFeaturesName;
+    private TextView inputDetailFeaturesModels;
     private Button btnDetailSubmit;
 
     private LoadingDialog loadingDialog;
@@ -98,6 +101,9 @@ public class CheckStockDetailActivity extends AppCompatActivity {
         inputDetailStartPlanDate = findViewById(R.id.inputDetailStartPlanDate);
         inputDetailQuantity = findViewById(R.id.inputDetailQuantity);
         inputDetailDocno = findViewById(R.id.inputDetailDocno);
+        inputDetailFeatures = findViewById(R.id.inputDetailFeatures);
+        inputDetailFeaturesName = findViewById(R.id.inputDetailFeaturesName);
+        inputDetailFeaturesModels = findViewById(R.id.inputDetailFeaturesModels);
         btnDetailSubmit = findViewById(R.id.btnDetailSubmit);
 
         btnDetailSubmit.setOnClickListener(new submitDataClickListener());
@@ -109,7 +115,13 @@ public class CheckStockDetailActivity extends AppCompatActivity {
         public void onClick(View view) {
             switch (view.getId()){
                 case R.id.btnDetailSubmit:
-
+                    if(inputDetailDocno.getText().toString().isEmpty()){
+                        MyToast.myShow(CheckStockDetailActivity.this,"扫描成功才可提交",0,0);
+                    }else{
+                        getScanQrData(inputDetailDocno.getText().toString(),"U");
+                        inputDetailQuantity.setVisibility(View.INVISIBLE);
+                        btnDetailSubmit.setVisibility(View.GONE);
+                    }
                     break;
             }
         }
@@ -195,18 +207,21 @@ public class CheckStockDetailActivity extends AppCompatActivity {
 
     //扫描结果解析
     private void scanResult(String qrContent,Context context, Intent intent){
+        inputDetailQuantity.setVisibility(View.VISIBLE);
+        btnDetailSubmit.setVisibility(View.VISIBLE);
+
         //解析二维码
         String[] qrCodeValue = qrContent.split("_");
         int qrIndex = qrContent.indexOf("_");
         if(qrIndex==-1){
             MyToast.myShow(context,"条码错误:"+qrContent,0,1);
         }else{
-            getScanQrData(qrCodeValue[0].toString());
+            getScanQrData(qrCodeValue[0].toString(),"A");
         }
     }
 
     //获取扫描条码信息
-    private void getScanQrData(String qrCode){
+    private void getScanQrData(String qrCode,String scmd){
         //显示进度条
         loadingDialog = new LoadingDialog(this,"数据提交中",R.drawable.dialog_loading);
         loadingDialog.show();
@@ -216,7 +231,13 @@ public class CheckStockDetailActivity extends AppCompatActivity {
             public void subscribe(ObservableEmitter<List<Map<String, Object>>> e) throws Exception {
                 //初始化T100服务名
                 String webServiceName = "GetQrCode";
-                String qrStatus = "CK";  //扫描状态CK盘点
+                String qrStatus = "K";  //扫描状态K盘点
+                String strStock = "10237";  //盘点库位
+                String sQuantity = inputDetailQuantity.getText().toString();
+                float fQuantity = 0;
+                if (!sQuantity.isEmpty()){
+                    fQuantity = Float.valueOf(sQuantity);
+                }
 
                 //发送服务器请求
                 T100ServiceHelper t100ServiceHelper = new T100ServiceHelper();
@@ -229,6 +250,9 @@ public class CheckStockDetailActivity extends AppCompatActivity {
                         "&lt;Field name=\"bcaa011\" value=\""+qrCode+"\"/&gt;\n"+
                         "&lt;Field name=\"bcaamodid\" value=\""+ UserInfo.getUserId(getApplicationContext()) +"\"/&gt;\n"+
                         "&lt;Field name=\"bcaa016\" value=\""+qrStatus+"\"/&gt;\n"+
+                        "&lt;Field name=\"bcaaud001\" value=\""+strStock+"\"/&gt;\n"+
+                        "&lt;Field name=\"scmd\" value=\""+scmd+"\"/&gt;\n"+
+                        "&lt;Field name=\"qty\" value=\""+fQuantity+"\"/&gt;\n"+
                         "&lt;Detail name=\"s_detail1\" node_id=\"1_1\"&gt;\n"+
                         "&lt;Record&gt;\n"+
                         "&lt;Field name=\"bcaa000\" value=\"1.0\"/&gt;\n"+
@@ -241,7 +265,9 @@ public class CheckStockDetailActivity extends AppCompatActivity {
                         "&lt;/RecordSet&gt;\n"+
                         "&lt;/Document&gt;\n";
                 String strResponse = t100ServiceHelper.getT100Data(requestBody,webServiceName,getApplicationContext(),"");
-                mapResponseList = t100ServiceHelper.getT100JsonQrCodeData(strResponse,"qrcode");
+                if(scmd.equals("A")){
+                    mapResponseList = t100ServiceHelper.getT100JsonQrCodeData(strResponse,"qrcode");
+                }
                 mapResponseStatus = t100ServiceHelper.getT100StatusData(strResponse);
 
                 e.onNext(mapResponseStatus);
@@ -288,6 +314,10 @@ public class CheckStockDetailActivity extends AppCompatActivity {
                         String sPlanDate = mData.get("PlanDate").toString();
                         String sQuantity = mData.get("Quantity").toString();
                         String sWeight = mData.get("Weight").toString();
+                        String sLots = mData.get("Lots").toString();
+                        String sFeatures = mData.get("Features").toString();
+                        String sFeaturesName = mData.get("FeaturesName").toString();
+                        String sFeaturesModels = mData.get("FeaturesModels").toString();
 
                         inputDetailProductCode.setText(sProductCode);
                         inputDetailProductModels.setText(sProductName);
@@ -295,6 +325,9 @@ public class CheckStockDetailActivity extends AppCompatActivity {
                         inputDetailStartPlanDate.setText(sPlanDate);
                         inputDetailQuantity.setText(sQuantity);
                         inputDetailDocno.setText(sDocno);
+                        inputDetailFeatures.setText(sFeatures);
+                        inputDetailFeaturesName.setText(sFeaturesName);
+                        inputDetailFeaturesModels.setText(sFeaturesModels);
                     }
                 }
                 loadingDialog.dismiss();

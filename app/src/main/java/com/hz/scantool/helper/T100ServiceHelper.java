@@ -25,7 +25,7 @@ public class T100ServiceHelper {
 
     private static final String SERVICE_IP="192.168.210.3";
     private static final String SERVICE_LISTENER="topprd";   //toptst
-    private static final String SERVICE_ENTERPRISE="12";
+    private static final String SERVICE_ENTERPRISE="10";
     private static final String ARG_NETWORK_WLAN="外部网络";
     private static final String SERVICE_LAN_URL="http://192.168.210.3/wtopprd/ws/r/awsp900?WSDL";  //wtoptst
     private static final String SERVICE_WLAN_URL="http://119.97.210.146:8089/wtopprd/ws/r/awsp900?WSDL";  //wtoptst
@@ -400,6 +400,10 @@ public class T100ServiceHelper {
                 map.put("ProductModels",jsonObject.getString("erpProductModels").trim());
                 map.put("ProductSize",jsonObject.getString("erpProductSize").trim());
                 map.put("Docno",jsonObject.getString("erpDocno").trim());
+                map.put("Lots",jsonObject.getString("erpLots").trim());
+                map.put("Features",jsonObject.getString("erpFeatures").trim());
+                map.put("FeaturesName",jsonObject.getString("erpFeaturesName").trim());
+                map.put("FeaturesModels",jsonObject.getString("erpFeaturesModels").trim());
                 map.put("PlanDate",jsonObject.getString("erpPlanDate").trim());
                 map.put("Weight",jsonObject.getString("erpWeight").trim());
                 detailList.add(map);
