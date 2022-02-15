@@ -599,7 +599,13 @@ public class SubListActivity extends AppCompatActivity {
             @Override
             public void onError(Throwable e) {
 //                MyToast.myShow(SubListActivity.this,"网络错误",0,0);
-                showDetail();
+                try{
+                    showDetail();
+                }catch (Exception ex){
+                    ex.printStackTrace();
+                    MyToast.myShow(SubListActivity.this,"网络错误",0,0);
+                }
+
 //                progressBar.setVisibility(View.GONE);
                 loadingDialog.dismiss();
             }

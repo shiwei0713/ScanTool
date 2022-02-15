@@ -436,7 +436,7 @@ public class SubMasterContentActivity extends AppCompatActivity {
 
             @Override
             public void onComplete() {
-                subMasterListItemAdapter = new SubMasterListItemAdapter(mapResponseList,getApplicationContext(),strType, mConfirmClickListener);
+                subMasterListItemAdapter = new SubMasterListItemAdapter(mapResponseList,getApplicationContext(),strType, mConfirmClickListener,mDeleteClickListener);
                 subMasterContentView.setAdapter(subMasterListItemAdapter);
 
                 subMasterContentProgressBar.setVisibility(View.GONE);
@@ -609,7 +609,7 @@ public class SubMasterContentActivity extends AppCompatActivity {
                             if(!statusCode.equals("0")) {
                                 MyToast.myShow(SubMasterContentActivity.this, statusDescription, 0, 1);
                             }else{
-                                Button listBtn = v.findViewById(R.id.txtSubContentListBtnDelete);
+                                Button listBtn = v.findViewById(R.id.txtSubContentListBtnConfirm);
                                 listBtn.setVisibility(View.INVISIBLE);
 //                                int progress = subMasterContentProgressBar.getProgress();
 //                                progress = progress + 50;
@@ -634,6 +634,90 @@ public class SubMasterContentActivity extends AppCompatActivity {
                 public void onComplete() {
                     getSubContentWorkOrderListData();
 //                    subMasterContentProgressBar.setVisibility(View.GONE);
+                    loadingDialog.dismiss();
+                }
+            });
+        }
+    };
+
+    //删除单据
+    private SubMasterListItemAdapter.DeleteClickListener mDeleteClickListener = new SubMasterListItemAdapter.DeleteClickListener() {
+        @Override
+        public void DeleteClickListener(int position, View v) {
+            //显示进度条
+            loadingDialog = new LoadingDialog(SubMasterContentActivity.this,"数据删除中",R.drawable.dialog_loading);
+            loadingDialog.show();
+
+            Observable.create(new ObservableOnSubscribe<List<Map<String,Object>>>() {
+                @Override
+                public void subscribe(ObservableEmitter<List<Map<String, Object>>> e) throws Exception {
+                    //初始化T100服务名
+                    String webServiceName = "InventoryBillRequestDelete";
+                    String strProg = "del340";
+                    String strDocno = subMasterListItemAdapter.getItemValue(position);
+
+                    //发送服务器请求
+                    T100ServiceHelper t100ServiceHelper = new T100ServiceHelper();
+                    String requestBody = "&lt;Document&gt;\n"+
+                            "&lt;RecordSet id=\"1\"&gt;\n"+
+                            "&lt;Master name=\"inaj_t\" node_id=\"1\"&gt;\n"+
+                            "&lt;Record&gt;\n"+
+                            "&lt;Field name=\"inajsite\" value=\""+ UserInfo.getUserSiteId(getApplicationContext())+"\"/&gt;\n"+
+                            "&lt;Field name=\"inajent\" value=\""+UserInfo.getUserEnterprise(getApplicationContext())+"\"/&gt;\n"+
+                            "&lt;Field name=\"inaj001\" value=\""+strDocno+"\"/&gt;\n"+
+                            "&lt;Field name=\"inaj015\" value=\""+strProg+"\"/&gt;\n"+
+                            "&lt;Field name=\"inajuser\" value=\""+ UserInfo.getUserId(getApplicationContext()) +"\"/&gt;\n"+  //异动人员
+                            "&lt;Detail name=\"s_detail1\" node_id=\"1_1\"&gt;\n"+
+                            "&lt;Record&gt;\n"+
+                            "&lt;Field name=\"inaj002\" value=\"1.0\"/&gt;\n"+
+                            "&lt;/Record&gt;\n"+
+                            "&lt;/Detail&gt;\n"+
+                            "&lt;Memo/&gt;\n"+
+                            "&lt;Attachment count=\"0\"/&gt;\n"+
+                            "&lt;/Record&gt;\n"+
+                            "&lt;/Master&gt;\n"+
+                            "&lt;/RecordSet&gt;\n"+
+                            "&lt;/Document&gt;\n";
+                    String strResponse = t100ServiceHelper.getT100Data(requestBody,webServiceName,getApplicationContext(),"");
+                    mapResponseStatus = t100ServiceHelper.getT100StatusData(strResponse);
+
+                    e.onNext(mapResponseStatus);
+                    e.onComplete();
+                }
+            }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<List<Map<String, Object>>>() {
+                @Override
+                public void onSubscribe(Disposable d) {
+
+                }
+
+                @Override
+                public void onNext(List<Map<String, Object>> maps) {
+                    if(mapResponseStatus.size()> 0){
+                        for(Map<String,Object> mStatus: mapResponseStatus){
+                            statusCode = mStatus.get("statusCode").toString();
+                            statusDescription = mStatus.get("statusDescription").toString();
+
+                            if(!statusCode.equals("0")) {
+                                MyToast.myShow(SubMasterContentActivity.this, statusDescription, 0, 1);
+                            }else{
+                                MyToast.myShow(SubMasterContentActivity.this, statusDescription, 1, 0);
+                            }
+                        }
+                    }else{
+                        MyToast.myShow(SubMasterContentActivity.this,"执行接口错误",2,0);
+                    }
+                }
+
+                @Override
+                public void onError(Throwable e) {
+                    MyToast.myShow(SubMasterContentActivity.this,mapResponseStatus.toString(),0,0);
+                    getSubContentWorkOrderListData();
+                    loadingDialog.dismiss();
+                }
+
+                @Override
+                public void onComplete() {
+                    getSubContentWorkOrderListData();
                     loadingDialog.dismiss();
                 }
             });

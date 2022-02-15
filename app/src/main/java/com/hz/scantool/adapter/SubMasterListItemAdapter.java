@@ -22,6 +22,7 @@ public class SubMasterListItemAdapter extends BaseAdapter {
     private Context mContext;
     private String mType;
     private ConfirmClickListener mConfirmClickListener;
+    private DeleteClickListener mDeleteClickListener;
 
     public SubMasterListItemAdapter(List<Map<String,Object>> mData, Context mContext,String mType){
         this.mData = mData;
@@ -29,11 +30,12 @@ public class SubMasterListItemAdapter extends BaseAdapter {
         this.mType = mType;
     }
 
-    public SubMasterListItemAdapter(List<Map<String,Object>> mData, Context mContext,String mType,ConfirmClickListener mConfirmClickListener){
+    public SubMasterListItemAdapter(List<Map<String,Object>> mData, Context mContext,String mType,ConfirmClickListener mConfirmClickListener,DeleteClickListener mDeleteClickListener){
         this.mData = mData;
         this.mContext = mContext;
         this.mType = mType;
         this.mConfirmClickListener = mConfirmClickListener;
+        this.mDeleteClickListener = mDeleteClickListener;
     }
 
     @Override
@@ -89,7 +91,8 @@ public class SubMasterListItemAdapter extends BaseAdapter {
         TextView txtSubContentListQuantityPcsTitle;
         TextView txtSubContentListQuantityPcs;
 
-        Button txtSubContentListBtnDelete;
+        Button txtSubContentListBtnConfirm;
+        Button txtSubContentListBtnDeleteDoc;
 
         ImageView imgSubContentList;
         ImageView imgSubContentListAlarm;
@@ -147,7 +150,8 @@ public class SubMasterListItemAdapter extends BaseAdapter {
             holder.txtSubContentListQuantityPcsTitle = convertView.findViewById(R.id.txtSubContentListQuantityPcsTitle);
             holder.txtSubContentListQuantityPcs = convertView.findViewById(R.id.txtSubContentListQuantityPcs);
 
-            holder.txtSubContentListBtnDelete = convertView.findViewById(R.id.txtSubContentListBtnDelete);
+            holder.txtSubContentListBtnConfirm = convertView.findViewById(R.id.txtSubContentListBtnConfirm);
+            holder.txtSubContentListBtnDeleteDoc = convertView.findViewById(R.id.txtSubContentListBtnDeleteDoc);
             holder.imgSubContentList = convertView.findViewById(R.id.imgSubContentList);
             holder.imgSubContentListAlarm = convertView.findViewById(R.id.imgSubContentListAlarm);
             holder.txtSubContentListStatus = convertView.findViewById(R.id.txtSubContentListStatus);
@@ -174,13 +178,13 @@ public class SubMasterListItemAdapter extends BaseAdapter {
         //状态图片显示
         holder.strStatus = (String)mData.get(position).get("Status");
         if(holder.strStatus.equals("Y")){
-            holder.txtSubContentListBtnDelete.setVisibility(View.GONE);
+            holder.txtSubContentListBtnConfirm.setVisibility(View.GONE);
             holder.txtSubContentListStatus.setImageDrawable(convertView.getResources().getDrawable(R.drawable.list_status_check));
         }else{
             if(mType.equals("1")){
-                holder.txtSubContentListBtnDelete.setVisibility(View.GONE);
+                holder.txtSubContentListBtnConfirm.setVisibility(View.GONE);
             }else{
-                holder.txtSubContentListBtnDelete.setVisibility(View.VISIBLE);
+                holder.txtSubContentListBtnConfirm.setVisibility(View.VISIBLE);
             }
 
             holder.txtSubContentListStatus.setImageDrawable(convertView.getResources().getDrawable(R.drawable.list_status_deal));
@@ -195,17 +199,21 @@ public class SubMasterListItemAdapter extends BaseAdapter {
         if(mType.equals("21")){
             holder.strDocStatus = (String)mData.get(position).get("DocStatus");
             if(holder.strDocStatus.equals("Y")) {
-                holder.txtSubContentListBtnDelete.setVisibility(View.GONE);
+                holder.txtSubContentListBtnConfirm.setVisibility(View.GONE);
             }else{
-                holder.txtSubContentListBtnDelete.setVisibility(View.VISIBLE);
+                holder.txtSubContentListBtnConfirm.setVisibility(View.VISIBLE);
             }
         }else{
-            holder.txtSubContentListBtnDelete.setVisibility(View.GONE);
+            holder.txtSubContentListBtnConfirm.setVisibility(View.GONE);
         }
 
         //按钮事件绑定
-        holder.txtSubContentListBtnDelete.setOnClickListener(mConfirmClickListener);
-        holder.txtSubContentListBtnDelete.setTag(position);
+        //托盘确认
+        holder.txtSubContentListBtnConfirm.setOnClickListener(mConfirmClickListener);
+        holder.txtSubContentListBtnConfirm.setTag(position);
+        //删除单据
+        holder.txtSubContentListBtnDeleteDoc.setOnClickListener(mDeleteClickListener);
+        holder.txtSubContentListBtnDeleteDoc.setTag(position);
 
         return convertView;
     }
@@ -267,6 +275,15 @@ public class SubMasterListItemAdapter extends BaseAdapter {
         }
 
         public abstract void ConfirmOnClick(int position,View v);
+    }
+
+    public static abstract class DeleteClickListener implements View.OnClickListener{
+        @Override
+        public void onClick(View view) {
+            DeleteClickListener((Integer) view.getTag(),view);
+        }
+
+        public abstract void DeleteClickListener(int position,View v);
     }
 }
 

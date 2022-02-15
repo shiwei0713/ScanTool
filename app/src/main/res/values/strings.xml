@@ -183,6 +183,7 @@
     <string name="sub_master_content_quantitypcs">总箱数:</string>
     <string name="sub_master_content_button1">托盘完成</string>
     <string name="sub_master_content_button2">紧急入库</string>
+    <string name="sub_master_content_button3">删除单据</string>
     <string name="sub_master_flag1">未检验</string>
     <string name="sub_master_flag2">未入库</string>
     <string name="sub_master_label1">当天</string>
