@@ -14,6 +14,7 @@
     <uses-permission android:name="android.permission.CAMERA" />
 
     <application
+        android:name=".App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher_scan"
         android:label="@string/app_name"
@@ -21,7 +22,9 @@
         android:supportsRtl="true"
         android:theme="@style/ThemeNoBar.ScanTool"
         android:usesCleartextTraffic="true">
-        <activity android:name=".CheckStockDetailActivity"></activity>
+        <activity android:name=".SubDetailActivity"></activity>
+        <activity android:name=".SubActivity" />
+        <activity android:name=".CheckStockDetailActivity" />
         <activity android:name=".ErrorActivity" />
         <activity android:name=".SubMasterListDetailActivity" />
         <activity android:name=".SubMasterListActivity" />

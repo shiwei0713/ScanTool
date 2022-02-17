@@ -42,6 +42,7 @@
     <string name="query_label2">近7天</string>
     <string name="query_button">查询</string>
     <string name="query_btnClear">清空</string>
+    <string name="query_price">产量查询</string>
     <string name="title_activity_list">ListActivity</string>
     <string name="tab_pro1">待生产</string>
     <string name="tab_pro2">生产中</string>
@@ -134,6 +135,7 @@
     <string name="list_detail_button3">库存报警</string>
     <string name="list_detail_button4">分配人员</string>
     <string name="list_detail_button5">备货完成</string>
+    <string name="list_detail_button6">扫描标签</string>
     <string name="detail_title4">发料总量:</string>
     <string name="detail_detail_quantity_pcs_title">箱数:</string>
     <string name="detail_detail_quantity">备货数/总箱数:</string>
@@ -196,4 +198,23 @@
     <string name="sub_detail_list_post">过账</string>
     <string name="loading">数据请求中,请稍等</string>
     <string name="loading_btn">关闭</string>
+    <string name="str_disconnect">断开连接</string>
+    <string name="default_mode"></string>
+    <string name="str_printer_conn_normal">打印机连接正常</string>
+    <string name="str_escmode">票据模式</string>
+    <string name="str_printer_out_of_paper">打印机缺纸</string>
+    <string name="str_printer_open_cover">打印机开盖</string>
+    <string name="str_printer_error">打印机出错</string>
+    <string name="str_state_query">状态查询</string>
+    <string name="str_printer_printmode_esc">打印模式:ESC</string>
+    <string name="str_printer_printmode_tsc">打印模式:TSC</string>
+    <string name="str_printer_printmode_cpcl">打印模式:CPCL</string>
+    <string name="str_state">状态：</string>
+    <string name="str_tscmode">标签模式</string>
+    <string name="str_cpclmode">面单模式</string>
+    <string name="str_mode_tip">打印机已处于%s，无需切换！</string>
+    <string name="str_conn_state_disconnect">连接状态：未连接</string>
+    <string name="str_conn_state_connecting">连接状态：连接中</string>
+    <string name="str_connecting">连接中</string>
+    <string name="str_conn_state_connected">连接状态：已连接</string>
 </resources>

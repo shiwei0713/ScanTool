@@ -109,14 +109,14 @@ public class MasterActivity extends AppCompatActivity {
         txtMasterSite.setText(UserInfo.getUserSite(getApplicationContext()));
 
         //初始化权限
-        btnAction1Power =false;    //工序报工
+        btnAction1Power =true;    //工序报工
         btnAction2Power =true;    //质量检验
         btnAction3Power =true;    //完工入库  //FQC
-        btnAction4Power =false;     //采购入库
-        btnAction5Power =false;     //生产备料
-        btnAction6Power =false;     //销售出货
-        btnAction7Power =false;    //生产协同
-        btnAction8Power =false;     //期末盘点
+        btnAction4Power =true;     //采购入库
+        btnAction5Power =true;     //生产备料
+        btnAction6Power =true;     //销售出货
+        btnAction7Power =true;    //生产协同
+        btnAction8Power =true;     //期末盘点
     }
 
     //设置导航按钮样式
@@ -147,7 +147,7 @@ public class MasterActivity extends AppCompatActivity {
                 //工序报工
                 case R.id.btnAction1:
                     if(btnAction1Power){
-                        intent=new Intent(MasterActivity.this,ListActivity.class);
+                        intent=new Intent(MasterActivity.this,SubActivity.class);
                         bundle=new Bundle();
                         bundle.putString("title",getString(agrTitle[0]));
                         bundle.putInt("count",1);

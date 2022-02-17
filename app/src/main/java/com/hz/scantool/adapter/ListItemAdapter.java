@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +21,6 @@ import com.hz.scantool.models.Company;
 import com.hz.scantool.R;
 import com.hz.scantool.helper.SharedHelper;
 import com.hz.scantool.helper.WebServiceHelper;
-import com.hz.scantool.printer.NetPrinter;
 
 import java.util.List;
 import java.util.Map;
@@ -278,9 +276,7 @@ public class ListItemAdapter extends BaseAdapter {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                NetPrinter netPrinter = new NetPrinter();
-                boolean printStatus = netPrinter.openPrinter("192.168.20.118");
-                Log.i("erpStatus",String.valueOf(printStatus));
+
             }
         }).start();
     }

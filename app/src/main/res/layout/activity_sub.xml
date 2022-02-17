@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".SubActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/subListToolBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/action_style"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/imgMasterUser"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="20dp"
+            app:srcCompat="@drawable/user" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:padding="5dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txtLoginout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:textColor="@color/master_loginout"
+                android:text="工号:01653"/>
+
+            <TextView
+                android:id="@+id/txtWorktime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:textColor="@color/master_loginout"
+                android:text="班次:白班"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/txtQuery"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:clickable="true"
+                android:text="@string/query_price"
+                android:textColor="@color/button_color" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:background="@color/line"
+        android:orientation="vertical">
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btnPrinter"
+        android:layout_width="80dp"
+        android:layout_height="25dp"
+        android:background="@drawable/list_flag_selector"
+        android:textColor="@color/teal_700"
+        android:layout_marginLeft="10dp"
+        android:textStyle="normal"
+        android:focusable="false"
+        android:textSize="@dimen/list_detail_button"
+        android:visibility="gone"
+        android:text="@string/list_detail_button2"/>
+
+    <Button
+        android:id="@+id/btnConnect"
+        android:layout_width="80dp"
+        android:layout_height="25dp"
+        android:background="@drawable/list_flag_selector"
+        android:textColor="@color/teal_700"
+        android:layout_marginLeft="10dp"
+        android:textStyle="normal"
+        android:focusable="false"
+        android:textSize="@dimen/list_detail_button"
+        android:visibility="gone"
+        android:text="连接打印机"/>
+
+    <TextView
+        android:id="@+id/txtIp"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:id="@+id/txtPort"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:id="@+id/txtStatus"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:max="100"/>
+
+    <ListView
+        android:id="@+id/subView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="@color/white"
+        android:dividerHeight="5dp"
+        android:padding="5dp" />
+
+</LinearLayout>
