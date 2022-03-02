@@ -7,35 +7,19 @@
 
     <LinearLayout
         android:layout_width="600px"
-        android:layout_height="500px"
+        android:layout_height="420px"
+        android:background="@drawable/linearlayout_border"
         android:orientation="vertical">
 
-        <TextView
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/print_title"
-            android:text="华滋东江汽车零部件有限公司"
-            android:textStyle="bold"
-            android:textColor="@color/black"
-            android:gravity="center"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/print_title"
-            android:text="生产过程标识卡"
-            android:textStyle="bold"
-            android:textColor="@color/black"
-            android:gravity="center"/>
-
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:orientation="horizontal">
 
             <TableLayout
                 android:layout_width="match_parent"
                 android:shrinkColumns="0"
-                android:stretchColumns="0,1,2,3"
+                android:stretchColumns="0,1,2,3,4,5"
                 android:layout_height="wrap_content"
                 android:background="@color/black"
                 android:id="@+id/li">
@@ -52,8 +36,55 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@color/white"
+                        android:layout_column="0"
+                        android:layout_span="7"
                         android:layout_marginLeft="@dimen/tableline"
-                        android:text="生产日期"
+                        android:text="98457841"
+                        android:gravity="center"
+                        android:textStyle="bold"
+                        android:textSize="@dimen/print_content_lager"
+                        android:textColor="@color/black" />
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/tableline"
+                    android:layout_marginRight="@dimen/tableline"
+                    android:layout_marginLeft="@dimen/tableline"
+                    android:layout_marginBottom="@dimen/tableline">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:layout_column="0"
+                        android:layout_span="7"
+                        android:gravity="center"
+                        android:textStyle="bold"
+                        android:layout_marginLeft="@dimen/tableline"
+                        android:text="左前门锁扣"
+                        android:textSize="@dimen/print_content_lager"
+                        android:textColor="@color/black" />
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/tableline"
+                    android:layout_marginRight="@dimen/tableline"
+                    android:layout_marginLeft="@dimen/tableline"
+                    android:layout_marginBottom="@dimen/tableline">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:layout_column="0"
+                        android:layout_marginLeft="@dimen/tableline"
+                        android:text="@string/label_lot"
                         android:textSize="@dimen/print_content"
                         android:textColor="@color/black"/>
 
@@ -61,8 +92,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@color/white"
+                        android:layout_column="1"
                         android:layout_marginLeft="@dimen/tableline"
-                        android:text="工序"
+                        android:text="22A05"
                         android:textSize="@dimen/print_content"
                         android:textColor="@color/black" />
 
@@ -70,8 +102,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@color/white"
+                        android:layout_column="2"
                         android:layout_marginLeft="@dimen/tableline"
-                        android:text="完工数"
+                        android:text="@string/label_operater"
                         android:textSize="@dimen/print_content"
                         android:textColor="@color/black"/>
 
@@ -79,8 +112,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@color/white"
+                        android:layout_column="3"
                         android:layout_marginLeft="@dimen/tableline"
-                        android:text="操作者"
+                        android:text="01653"
                         android:textSize="@dimen/print_content"
                         android:textColor="@color/black"/>
 
@@ -88,15 +122,348 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@color/white"
+                        android:layout_column="4"
+                        android:layout_span="2"
                         android:layout_marginLeft="@dimen/tableline"
-                        android:text="检验员  "
+                        android:text="@string/label_programe"
+                        android:textSize="@dimen/print_content"
+                        android:textColor="@color/black"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:layout_column="5"
+                        android:layout_marginLeft="@dimen/tableline"
+                        android:text="X37/M3/M4"
+                        android:textSize="@dimen/print_content"
+                        android:textColor="@color/black"/>
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/tableline"
+                    android:layout_marginRight="@dimen/tableline"
+                    android:layout_marginLeft="@dimen/tableline"
+                    android:layout_marginBottom="@dimen/tableline">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:layout_column="0"
+                        android:layout_marginLeft="@dimen/tableline"
+                        android:text="@string/label_packages"
+                        android:textSize="@dimen/print_content"
+                        android:textColor="@color/black"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:layout_column="1"
+                        android:layout_marginLeft="@dimen/tableline"
+                        android:text="80"
+                        android:textSize="@dimen/print_content"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:layout_column="2"
+                        android:layout_marginLeft="@dimen/tableline"
+                        android:text="@string/label_tray"
+                        android:textSize="@dimen/print_content"
+                        android:textColor="@color/black"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:layout_column="3"
+                        android:layout_marginLeft="@dimen/tableline"
+                        android:text="P4322"
+                        android:textSize="@dimen/print_content"
+                        android:textColor="@color/black"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:layout_column="4"
+                        android:layout_span="2"
+                        android:layout_marginLeft="@dimen/tableline"
+                        android:text="@string/label_saler"
+                        android:textSize="@dimen/print_content"
+                        android:textColor="@color/black"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:layout_column="5"
+                        android:layout_marginLeft="@dimen/tableline"
+                        android:text="神龙汽车"
+                        android:textSize="@dimen/print_content"
+                        android:textColor="@color/black"/>
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/tableline"
+                    android:layout_marginRight="@dimen/tableline"
+                    android:layout_marginLeft="@dimen/tableline"
+                    android:layout_marginBottom="@dimen/tableline">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:layout_column="0"
+                        android:layout_marginLeft="@dimen/tableline"
+                        android:text="@string/label_property"
+                        android:textSize="@dimen/print_content"
+                        android:textColor="@color/black"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:layout_column="1"
+                        android:layout_marginLeft="@dimen/tableline"
+                        android:text=""
+                        android:textSize="@dimen/print_content"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:layout_column="2"
+                        android:layout_marginLeft="@dimen/tableline"
+                        android:text="@string/label_company"
+                        android:textSize="@dimen/print_content"
+                        android:textColor="@color/black"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:layout_column="3"
+                        android:layout_marginLeft="@dimen/tableline"
+                        android:text="华滋东江"
+                        android:textSize="@dimen/print_content"
+                        android:textColor="@color/black"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:layout_column="4"
+                        android:layout_span="2"
+                        android:layout_marginLeft="@dimen/tableline"
+                        android:text="@string/label_floor"
+                        android:textSize="@dimen/print_content"
+                        android:textColor="@color/black"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:layout_column="5"
+                        android:layout_marginLeft="@dimen/tableline"
+                        android:text="0"
+                        android:textSize="@dimen/print_content"
+                        android:textColor="@color/black"/>
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/tableline"
+                    android:layout_marginRight="@dimen/tableline"
+                    android:layout_marginLeft="@dimen/tableline"
+                    android:layout_marginBottom="@dimen/tableline">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:layout_column="0"
+                        android:layout_marginLeft="@dimen/tableline"
+                        android:text="@string/label_left"
+                        android:textSize="@dimen/print_content"
+                        android:textColor="@color/black"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:layout_column="1"
+                        android:layout_marginLeft="@dimen/tableline"
+                        android:text="L/左"
+                        android:textSize="@dimen/print_content"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:layout_column="2"
+                        android:layout_marginLeft="@dimen/tableline"
+                        android:text="@string/label_product"
+                        android:textSize="@dimen/print_content"
+                        android:textColor="@color/black"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:layout_column="3"
+                        android:layout_marginLeft="@dimen/tableline"
+                        android:text="XF"
+                        android:textSize="@dimen/print_content"
+                        android:textColor="@color/black"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:layout_column="4"
+                        android:layout_span="2"
+                        android:layout_marginLeft="@dimen/tableline"
+                        android:text="@string/label_stock"
+                        android:textSize="@dimen/print_content"
+                        android:textColor="@color/black"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:layout_column="5"
+                        android:layout_marginLeft="@dimen/tableline"
+                        android:text="XF-CK"
+                        android:textSize="@dimen/print_content"
+                        android:textColor="@color/black"/>
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/tableline"
+                    android:layout_marginRight="@dimen/tableline"
+                    android:layout_marginLeft="@dimen/tableline"
+                    android:layout_marginBottom="@dimen/tableline">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:layout_column="0"
+                        android:layout_span="2"
+                        android:layout_marginLeft="@dimen/tableline"
+                        android:text="@string/label_kg1"
+                        android:textSize="@dimen/print_content"
+                        android:textColor="@color/black"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:layout_column="1"
+                        android:layout_marginLeft="@dimen/tableline"
+                        android:text=""
+                        android:textSize="@dimen/print_content"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:layout_column="2"
+                        android:layout_span="2"
+                        android:layout_marginLeft="@dimen/tableline"
+                        android:text="@string/label_kg2"
+                        android:textSize="@dimen/print_content"
+                        android:textColor="@color/black"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:layout_column="3"
+                        android:layout_span="2"
+                        android:layout_marginLeft="@dimen/tableline"
+                        android:text=""
+                        android:textSize="@dimen/print_content"
+                        android:textColor="@color/black"/>
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/tableline"
+                    android:layout_marginRight="@dimen/tableline"
+                    android:layout_marginLeft="@dimen/tableline"
+                    android:layout_marginBottom="@dimen/tableline">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:layout_column="0"
+                        android:layout_span="2"
+                        android:layout_marginLeft="@dimen/tableline"
+                        android:text="@string/label_fqc_check"
+                        android:textSize="@dimen/print_content"
+                        android:textColor="@color/black"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:layout_column="1"
+                        android:layout_marginLeft="@dimen/tableline"
+                        android:text=""
+                        android:textSize="@dimen/print_content"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:layout_column="2"
+                        android:layout_span="2"
+                        android:layout_marginLeft="@dimen/tableline"
+                        android:text="@string/label_product_check"
+                        android:textSize="@dimen/print_content"
+                        android:textColor="@color/black"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:layout_column="3"
+                        android:layout_span="2"
+                        android:layout_marginLeft="@dimen/tableline"
+                        android:text=""
                         android:textSize="@dimen/print_content"
                         android:textColor="@color/black"/>
 
                 </TableRow>
 
             </TableLayout>
-        </ScrollView>
+
+        </LinearLayout>
+
 
     </LinearLayout>
 

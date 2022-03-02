@@ -7,7 +7,7 @@
 
     <LinearLayout
         android:layout_width="600px"
-        android:layout_height="500px"
+        android:layout_height="420px"
         android:orientation="vertical">
 
         <TextView
@@ -19,42 +19,35 @@
             android:textColor="@color/black"
             android:gravity="center"/>
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/print_title"
-            android:text="生产过程标识卡"
-            android:textStyle="bold"
-            android:textColor="@color/black"
-            android:gravity="center"/>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
             android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:text="零件号:"
-                android:textSize="@dimen/print_content"
-                android:textColor="@color/black"/>
+                android:textSize="@dimen/print_title"
+                android:text="XF"
+                android:textStyle="italic"
+                android:textColor="@color/black"
+                android:gravity="left"/>
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:text="9817489487"
-                android:textSize="@dimen/print_content"
-                android:textColor="@color/black"/>
+                android:textSize="@dimen/print_title"
+                android:text="生产过程标识卡"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:gravity="center"/>
 
         </LinearLayout>
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="7dp">
 
             <TableLayout
                 android:layout_width="match_parent"
@@ -63,6 +56,139 @@
                 android:layout_height="wrap_content"
                 android:background="@color/black"
                 android:id="@+id/li">
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/tableline"
+                    android:layout_marginRight="@dimen/tableline"
+                    android:layout_marginLeft="@dimen/tableline"
+                    android:layout_marginBottom="@dimen/tableline">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="0"
+                        android:background="@color/white"
+                        android:layout_marginLeft="@dimen/tableline"
+                        android:text="@string/label_code"
+                        android:textSize="@dimen/print_content"
+                        android:textColor="@color/black"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="1"
+                        android:background="@color/white"
+                        android:layout_marginLeft="@dimen/tableline"
+                        android:text="98457841"
+                        android:textSize="@dimen/print_content"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="2"
+                        android:background="@color/white"
+                        android:layout_marginLeft="@dimen/tableline"
+                        android:text="@string/label_stock"
+                        android:textSize="@dimen/print_content"
+                        android:textColor="@color/black"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="3"
+                        android:layout_span="2"
+                        android:background="@color/white"
+                        android:layout_marginLeft="@dimen/tableline"
+                        android:text="XF-CK"
+                        android:textSize="@dimen/print_content"
+                        android:textColor="@color/black"/>
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/tableline"
+                    android:layout_marginRight="@dimen/tableline"
+                    android:layout_marginLeft="@dimen/tableline"
+                    android:layout_marginBottom="@dimen/tableline">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="0"
+                        android:background="@color/white"
+                        android:layout_marginLeft="@dimen/tableline"
+                        android:text="@string/label_name"
+                        android:textSize="@dimen/print_content"
+                        android:textColor="@color/black"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="1"
+                        android:layout_span="4"
+                        android:background="@color/white"
+                        android:layout_marginLeft="@dimen/tableline"
+                        android:text="左前门锁扣"
+                        android:textSize="@dimen/print_content"
+                        android:textColor="@color/black" />
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/tableline"
+                    android:layout_marginRight="@dimen/tableline"
+                    android:layout_marginLeft="@dimen/tableline"
+                    android:layout_marginBottom="@dimen/tableline">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="0"
+                        android:background="@color/white"
+                        android:layout_marginLeft="@dimen/tableline"
+                        android:text="@string/label_programe"
+                        android:textSize="@dimen/print_content"
+                        android:textColor="@color/black"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="1"
+                        android:background="@color/white"
+                        android:layout_marginLeft="@dimen/tableline"
+                        android:text="X37"
+                        android:textSize="@dimen/print_content"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="2"
+                        android:background="@color/white"
+                        android:layout_marginLeft="@dimen/tableline"
+                        android:text="@string/label_lot"
+                        android:textSize="@dimen/print_content"
+                        android:textColor="@color/black"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="3"
+                        android:layout_span="2"
+                        android:background="@color/white"
+                        android:layout_marginLeft="@dimen/tableline"
+                        android:text="22A05"
+                        android:textSize="@dimen/print_content"
+                        android:textColor="@color/black"/>
+
+                </TableRow>
 
                 <TableRow
                     android:layout_width="match_parent"

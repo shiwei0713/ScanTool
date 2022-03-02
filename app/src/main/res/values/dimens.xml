@@ -25,5 +25,7 @@
     <dimen name="error">20sp</dimen>
     <dimen name="tableline">0.5dp</dimen>
     <dimen name="print_title">12sp</dimen>
+    <dimen name="print_title2">14sp</dimen>
     <dimen name="print_content">8sp</dimen>
+    <dimen name="print_content_lager">14sp</dimen>
 </resources>

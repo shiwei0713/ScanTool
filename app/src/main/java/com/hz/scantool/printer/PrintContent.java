@@ -144,10 +144,12 @@ public class PrintContent {
 //        Bitmap b2 = BitmapFactory.decodeResource(App.getContext().getResources(), R.drawable.test2);
 //        Bitmap b3 = BitmapFactory.decodeFile(Environment.getExternalStorageDirectory().getAbsolutePath()+"/hzimages/testlabel");
         // 绘制图片
-        tsc.addBitmap(50, 70, LabelCommand.BITMAP_MODE.OVERWRITE,1100, b);
-
+        tsc.addBitmap(50, 30, LabelCommand.BITMAP_MODE.OVERWRITE,1100, b);
+        //绘制二维码显示内容
+        tsc.addText(10, 10, LabelCommand.FONTTYPE.SIMPLIFIED_CHINESE, LabelCommand.ROTATION.ROTATION_0, LabelCommand.FONTMUL.MUL_1, LabelCommand.FONTMUL.MUL_1,
+                "www.smarnet.cc");
         //绘制二维码
-        tsc.addQRCode(950,20, LabelCommand.EEC.LEVEL_L, 8, LabelCommand.ROTATION.ROTATION_0, " www.smarnet.cc");
+        tsc.addQRCode(960,20, LabelCommand.EEC.LEVEL_L, 8, LabelCommand.ROTATION.ROTATION_0, " www.smarnet.cc");
 
         // 打印标签
         tsc.addPrint(1, 1);
@@ -222,6 +224,7 @@ public class PrintContent {
      */
     public static Bitmap getBitmap(Context mcontext) {
         View v = View.inflate(App.getContext(), R.layout.print_content, null);
+//        View v = View.inflate(App.getContext(), R.layout.print_content_sale, null);
         TableLayout tableLayout = (TableLayout) v.findViewById(R.id.li);
         tableLayout.addView(ctv(mcontext, "2022-02-16", "CY10/连续冲压", 30,"01653",""));
         tableLayout.addView(ctv(mcontext, "2022-02-16", "CY20/连续冲压", 30,"01653",""));

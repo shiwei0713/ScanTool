@@ -222,4 +222,22 @@
     <string name="str_conn_state_connecting">连接状态：连接中</string>
     <string name="str_connecting">连接中</string>
     <string name="str_conn_state_connected">连接状态：已连接</string>
+    <string name="label_code">零件号</string>
+    <string name="label_name">零件名</string>
+    <string name="label_lot">批次</string>
+    <string name="label_operater">末序操作者</string>
+    <string name="label_programe">车型</string>
+    <string name="label_packages">包装量</string>
+    <string name="label_tray">容器型号</string>
+    <string name="label_saler">客户</string>
+    <string name="label_property">特性</string>
+    <string name="label_left">左右件</string>
+    <string name="label_company">公司名称</string>
+    <string name="label_product">生产地</string>
+    <string name="label_stock">仓库</string>
+    <string name="label_floor">层数</string>
+    <string name="label_kg1">实测单件净重</string>
+    <string name="label_kg2">实测整箱净重</string>
+    <string name="label_fqc_check">FQC检验章</string>
+    <string name="label_product_check">车间检验章</string>
 </resources>
