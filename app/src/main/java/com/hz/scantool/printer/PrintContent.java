@@ -3,8 +3,11 @@ package com.hz.scantool.printer;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.os.Environment;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -14,6 +17,7 @@ import com.gprinter.command.EscCommand;
 import com.gprinter.command.LabelCommand;
 import com.hz.scantool.App;
 import com.hz.scantool.R;
+import com.hz.scantool.SubActivity;
 
 import java.util.Vector;
 
@@ -114,12 +118,12 @@ public class PrintContent {
      * 标签打印测试页
      * @return
      */
-    public static Vector<Byte> getLabel() {
+    public static Vector<Byte> getLabel(Bitmap b) {
         LabelCommand tsc = new LabelCommand();
         // 设置标签尺寸宽高，按照实际尺寸设置 单位mm
-        tsc.addSize(60, 75);
+        tsc.addSize(100, 70);
         // 设置标签间隙，按照实际尺寸设置，如果为无间隙纸则设置为0 单位mm
-        tsc.addGap(0);
+        tsc.addGap(2);
         // 设置打印方向
         tsc.addDirection(LabelCommand.DIRECTION.FORWARD, LabelCommand.MIRROR.NORMAL);
         // 开启带Response的打印，用于连续打印
@@ -127,31 +131,30 @@ public class PrintContent {
         // 设置原点坐标
         tsc.addReference(0, 0);
         //设置浓度
-        tsc.addDensity(LabelCommand.DENSITY.DNESITY4);
+        tsc.addDensity(LabelCommand.DENSITY.DNESITY10);
         // 撕纸模式开启
         tsc.addTear(EscCommand.ENABLE.ON);
         // 清除打印缓冲区
         tsc.addCls();
+
         // 绘制简体中文
-        tsc.addText(10, 0, LabelCommand.FONTTYPE.SIMPLIFIED_CHINESE, LabelCommand.ROTATION.ROTATION_0, LabelCommand.FONTMUL.MUL_1, LabelCommand.FONTMUL.MUL_1,
-                "欢迎使用Printer");
-        //打印繁体
-        tsc.addUnicodeText(10,32, LabelCommand.FONTTYPE.TRADITIONAL_CHINESE, LabelCommand.ROTATION.ROTATION_0, LabelCommand.FONTMUL.MUL_1, LabelCommand.FONTMUL.MUL_1,"BIG5碼繁體中文字元","BIG5");
-        //打印韩文
-        tsc.addUnicodeText(10,60, LabelCommand.FONTTYPE.KOREAN, LabelCommand.ROTATION.ROTATION_0, LabelCommand.FONTMUL.MUL_1, LabelCommand.FONTMUL.MUL_1,"Korean 지아보 하성","EUC_KR");
-        Bitmap b = BitmapFactory.decodeResource(App.getContext().getResources(), R.drawable.list_alarm);
+//        tsc.addText(100, 10, LabelCommand.FONTTYPE.SIMPLIFIED_CHINESE, LabelCommand.ROTATION.ROTATION_0, LabelCommand.FONTMUL.MUL_1, LabelCommand.FONTMUL.MUL_1,
+//                "华滋东江汽车零部件有限公司");
+
+//        Bitmap b2 = BitmapFactory.decodeResource(App.getContext().getResources(), R.drawable.test2);
+//        Bitmap b3 = BitmapFactory.decodeFile(Environment.getExternalStorageDirectory().getAbsolutePath()+"/hzimages/testlabel");
         // 绘制图片
-        tsc.addBitmap(10, 80, LabelCommand.BITMAP_MODE.OVERWRITE, 300, b);
+        tsc.addBitmap(50, 70, LabelCommand.BITMAP_MODE.OVERWRITE,1100, b);
+
         //绘制二维码
-        tsc.addQRCode(10,380, LabelCommand.EEC.LEVEL_L, 5, LabelCommand.ROTATION.ROTATION_0, " www.smarnet.cc");
-        // 绘制一维条码
-        tsc.add1DBarcode(10, 500, LabelCommand.BARCODETYPE.CODE128, 100, LabelCommand.READABEL.EANBEL, LabelCommand.ROTATION.ROTATION_0, "SMARNET");
+        tsc.addQRCode(950,20, LabelCommand.EEC.LEVEL_L, 8, LabelCommand.ROTATION.ROTATION_0, " www.smarnet.cc");
+
         // 打印标签
         tsc.addPrint(1, 1);
         // 打印标签后 蜂鸣器响
         tsc.addSound(2, 100);
         //开启钱箱
-        tsc.addCashdrwer(LabelCommand.FOOT.F5, 255, 255);
+//        tsc.addCashdrwer(LabelCommand.FOOT.F5, 255, 255);
         Vector<Byte> datas = tsc.getCommand();
         // 发送数据
         return  datas;
@@ -220,12 +223,12 @@ public class PrintContent {
     public static Bitmap getBitmap(Context mcontext) {
         View v = View.inflate(App.getContext(), R.layout.print_content, null);
         TableLayout tableLayout = (TableLayout) v.findViewById(R.id.li);
-        tableLayout.addView(ctv(mcontext, "2022-02-16", "CY10", 30,"01653",""));
-        tableLayout.addView(ctv(mcontext, "2022-02-16", "CY10", 30,"01653",""));
-        tableLayout.addView(ctv(mcontext, "2022-02-16", "CY10", 30,"01653",""));
-        tableLayout.addView(ctv(mcontext, "2022-02-16", "CY10", 30,"01653",""));
-        tableLayout.addView(ctv(mcontext, "2022-02-16", "CY10", 30,"01653",""));
-        tableLayout.addView(ctv(mcontext, "2022-02-16", "CY10", 30,"01653",""));
+        tableLayout.addView(ctv(mcontext, "2022-02-16", "CY10/连续冲压", 30,"01653",""));
+        tableLayout.addView(ctv(mcontext, "2022-02-16", "CY20/连续冲压", 30,"01653",""));
+        tableLayout.addView(ctv(mcontext, "2022-02-16", "CY10/连续冲压", 30,"01653",""));
+        tableLayout.addView(ctv(mcontext, "2022-02-16", "CY10/连续冲压", 30,"01653",""));
+        tableLayout.addView(ctv(mcontext, "2022-02-16", "CY10/连续冲压", 30,"01653",""));
+        tableLayout.addView(ctv(mcontext, "2022-02-16", "CY10/连续冲压", 30,"01653",""));
         final Bitmap bitmap = convertViewToBitmap(v);
         return bitmap;
     }
@@ -243,42 +246,45 @@ public class PrintContent {
     }
 
     public static TableRow ctv(Context context, String name,String product,int qty,String code,String qc){
+        int iTextSize = 8;
+
         TableRow tb=new TableRow(context);
         tb.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT ,TableLayout.LayoutParams.WRAP_CONTENT));
+
         TextView tv1=new TextView(context);
         tv1.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT ,TableRow.LayoutParams.WRAP_CONTENT));
         tv1.setText(name);
         tv1.setTextColor(Color.BLACK);
         tv1.setBackgroundColor(Color.WHITE);
-        tv1.setTextSize(20);
+        tv1.setTextSize(iTextSize);
         tb.addView(tv1);
         TextView tv2=new TextView(context);
         tv2.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT ,TableRow.LayoutParams.WRAP_CONTENT));
         tv2.setText(product+"");
         tv2.setTextColor(Color.BLACK);
         tv2.setBackgroundColor(Color.WHITE);
-        tv2.setTextSize(20);
+        tv2.setTextSize(iTextSize);
         tb.addView(tv2);
         TextView tv3=new TextView(context);
         tv3.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT ,TableRow.LayoutParams.WRAP_CONTENT));
         tv3.setText(qty+"");
         tv3.setTextColor(Color.BLACK);
         tv3.setBackgroundColor(Color.WHITE);
-        tv3.setTextSize(20);
+        tv3.setTextSize(iTextSize);
         tb.addView(tv3);
         TextView tv4=new TextView(context);
         tv4.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT ,TableRow.LayoutParams.WRAP_CONTENT));
         tv4.setText(code+"");
         tv4.setTextColor(Color.BLACK);
         tv4.setBackgroundColor(Color.WHITE);
-        tv4.setTextSize(20);
+        tv4.setTextSize(iTextSize);
         tb.addView(tv4);
         TextView tv5=new TextView(context);
         tv5.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT ,TableRow.LayoutParams.WRAP_CONTENT));
         tv5.setText(qc+"");
         tv5.setTextColor(Color.BLACK);
         tv5.setBackgroundColor(Color.WHITE);
-        tv5.setTextSize(20);
+        tv5.setTextSize(iTextSize);
         tb.addView(tv5);
         return tb;
     }

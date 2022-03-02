@@ -10,9 +10,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -46,6 +48,11 @@ import com.hz.scantool.printer.PrinterCommand;
 import com.hz.scantool.printer.ThreadPool;
 import com.hz.scantool.printer.WifiParameterConfig;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -87,8 +94,7 @@ public class SubActivity extends AppCompatActivity {
 
     private Button btnPrinter;
     private Button btnConnect;
-    private TextView txtIp;
-    private TextView txtPort;
+    private Button btnPrinterTest;
     private TextView txtStatus;
     private ThreadPool threadPool;
     private CheckWifiConnThread checkWifiConnThread;//wifi连接线程监听
@@ -259,16 +265,16 @@ public class SubActivity extends AppCompatActivity {
     }
 
     private void initView(){
-        txtIp = findViewById(R.id.txtIp);
-        txtPort = findViewById(R.id.txtPort);
         txtStatus = findViewById(R.id.txtStatus);
         btnPrinter = findViewById(R.id.btnPrinter);
         btnConnect = findViewById(R.id.btnConnect);
+        btnPrinterTest = findViewById(R.id.btnPrinterTest);
         progressBar = findViewById(R.id.progressBar);
         listView = findViewById(R.id.subView);
 
         btnPrinter.setOnClickListener(new commandClickListener());
         btnConnect.setOnClickListener(new commandClickListener());
+        btnPrinterTest.setOnClickListener(new commandClickListener());
         listView.setOnItemClickListener(new SubActivity.listItemClickListener());
     }
 
@@ -278,7 +284,10 @@ public class SubActivity extends AppCompatActivity {
         public void onClick(View view) {
             switch (view.getId()){
                 case R.id.btnPrinter:
-                    printLabel();
+                    savePicture(PrintContent.getBitmap(SubActivity.this),"testlabel");
+                    break;
+                case R.id.btnPrinterTest:
+                    btnLabelPrint();
                     break;
                 case R.id.btnConnect:
                     initPrinter();
@@ -361,6 +370,55 @@ public class SubActivity extends AppCompatActivity {
     }
 
     //打印标签
+    public void btnLabelPrint() {
+        threadPool = ThreadPool.getInstantiation();
+        threadPool.addSerialTask(new Runnable() {
+            @Override
+            public void run() {
+                if (DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id] == null ||
+                        !DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].getConnState()) {
+                    mHandler.obtainMessage(CONN_PRINTER).sendToTarget();
+                    return;
+                }
+                if (DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].getCurrentPrinterCommand() == PrinterCommand.TSC) {
+                    Bitmap b = PrintContent.getBitmap(SubActivity.this);
+
+                    DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].sendDataImmediately(PrintContent.getLabel(b));
+                } else {
+                    mHandler.obtainMessage(PRINTER_COMMAND_ERROR).sendToTarget();
+                }
+            }
+        });
+    }
+
+    private void savePicture(Bitmap bitmap,String fileName){
+        if(bitmap==null){
+            return;
+        }
+
+        File folder = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/hzimages");
+        if(!folder.exists()){
+            folder.mkdirs();
+        }
+
+        File lableFile = new File(folder,fileName);
+        try{
+            if(!lableFile.exists()){
+                lableFile.createNewFile();
+            }
+
+            BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(new FileOutputStream(lableFile));
+            bitmap.compress(Bitmap.CompressFormat.PNG,80,bufferedOutputStream);
+            bufferedOutputStream.flush();
+            bufferedOutputStream.close();
+
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+        MyToast.myShow(SubActivity.this,"保存成功",2,0);
+    }
+
+    //打印xml标签
     private void printLabel(){
 
         //设置打印机模式
@@ -387,7 +445,8 @@ public class SubActivity extends AppCompatActivity {
                     DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].sendDataImmediately(cpcl.getCommand());
                 } else if (DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].getCurrentPrinterCommand() == PrinterCommand.TSC) {
                     LabelCommand labelCommand=new LabelCommand();
-                    labelCommand.addSize(110,105);
+                    labelCommand.addSize(100,70);
+                    labelCommand.addGap(2);
                     labelCommand.addCls();
                     // 打印图片  光栅位图  384代表打印图片像素  0代表打印模式
                     // 58mm打印机 可打印区域最大点数为 384 ，80mm 打印机 可打印区域最大点数为 576 例子为80mmd打印机

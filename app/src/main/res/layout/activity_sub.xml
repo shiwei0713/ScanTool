@@ -83,6 +83,18 @@
 
     <Button
         android:id="@+id/btnPrinter"
+        android:layout_width="100dp"
+        android:layout_height="25dp"
+        android:background="@drawable/list_flag_selector"
+        android:textColor="@color/teal_700"
+        android:layout_marginLeft="10dp"
+        android:textStyle="normal"
+        android:focusable="false"
+        android:textSize="@dimen/list_detail_button"
+        android:text="@string/list_detail_button7"/>
+
+    <Button
+        android:id="@+id/btnPrinterTest"
         android:layout_width="80dp"
         android:layout_height="25dp"
         android:background="@drawable/list_flag_selector"
@@ -91,7 +103,6 @@
         android:textStyle="normal"
         android:focusable="false"
         android:textSize="@dimen/list_detail_button"
-        android:visibility="gone"
         android:text="@string/list_detail_button2"/>
 
     <Button
@@ -104,24 +115,10 @@
         android:textStyle="normal"
         android:focusable="false"
         android:textSize="@dimen/list_detail_button"
-        android:visibility="gone"
         android:text="连接打印机"/>
 
     <TextView
-        android:id="@+id/txtIp"
-        android:visibility="gone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-
-    <TextView
-        android:id="@+id/txtPort"
-        android:visibility="gone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-
-    <TextView
         android:id="@+id/txtStatus"
-        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 

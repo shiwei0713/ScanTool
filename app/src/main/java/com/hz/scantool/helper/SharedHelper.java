@@ -37,4 +37,21 @@ public class SharedHelper {
 
         return data;
     }
+
+    //保存部门
+    public void saveDept(String dept){
+        SharedPreferences sharedPreferences=mContext.getSharedPreferences("deptinfo",Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor=sharedPreferences.edit();
+        editor.putString("dept",dept);
+        editor.commit();
+    }
+
+    //读取部门
+    public Map<String,String> readDept(){
+        Map<String,String> data=new HashMap<String,String>();
+        SharedPreferences sharedPreferences=mContext.getSharedPreferences("deptinfo",Context.MODE_PRIVATE);
+        data.put("dept",sharedPreferences.getString("dept",""));
+
+        return data;
+    }
 }

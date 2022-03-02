@@ -11,6 +11,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,6 +25,7 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.hz.scantool.adapter.LoadingDialog;
 import com.hz.scantool.adapter.MyToast;
+import com.hz.scantool.dialog.DeptConfigDialog;
 import com.hz.scantool.helper.T100ServiceHelper;
 import com.hz.scantool.models.UserInfo;
 
@@ -44,9 +48,13 @@ public class CheckStockDetailActivity extends AppCompatActivity {
 
     private int intIndex;
     private String strTitle;
-
+    private String strDept;
+    private String strArrayDept;
     private String statusCode;
     private String statusDescription;
+
+    private TextView checkStockDetailDept;
+    private Button checkBtnDept;
 
     private TextView inputDetailProductCode;
     private TextView inputDetailProductModels;
@@ -95,6 +103,9 @@ public class CheckStockDetailActivity extends AppCompatActivity {
     }
 
     private void initView(){
+        checkStockDetailDept = findViewById(R.id.checkStockDetailDept);
+        checkBtnDept = findViewById(R.id.checkBtnDept);
+
         inputDetailProductCode = findViewById(R.id.inputDetailProductCode);
         inputDetailProductModels = findViewById(R.id.inputDetailProductModels);
         inputDetailModel = findViewById(R.id.inputDetailModel);
@@ -106,6 +117,10 @@ public class CheckStockDetailActivity extends AppCompatActivity {
         inputDetailFeaturesModels = findViewById(R.id.inputDetailFeaturesModels);
         btnDetailSubmit = findViewById(R.id.btnDetailSubmit);
 
+        //初始化
+        checkStockDetailDept.setText(UserInfo.getDept(CheckStockDetailActivity.this));
+
+        checkBtnDept.setOnClickListener(new submitDataClickListener());
         btnDetailSubmit.setOnClickListener(new submitDataClickListener());
     }
 
@@ -123,9 +138,26 @@ public class CheckStockDetailActivity extends AppCompatActivity {
                         btnDetailSubmit.setVisibility(View.GONE);
                     }
                     break;
+                case R.id.checkBtnDept:
+                    DeptConfigDialog deptConfigDialog = new DeptConfigDialog(CheckStockDetailActivity.this,handler);
+                    deptConfigDialog.show();
+                    break;
             }
         }
     }
+
+    //刷新显示部门
+    private Handler handler =new Handler(Looper.getMainLooper()){
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            super.handleMessage(msg);
+
+            if(msg.what==1){
+                String strDept = msg.getData().getString("dept");
+                checkStockDetailDept.setText(strDept);
+            }
+        }
+    };
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -210,6 +242,16 @@ public class CheckStockDetailActivity extends AppCompatActivity {
         inputDetailQuantity.setVisibility(View.VISIBLE);
         btnDetailSubmit.setVisibility(View.VISIBLE);
 
+        //解析部门
+        strArrayDept = checkStockDetailDept.getText().toString();
+        if(strArrayDept.isEmpty()){
+            MyToast.myShow(context,"盘点部门不可为空",0,1);
+            return;
+        }else{
+            String[] arrayDept = strArrayDept.split("_");
+            strDept = arrayDept[0].toString();
+        }
+
         //解析二维码
         String[] qrCodeValue = qrContent.split("_");
         int qrIndex = qrContent.indexOf("_");
@@ -232,7 +274,7 @@ public class CheckStockDetailActivity extends AppCompatActivity {
                 //初始化T100服务名
                 String webServiceName = "GetQrCode";
                 String qrStatus = "K";  //扫描状态K盘点
-                String strStock = "10237";  //盘点库位
+                String strStock = strDept;  //盘点库位
                 String sQuantity = inputDetailQuantity.getText().toString();
                 float fQuantity = 0;
                 if (!sQuantity.isEmpty()){

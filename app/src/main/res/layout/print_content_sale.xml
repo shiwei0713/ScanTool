@@ -28,30 +28,6 @@
             android:textColor="@color/black"
             android:gravity="center"/>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:text="零件号:"
-                android:textSize="@dimen/print_content"
-                android:textColor="@color/black"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:text="9817489487"
-                android:textSize="@dimen/print_content"
-                android:textColor="@color/black"/>
-
-        </LinearLayout>
-
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content">

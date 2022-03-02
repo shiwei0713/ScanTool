@@ -20,15 +20,24 @@ public class UserInfo {
     private static String userNetwork;
     private static String userEnterprise;
     private static String macAddress;
+    private static String userDept;
 
     private static SharedHelper sharedHelper;
     private static Map<String,String> userData;
+    private static Map<String,String> userDeptData;
 
     private static Map<String,String> getUserData(Context mContext) {
         sharedHelper = new SharedHelper(mContext);
         userData = sharedHelper.readShared();
 
         return userData;
+    }
+
+    private static Map<String,String> getUserDept(Context mContext){
+        sharedHelper = new SharedHelper(mContext);
+        userDeptData = sharedHelper.readDept();
+
+        return userDeptData;
     }
 
     public static String getUserId(Context mContext) {
@@ -73,6 +82,13 @@ public class UserInfo {
         userSiteCode = company.getId();
 
         return userSiteCode;
+    }
+
+    //获取用户盘点部门
+    public static String getDept(Context mContext){
+        userDept = getUserDept(mContext).get("dept");
+
+        return userDept;
     }
 
     //网络类型

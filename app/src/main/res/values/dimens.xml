@@ -9,6 +9,7 @@
     <dimen name="fab_refresh_margin">80dp</dimen>
     <dimen name="appbar_padding_top">8dp</dimen>
     <dimen name="detail_content_textsize">16sp</dimen>
+    <dimen name="check_detail_content_textsize">16sp</dimen>
     <dimen name="detail_content_height">45dp</dimen>
     <dimen name="detail_content_titlesizte">18sp</dimen>
     <dimen name="detail_list_titlesizte">16sp</dimen>
@@ -19,7 +20,10 @@
     <dimen name="list_button_size">25dp</dimen>
     <dimen name="detail_title_padding">3dp</dimen>
     <dimen name="list_detil_title">55sp</dimen>
+    <dimen name="list_detil_content">20sp</dimen>
     <dimen name="list_detil_qty">20sp</dimen>
     <dimen name="error">20sp</dimen>
-    <dimen name="tableline">1dp</dimen>
+    <dimen name="tableline">0.5dp</dimen>
+    <dimen name="print_title">12sp</dimen>
+    <dimen name="print_content">8sp</dimen>
 </resources>

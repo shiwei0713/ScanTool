@@ -12,6 +12,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import com.hz.scantool.dialog.DeptConfigDialog;
+
 public class SubMasterActivity extends AppCompatActivity {
 
     Button subMasterAction1;
@@ -340,7 +342,7 @@ public class SubMasterActivity extends AppCompatActivity {
                 case R.id.subMasterAction11:
                     //生产协同：6;质量检验：1;销售出货：5
                     if(intIndex == 6) {
-                        //标签确认，尾数拆包和包重新打印标签FQC确认
+                        //车间盘点
                         intent = new Intent(SubMasterActivity.this, CheckStockDetailActivity.class);
                         btnId = 610;
                         bundle.putInt("btnId",btnId);
