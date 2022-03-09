@@ -22,7 +22,8 @@
         android:supportsRtl="true"
         android:theme="@style/ThemeNoBar.ScanTool"
         android:usesCleartextTraffic="true">
-        <activity android:name=".SubDetailForModelActivity"></activity>
+        <activity android:name=".EmployeeReportActivity"></activity>
+        <activity android:name=".SubDetailForModelActivity" />
         <activity android:name=".SubDetailActivity" />
         <activity android:name=".SubActivity" />
         <activity android:name=".CheckStockDetailActivity" />
