@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView txtUserName;
     private TextView txtUserPassword;
     private TextView txtAppVersion;
+    private TextView txtLoginContent;
     private RadioButton rBtnLan;
     private RadioButton rBtnWlan;
     private Spinner spinnerSite;
@@ -77,6 +78,9 @@ public class MainActivity extends AppCompatActivity {
         btnLogin.setOnClickListener(new loginClickListener());
         Button btnRest=findViewById(R.id.btnReset);
         btnRest.setOnClickListener(new resetClickListener());
+
+        txtLoginContent = findViewById(R.id.txtLoginContent);
+        txtLoginContent.setOnClickListener(new txtClickListener());
     }
 
     @Override
@@ -166,6 +170,15 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             txtUserName.setText("");
+        }
+    }
+
+    private class txtClickListener implements View.OnClickListener{
+
+        @Override
+        public void onClick(View view) {
+            Intent intent = new Intent(MainActivity.this,PrinterActivity.class);
+            startActivity(intent);
         }
     }
 

@@ -17,6 +17,7 @@
     <dimen name="detail_content_margin">5dp</dimen>
     <dimen name="detail_content_padding">5dp</dimen>
     <dimen name="list_detail_button">14sp</dimen>
+    <dimen name="list_detail_button_large">30sp</dimen>
     <dimen name="list_button_size">25dp</dimen>
     <dimen name="detail_title_padding">3dp</dimen>
     <dimen name="list_detil_title">55sp</dimen>

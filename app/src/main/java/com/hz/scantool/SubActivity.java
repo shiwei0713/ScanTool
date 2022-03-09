@@ -95,6 +95,7 @@ public class SubActivity extends AppCompatActivity {
     private SubAdapter subAdapter;
     private TextView txtLoginout;
     private TextView txtWorktime;
+    private TextView txtQuery;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -187,11 +188,13 @@ public class SubActivity extends AppCompatActivity {
     private void initView(){
         txtLoginout = findViewById(R.id.txtLoginout);
         txtWorktime = findViewById(R.id.txtWorktime);
+        txtQuery = findViewById(R.id.txtQuery);
         progressBar = findViewById(R.id.progressBar);
         listView = findViewById(R.id.subView);
 
         txtLoginout.setText("工号:"+UserInfo.getUserId(getApplicationContext()));
-        listView.setOnItemClickListener(new SubActivity.listItemClickListener());
+        txtQuery.setOnClickListener(new queryClickListener());
+        listView.setOnItemClickListener(new listItemClickListener());
     }
 
     private void setWorktime(){
@@ -212,6 +215,20 @@ public class SubActivity extends AppCompatActivity {
         }
 
         txtWorktime.setText("班次:"+strWorkTime);
+    }
+
+    //查询报表
+    private class queryClickListener implements View.OnClickListener{
+
+        @Override
+        public void onClick(View view) {
+            switch (view.getId()){
+                case R.id.txtQuery:
+                    Intent intent = new Intent(SubActivity.this,EmployeeReportActivity.class);
+                    startActivity(intent);
+                    break;
+            }
+        }
     }
 
     //行单击事件

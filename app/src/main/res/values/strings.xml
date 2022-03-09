@@ -140,6 +140,9 @@
     <string name="list_detail_button5">备货完成</string>
     <string name="list_detail_button6">保存数据</string>
     <string name="list_detail_button7">打印XML标签</string>
+    <string name="list_detail_button8">连接打印机</string>
+    <string name="list_detail_button9">开始任务</string>
+    <string name="list_detail_button10">停止任务</string>
     <string name="detail_title4">发料总量:</string>
     <string name="detail_detail_quantity_pcs_title">箱数:</string>
     <string name="detail_detail_quantity">备货数/总箱数:</string>
