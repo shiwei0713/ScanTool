@@ -110,6 +110,7 @@
     <string name="detail_title1">良品:</string>
     <string name="detail_title2">不良:</string>
     <string name="detail_title3">废品:</string>
+    <string name="detail_title8">时长:</string>
     <string name="check_stock_btn">设置</string>
     <string name="detail_content_title">盘点部门:</string>
     <string name="detail_content_title1">料件编码:</string>
@@ -137,7 +138,7 @@
     <string name="list_detail_button3">库存报警</string>
     <string name="list_detail_button4">分配人员</string>
     <string name="list_detail_button5">备货完成</string>
-    <string name="list_detail_button6">扫描标签</string>
+    <string name="list_detail_button6">保存数据</string>
     <string name="list_detail_button7">打印XML标签</string>
     <string name="detail_title4">发料总量:</string>
     <string name="detail_detail_quantity_pcs_title">箱数:</string>
@@ -234,7 +235,7 @@
     <string name="label_left">左右件</string>
     <string name="label_company">公司名称</string>
     <string name="label_product">生产地</string>
-    <string name="label_stock">仓库</string>
+    <string name="label_stock">CK</string>
     <string name="label_floor">层数</string>
     <string name="label_kg1">实测单件净重</string>
     <string name="label_kg2">实测整箱净重</string>

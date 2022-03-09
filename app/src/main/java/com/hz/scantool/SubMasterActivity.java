@@ -261,7 +261,7 @@ public class SubMasterActivity extends AppCompatActivity {
                     //生产协同：6;质量检验：1;销售出货：5
                     if(intIndex == 6) {
                         //模具安装
-                        intent = new Intent(SubMasterActivity.this,SubMasterDetailActivity.class);
+                        intent = new Intent(SubMasterActivity.this,SubDetailForModelActivity.class);
                         btnId = 65;
                     }else{
                         if(intIndex==1){

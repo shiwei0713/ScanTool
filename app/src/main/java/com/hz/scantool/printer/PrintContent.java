@@ -144,7 +144,7 @@ public class PrintContent {
 //        Bitmap b2 = BitmapFactory.decodeResource(App.getContext().getResources(), R.drawable.test2);
 //        Bitmap b3 = BitmapFactory.decodeFile(Environment.getExternalStorageDirectory().getAbsolutePath()+"/hzimages/testlabel");
         // 绘制图片
-        tsc.addBitmap(50, 30, LabelCommand.BITMAP_MODE.OVERWRITE,1100, b);
+        tsc.addBitmap(50, 30, LabelCommand.BITMAP_MODE.OVERWRITE,1050, b);
         //绘制二维码显示内容
         tsc.addText(10, 10, LabelCommand.FONTTYPE.SIMPLIFIED_CHINESE, LabelCommand.ROTATION.ROTATION_0, LabelCommand.FONTMUL.MUL_1, LabelCommand.FONTMUL.MUL_1,
                 "www.smarnet.cc");
@@ -249,7 +249,7 @@ public class PrintContent {
     }
 
     public static TableRow ctv(Context context, String name,String product,int qty,String code,String qc){
-        int iTextSize = 8;
+        int iTextSize = 7;
 
         TableRow tb=new TableRow(context);
         tb.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT ,TableLayout.LayoutParams.WRAP_CONTENT));

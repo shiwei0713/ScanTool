@@ -25,6 +25,7 @@ public class WifiParameterConfig {
 
     public void WifiConnect(){
         AlertDialog alertDialog = new AlertDialog.Builder(mContext)
+                .setTitle("是否确认?")
                 .setNegativeButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

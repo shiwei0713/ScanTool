@@ -10,7 +10,7 @@
     <dimen name="appbar_padding_top">8dp</dimen>
     <dimen name="detail_content_textsize">16sp</dimen>
     <dimen name="check_detail_content_textsize">16sp</dimen>
-    <dimen name="detail_content_height">45dp</dimen>
+    <dimen name="detail_content_height">35dp</dimen>
     <dimen name="detail_content_titlesizte">18sp</dimen>
     <dimen name="detail_list_titlesizte">16sp</dimen>
     <dimen name="detail_content_input_margin">5dp</dimen>
@@ -20,12 +20,12 @@
     <dimen name="list_button_size">25dp</dimen>
     <dimen name="detail_title_padding">3dp</dimen>
     <dimen name="list_detil_title">55sp</dimen>
-    <dimen name="list_detil_content">20sp</dimen>
+    <dimen name="list_detil_content">35sp</dimen>
     <dimen name="list_detil_qty">20sp</dimen>
     <dimen name="error">20sp</dimen>
-    <dimen name="tableline">0.5dp</dimen>
-    <dimen name="print_title">12sp</dimen>
+    <dimen name="tableline">0.4dp</dimen>
+    <dimen name="print_title">10sp</dimen>
     <dimen name="print_title2">14sp</dimen>
-    <dimen name="print_content">8sp</dimen>
+    <dimen name="print_content">7sp</dimen>
     <dimen name="print_content_lager">14sp</dimen>
 </resources>

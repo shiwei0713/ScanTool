@@ -81,47 +81,6 @@
         android:orientation="vertical">
     </LinearLayout>
 
-    <Button
-        android:id="@+id/btnPrinter"
-        android:layout_width="100dp"
-        android:layout_height="25dp"
-        android:background="@drawable/list_flag_selector"
-        android:textColor="@color/teal_700"
-        android:layout_marginLeft="10dp"
-        android:textStyle="normal"
-        android:focusable="false"
-        android:textSize="@dimen/list_detail_button"
-        android:text="@string/list_detail_button7"/>
-
-    <Button
-        android:id="@+id/btnPrinterTest"
-        android:layout_width="80dp"
-        android:layout_height="25dp"
-        android:background="@drawable/list_flag_selector"
-        android:textColor="@color/teal_700"
-        android:layout_marginLeft="10dp"
-        android:textStyle="normal"
-        android:focusable="false"
-        android:textSize="@dimen/list_detail_button"
-        android:text="@string/list_detail_button2"/>
-
-    <Button
-        android:id="@+id/btnConnect"
-        android:layout_width="80dp"
-        android:layout_height="25dp"
-        android:background="@drawable/list_flag_selector"
-        android:textColor="@color/teal_700"
-        android:layout_marginLeft="10dp"
-        android:textStyle="normal"
-        android:focusable="false"
-        android:textSize="@dimen/list_detail_button"
-        android:text="连接打印机"/>
-
-    <TextView
-        android:id="@+id/txtStatus"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="match_parent"
