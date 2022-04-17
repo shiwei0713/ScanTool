@@ -25,6 +25,7 @@
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/txtPrintDept"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/print_title"
@@ -36,7 +37,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/print_title"
+                android:textSize="@dimen/print_title2"
                 android:text="生产过程标识卡"
                 android:textStyle="bold"
                 android:textColor="@color/black"
@@ -76,12 +77,12 @@
                         android:textColor="@color/black"/>
 
                     <TextView
+                        android:id="@+id/txtPrintProductName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_column="1"
                         android:background="@color/white"
                         android:layout_marginLeft="@dimen/tableline"
-                        android:text="98457841"
                         android:textSize="@dimen/print_content"
                         android:textColor="@color/black" />
 
@@ -96,13 +97,13 @@
                         android:textColor="@color/black"/>
 
                     <TextView
+                        android:id="@+id/txtPrintCk"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_column="3"
                         android:layout_span="2"
                         android:background="@color/white"
                         android:layout_marginLeft="@dimen/tableline"
-                        android:text="XF-CK"
                         android:textSize="@dimen/print_content"
                         android:textColor="@color/black"/>
 
@@ -127,13 +128,13 @@
                         android:textColor="@color/black"/>
 
                     <TextView
+                        android:id="@+id/txtPrintProductModel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_column="1"
                         android:layout_span="4"
                         android:background="@color/white"
                         android:layout_marginLeft="@dimen/tableline"
-                        android:text="左前门锁扣"
                         android:textSize="@dimen/print_content"
                         android:textColor="@color/black" />
 
@@ -158,12 +159,12 @@
                         android:textColor="@color/black"/>
 
                     <TextView
+                        android:id="@+id/txtPrintPrograme"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_column="1"
                         android:background="@color/white"
                         android:layout_marginLeft="@dimen/tableline"
-                        android:text="X37"
                         android:textSize="@dimen/print_content"
                         android:textColor="@color/black" />
 
@@ -178,13 +179,13 @@
                         android:textColor="@color/black"/>
 
                     <TextView
+                        android:id="@+id/txtPrintLots"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_column="3"
                         android:layout_span="2"
                         android:background="@color/white"
                         android:layout_marginLeft="@dimen/tableline"
-                        android:text="22A05"
                         android:textSize="@dimen/print_content"
                         android:textColor="@color/black"/>
 

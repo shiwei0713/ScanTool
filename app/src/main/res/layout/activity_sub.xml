@@ -39,16 +39,28 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:textColor="@color/master_loginout"
-                android:text="工号:01653"/>
+                android:textColor="@color/master_loginout"/>
 
-            <TextView
-                android:id="@+id/txtWorktime"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:textColor="@color/master_loginout"
-                android:text="班次:白班"/>
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:textColor="@color/master_loginout"
+                    android:text="班次:"/>
+
+                <TextView
+                    android:id="@+id/txtWorktime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:textColor="@color/master_loginout"/>
+
+            </LinearLayout>
 
         </LinearLayout>
 

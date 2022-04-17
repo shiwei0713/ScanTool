@@ -9,7 +9,7 @@ android {
     defaultConfig {
         applicationId "com.hz.scantool"
         minSdkVersion 16
-        targetSdkVersion 30
+        targetSdkVersion 29
         versionCode 1
         versionName "1.0"
 
@@ -42,6 +42,7 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
     implementation 'io.reactivex.rxjava2:rxjava:2.0.7'
     implementation 'com.squareup.okhttp3:okhttp:3.12.0'
+    implementation 'es.voghdev.pdfviewpager:library:1.1.2'
     implementation files('libs\\gprintersdkv2.jar')
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'

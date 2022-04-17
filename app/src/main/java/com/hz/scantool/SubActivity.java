@@ -214,7 +214,7 @@ public class SubActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        txtWorktime.setText("班次:"+strWorkTime);
+        txtWorktime.setText(strWorkTime);
     }
 
     //查询报表
@@ -241,22 +241,43 @@ public class SubActivity extends AppCompatActivity {
             TextView txtProductCode = view.findViewById(R.id.txtProductCode);
             TextView txtProductModels = view.findViewById(R.id.txtProductModels);
             TextView txtProcess = view.findViewById(R.id.txtProcess);
+            TextView txtProcessId = view.findViewById(R.id.txtProcessId);
             TextView txtDevice = view.findViewById(R.id.txtDevice);
             TextView txtDocno = view.findViewById(R.id.txtDocno);
             TextView txtQuantity = view.findViewById(R.id.txtQuantity);
+            TextView txtEmployee = view.findViewById(R.id.txtEmployee);
+            TextView txtLots = view.findViewById(R.id.txtLots);
+            TextView txtSubFlag = view.findViewById(R.id.txtSubFlag);
+            TextView txtSubModStatus = view.findViewById(R.id.txtSubModStatus);
+            String modStatus = txtSubModStatus.getText().toString();
 
-            Intent intent = new Intent(SubActivity.this,SubDetailActivity.class);
-            Bundle bundle=new Bundle();
-            bundle.putString("ProductName",txtProductName.getText().toString());
-            bundle.putString("PlanDate",txtPlanDate.getText().toString());
-            bundle.putString("ProductCode",txtProductCode.getText().toString());
-            bundle.putString("ProductModels",txtProductModels.getText().toString());
-            bundle.putString("Process",txtProcess.getText().toString());
-            bundle.putString("Device",txtDevice.getText().toString());
-            bundle.putString("Docno",txtDocno.getText().toString());
-            bundle.putString("Quantity",txtQuantity.getText().toString());
-            intent.putExtras(bundle);
-            startActivity(intent);
+//            if(modStatus.equals("2")||modStatus.equals("3")||modStatus.equals("4")){
+                Intent intent = new Intent(SubActivity.this,SubDetailForMultipleActivity.class);
+                Bundle bundle=new Bundle();
+                bundle.putString("Flag",txtSubFlag.getText().toString());
+                bundle.putString("ProcessId",txtProcessId.getText().toString());
+                bundle.putString("ModStatus",modStatus);
+                intent.putExtras(bundle);
+                startActivity(intent);
+//            }else{
+//                Intent intent = new Intent(SubActivity.this,SubDetailActivity.class);
+//                Bundle bundle=new Bundle();
+//                bundle.putString("ProductName",txtProductName.getText().toString());
+//                bundle.putString("PlanDate",txtPlanDate.getText().toString());
+//                bundle.putString("ProductCode",txtProductCode.getText().toString());
+//                bundle.putString("ProductModels",txtProductModels.getText().toString());
+//                bundle.putString("ProcessId",txtProcessId.getText().toString());
+//                bundle.putString("Process",txtProcess.getText().toString());
+//                bundle.putString("Device",txtDevice.getText().toString());
+//                bundle.putString("Docno",txtDocno.getText().toString());
+//                bundle.putString("Quantity",txtQuantity.getText().toString());
+//                bundle.putString("Worktime",txtWorktime.getText().toString());
+//                bundle.putString("Employee",txtEmployee.getText().toString());
+//                bundle.putString("Lots",txtLots.getText().toString());
+//                bundle.putString("Flag",txtSubFlag.getText().toString());
+//                intent.putExtras(bundle);
+//                startActivity(intent);
+//            }
         }
     }
 
@@ -325,7 +346,7 @@ public class SubActivity extends AppCompatActivity {
 
             @Override
             public void onComplete() {
-                subAdapter = new SubAdapter(mapResponseList,getApplicationContext());
+                subAdapter = new SubAdapter(mapResponseList,getApplicationContext(),"CJ");
                 listView.setAdapter(subAdapter);
 
                 progressBar.setVisibility(View.GONE);

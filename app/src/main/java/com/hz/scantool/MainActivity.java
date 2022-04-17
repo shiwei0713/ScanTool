@@ -177,8 +177,8 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onClick(View view) {
-            Intent intent = new Intent(MainActivity.this,PrinterActivity.class);
-            startActivity(intent);
+//            Intent intent = new Intent(MainActivity.this,PrinterActivity.class);
+//            startActivity(intent);
         }
     }
 
@@ -192,8 +192,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void subscribe(ObservableEmitter<String> e) throws Exception {
                 //检查版本
-                Integer currentVersion = UpdateManager.getInstance(nerworkType).getVersion(MainActivity.this);
-                Integer serverVersion = UpdateManager.getInstance(nerworkType).getServerVersion();
+                int currentVersion = UpdateManager.getInstance(nerworkType).getVersion(MainActivity.this);
+                int serverVersion = UpdateManager.getInstance(nerworkType).getServerVersion();
 
                 if(currentVersion == serverVersion){
                     T100ServiceHelper t100ServiceHelper = new T100ServiceHelper();

@@ -59,7 +59,6 @@ public class SubDetailForModelActivity extends AppCompatActivity {
     private TextView subDetailStartPlanDate;
     private TextView subDetailEndPlanDate;
     private TextView subDetailDocno;
-    private TextView txtStatus;
     private Button btnSave;
     private LoadingDialog loadingDialog;
 
@@ -185,7 +184,6 @@ public class SubDetailForModelActivity extends AppCompatActivity {
         subDetailStartPlanDate= findViewById(R.id.subDetailStartPlanDate);
         subDetailEndPlanDate= findViewById(R.id.subDetailEndPlanDate);
         subDetailDocno= findViewById(R.id.subDetailDocno);
-        txtStatus = findViewById(R.id.txtStatus);
         btnSave= findViewById(R.id.btnSave);
 
         btnSave.setOnClickListener(new btnClickListener());
@@ -291,7 +289,6 @@ public class SubDetailForModelActivity extends AppCompatActivity {
                         subDetailStartPlanDate.setText(mData.get("PlanDate").toString());
                         subDetailEndPlanDate.setText(mData.get("PlanDate").toString());
                         subDetailDocno.setText(mData.get("Docno").toString());
-                        txtStatus.setText(mData.get("Status").toString());
                     }
                 }
                 loadingDialog.dismiss();

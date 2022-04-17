@@ -34,7 +34,9 @@ import com.google.zxing.qrcode.QRCodeWriter;
 import com.gprinter.command.CpclCommand;
 import com.gprinter.command.EscCommand;
 import com.gprinter.command.LabelCommand;
+import com.hz.scantool.adapter.LoadingDialog;
 import com.hz.scantool.adapter.MyToast;
+import com.hz.scantool.helper.T100ServiceHelper;
 import com.hz.scantool.models.UserInfo;
 import com.hz.scantool.printer.CheckWifiConnThread;
 import com.hz.scantool.printer.Constant;
@@ -49,6 +51,16 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
+
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 import static android.hardware.usb.UsbManager.ACTION_USB_DEVICE_ATTACHED;
 import static android.hardware.usb.UsbManager.ACTION_USB_DEVICE_DETACHED;
@@ -82,20 +94,32 @@ public class SubDetailActivity extends AppCompatActivity {
 
     private String strTitle;
     private String strQuantity;
+    private String statusCode;
+    private String statusDescription;
+    private String strWorktime;
     private TextView subDetailProductName;
     private TextView subDetailQuantity;
     private TextView subDetailProductCode;
     private TextView subDetailProductModels;
+    private TextView subDetailProcessId;
     private TextView subDetailProcess;
     private TextView subDetailDevice;
     private TextView subDetailStartPlanDate;
     private TextView subDetailEndPlanDate;
     private TextView subDetailDocno;
-    private TextView txtStatus;
+    private TextView subDetailProductDocno;
+    private TextView subDetailEmployee;
+    private TextView subDetailLots;
     private ImageView imgQrcode;
 
-    private Button btnConnect;
+    private Button btnSave;
     private Button btnPrint;
+    private Button btnQc;
+    private Button btnProduct;
+    private Button btnError;
+    private LoadingDialog loadingDialog;
+    private List<Map<String,Object>> mapResponseList;
+    private List<Map<String,Object>> mapResponseStatus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -161,14 +185,18 @@ public class SubDetailActivity extends AppCompatActivity {
         Bundle bundle = intent.getExtras();
         subDetailProductName.setText(bundle.getString("ProductName"));
         strQuantity = bundle.getString("Quantity");
+        strWorktime = bundle.getString("Worktime");
         subDetailQuantity.setText("");
         subDetailProductCode.setText(bundle.getString("ProductCode"));
         subDetailProductModels.setText(bundle.getString("ProductModels"));
+        subDetailProcessId.setText(bundle.getString("ProcessId"));
         subDetailProcess.setText(bundle.getString("Process"));
         subDetailDevice.setText(bundle.getString("Device"));
         subDetailStartPlanDate.setText(bundle.getString("PlanDate"));
         subDetailEndPlanDate.setText(bundle.getString("PlanDate"));
         subDetailDocno.setText(bundle.getString("Docno"));
+        subDetailEmployee.setText("("+bundle.getString("Employee")+")");
+        subDetailLots.setText(bundle.getString("Lots"));
     }
 
     //初始化控件
@@ -177,18 +205,27 @@ public class SubDetailActivity extends AppCompatActivity {
         subDetailQuantity = findViewById(R.id.subDetailQuantity);
         subDetailProductCode = findViewById(R.id.subDetailProductCode);
         subDetailProductModels = findViewById(R.id.subDetailProductModels);
+        subDetailProcessId = findViewById(R.id.subDetailProcessId);
         subDetailProcess = findViewById(R.id.subDetailProcess);
         subDetailDevice = findViewById(R.id.subDetailDevice);
         subDetailStartPlanDate = findViewById(R.id.subDetailStartPlanDate);
         subDetailEndPlanDate = findViewById(R.id.subDetailEndPlanDate);
         subDetailDocno = findViewById(R.id.subDetailDocno);
-        txtStatus = findViewById(R.id.txtStatus);
+        subDetailProductDocno = findViewById(R.id.subDetailProductDocno);
+        subDetailEmployee = findViewById(R.id.subDetailEmployee);
+        subDetailLots = findViewById(R.id.subDetailLots);
         imgQrcode = findViewById(R.id.imgQrcode);
 
-        btnConnect = findViewById(R.id.btnConnect);
+        btnSave = findViewById(R.id.btnSave);
         btnPrint = findViewById(R.id.btnPrint);
-        btnConnect.setOnClickListener(new commandClickListener());
+        btnQc = findViewById(R.id.btnQc);
+        btnProduct = findViewById(R.id.btnProduct);
+        btnError = findViewById(R.id.btnError);
+        btnSave.setOnClickListener(new commandClickListener());
         btnPrint.setOnClickListener(new commandClickListener());
+        btnQc.setOnClickListener(new commandClickListener());
+        btnProduct.setOnClickListener(new commandClickListener());
+        btnError.setOnClickListener(new commandClickListener());
     }
 
     private class commandClickListener implements View.OnClickListener{
@@ -196,11 +233,18 @@ public class SubDetailActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             switch (view.getId()){
-                case R.id.btnConnect:
-//                    initPrinter();
+                case R.id.btnSave:
+                    saveDataToT100("insert");
                     break;
                 case R.id.btnPrint:
-                    btnLabelPrint();
+                    saveDataToT100("print");
+                    break;
+                case R.id.btnQc:
+                    saveDataToT100("check");
+                    break;
+                case R.id.btnProduct:
+                    break;
+                case R.id.btnError:
                     break;
             }
         }
@@ -261,21 +305,117 @@ public class SubDetailActivity extends AppCompatActivity {
         }
     }
 
+    private void saveDataToT100(String action){
+        //显示进度条
+        loadingDialog = new LoadingDialog(SubDetailActivity.this,"数据提交中",R.drawable.dialog_loading);
+        loadingDialog.show();
+
+        Observable.create(new ObservableOnSubscribe<List<Map<String,Object>>>() {
+            @Override
+            public void subscribe(ObservableEmitter<List<Map<String, Object>>> e) throws Exception {
+                //初始化T100服务名
+                String webServiceName = "WorkReportRequestGen";
+                String qcstatus = "PY";
+
+                //发送服务器请求
+                T100ServiceHelper t100ServiceHelper = new T100ServiceHelper();
+                String requestBody = "&lt;Document&gt;\n"+
+                        "&lt;RecordSet id=\"1\"&gt;\n"+
+                        "&lt;Master name=\"sffb_t\" node_id=\"1\"&gt;\n"+
+                        "&lt;Record&gt;\n"+
+                        "&lt;Field name=\"sffbsite\" value=\""+ UserInfo.getUserSiteId(getApplicationContext())+"\"/&gt;\n"+
+                        "&lt;Field name=\"sffbent\" value=\""+UserInfo.getUserEnterprise(getApplicationContext())+"\"/&gt;\n"+
+                        "&lt;Field name=\"sffbdocdt\" value=\""+subDetailStartPlanDate.getText().toString()+"\"/&gt;\n"+
+                        "&lt;Field name=\"sffb002\" value=\""+ UserInfo.getUserId(getApplicationContext()) +"\"/&gt;\n"+  //异动人员
+                        "&lt;Field name=\"sffb004\" value=\""+ strWorktime +"\"/&gt;\n"+  //班次
+                        "&lt;Field name=\"sffb005\" value=\""+ subDetailDocno.getText().toString() +"\"/&gt;\n"+  //工单单号
+                        "&lt;Field name=\"sffbseq\" value=\""+ subDetailProcessId.getText().toString() +"\"/&gt;\n"+  //工艺项次
+                        "&lt;Field name=\"sffb010\" value=\""+ subDetailDevice.getText().toString() +"\"/&gt;\n"+  //机器编号
+                        "&lt;Field name=\"sffb029\" value=\""+ subDetailProductCode.getText().toString() +"\"/&gt;\n"+  //报工料号
+                        "&lt;Field name=\"sffb017\" value=\""+ subDetailQuantity.getText().toString() +"\"/&gt;\n"+  //良品数量
+                        "&lt;Field name=\"process\" value=\""+ subDetailProcess.getText().toString() +"\"/&gt;\n"+  //工序
+                        "&lt;Field name=\"lots\" value=\""+ subDetailLots.getText().toString() +"\"/&gt;\n"+  //批次
+                        "&lt;Field name=\"sffbdocno\" value=\""+ subDetailProductDocno.getText().toString() +"\"/&gt;\n"+  //报工单号
+                        "&lt;Field name=\"qcstatus\" value=\""+ qcstatus +"\"/&gt;\n"+  //首检状态
+                        "&lt;Field name=\"act\" value=\""+ action +"\"/&gt;\n"+  //执行动作
+                        "&lt;Detail name=\"s_detail1\" node_id=\"1_1\"&gt;\n"+
+                        "&lt;Record&gt;\n"+
+                        "&lt;Field name=\"sffyucseq\" value=\"1.0\"/&gt;\n"+
+                        "&lt;/Record&gt;\n"+
+                        "&lt;/Detail&gt;\n"+
+                        "&lt;Memo/&gt;\n"+
+                        "&lt;Attachment count=\"0\"/&gt;\n"+
+                        "&lt;/Record&gt;\n"+
+                        "&lt;/Master&gt;\n"+
+                        "&lt;/RecordSet&gt;\n"+
+                        "&lt;/Document&gt;\n";
+                String strResponse = t100ServiceHelper.getT100Data(requestBody,webServiceName,getApplicationContext(),"");
+                mapResponseStatus = t100ServiceHelper.getT100StatusData(strResponse);
+                mapResponseList = t100ServiceHelper.getT100ResponseDocno(strResponse,"docno");
+
+                e.onNext(mapResponseStatus);
+                e.onNext(mapResponseList);
+                e.onComplete();
+            }
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<List<Map<String, Object>>>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(List<Map<String, Object>> maps) {
+                if(mapResponseStatus.size()> 0){
+                    for(Map<String,Object> mStatus: mapResponseStatus){
+                        statusCode = mStatus.get("statusCode").toString();
+                        statusDescription = mStatus.get("statusDescription").toString();
+                    }
+                }else{
+                    MyToast.myShow(SubDetailActivity.this,"执行接口错误",2,0);
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                MyToast.myShow(SubDetailActivity.this,"网络错误",0,0);
+                loadingDialog.dismiss();
+            }
+
+            @Override
+            public void onComplete() {
+                if(statusCode.equals("0")){
+                    String strDocno="";
+
+                    if(mapResponseList.size()> 0) {
+                        for (Map<String, Object> mResponse : mapResponseList) {
+                            strDocno = mResponse.get("Docno").toString();
+                            subDetailProductDocno.setText(strDocno);
+                        }
+                    }
+                    MyToast.myShow(SubDetailActivity.this, statusDescription, 1, 1);
+                }else{
+                    MyToast.myShow(SubDetailActivity.this, statusDescription, 0, 1);
+                }
+                loadingDialog.dismiss();
+            }
+        });
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
 
-        //获取连接对象是否连接
-        DeviceConnFactoryManager [] deviceConnFactoryManagers;
-        deviceConnFactoryManagers = DeviceConnFactoryManager.getDeviceConnFactoryManagers();
-        for (int i = 0; i < 4; i++) {
-            if (deviceConnFactoryManagers[i] != null && deviceConnFactoryManagers[i].getConnState()) {
-                txtStatus.setText(getString(R.string.str_conn_state_connected) + "\n" + getConnDeviceInfo());
-                break;
-            } else {
-                txtStatus.setText(getString(R.string.str_conn_state_disconnect));
-            }
-        }
+//        //获取连接对象是否连接
+//        DeviceConnFactoryManager [] deviceConnFactoryManagers;
+//        deviceConnFactoryManagers = DeviceConnFactoryManager.getDeviceConnFactoryManagers();
+//        for (int i = 0; i < 4; i++) {
+//            if (deviceConnFactoryManagers[i] != null && deviceConnFactoryManagers[i].getConnState()) {
+//                txtStatus.setText(getString(R.string.str_conn_state_connected) + "\n" + getConnDeviceInfo());
+//                break;
+//            } else {
+//                txtStatus.setText(getString(R.string.str_conn_state_disconnect));
+//            }
+//        }
     }
 
     @Override
@@ -314,18 +454,18 @@ public class SubDetailActivity extends AppCompatActivity {
                         case DeviceConnFactoryManager.CONN_STATE_DISCONNECT:
                             if (id == deviceId) {
                                 Log.e(TAG,"connection is lost");
-                                txtStatus.setText(getString(R.string.str_conn_state_disconnect));
+//                                txtStatus.setText(getString(R.string.str_conn_state_disconnect));
                             }
                             break;
                         case DeviceConnFactoryManager.CONN_STATE_CONNECTING:
-                            txtStatus.setText(getString(R.string.str_conn_state_connecting));
+//                            txtStatus.setText(getString(R.string.str_conn_state_connecting));
                             break;
                         case DeviceConnFactoryManager.CONN_STATE_CONNECTED:
-                            txtStatus.setText(getString(R.string.str_conn_state_connected) + "\n" + getConnDeviceInfo());
+//                            txtStatus.setText(getString(R.string.str_conn_state_connected) + "\n" + getConnDeviceInfo());
                             break;
                         case CONN_STATE_FAILED:
                             MyToast.myShow(SubDetailActivity.this,"连接失败",2,0);
-                            txtStatus.setText(getString(R.string.str_conn_state_disconnect));
+//                            txtStatus.setText(getString(R.string.str_conn_state_disconnect));
                             break;
                         default:
                             break;
@@ -374,28 +514,28 @@ public class SubDetailActivity extends AppCompatActivity {
         return str;
     }
 
-    //打印标签
-    public void btnLabelPrint() {
-        threadPool = ThreadPool.getInstantiation();
-        threadPool.addSerialTask(new Runnable() {
-            @Override
-            public void run() {
-                if (DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id] == null ||
-                        !DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].getConnState()) {
-                    mHandler.obtainMessage(CONN_PRINTER).sendToTarget();
-                    return;
-                }
-                if (DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].getCurrentPrinterCommand() == PrinterCommand.TSC) {
-                    Bitmap b = PrintContent.getBitmap(SubDetailActivity.this);
-
-                    DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].sendDataImmediately(PrintContent.getLabel(b));
-                    mHandler.obtainMessage(CONN_STATE_DISCONN).sendToTarget();
-                } else {
-                    mHandler.obtainMessage(PRINTER_COMMAND_ERROR).sendToTarget();
-                }
-            }
-        });
-    }
+//    //打印标签
+//    public void btnLabelPrint() {
+//        threadPool = ThreadPool.getInstantiation();
+//        threadPool.addSerialTask(new Runnable() {
+//            @Override
+//            public void run() {
+//                if (DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id] == null ||
+//                        !DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].getConnState()) {
+//                    mHandler.obtainMessage(CONN_PRINTER).sendToTarget();
+//                    return;
+//                }
+//                if (DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].getCurrentPrinterCommand() == PrinterCommand.TSC) {
+//                    Bitmap b = PrintContent.getBitmap(SubDetailActivity.this);
+//
+//                    DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].sendDataImmediately(PrintContent.getLabel(b));
+//                    mHandler.obtainMessage(CONN_STATE_DISCONN).sendToTarget();
+//                } else {
+//                    mHandler.obtainMessage(PRINTER_COMMAND_ERROR).sendToTarget();
+//                }
+//            }
+//        });
+//    }
 
     //预览标签
     private void savePicture(Bitmap bitmap,String fileName){
@@ -425,54 +565,54 @@ public class SubDetailActivity extends AppCompatActivity {
         MyToast.myShow(SubDetailActivity.this,"保存成功",2,0);
     }
 
-    //打印xml标签
-    private void printLabel(){
-
-        //设置打印机模式
-//        setPrinterMode();
-
-        if (DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id] == null ||
-                !DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].getConnState()) {
-            mHandler.obtainMessage(CONN_PRINTER).sendToTarget();
-            return;
-        }
-
-        threadPool = ThreadPool.getInstantiation();
-        threadPool.addSerialTask(new Runnable() {
-            @Override
-            public void run() {
-
-                if (DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].getCurrentPrinterCommand() == PrinterCommand.CPCL) {
-                    CpclCommand cpcl=new CpclCommand();
-                    cpcl.addInitializePrinter(1500,1);
-                    // 打印图片  光栅位图  384代表打印图片像素  0代表打印模式
-                    // 58mm打印机 可打印区域最大点数为 384 ，80mm 打印机 可打印区域最大点数为 576 例子为80mmd打印机
-                    cpcl.addCGraphics(0,0,576, PrintContent.getBitmap(SubDetailActivity.this));
-                    cpcl.addPrint();
-                    DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].sendDataImmediately(cpcl.getCommand());
-                } else if (DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].getCurrentPrinterCommand() == PrinterCommand.TSC) {
-                    LabelCommand labelCommand=new LabelCommand();
-                    labelCommand.addSize(100,70);
-                    labelCommand.addGap(2);
-                    labelCommand.addCls();
-                    // 打印图片  光栅位图  384代表打印图片像素  0代表打印模式
-                    // 58mm打印机 可打印区域最大点数为 384 ，80mm 打印机 可打印区域最大点数为 576 例子为80mmd打印机
-                    labelCommand.addBitmap(0,0, 576,PrintContent.getBitmap(SubDetailActivity.this));
-                    labelCommand.addPrint(1);
-                    DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].sendDataImmediately(labelCommand.getCommand());
-                }else  if (DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].getCurrentPrinterCommand() == PrinterCommand.ESC) {
-                    EscCommand esc = new EscCommand();
-                    esc.addInitializePrinter();
-                    // 打印图片  光栅位图  384代表打印图片像素  0代表打印模式
-                    // 58mm打印机 可打印区域最大点数为 384 ，80mm 打印机 可打印区域最大点数为 576 例子为80mmd打印机
-                    esc.addRastBitImage(PrintContent.getBitmap(SubDetailActivity.this), 576, 0);
-                    esc.addPrintAndLineFeed();
-                    DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].sendDataImmediately(esc.getCommand());
-                }
-
-            }
-        });
-    }
+//    //打印xml标签
+//    private void printLabel(){
+//
+//        //设置打印机模式
+////        setPrinterMode();
+//
+//        if (DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id] == null ||
+//                !DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].getConnState()) {
+//            mHandler.obtainMessage(CONN_PRINTER).sendToTarget();
+//            return;
+//        }
+//
+//        threadPool = ThreadPool.getInstantiation();
+//        threadPool.addSerialTask(new Runnable() {
+//            @Override
+//            public void run() {
+//
+//                if (DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].getCurrentPrinterCommand() == PrinterCommand.CPCL) {
+//                    CpclCommand cpcl=new CpclCommand();
+//                    cpcl.addInitializePrinter(1500,1);
+//                    // 打印图片  光栅位图  384代表打印图片像素  0代表打印模式
+//                    // 58mm打印机 可打印区域最大点数为 384 ，80mm 打印机 可打印区域最大点数为 576 例子为80mmd打印机
+//                    cpcl.addCGraphics(0,0,576, PrintContent.getBitmap(SubDetailActivity.this));
+//                    cpcl.addPrint();
+//                    DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].sendDataImmediately(cpcl.getCommand());
+//                } else if (DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].getCurrentPrinterCommand() == PrinterCommand.TSC) {
+//                    LabelCommand labelCommand=new LabelCommand();
+//                    labelCommand.addSize(100,70);
+//                    labelCommand.addGap(2);
+//                    labelCommand.addCls();
+//                    // 打印图片  光栅位图  384代表打印图片像素  0代表打印模式
+//                    // 58mm打印机 可打印区域最大点数为 384 ，80mm 打印机 可打印区域最大点数为 576 例子为80mmd打印机
+//                    labelCommand.addBitmap(0,0, 576,PrintContent.getBitmap(SubDetailActivity.this));
+//                    labelCommand.addPrint(1);
+//                    DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].sendDataImmediately(labelCommand.getCommand());
+//                }else  if (DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].getCurrentPrinterCommand() == PrinterCommand.ESC) {
+//                    EscCommand esc = new EscCommand();
+//                    esc.addInitializePrinter();
+//                    // 打印图片  光栅位图  384代表打印图片像素  0代表打印模式
+//                    // 58mm打印机 可打印区域最大点数为 384 ，80mm 打印机 可打印区域最大点数为 576 例子为80mmd打印机
+//                    esc.addRastBitImage(PrintContent.getBitmap(SubDetailActivity.this), 576, 0);
+//                    esc.addPrintAndLineFeed();
+//                    DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].sendDataImmediately(esc.getCommand());
+//                }
+//
+//            }
+//        });
+//    }
 
     private void tip(String msg){
         Message message=new Message();

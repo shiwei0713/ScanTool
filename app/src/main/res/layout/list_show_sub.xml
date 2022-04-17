@@ -22,7 +22,7 @@
 
         <TextView
             android:id="@+id/txtProductName"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/list_show_sub_textview_width"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:textColor="@color/list_item_icon"
@@ -106,7 +106,7 @@
 
                 <TextView
                     android:id="@+id/txtProductModels"
-                    android:layout_width="wrap_content"
+                    android:layout_width="@dimen/list_show_sub_textview_width"
                     android:layout_height="wrap_content"
                     android:textColor="@color/black"/>
 
@@ -122,6 +122,20 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/black"
                     android:text="@string/detail_content_title3"/>
+
+                <TextView
+                    android:id="@+id/txtProcessId"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:text="/"
+                    android:textColor="@color/black"/>
 
                 <TextView
                     android:id="@+id/txtProcess"
@@ -163,7 +177,7 @@
 
                 <TextView
                     android:id="@+id/txtDocno"
-                    android:layout_width="wrap_content"
+                    android:layout_width="@dimen/list_show_sub_textview_width"
                     android:layout_height="wrap_content"
                     android:textColor="@color/black"/>
 
@@ -188,7 +202,109 @@
                 android:inputType="numberDecimal"
                 android:textSize="24sp" />
 
+            <TextView
+                android:id="@+id/txtEmployee"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|right"
+                android:layout_marginRight="10dp"
+                android:textStyle="italic"
+                android:textColor="@color/list_item_number" />
+
+            <TextView
+                android:id="@+id/txtLots"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|right"
+                android:layout_marginRight="10dp"
+                android:textStyle="italic"
+                android:textColor="@color/master_loginout" />
+
+            <TextView
+                android:id="@+id/txtSubStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|right"
+                android:layout_marginRight="10dp"
+                android:textStyle="italic"
+                android:textColor="@color/master_loginout" />
+
         </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/line"
+        android:orientation="horizontal">
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:padding="5dp"
+        android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/listSubBtnConfirm"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/list_button_size"
+                        android:background="@drawable/list_button_selector"
+                        android:textColor="@color/teal_700"
+                        android:textStyle="normal"
+                        android:focusable="false"
+                        android:textSize="@dimen/list_detail_button"
+                        android:text="@string/list_detail_button1"/>
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:layout_gravity="right|center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/txtSubModStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|right"
+                    android:layout_marginRight="10dp"
+                    android:textColor="@color/master_loginout" />
+
+                <TextView
+                    android:id="@+id/txtSubFlag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|right"
+                    android:layout_marginRight="10dp"
+                    android:textColor="@color/master_loginout" />
+
+                <ImageView
+                    android:id="@+id/listSubStatus"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="10dp"/>
+
+            </LinearLayout>
 
     </LinearLayout>
 

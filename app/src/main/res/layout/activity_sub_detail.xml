@@ -79,14 +79,6 @@
             android:background="@drawable/edittext_style"
             android:textColor="@color/master_loginout" />
 
-        <TextView
-            android:id="@+id/subDetailProductDocno"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:textColor="@color/list_item_icon"
-            android:textSize="@dimen/detail_content_textsize" />
-
         <ImageView
             android:id="@+id/imgQrcode"
             android:layout_width="wrap_content"
@@ -100,6 +92,7 @@
             android:orientation="vertical">
 
             <Button
+                android:id="@+id/btnQc"
                 android:layout_width="70dp"
                 android:layout_height="25dp"
                 android:background="@drawable/list_flag_selector"
@@ -107,9 +100,22 @@
                 android:textStyle="normal"
                 android:focusable="false"
                 android:textSize="@dimen/list_detail_button"
-                android:text="报首检" />
+                android:text="@string/list_detail_button0" />
 
             <Button
+                android:id="@+id/btnProduct"
+                android:layout_width="70dp"
+                android:layout_height="25dp"
+                android:background="@drawable/list_flag_selector"
+                android:textColor="@color/teal_700"
+                android:layout_marginTop="10dp"
+                android:textStyle="normal"
+                android:focusable="false"
+                android:textSize="@dimen/list_detail_button"
+                android:text="@string/list_detail_button12" />
+
+            <Button
+                android:id="@+id/btnError"
                 android:layout_width="70dp"
                 android:layout_height="25dp"
                 android:background="@drawable/list_flag_selector"
@@ -118,7 +124,7 @@
                 android:textStyle="normal"
                 android:focusable="false"
                 android:textSize="@dimen/list_detail_button"
-                android:text="异常" />
+                android:text="@string/list_detail_button11" />
 
         </LinearLayout>
 
@@ -141,7 +147,7 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/btnConnect"
+            android:id="@+id/btnSave"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:layout_marginLeft="10dp"
@@ -158,7 +164,7 @@
             android:layout_height="30dp"
             android:background="@drawable/list_button_selector"
             android:textColor="@color/teal_700"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="30dp"
             android:textStyle="normal"
             android:focusable="false"
             android:textSize="@dimen/list_detail_button"
@@ -169,6 +175,23 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="5dp"
+        android:background="@color/line"
+        android:orientation="vertical">
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/subDetailProductDocno"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="5dp"
+        android:textColor="@color/list_item_icon"
+        android:textSize="8sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
         android:background="@color/line"
         android:orientation="vertical">
 

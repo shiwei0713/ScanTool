@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".SubMaterialListActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/subMaterialListToolBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/action_style"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:text="@string/query_title_name" />
+
+        <EditText
+            android:id="@+id/txtQueryCondition"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/query_style"
+            android:ems="8"
+            android:padding="2dp"
+            android:hint="@string/query_hint_product_name"
+            android:textColorHint="@color/hint_color"
+            android:textColor="@color/black"
+            android:inputType=""
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/btnMaterialQuery"
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:background="@drawable/list_button_selector"
+            android:layout_marginLeft="10dp"
+            android:textColor="@color/teal_700"
+            android:textStyle="normal"
+            android:focusable="false"
+            android:textSize="@dimen/list_detail_button"
+            android:text="@string/query_button"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:background="@color/line"
+        android:orientation="vertical">
+
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/subMaterialListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="@color/white"
+        android:dividerHeight="5dp"
+        android:padding="5dp" />
+
+</LinearLayout>

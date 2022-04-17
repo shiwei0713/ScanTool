@@ -111,7 +111,7 @@ public class MasterActivity extends AppCompatActivity {
         //初始化权限
         btnAction1Power =true;    //工序报工
         btnAction2Power =true;    //质量检验
-        btnAction3Power =false;    //完工入库  //FQC
+        btnAction3Power =true;    //完工入库  //FQC
         btnAction4Power =false;     //采购入库
         btnAction5Power =false;     //生产备料
         btnAction6Power =false;     //销售出货

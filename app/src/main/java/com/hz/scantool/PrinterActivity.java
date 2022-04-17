@@ -1,6 +1,7 @@
 package com.hz.scantool;
 
 import androidx.annotation.MainThread;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlarmManager;
@@ -17,6 +18,7 @@ import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -29,6 +31,8 @@ import com.gprinter.command.CpclCommand;
 import com.gprinter.command.EscCommand;
 import com.gprinter.command.LabelCommand;
 import com.hz.scantool.adapter.MyToast;
+import com.hz.scantool.helper.T100ServiceHelper;
+import com.hz.scantool.models.UserInfo;
 import com.hz.scantool.printer.CheckWifiConnThread;
 import com.hz.scantool.printer.Constant;
 import com.hz.scantool.printer.DeviceConnFactoryManager;
@@ -42,6 +46,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
@@ -70,15 +76,14 @@ public class PrinterActivity extends AppCompatActivity {
      */
     private static final int PRINTER_COMMAND_ERROR = 0x008;
     private static final int CONN_PRINTER = 0x12;
-    private static final int PERIOD = 2000;
-    private static final int DELAY = 0;
+    private static final int PERIOD = 3000;
+    private static final int DELAY = 100;
     private Disposable mDisposable;
 
     private String mIp;
     private String mPort;
     private int id = 0;
     private int w,h;
-    private Context context;
 
     private ThreadPool threadPool;
     private CheckWifiConnThread checkWifiConnThread;//wifi连接线程监听
@@ -88,7 +93,11 @@ public class PrinterActivity extends AppCompatActivity {
     private Button btnPrint;
     private TextView txtStatus;
     private TextView txtMessage;
+    private EditText txtIp;
     private ImageView imgQrcode;
+
+    private List<Map<String,Object>> mapResponseList;
+    private List<Map<String,Object>> mapResponseStatus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,6 +122,7 @@ public class PrinterActivity extends AppCompatActivity {
         txtStatus = findViewById(R.id.txtStatus);
         imgQrcode = findViewById(R.id.imgQrcode);
         txtMessage = findViewById(R.id.txtMessage);
+        txtIp = findViewById(R.id.txtIp);
 
         btnConnect.setOnClickListener(new commandClickListener());
         btnPrint.setOnClickListener(new commandClickListener());
@@ -179,18 +189,15 @@ public class PrinterActivity extends AppCompatActivity {
                 .map((aLong -> aLong+1))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(aLong -> testJob());
-    }
-
-    private void testJob(){
-        String strTest = "1";
-        txtMessage.setText("1");
+                .subscribe(aLong -> btnLabelPrint());
+        txtMessage.setText("打印任务已开始");
     }
 
     private void stopJob(){
         if(mDisposable!=null){
             mDisposable.dispose();
         }
+        txtMessage.setText("打印任务已停止");
     }
 
     @Override
@@ -271,8 +278,9 @@ public class PrinterActivity extends AppCompatActivity {
 
     //初始化连接打印机IP和端口
     private void initPrinter(){
-        mIp = "192.168.30.100";  //凤一
+//        mIp = "192.168.30.100";  //凤一
 //        mIp = "192.168.2.50";  //薛峰
+        mIp = txtIp.getText().toString();
         mPort = "9100";
 
         WifiParameterConfig wifiParameterConfig = new WifiParameterConfig(this,mHandler,mIp,mPort);
@@ -306,6 +314,42 @@ public class PrinterActivity extends AppCompatActivity {
         return str;
     }
 
+    //获取标签数据
+    private void getLableData(){
+        //初始化T100服务名
+        String webServiceName = "PrintLabelGet";
+
+        //发送服务器请求
+        T100ServiceHelper t100ServiceHelper = new T100ServiceHelper();
+        String requestBody = "&lt;Document&gt;\n"+
+                "&lt;RecordSet id=\"1\"&gt;\n"+
+                "&lt;Master name=\"bcaa_t\" node_id=\"1\"&gt;\n"+
+                "&lt;Record&gt;\n"+
+                "&lt;Field name=\"bcaasite\" value=\""+ UserInfo.getUserSiteId(getApplicationContext())+"\"/&gt;\n"+
+                "&lt;Field name=\"bcaaent\" value=\""+UserInfo.getUserEnterprise(getApplicationContext())+"\"/&gt;\n"+
+                "&lt;Field name=\"ip\" value=\""+mIp+"\"/&gt;\n"+
+                "&lt;Detail name=\"s_detail1\" node_id=\"1_1\"&gt;\n"+
+                "&lt;Record&gt;\n"+
+                "&lt;Field name=\"bcaa000\" value=\"1.0\"/&gt;\n"+
+                "&lt;/Record&gt;\n"+
+                "&lt;/Detail&gt;\n"+
+                "&lt;Memo/&gt;\n"+
+                "&lt;Attachment count=\"0\"/&gt;\n"+
+                "&lt;/Record&gt;\n"+
+                "&lt;/Master&gt;\n"+
+                "&lt;/RecordSet&gt;\n"+
+                "&lt;/Document&gt;\n";
+
+        try{
+            String strResponse = t100ServiceHelper.getT100Data(requestBody,webServiceName,getApplicationContext(),"");
+            mapResponseStatus = t100ServiceHelper.getT100StatusData(strResponse);
+            mapResponseList = t100ServiceHelper.getT100JsonLabelData(strResponse,"workorder");
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+
+    }
+
     //打印标签
     public void btnLabelPrint() {
         threadPool = ThreadPool.getInstantiation();
@@ -318,9 +362,13 @@ public class PrinterActivity extends AppCompatActivity {
                     return;
                 }
                 if (DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].getCurrentPrinterCommand() == PrinterCommand.TSC) {
-                    Bitmap b = PrintContent.getBitmap(PrinterActivity.this);
+                    getLableData();
+                    if(mapResponseList.size()>0){
+                        Bitmap b = PrintContent.getBitmap(PrinterActivity.this,mapResponseList);
+                        String qrcode = (String)mapResponseList.get(0).get("Qrcode");
 
-                    DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].sendDataImmediately(PrintContent.getLabel(b));
+                        DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].sendDataImmediately(PrintContent.getLabel(b,qrcode));
+                    }
                 } else {
                     mHandler.obtainMessage(PRINTER_COMMAND_ERROR).sendToTarget();
                 }
@@ -356,54 +404,54 @@ public class PrinterActivity extends AppCompatActivity {
         MyToast.myShow(PrinterActivity.this,"保存成功",2,0);
     }
 
-    //打印xml标签
-    private void printLabel(){
-
-        //设置打印机模式
-//        setPrinterMode();
-
-        if (DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id] == null ||
-                !DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].getConnState()) {
-            mHandler.obtainMessage(CONN_PRINTER).sendToTarget();
-            return;
-        }
-
-        threadPool = ThreadPool.getInstantiation();
-        threadPool.addSerialTask(new Runnable() {
-            @Override
-            public void run() {
-
-                if (DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].getCurrentPrinterCommand() == PrinterCommand.CPCL) {
-                    CpclCommand cpcl=new CpclCommand();
-                    cpcl.addInitializePrinter(1500,1);
-                    // 打印图片  光栅位图  384代表打印图片像素  0代表打印模式
-                    // 58mm打印机 可打印区域最大点数为 384 ，80mm 打印机 可打印区域最大点数为 576 例子为80mmd打印机
-                    cpcl.addCGraphics(0,0,576, PrintContent.getBitmap(PrinterActivity.this));
-                    cpcl.addPrint();
-                    DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].sendDataImmediately(cpcl.getCommand());
-                } else if (DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].getCurrentPrinterCommand() == PrinterCommand.TSC) {
-                    LabelCommand labelCommand=new LabelCommand();
-                    labelCommand.addSize(100,70);
-                    labelCommand.addGap(2);
-                    labelCommand.addCls();
-                    // 打印图片  光栅位图  384代表打印图片像素  0代表打印模式
-                    // 58mm打印机 可打印区域最大点数为 384 ，80mm 打印机 可打印区域最大点数为 576 例子为80mmd打印机
-                    labelCommand.addBitmap(0,0, 576,PrintContent.getBitmap(PrinterActivity.this));
-                    labelCommand.addPrint(1);
-                    DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].sendDataImmediately(labelCommand.getCommand());
-                }else  if (DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].getCurrentPrinterCommand() == PrinterCommand.ESC) {
-                    EscCommand esc = new EscCommand();
-                    esc.addInitializePrinter();
-                    // 打印图片  光栅位图  384代表打印图片像素  0代表打印模式
-                    // 58mm打印机 可打印区域最大点数为 384 ，80mm 打印机 可打印区域最大点数为 576 例子为80mmd打印机
-                    esc.addRastBitImage(PrintContent.getBitmap(PrinterActivity.this), 576, 0);
-                    esc.addPrintAndLineFeed();
-                    DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].sendDataImmediately(esc.getCommand());
-                }
-
-            }
-        });
-    }
+//    //打印xml标签
+//    private void printLabel(){
+//
+//        //设置打印机模式
+////        setPrinterMode();
+//
+//        if (DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id] == null ||
+//                !DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].getConnState()) {
+//            mHandler.obtainMessage(CONN_PRINTER).sendToTarget();
+//            return;
+//        }
+//
+//        threadPool = ThreadPool.getInstantiation();
+//        threadPool.addSerialTask(new Runnable() {
+//            @Override
+//            public void run() {
+//
+//                if (DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].getCurrentPrinterCommand() == PrinterCommand.CPCL) {
+//                    CpclCommand cpcl=new CpclCommand();
+//                    cpcl.addInitializePrinter(1500,1);
+//                    // 打印图片  光栅位图  384代表打印图片像素  0代表打印模式
+//                    // 58mm打印机 可打印区域最大点数为 384 ，80mm 打印机 可打印区域最大点数为 576 例子为80mmd打印机
+//                    cpcl.addCGraphics(0,0,576, PrintContent.getBitmap(PrinterActivity.this));
+//                    cpcl.addPrint();
+//                    DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].sendDataImmediately(cpcl.getCommand());
+//                } else if (DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].getCurrentPrinterCommand() == PrinterCommand.TSC) {
+//                    LabelCommand labelCommand=new LabelCommand();
+//                    labelCommand.addSize(100,70);
+//                    labelCommand.addGap(2);
+//                    labelCommand.addCls();
+//                    // 打印图片  光栅位图  384代表打印图片像素  0代表打印模式
+//                    // 58mm打印机 可打印区域最大点数为 384 ，80mm 打印机 可打印区域最大点数为 576 例子为80mmd打印机
+//                    labelCommand.addBitmap(0,0, 576,PrintContent.getBitmap(PrinterActivity.this));
+//                    labelCommand.addPrint(1);
+//                    DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].sendDataImmediately(labelCommand.getCommand());
+//                }else  if (DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].getCurrentPrinterCommand() == PrinterCommand.ESC) {
+//                    EscCommand esc = new EscCommand();
+//                    esc.addInitializePrinter();
+//                    // 打印图片  光栅位图  384代表打印图片像素  0代表打印模式
+//                    // 58mm打印机 可打印区域最大点数为 384 ，80mm 打印机 可打印区域最大点数为 576 例子为80mmd打印机
+//                    esc.addRastBitImage(PrintContent.getBitmap(PrinterActivity.this), 576, 0);
+//                    esc.addPrintAndLineFeed();
+//                    DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].sendDataImmediately(esc.getCommand());
+//                }
+//
+//            }
+//        });
+//    }
 
     private void tip(String msg){
         Message message=new Message();
@@ -411,6 +459,13 @@ public class PrinterActivity extends AppCompatActivity {
         message.what= Constant.tip;
         mHandler.sendMessage(message);
     }
+
+    private Handler dHandler = new Handler(Looper.getMainLooper()){
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            super.handleMessage(msg);
+        }
+    };
 
     private Handler mHandler = new Handler(Looper.getMainLooper()) {
         @Override

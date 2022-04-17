@@ -19,6 +19,9 @@ import com.hz.scantool.App;
 import com.hz.scantool.R;
 import com.hz.scantool.SubActivity;
 
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 public class PrintContent {
@@ -118,7 +121,7 @@ public class PrintContent {
      * 标签打印测试页
      * @return
      */
-    public static Vector<Byte> getLabel(Bitmap b) {
+    public static Vector<Byte> getLabel(Bitmap b,String qrcode) {
         LabelCommand tsc = new LabelCommand();
         // 设置标签尺寸宽高，按照实际尺寸设置 单位mm
         tsc.addSize(100, 70);
@@ -144,12 +147,12 @@ public class PrintContent {
 //        Bitmap b2 = BitmapFactory.decodeResource(App.getContext().getResources(), R.drawable.test2);
 //        Bitmap b3 = BitmapFactory.decodeFile(Environment.getExternalStorageDirectory().getAbsolutePath()+"/hzimages/testlabel");
         // 绘制图片
-        tsc.addBitmap(50, 30, LabelCommand.BITMAP_MODE.OVERWRITE,1050, b);
+        tsc.addBitmap(50, 80, LabelCommand.BITMAP_MODE.OVERWRITE,1050, b);
         //绘制二维码显示内容
-        tsc.addText(10, 10, LabelCommand.FONTTYPE.SIMPLIFIED_CHINESE, LabelCommand.ROTATION.ROTATION_0, LabelCommand.FONTMUL.MUL_1, LabelCommand.FONTMUL.MUL_1,
-                "www.smarnet.cc");
+        tsc.addText(50, 20, LabelCommand.FONTTYPE.SIMPLIFIED_CHINESE, LabelCommand.ROTATION.ROTATION_0, LabelCommand.FONTMUL.MUL_1, LabelCommand.FONTMUL.MUL_1,
+                qrcode);
         //绘制二维码
-        tsc.addQRCode(960,20, LabelCommand.EEC.LEVEL_L, 8, LabelCommand.ROTATION.ROTATION_0, " www.smarnet.cc");
+        tsc.addQRCode(960,30, LabelCommand.EEC.LEVEL_L, 7, LabelCommand.ROTATION.ROTATION_0, qrcode);
 
         // 打印标签
         tsc.addPrint(1, 1);
@@ -222,16 +225,30 @@ public class PrintContent {
      * @param mcontext
      * @return
      */
-    public static Bitmap getBitmap(Context mcontext) {
+    public static Bitmap getBitmap(Context mcontext, List<Map<String,Object>> mData) {
         View v = View.inflate(App.getContext(), R.layout.print_content, null);
 //        View v = View.inflate(App.getContext(), R.layout.print_content_sale, null);
+
+        //标签表头数据获取
+        TextView txtPrintProductName = (TextView)v.findViewById(R.id.txtPrintProductName);
+        TextView txtPrintDept = (TextView)v.findViewById(R.id.txtPrintDept);
+        TextView txtPrintCk = (TextView)v.findViewById(R.id.txtPrintCk);
+        TextView txtPrintProductModel = (TextView)v.findViewById(R.id.txtPrintProductModel);
+        TextView txtPrintPrograme = (TextView)v.findViewById(R.id.txtPrintPrograme);
+        TextView txtPrintLots = (TextView)v.findViewById(R.id.txtPrintLots);
+
+        txtPrintProductName.setText((String)mData.get(0).get("ProductName"));
+        txtPrintProductModel.setText((String)mData.get(0).get("ProductModels"));
+        txtPrintCk.setText((String)mData.get(0).get("StockId"));
+        txtPrintPrograme.setText((String)mData.get(0).get("Program"));
+        txtPrintLots.setText((String)mData.get(0).get("Lots"));
+
         TableLayout tableLayout = (TableLayout) v.findViewById(R.id.li);
-        tableLayout.addView(ctv(mcontext, "2022-02-16", "CY10/连续冲压", 30,"01653",""));
-        tableLayout.addView(ctv(mcontext, "2022-02-16", "CY20/连续冲压", 30,"01653",""));
-        tableLayout.addView(ctv(mcontext, "2022-02-16", "CY10/连续冲压", 30,"01653",""));
-        tableLayout.addView(ctv(mcontext, "2022-02-16", "CY10/连续冲压", 30,"01653",""));
-        tableLayout.addView(ctv(mcontext, "2022-02-16", "CY10/连续冲压", 30,"01653",""));
-        tableLayout.addView(ctv(mcontext, "2022-02-16", "CY10/连续冲压", 30,"01653",""));
+        for(Map<String,Object> mResponse: mData){
+            //mResponse.get("Quantity").toString();
+            tableLayout.addView(ctv(mcontext, mResponse.get("PlanDate").toString(), mResponse.get("Process").toString(), Integer.valueOf(mResponse.get("Quantity").toString()),mResponse.get("Employee").toString(),""));
+        }
+
         final Bitmap bitmap = convertViewToBitmap(v);
         return bitmap;
     }
@@ -249,7 +266,7 @@ public class PrintContent {
     }
 
     public static TableRow ctv(Context context, String name,String product,int qty,String code,String qc){
-        int iTextSize = 7;
+        int iTextSize = 11;
 
         TableRow tb=new TableRow(context);
         tb.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT ,TableLayout.LayoutParams.WRAP_CONTENT));

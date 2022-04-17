@@ -1,0 +1,480 @@
+package com.hz.scantool;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.TextView;
+
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.qrcode.QRCodeWriter;
+import com.hz.scantool.adapter.LoadingDialog;
+import com.hz.scantool.adapter.MultipleDetailAdapter;
+import com.hz.scantool.adapter.MyToast;
+import com.hz.scantool.adapter.SubAdapter;
+import com.hz.scantool.helper.T100ServiceHelper;
+import com.hz.scantool.models.UserInfo;
+
+import org.w3c.dom.Text;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+
+public class SubDetailForMultipleActivity extends AppCompatActivity {
+
+    private String strTitle;
+    private String strFlag;
+    private String strProcessId;
+    private String strModStatus;
+    private int id = 0;
+    private int w,h;
+
+    private TextView txtMultipleInputCount;
+    private TextView txtMultiplePrintCount;
+    private TextView txtMultiplePlanNo;
+    private ImageView imgMultipleQrcode;
+    private ListView subMultipleView;
+    private Button btnMultipleQc;
+    private Button btnMultipleProduct;
+    private Button btnMultipleError;
+    private Button btnMultipleSave;
+    private Button btnMultiplePrint;
+
+    private String statusCode;
+    private String statusDescription;
+    private String strWorkTime;
+
+    private List<Map<String,Object>> mapResponseList;
+    private List<Map<String,Object>> mapResponseStatus;
+    private LoadingDialog loadingDialog;
+    private MultipleDetailAdapter multipleDetailAdapter;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_sub_detail_for_multiple);
+
+        //初始化
+        initView();
+        initBundle();
+
+        //获取工具栏
+        Toolbar toolbar=findViewById(R.id.subDetailMultipleToolBar);
+        setSupportActionBar(toolbar);
+
+        //工具栏增加返回按钮和标题显示
+        ActionBar actionBar=getSupportActionBar();
+        if(actionBar!=null){
+            actionBar.setTitle(strTitle);
+            actionBar.setHomeButtonEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
+        createQrcode(strFlag+"_"+ UserInfo.getUserId(getApplicationContext()));
+
+        //获取汇总数据
+        getMultipleCount();
+
+        //获取显示数据
+        getMultipleDetailData();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.sub_menu,menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        //工具栏按钮事件定义
+        switch (item.getItemId()){
+            case R.id.action_scan:
+                //调用zxing扫码界面
+                IntentIntegrator intentIntegrator = new IntentIntegrator(SubDetailForMultipleActivity.this);
+                intentIntegrator.setTimeout(5000);
+                intentIntegrator.setDesiredBarcodeFormats();  //IntentIntegrator.QR_CODE
+                //开始扫描
+                intentIntegrator.initiateScan();
+                break;
+            case android.R.id.home:
+                finish();
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    //初始化传入参数
+    private void initBundle(){
+        strTitle = this.getResources().getString(R.string.master_detail1);
+
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        strFlag = bundle.getString("Flag");
+        strProcessId = bundle.getString("ProcessId");
+        strModStatus = bundle.getString("ModStatus");
+        txtMultiplePlanNo.setText(strFlag);
+    }
+
+    //初始化控件
+    private void initView(){
+        txtMultipleInputCount = findViewById(R.id.txtMultipleInputCount);
+        txtMultiplePrintCount = findViewById(R.id.txtMultiplePrintCount);
+        txtMultiplePlanNo = findViewById(R.id.txtMultiplePlanNo);
+        imgMultipleQrcode = findViewById(R.id.imgMultipleQrcode);
+        subMultipleView = findViewById(R.id.subMultipleView);
+
+        btnMultipleQc = findViewById(R.id.btnMultipleQc);
+        btnMultipleProduct = findViewById(R.id.btnMultipleProduct);
+        btnMultipleError = findViewById(R.id.btnMultipleError);
+        btnMultipleSave = findViewById(R.id.btnMultipleSave);
+        btnMultiplePrint = findViewById(R.id.btnMultiplePrint);
+
+        btnMultipleQc.setOnClickListener(new commandClickListener());
+        btnMultipleProduct.setOnClickListener(new commandClickListener());
+        btnMultipleError.setOnClickListener(new commandClickListener());
+        btnMultipleSave.setOnClickListener(new commandClickListener());
+        btnMultiplePrint.setOnClickListener(new commandClickListener());
+
+        //初始化班次
+        setWorktime();
+    }
+
+    private class commandClickListener implements View.OnClickListener{
+
+        @Override
+        public void onClick(View view) {
+            switch (view.getId()){
+                case R.id.btnMultipleSave:
+                    saveMultipleToT100("insert");
+                    break;
+                case R.id.btnMultiplePrint:
+                    saveMultipleToT100("print");
+                    break;
+                case R.id.btnMultipleQc:
+                    saveMultipleToT100("check");
+                    break;
+                case R.id.btnMultipleProduct:
+                    break;
+                case R.id.btnMultipleError:
+                    break;
+            }
+        }
+    }
+
+    private void createQrcode(String qrcode){
+        w=300;
+        h=300;
+        try{
+            if(qrcode == null || "".equals(qrcode) || qrcode.length()<1){
+                return;
+            }
+
+            Hashtable<EncodeHintType,String> hints = new Hashtable<EncodeHintType,String>();
+            hints.put(EncodeHintType.CHARACTER_SET,"utf-8");
+
+            BitMatrix bitMatrix = new QRCodeWriter().encode(qrcode, BarcodeFormat.QR_CODE,w,h,hints);
+            int[] pixels = new int[w*h];
+
+            for(int y=0;y<h;y++){
+                for(int x=0;x<w;x++){
+                    if(bitMatrix.get(x,y)){
+                        pixels[y*w+x] = 0xff000000;
+                    }else{
+                        pixels[y*w+x] = 0xffffffff;
+                    }
+                }
+            }
+
+            Bitmap bitmap = Bitmap.createBitmap(w,h,Bitmap.Config.ARGB_8888);
+            bitmap.setPixels(pixels,0,w,0,0,w,h);
+            imgMultipleQrcode.setImageBitmap(bitmap);
+
+        }catch (WriterException e){
+            e.printStackTrace();
+        }
+    }
+
+    //获取报工汇总数据
+    private void getMultipleCount(){
+        txtMultipleInputCount.setText("1");
+        txtMultiplePrintCount.setText("1");
+    }
+
+    //获取清单
+    private void getMultipleDetailData(){
+        //显示进度条
+        if(loadingDialog == null){
+            loadingDialog = new LoadingDialog(SubDetailForMultipleActivity.this,"正在刷新",R.drawable.dialog_loading);
+            loadingDialog.show();
+        }
+
+        Observable.create(new ObservableOnSubscribe<List<Map<String,Object>>>(){
+            @Override
+            public void subscribe(ObservableEmitter<List<Map<String, Object>>> e) throws Exception {
+                //初始化T100服务名
+                String webServiceName = "ProductListGet";
+                String strwhere = " sfncuc004='"+strFlag+"' AND sfncuc009='"+strProcessId+"'";
+                String strType = "21";
+
+                //发送服务器请求
+                T100ServiceHelper t100ServiceHelper = new T100ServiceHelper();
+                String requestBody = "&lt;Parameter&gt;\n"+
+                        "&lt;Record&gt;\n"+
+                        "&lt;Field name=\"enterprise\" value=\""+ UserInfo.getUserEnterprise(getApplicationContext())+"\"/&gt;\n"+
+                        "&lt;Field name=\"site\" value=\""+UserInfo.getUserSiteId(getApplicationContext())+"\"/&gt;\n"+
+                        "&lt;Field name=\"type\" value=\""+ strType +"\"/&gt;\n"+
+                        "&lt;Field name=\"where\" value=\""+ strwhere +"\"/&gt;\n"+
+                        "&lt;/Record&gt;\n"+
+                        "&lt;/Parameter&gt;\n"+
+                        "&lt;Document/&gt;\n";
+                String strResponse = t100ServiceHelper.getT100Data(requestBody,webServiceName,getApplicationContext(),"");
+                mapResponseStatus = t100ServiceHelper.getT100StatusData(strResponse);
+                mapResponseList = t100ServiceHelper.getT100JsonProductDetailData(strResponse,"workorder");
+
+                e.onNext(mapResponseStatus);
+                e.onNext(mapResponseList);
+                e.onComplete();
+            }
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<List<Map<String, Object>>>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(List<Map<String, Object>> maps) {
+                if(mapResponseStatus.size()> 0){
+                    for(Map<String,Object> mStatus: mapResponseStatus){
+                        statusCode = mStatus.get("statusCode").toString();
+                        statusDescription = mStatus.get("statusDescription").toString();
+
+                        if(!statusCode.equals("0")){
+                            MyToast.myShow(SubDetailForMultipleActivity.this,statusDescription,0,0);
+                        }
+                    }
+                }else{
+                    MyToast.myShow(SubDetailForMultipleActivity.this,"无备料数据",2,0);
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                MyToast.myShow(SubDetailForMultipleActivity.this,"网络错误",0,0);
+                loadingDialog.dismiss();
+            }
+
+            @Override
+            public void onComplete() {
+                multipleDetailAdapter = new MultipleDetailAdapter(mapResponseList,getApplicationContext(),strModStatus);
+                subMultipleView.setAdapter(multipleDetailAdapter);
+
+                loadingDialog.dismiss();
+            }
+        });
+    }
+
+    private void setWorktime(){
+        long timeCurrentTimeMillis = System.currentTimeMillis();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
+        String currentTime = simpleDateFormat.format(timeCurrentTimeMillis);
+        strWorkTime = "晚班";
+
+        try{
+            Date date1 = simpleDateFormat.parse(currentTime);
+            Date date2 = simpleDateFormat.parse("07:00:00");
+            Date date3 = simpleDateFormat.parse("20:00:00");
+            if(date1.getTime()>=date2.getTime() && date1.getTime()<=date3.getTime()){
+                strWorkTime = "白班";
+            }
+        }catch (ParseException e){
+            e.printStackTrace();
+        }
+    }
+
+    private boolean checkListItemQuantity(){
+        for(int i= 0;i<multipleDetailAdapter.getCount();i++){
+            LinearLayout linearLayout = (LinearLayout)subMultipleView.getAdapter().getView(i,null,null);
+            TextView txtMultipleDetailProductName = (TextView)linearLayout.findViewById(R.id.txtMultipleDetailProductName);
+            String strQuantity = multipleDetailAdapter.getQuantity(i);
+
+            if(strQuantity.equals("")||strQuantity.isEmpty()||strQuantity.equals("0")){
+                if(strModStatus.equals("4")){
+                    MyToast.myShow(SubDetailForMultipleActivity.this,"零件:"+txtMultipleDetailProductName.getText().toString()+",数量不可为0",2,0);
+                    return false;
+                }else{
+                    if(i==0){
+                        MyToast.myShow(SubDetailForMultipleActivity.this,"零件:"+txtMultipleDetailProductName.getText().toString()+",数量不可为0",2,0);
+                        return false;
+                    }
+                }
+
+            }
+        }
+
+        return true;
+    }
+
+    private void saveMultipleToT100(String strAction){
+        if(checkListItemQuantity()){
+            for(int i= 0;i<multipleDetailAdapter.getCount();i++){
+                LinearLayout linearLayout = (LinearLayout)subMultipleView.getAdapter().getView(i,null,null);
+                TextView txtMultipleDetailProductCode = (TextView)linearLayout.findViewById(R.id.txtMultipleDetailProductCode);
+                TextView txtMultipleDetailDocno = (TextView)linearLayout.findViewById(R.id.txtMultipleDetailDocno);
+                TextView txtMultipleDetailPlanDate = (TextView)linearLayout.findViewById(R.id.txtMultipleDetailPlanDate);
+                TextView txtMultipleDetailProcessId = (TextView)linearLayout.findViewById(R.id.txtMultipleDetailProcessId);
+                TextView txtMultipleDetailProcess = (TextView)linearLayout.findViewById(R.id.txtMultipleDetailProcess);
+                TextView txtMultipleDetailDevice = (TextView)linearLayout.findViewById(R.id.txtMultipleDetailDevice);
+                TextView txtMultipleDetailLots = (TextView)linearLayout.findViewById(R.id.txtMultipleDetailLots);
+
+                String strQuantity;
+                if(strModStatus.equals("2")||strModStatus.equals("3")){
+                    strQuantity = multipleDetailAdapter.getQuantity(0);
+                }else{
+                    strQuantity = multipleDetailAdapter.getQuantity(i);
+                }
+
+                String strProductCode = txtMultipleDetailProductCode.getText().toString();
+                String strDocno = txtMultipleDetailDocno.getText().toString();
+                String strPlanDate = txtMultipleDetailPlanDate.getText().toString();
+                String strProcessId = txtMultipleDetailProcessId.getText().toString();
+                String strProcess = txtMultipleDetailProcess.getText().toString();
+                String strDevice = txtMultipleDetailDevice.getText().toString();
+                String strLots = txtMultipleDetailLots.getText().toString();
+                String strProductDocno = multipleDetailAdapter.getProductDocno(i);
+
+                saveDataToT100(strAction,strProductCode,strDocno,strPlanDate,strProcessId,strProcess,strDevice,strLots,strQuantity,strProductDocno,i);
+            }
+        }
+    }
+
+    private void saveDataToT100(String action,String strProductCode,String strDocno,String strPlanDate,String strProcessId,String strProcess,String strDevice,String strLots,String strQuantity,String strProductDocno,int i){
+        //显示进度条
+        if(loadingDialog == null){
+            loadingDialog = new LoadingDialog(SubDetailForMultipleActivity.this,"数据提交中",R.drawable.dialog_loading);
+            loadingDialog.show();
+        }
+
+        Observable.create(new ObservableOnSubscribe<List<Map<String,Object>>>() {
+            @Override
+            public void subscribe(ObservableEmitter<List<Map<String, Object>>> e) throws Exception {
+                //初始化T100服务名
+                String webServiceName = "WorkReportRequestGen";
+                String qcstatus = "PY";
+
+                //发送服务器请求
+                T100ServiceHelper t100ServiceHelper = new T100ServiceHelper();
+                String requestBody = "&lt;Document&gt;\n"+
+                        "&lt;RecordSet id=\"1\"&gt;\n"+
+                        "&lt;Master name=\"sffb_t\" node_id=\"1\"&gt;\n"+
+                        "&lt;Record&gt;\n"+
+                        "&lt;Field name=\"sffbsite\" value=\""+ UserInfo.getUserSiteId(getApplicationContext())+"\"/&gt;\n"+
+                        "&lt;Field name=\"sffbent\" value=\""+UserInfo.getUserEnterprise(getApplicationContext())+"\"/&gt;\n"+
+                        "&lt;Field name=\"sffbdocdt\" value=\""+strPlanDate+"\"/&gt;\n"+
+                        "&lt;Field name=\"sffb002\" value=\""+ UserInfo.getUserId(getApplicationContext()) +"\"/&gt;\n"+  //异动人员
+                        "&lt;Field name=\"sffb004\" value=\""+ strWorkTime +"\"/&gt;\n"+  //班次
+                        "&lt;Field name=\"sffb005\" value=\""+ strDocno +"\"/&gt;\n"+  //工单单号
+                        "&lt;Field name=\"sffbseq\" value=\""+ strProcessId +"\"/&gt;\n"+  //工艺项次
+                        "&lt;Field name=\"sffb010\" value=\""+ strDevice +"\"/&gt;\n"+  //机器编号
+                        "&lt;Field name=\"sffb029\" value=\""+ strProductCode +"\"/&gt;\n"+  //报工料号
+                        "&lt;Field name=\"sffb017\" value=\""+ strQuantity +"\"/&gt;\n"+  //良品数量
+                        "&lt;Field name=\"process\" value=\""+ strProcess +"\"/&gt;\n"+  //工序
+                        "&lt;Field name=\"lots\" value=\""+ strLots +"\"/&gt;\n"+  //批次
+                        "&lt;Field name=\"sffbdocno\" value=\""+ strProductDocno +"\"/&gt;\n"+  //报工单号
+                        "&lt;Field name=\"qcstatus\" value=\""+ qcstatus +"\"/&gt;\n"+  //首检状态
+                        "&lt;Field name=\"act\" value=\""+ action +"\"/&gt;\n"+  //执行动作
+                        "&lt;Detail name=\"s_detail1\" node_id=\"1_1\"&gt;\n"+
+                        "&lt;Record&gt;\n"+
+                        "&lt;Field name=\"sffyucseq\" value=\"1.0\"/&gt;\n"+
+                        "&lt;/Record&gt;\n"+
+                        "&lt;/Detail&gt;\n"+
+                        "&lt;Memo/&gt;\n"+
+                        "&lt;Attachment count=\"0\"/&gt;\n"+
+                        "&lt;/Record&gt;\n"+
+                        "&lt;/Master&gt;\n"+
+                        "&lt;/RecordSet&gt;\n"+
+                        "&lt;/Document&gt;\n";
+                String strResponse = t100ServiceHelper.getT100Data(requestBody,webServiceName,getApplicationContext(),"");
+                mapResponseStatus = t100ServiceHelper.getT100StatusData(strResponse);
+                mapResponseList = t100ServiceHelper.getT100ResponseDocno(strResponse,"docno");
+
+                e.onNext(mapResponseStatus);
+                e.onNext(mapResponseList);
+                e.onComplete();
+            }
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<List<Map<String, Object>>>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(List<Map<String, Object>> maps) {
+                if(mapResponseStatus.size()> 0){
+                    for(Map<String,Object> mStatus: mapResponseStatus){
+                        statusCode = mStatus.get("statusCode").toString();
+                        statusDescription = mStatus.get("statusDescription").toString();
+                    }
+                }else{
+                    MyToast.myShow(SubDetailForMultipleActivity.this,"执行接口错误",2,0);
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                MyToast.myShow(SubDetailForMultipleActivity.this,"网络错误",0,0);
+                loadingDialog.dismiss();
+            }
+
+            @Override
+            public void onComplete() {
+                if(statusCode.equals("0")){
+                    String strDocno="";
+
+                    if(mapResponseList.size()> 0) {
+                        for (Map<String, Object> mResponse : mapResponseList) {
+                            strDocno = mResponse.get("Docno").toString();
+                            multipleDetailAdapter.updateData(i,subMultipleView,strDocno);
+                        }
+                    }
+                    MyToast.myShow(SubDetailForMultipleActivity.this, statusDescription, 1, 1);
+                }else{
+                    MyToast.myShow(SubDetailForMultipleActivity.this, statusDescription, 0, 1);
+                }
+                loadingDialog.dismiss();
+            }
+        });
+    }
+}

@@ -11,7 +11,7 @@
     <string name="login_txtLicense">服务协议</string>
     <string name="master_username"></string>
     <string name="master_logout">注销</string>
-    <string name="master_action1">工序报工</string>
+    <string name="master_action1">生产任务</string>
     <string name="master_action2">质量检验</string>
     <string name="master_action3">完工入库</string>
     <string name="master_action4">采购入库</string>
@@ -34,6 +34,7 @@
     <string name="query_title_dept">领料部门</string>
     <string name="query_title_dept_in">入库部门</string>
     <string name="query_title_dept_out">退料部门</string>
+    <string name="query_hint_product_name">请输入零件号</string>
     <string name="query_hint_name">请输入部门/供应商</string>
     <string name="query_title_date">日期范围</string>
     <string name="query_hint_bdate">开始日期</string>
@@ -80,6 +81,7 @@
     <string name="tab_product16">收料确认</string>
     <string name="tab_product17">标签确认</string>
     <string name="tab_product18">车间盘点</string>
+    <string name="tab_product19">零件查询</string>
     <string name="tab_query1">失败明细</string>
     <string name="item_title_product_code">料件编码:</string>
     <string name="item_title_product_name">品名:</string>
@@ -108,7 +110,7 @@
     <string name="detail_qc_cancel">不合格</string>
     <string name="detail_refresh">刷新</string>
     <string name="detail_title1">良品:</string>
-    <string name="detail_title2">不良:</string>
+    <string name="detail_title2">不良品:</string>
     <string name="detail_title3">废品:</string>
     <string name="detail_title8">时长:</string>
     <string name="check_stock_btn">设置</string>
@@ -127,13 +129,16 @@
     <string name="detail_content_title11">零件编码:</string>
     <string name="detail_content_title12">零件号:</string>
     <string name="detail_content_title13">零件名:</string>
+    <string name="detail_content_title14">批次:</string>
+    <string name="detail_content_title15">文件地址:</string>
     <string name="master_detail1">报工详情</string>
     <string name="master_detail2">检验详情</string>
     <string name="master_detail3">入库详情</string>
     <string name="master_detail4">发料详情</string>
     <string name="master_detail5">出货详情</string>
     <string name="master_detail6">报表数据</string>
-    <string name="list_detail_button1">报首检</string>
+    <string name="list_detail_button0">报首检</string>
+    <string name="list_detail_button1">首检合格</string>
     <string name="list_detail_button2">打印标签</string>
     <string name="list_detail_button3">库存报警</string>
     <string name="list_detail_button4">分配人员</string>
@@ -143,6 +148,10 @@
     <string name="list_detail_button8">连接打印机</string>
     <string name="list_detail_button9">开始任务</string>
     <string name="list_detail_button10">停止任务</string>
+    <string name="list_detail_button11">生产异常</string>
+    <string name="list_detail_button12">上料检核</string>
+    <string name="list_detail_button13">开始生产</string>
+    <string name="list_detail_button14">结束生产</string>
     <string name="detail_title4">发料总量:</string>
     <string name="detail_detail_quantity_pcs_title">箱数:</string>
     <string name="detail_detail_quantity">备货数/总箱数:</string>
@@ -157,6 +166,7 @@
     <string name="sub_detail_plandate">需求日期:</string>
     <string name="sub_detail_position">送货位置:</string>
     <string name="sub_detail_docno">工单单号:</string>
+    <string name="hint_quantity">请输入数量</string>
     <string name="sub_list_flag_query">类型:</string>
     <string name="sub_list_flag1">生产备货</string>
     <string name="sub_list_flag2">生产退货</string>
@@ -244,4 +254,14 @@
     <string name="label_kg2">实测整箱净重</string>
     <string name="label_fqc_check">FQC检验章</string>
     <string name="label_product_check">车间检验章</string>
+    <string name="sub_detail_multiple_title1">报工次数:</string>
+    <string name="sub_detail_multiple_title2">打印次数:</string>
+    <string name="sub_detail_multiple_title3">当前状态:</string>
+    <string name="sub_detail_multiple_title4">计划单号:</string>
+    <string name="show_material_label1">零件号:</string>
+    <string name="show_material_label2">零件图</string>
+    <string name="show_material_label3">相似件</string>
+    <string name="show_material_label4">工艺图</string>
+    <string name="show_material_label5">URL:</string>
+    <string name="show_material_label6">操作:双指伸缩放大缩小;单指左右滑动翻页</string>
 </resources>
