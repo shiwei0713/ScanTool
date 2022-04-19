@@ -56,14 +56,30 @@ public class SubDetailForMultipleActivity extends AppCompatActivity {
     private String strFlag;
     private String strProcessId;
     private String strModStatus;
+    private String strOperateCount;
+    private String strPrintCount;
+    private String strStartStatus;
+    private String strCheckStatus;
+    private String strUpStatus;
+    private String strErrorStartStatus;
+    private String strErrorStopStatus;
+    private boolean isPrint;
     private int id = 0;
     private int w,h;
 
     private TextView txtMultipleInputCount;
     private TextView txtMultiplePrintCount;
     private TextView txtMultiplePlanNo;
+    private TextView txtMultipleModle;
     private ImageView imgMultipleQrcode;
     private ListView subMultipleView;
+    private ImageView imgMultipleStartStatus;
+    private ImageView imgMultipleQcStatus;
+    private ImageView imgMultipleProductStatus;
+    private ImageView imgMultipleErrorBeginStatus;
+    private ImageView imgMultipleErrorEndStatus;
+    private Button btnMultipleStart;
+    private Button btnMultipleEnd;
     private Button btnMultipleQc;
     private Button btnMultipleProduct;
     private Button btnMultipleError;
@@ -102,9 +118,6 @@ public class SubDetailForMultipleActivity extends AppCompatActivity {
 
         createQrcode(strFlag+"_"+ UserInfo.getUserId(getApplicationContext()));
 
-        //获取汇总数据
-        getMultipleCount();
-
         //获取显示数据
         getMultipleDetailData();
     }
@@ -139,13 +152,70 @@ public class SubDetailForMultipleActivity extends AppCompatActivity {
     //初始化传入参数
     private void initBundle(){
         strTitle = this.getResources().getString(R.string.master_detail1);
+        isPrint = false;
 
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         strFlag = bundle.getString("Flag");
         strProcessId = bundle.getString("ProcessId");
         strModStatus = bundle.getString("ModStatus");
+        strOperateCount = bundle.getString("OperateCount");
+        strPrintCount = bundle.getString("PrintCount");
+        strStartStatus = bundle.getString("StartStatus");
+        strCheckStatus = bundle.getString("CheckStatus");
+        strUpStatus = bundle.getString("UpStatus");
+        strErrorStartStatus = bundle.getString("ErrorStartStatus");
+        strErrorStopStatus = bundle.getString("ErrorStopStatus");
+
+        if(strOperateCount.equals("")||strOperateCount.isEmpty()){
+            strOperateCount = "0";
+        }
+        if(strPrintCount.equals("")||strPrintCount.isEmpty()){
+            strPrintCount = "0";
+        }
+
+        //开始生产状态
+        if(strStartStatus.equals("0")||strStartStatus.isEmpty()){
+            imgMultipleStartStatus.setImageDrawable(getResources().getDrawable(R.drawable.fail));
+        }else{
+            imgMultipleStartStatus.setImageDrawable(getResources().getDrawable(R.drawable.ok));
+        }
+
+        //报首检状态
+        if(strCheckStatus.equals("0")||strCheckStatus.isEmpty()){
+            imgMultipleQcStatus.setImageDrawable(getResources().getDrawable(R.drawable.fail));
+        }else{
+            imgMultipleQcStatus.setImageDrawable(getResources().getDrawable(R.drawable.ok));
+        }
+
+        //上料检核状态
+        if(strUpStatus.equals("0")||strUpStatus.isEmpty()){
+            imgMultipleProductStatus.setImageDrawable(getResources().getDrawable(R.drawable.fail));
+        }else{
+            imgMultipleProductStatus.setImageDrawable(getResources().getDrawable(R.drawable.ok));
+        }
+
+        //异常开始状态
+        if(strErrorStartStatus.equals("0")||strErrorStartStatus.isEmpty()){
+            imgMultipleErrorBeginStatus.setImageDrawable(getResources().getDrawable(R.drawable.fail));
+        }else{
+            imgMultipleErrorBeginStatus.setImageDrawable(getResources().getDrawable(R.drawable.ok));
+        }
+
+        //异常结束状态
+        if(strErrorStopStatus.equals("0")||strErrorStopStatus.isEmpty()){
+            imgMultipleErrorEndStatus.setImageDrawable(getResources().getDrawable(R.drawable.fail));
+        }else{
+            imgMultipleErrorEndStatus.setImageDrawable(getResources().getDrawable(R.drawable.ok));
+        }
+
+        int iOperateCount = Integer.valueOf(strOperateCount) + 1;
+        int iPrintCount = Integer.valueOf(strPrintCount) + 1;
+
         txtMultiplePlanNo.setText(strFlag);
+        txtMultipleModle.setText(strModStatus);
+        txtMultipleInputCount.setText(String.valueOf(iOperateCount));
+        txtMultiplePrintCount.setText(String.valueOf(iPrintCount));
     }
 
     //初始化控件
@@ -153,15 +223,25 @@ public class SubDetailForMultipleActivity extends AppCompatActivity {
         txtMultipleInputCount = findViewById(R.id.txtMultipleInputCount);
         txtMultiplePrintCount = findViewById(R.id.txtMultiplePrintCount);
         txtMultiplePlanNo = findViewById(R.id.txtMultiplePlanNo);
+        txtMultipleModle = findViewById(R.id.txtMultipleModle);
         imgMultipleQrcode = findViewById(R.id.imgMultipleQrcode);
+        imgMultipleStartStatus = findViewById(R.id.imgMultipleStartStatus);
+        imgMultipleQcStatus = findViewById(R.id.imgMultipleQcStatus);
+        imgMultipleProductStatus = findViewById(R.id.imgMultipleProductStatus);
+        imgMultipleErrorBeginStatus = findViewById(R.id.imgMultipleErrorBeginStatus);
+        imgMultipleErrorEndStatus = findViewById(R.id.imgMultipleErrorEndStatus);
         subMultipleView = findViewById(R.id.subMultipleView);
 
+        btnMultipleStart = findViewById(R.id.btnMultipleStart);
+        btnMultipleEnd = findViewById(R.id.btnMultipleEnd);
         btnMultipleQc = findViewById(R.id.btnMultipleQc);
         btnMultipleProduct = findViewById(R.id.btnMultipleProduct);
         btnMultipleError = findViewById(R.id.btnMultipleError);
         btnMultipleSave = findViewById(R.id.btnMultipleSave);
         btnMultiplePrint = findViewById(R.id.btnMultiplePrint);
 
+        btnMultipleStart.setOnClickListener(new commandClickListener());
+        btnMultipleEnd.setOnClickListener(new commandClickListener());
         btnMultipleQc.setOnClickListener(new commandClickListener());
         btnMultipleProduct.setOnClickListener(new commandClickListener());
         btnMultipleError.setOnClickListener(new commandClickListener());
@@ -177,18 +257,32 @@ public class SubDetailForMultipleActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             switch (view.getId()){
-                case R.id.btnMultipleSave:
-                    saveMultipleToT100("insert");
+                case R.id.btnMultipleStart: //开始生产
+                    saveMultipleToT100("insert","10","B");
                     break;
-                case R.id.btnMultiplePrint:
-                    saveMultipleToT100("print");
+                case R.id.btnMultipleEnd:   //异常结束
+                    saveMultipleToT100("insert","14","E");
                     break;
-                case R.id.btnMultipleQc:
-                    saveMultipleToT100("check");
+                case R.id.btnMultipleSave:  //保存数据
+                    saveMultipleToT100("save","","V");
+                    isPrint = true;
                     break;
-                case R.id.btnMultipleProduct:
+                case R.id.btnMultiplePrint: //打印数据
+                    if(isPrint){
+                        saveMultipleToT100("print","","P");
+                    }else{
+                        MyToast.myShow(SubDetailForMultipleActivity.this,"请先保存数据,再打印",2,0);
+                    }
+                    isPrint = false;
                     break;
-                case R.id.btnMultipleError:
+                case R.id.btnMultipleQc:    //报首检已报首检:F,首检合格：K
+                    saveMultipleToT100("insert","11","F");
+                    break;
+                case R.id.btnMultipleProduct:   //上料检核
+                    saveMultipleToT100("insert","12","M");
+                    break;
+                case R.id.btnMultipleError:     //异常开始
+                    saveMultipleToT100("insert","13","S");
                     break;
             }
         }
@@ -225,12 +319,6 @@ public class SubDetailForMultipleActivity extends AppCompatActivity {
         }catch (WriterException e){
             e.printStackTrace();
         }
-    }
-
-    //获取报工汇总数据
-    private void getMultipleCount(){
-        txtMultipleInputCount.setText("1");
-        txtMultiplePrintCount.setText("1");
     }
 
     //获取清单
@@ -324,7 +412,11 @@ public class SubDetailForMultipleActivity extends AppCompatActivity {
         }
     }
 
-    private boolean checkListItemQuantity(){
+    private boolean checkListItemQuantity(String strAction){
+        if(strAction.equals("insert")){
+            return true;
+        }
+
         for(int i= 0;i<multipleDetailAdapter.getCount();i++){
             LinearLayout linearLayout = (LinearLayout)subMultipleView.getAdapter().getView(i,null,null);
             TextView txtMultipleDetailProductName = (TextView)linearLayout.findViewById(R.id.txtMultipleDetailProductName);
@@ -347,9 +439,11 @@ public class SubDetailForMultipleActivity extends AppCompatActivity {
         return true;
     }
 
-    private void saveMultipleToT100(String strAction){
-        if(checkListItemQuantity()){
-            for(int i= 0;i<multipleDetailAdapter.getCount();i++){
+    private void saveMultipleToT100(String strAction,String strActionId,String qcstatus){
+        int iCount = multipleDetailAdapter.getCount();
+
+        if(checkListItemQuantity(strAction)){
+            for(int i= 0;i<iCount;i++){
                 LinearLayout linearLayout = (LinearLayout)subMultipleView.getAdapter().getView(i,null,null);
                 TextView txtMultipleDetailProductCode = (TextView)linearLayout.findViewById(R.id.txtMultipleDetailProductCode);
                 TextView txtMultipleDetailDocno = (TextView)linearLayout.findViewById(R.id.txtMultipleDetailDocno);
@@ -358,6 +452,7 @@ public class SubDetailForMultipleActivity extends AppCompatActivity {
                 TextView txtMultipleDetailProcess = (TextView)linearLayout.findViewById(R.id.txtMultipleDetailProcess);
                 TextView txtMultipleDetailDevice = (TextView)linearLayout.findViewById(R.id.txtMultipleDetailDevice);
                 TextView txtMultipleDetailLots = (TextView)linearLayout.findViewById(R.id.txtMultipleDetailLots);
+                TextView txtMultipleDetailEmployee = (TextView)linearLayout.findViewById(R.id.txtMultipleDetailEmployee);
 
                 String strQuantity;
                 if(strModStatus.equals("2")||strModStatus.equals("3")){
@@ -373,14 +468,15 @@ public class SubDetailForMultipleActivity extends AppCompatActivity {
                 String strProcess = txtMultipleDetailProcess.getText().toString();
                 String strDevice = txtMultipleDetailDevice.getText().toString();
                 String strLots = txtMultipleDetailLots.getText().toString();
+                String strEmployee = txtMultipleDetailEmployee.getText().toString();
                 String strProductDocno = multipleDetailAdapter.getProductDocno(i);
 
-                saveDataToT100(strAction,strProductCode,strDocno,strPlanDate,strProcessId,strProcess,strDevice,strLots,strQuantity,strProductDocno,i);
+                saveDataToT100(strAction,strActionId,qcstatus,strProductCode,strDocno,strPlanDate,strProcessId,strProcess,strDevice,strLots,strQuantity,strProductDocno,i,strEmployee);
             }
         }
     }
 
-    private void saveDataToT100(String action,String strProductCode,String strDocno,String strPlanDate,String strProcessId,String strProcess,String strDevice,String strLots,String strQuantity,String strProductDocno,int i){
+    private void saveDataToT100(String action,String actionid,String qcstatus,String strProductCode,String strDocno,String strPlanDate,String strProcessId,String strProcess,String strDevice,String strLots,String strQuantity,String strProductDocno,int i,String strEmployee){
         //显示进度条
         if(loadingDialog == null){
             loadingDialog = new LoadingDialog(SubDetailForMultipleActivity.this,"数据提交中",R.drawable.dialog_loading);
@@ -392,7 +488,6 @@ public class SubDetailForMultipleActivity extends AppCompatActivity {
             public void subscribe(ObservableEmitter<List<Map<String, Object>>> e) throws Exception {
                 //初始化T100服务名
                 String webServiceName = "WorkReportRequestGen";
-                String qcstatus = "PY";
 
                 //发送服务器请求
                 T100ServiceHelper t100ServiceHelper = new T100ServiceHelper();
@@ -410,11 +505,18 @@ public class SubDetailForMultipleActivity extends AppCompatActivity {
                         "&lt;Field name=\"sffb010\" value=\""+ strDevice +"\"/&gt;\n"+  //机器编号
                         "&lt;Field name=\"sffb029\" value=\""+ strProductCode +"\"/&gt;\n"+  //报工料号
                         "&lt;Field name=\"sffb017\" value=\""+ strQuantity +"\"/&gt;\n"+  //良品数量
+                        "&lt;Field name=\"processid\" value=\""+ strProcessId +"\"/&gt;\n"+  //工艺项次
                         "&lt;Field name=\"process\" value=\""+ strProcess +"\"/&gt;\n"+  //工序
                         "&lt;Field name=\"lots\" value=\""+ strLots +"\"/&gt;\n"+  //批次
                         "&lt;Field name=\"sffbdocno\" value=\""+ strProductDocno +"\"/&gt;\n"+  //报工单号
-                        "&lt;Field name=\"qcstatus\" value=\""+ qcstatus +"\"/&gt;\n"+  //首检状态
+                        "&lt;Field name=\"qcstatus\" value=\""+ qcstatus +"\"/&gt;\n"+  //状态
+                        "&lt;Field name=\"planno\" value=\""+ strFlag +"\"/&gt;\n"+  //计划单号
+                        "&lt;Field name=\"planseq\" value=\""+ txtMultipleInputCount.getText().toString() +"\"/&gt;\n"+  //报工次数
+                        "&lt;Field name=\"planuser\" value=\""+ strEmployee +"\"/&gt;\n"+  //生产人员
+                        "&lt;Field name=\"errorlots\" value=\""+ 1 +"\"/&gt;\n"+  //异常批次
+                        "&lt;Field name=\"models\" value=\""+ strModStatus +"\"/&gt;\n"+  //同模类型
                         "&lt;Field name=\"act\" value=\""+ action +"\"/&gt;\n"+  //执行动作
+                        "&lt;Field name=\"actcode\" value=\""+ actionid +"\"/&gt;\n"+  //执行命令ID
                         "&lt;Detail name=\"s_detail1\" node_id=\"1_1\"&gt;\n"+
                         "&lt;Record&gt;\n"+
                         "&lt;Field name=\"sffyucseq\" value=\"1.0\"/&gt;\n"+
@@ -463,13 +565,32 @@ public class SubDetailForMultipleActivity extends AppCompatActivity {
                 if(statusCode.equals("0")){
                     String strDocno="";
 
-                    if(mapResponseList.size()> 0) {
-                        for (Map<String, Object> mResponse : mapResponseList) {
-                            strDocno = mResponse.get("Docno").toString();
-                            multipleDetailAdapter.updateData(i,subMultipleView,strDocno);
+                    if(action.equals("save")){
+                        if(mapResponseList.size()> 0) {
+                            for (Map<String, Object> mResponse : mapResponseList) {
+                                strDocno = mResponse.get("Docno").toString();
+                                multipleDetailAdapter.updateData(i,subMultipleView,strDocno);
+                            }
                         }
                     }
                     MyToast.myShow(SubDetailForMultipleActivity.this, statusDescription, 1, 1);
+
+                    if(action.equals("print")){
+                        finish();
+                    }else{
+                        if(actionid.equals("10")){
+                            imgMultipleStartStatus.setImageDrawable(getResources().getDrawable(R.drawable.ok));
+                        }else if(actionid.equals("11")){
+                            imgMultipleQcStatus.setImageDrawable(getResources().getDrawable(R.drawable.ok));
+                        }else if(actionid.equals("12")){
+                            imgMultipleProductStatus.setImageDrawable(getResources().getDrawable(R.drawable.ok));
+                        }else if(actionid.equals("13")){
+                            imgMultipleErrorBeginStatus.setImageDrawable(getResources().getDrawable(R.drawable.ok));
+                        }else if(actionid.equals("14")){
+                            imgMultipleErrorEndStatus.setImageDrawable(getResources().getDrawable(R.drawable.ok));
+                        }
+                    }
+
                 }else{
                     MyToast.myShow(SubDetailForMultipleActivity.this, statusDescription, 0, 1);
                 }

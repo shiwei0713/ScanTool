@@ -169,7 +169,7 @@ public class SubQualityCheckActivity extends AppCompatActivity {
             public void subscribe(ObservableEmitter<List<Map<String, Object>>> e) throws Exception {
                 //初始化T100服务名
                 String webServiceName = "ProductListGet";
-                String strwhere = " sfncuc005 IN ('PY','PC')";
+                String strwhere = " sffyuc004 ='F'";
 
                 //发送服务器请求
                 T100ServiceHelper t100ServiceHelper = new T100ServiceHelper();
@@ -184,7 +184,7 @@ public class SubQualityCheckActivity extends AppCompatActivity {
                         "&lt;Document/&gt;\n";
                 String strResponse = t100ServiceHelper.getT100Data(requestBody,webServiceName,getApplicationContext(),"");
                 mapResponseStatus = t100ServiceHelper.getT100StatusData(strResponse);
-                mapResponseList = t100ServiceHelper.getT100JsonProductData(strResponse,"workorder");
+                mapResponseList = t100ServiceHelper.getT100JsonPqcData(strResponse,"workorder");
 
                 e.onNext(mapResponseStatus);
                 e.onNext(mapResponseList);
@@ -242,7 +242,7 @@ public class SubQualityCheckActivity extends AppCompatActivity {
                 public void subscribe(ObservableEmitter<List<Map<String, Object>>> e) throws Exception {
                     //初始化T100服务名
                     String webServiceName = "WorkReportRequestGen";
-                    String qcstatus = "PC";
+                    String qcstatus = "K";
                     String action = "check";
 
                     String strPlanDate = subAdapter.getItemValue(position,"PlanDate");
@@ -252,6 +252,8 @@ public class SubQualityCheckActivity extends AppCompatActivity {
                     String strProductCode = subAdapter.getItemValue(position,"ProductCode");
                     String strProcess = subAdapter.getItemValue(position,"Process");
                     String strLots = subAdapter.getItemValue(position,"Lots");
+                    String strFlag = subAdapter.getItemValue(position,"Flag");
+                    String strSeq = subAdapter.getItemValue(position,"OperateCount");
 
                     //发送服务器请求
                     T100ServiceHelper t100ServiceHelper = new T100ServiceHelper();
@@ -270,6 +272,8 @@ public class SubQualityCheckActivity extends AppCompatActivity {
                             "&lt;Field name=\"process\" value=\""+ strProcess +"\"/&gt;\n"+  //工序
                             "&lt;Field name=\"lots\" value=\""+ strLots +"\"/&gt;\n"+  //批次
                             "&lt;Field name=\"qcstatus\" value=\""+ qcstatus +"\"/&gt;\n"+  //首检状态
+                            "&lt;Field name=\"planno\" value=\""+ strFlag +"\"/&gt;\n"+  //计划单号
+                            "&lt;Field name=\"planseq\" value=\""+ strSeq +"\"/&gt;\n"+  //报工次数
                             "&lt;Field name=\"act\" value=\""+ action +"\"/&gt;\n"+  //执行动作
                             "&lt;Detail name=\"s_detail1\" node_id=\"1_1\"&gt;\n"+
                             "&lt;Record&gt;\n"+

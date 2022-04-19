@@ -172,6 +172,15 @@ public class SubActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        //初始化清单数据
+        strType = "1";
+        getSubListData();
+    }
+
     //扫描结果解析
     private void scanResult(String qrContent, Context context, Intent intent){
 
@@ -249,6 +258,8 @@ public class SubActivity extends AppCompatActivity {
             TextView txtLots = view.findViewById(R.id.txtLots);
             TextView txtSubFlag = view.findViewById(R.id.txtSubFlag);
             TextView txtSubModStatus = view.findViewById(R.id.txtSubModStatus);
+            TextView txtSubOperateCount = view.findViewById(R.id.txtSubOperateCount);
+            TextView txtSubPrintCount = view.findViewById(R.id.txtSubPrintCount);
             String modStatus = txtSubModStatus.getText().toString();
 
 //            if(modStatus.equals("2")||modStatus.equals("3")||modStatus.equals("4")){
@@ -257,6 +268,13 @@ public class SubActivity extends AppCompatActivity {
                 bundle.putString("Flag",txtSubFlag.getText().toString());
                 bundle.putString("ProcessId",txtProcessId.getText().toString());
                 bundle.putString("ModStatus",modStatus);
+                bundle.putString("OperateCount",txtSubOperateCount.getText().toString());
+                bundle.putString("PrintCount",txtSubPrintCount.getText().toString());
+                bundle.putString("StartStatus",subAdapter.getItemValue(i,"StartStatus"));
+                bundle.putString("CheckStatus",subAdapter.getItemValue(i,"CheckStatus"));
+                bundle.putString("UpStatus",subAdapter.getItemValue(i,"UpStatus"));
+                bundle.putString("ErrorStartStatus",subAdapter.getItemValue(i,"ErrorStartStatus"));
+                bundle.putString("ErrorStopStatus",subAdapter.getItemValue(i,"ErrorStopStatus"));
                 intent.putExtras(bundle);
                 startActivity(intent);
 //            }else{

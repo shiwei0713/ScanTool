@@ -79,6 +79,8 @@ public class SubAdapter extends BaseAdapter {
             holder.listSubBtnConfirm = view.findViewById(R.id.listSubBtnConfirm);
             holder.txtSubFlag = view.findViewById(R.id.txtSubFlag);
             holder.txtSubModStatus = view.findViewById(R.id.txtSubModStatus);
+            holder.txtSubOperateCount = view.findViewById(R.id.txtSubOperateCount);
+            holder.txtSubPrintCount = view.findViewById(R.id.txtSubPrintCount);
 
             view.setTag(holder);
         }else{
@@ -103,17 +105,22 @@ public class SubAdapter extends BaseAdapter {
         holder.txtLots.setText((String)mData.get(i).get("Lots"));
         holder.txtSubFlag.setText((String)mData.get(i).get("Flag"));
         holder.txtSubModStatus.setText((String)mData.get(i).get("ModStatus"));
+        holder.txtSubOperateCount.setText((String)mData.get(i).get("OperateCount"));
+        holder.txtSubPrintCount.setText((String)mData.get(i).get("PrintCount"));
         holder.status = (String)mData.get(i).get("Status");
+        holder.StartStatus = (String)mData.get(i).get("StartStatus");
+        holder.CheckStatus = (String)mData.get(i).get("CheckStatus");
+        holder.UpStatus = (String)mData.get(i).get("UpStatus");
+        holder.ErrorStartStatus = (String)mData.get(i).get("ErrorStartStatus");
+        holder.ErrorStopStatus = (String)mData.get(i).get("ErrorStopStatus");
         holder.txtSubStatus.setText(holder.status);
 
-        if(holder.status.equals("PY")){
+        if(holder.status.equals("F")){
             holder.listSubBtnConfirm.setVisibility(View.VISIBLE);
             holder.listSubStatus.setImageDrawable(view.getResources().getDrawable(R.drawable.first_check));
         }else{
-            if(holder.status.equals("PC")) {
-                holder.listSubBtnConfirm.setVisibility(View.GONE);
-                holder.listSubStatus.setImageDrawable(view.getResources().getDrawable(R.drawable.ready_checkpqc));
-            }
+            holder.listSubBtnConfirm.setVisibility(View.GONE);
+            holder.listSubStatus.setImageDrawable(view.getResources().getDrawable(R.drawable.ready_checkpqc));
         }
 
         holder.listSubBtnConfirm.setOnClickListener(mUpdateClickListener);
@@ -136,6 +143,8 @@ public class SubAdapter extends BaseAdapter {
         TextView txtDocno;
         TextView txtEmployee;
         TextView txtLots;
+        TextView txtSubOperateCount;
+        TextView txtSubPrintCount;
         ImageView listSubStatus;
         TextView txtSubStatus;
         Button listSubBtnConfirm;
@@ -143,6 +152,11 @@ public class SubAdapter extends BaseAdapter {
         TextView txtSubModStatus;
 
         String status;
+        String StartStatus;
+        String CheckStatus;
+        String UpStatus;
+        String ErrorStartStatus;
+        String ErrorStopStatus;
     }
 
     public static abstract class UpdateClickListener implements View.OnClickListener{

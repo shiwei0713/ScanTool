@@ -148,10 +148,10 @@
     <string name="list_detail_button8">连接打印机</string>
     <string name="list_detail_button9">开始任务</string>
     <string name="list_detail_button10">停止任务</string>
-    <string name="list_detail_button11">生产异常</string>
+    <string name="list_detail_button11">异常开始</string>
     <string name="list_detail_button12">上料检核</string>
     <string name="list_detail_button13">开始生产</string>
-    <string name="list_detail_button14">结束生产</string>
+    <string name="list_detail_button14">异常结束</string>
     <string name="detail_title4">发料总量:</string>
     <string name="detail_detail_quantity_pcs_title">箱数:</string>
     <string name="detail_detail_quantity">备货数/总箱数:</string>

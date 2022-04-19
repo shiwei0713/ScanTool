@@ -33,6 +33,13 @@
             android:layout_height="wrap_content"
             android:textColor="@color/master_loginout" />
 
+        <TextView
+            android:id="@+id/txtMultipleModle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:textColor="@color/master_loginout" />
+
     </LinearLayout>
 
     <LinearLayout
@@ -186,28 +193,58 @@
             android:layout_marginLeft="10dp"
             android:orientation="vertical">
 
-            <Button
-                android:id="@+id/btnMultipleEnd"
-                android:layout_width="70dp"
-                android:layout_height="25dp"
-                android:background="@drawable/list_flag_selector"
-                android:textColor="@color/green"
-                android:textStyle="normal"
-                android:focusable="false"
-                android:textSize="@dimen/list_detail_button"
-                android:text="@string/list_detail_button14" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/btnMultipleError"
-                android:layout_width="70dp"
-                android:layout_height="25dp"
-                android:background="@drawable/list_flag_selector"
+                <Button
+                    android:id="@+id/btnMultipleError"
+                    android:layout_width="70dp"
+                    android:layout_height="25dp"
+                    android:background="@drawable/list_flag_selector"
+                    android:textColor="@color/master_message"
+                    android:textStyle="normal"
+                    android:focusable="false"
+                    android:textSize="@dimen/list_detail_button"
+                    android:text="@string/list_detail_button11" />
+
+                <ImageView
+                    android:id="@+id/imgMultipleErrorBeginStatus"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_gravity="center_vertical"
+                    app:srcCompat="@drawable/fail" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:textColor="@color/master_message"
-                android:textStyle="normal"
-                android:focusable="false"
-                android:textSize="@dimen/list_detail_button"
-                android:text="@string/list_detail_button11" />
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btnMultipleEnd"
+                    android:layout_width="70dp"
+                    android:layout_height="25dp"
+                    android:background="@drawable/list_flag_selector"
+                    android:textColor="@color/green"
+                    android:textStyle="normal"
+                    android:focusable="false"
+                    android:textSize="@dimen/list_detail_button"
+                    android:text="@string/list_detail_button14" />
+
+                <ImageView
+                    android:id="@+id/imgMultipleErrorEndStatus"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_gravity="center_vertical"
+                    app:srcCompat="@drawable/fail" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
