@@ -40,6 +40,19 @@
             android:layout_marginLeft="10dp"
             android:textColor="@color/master_loginout" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/master_loginout"
+            android:layout_marginLeft="10dp"
+            android:text="@string/sub_detail_multiple_title5"/>
+
+        <TextView
+            android:id="@+id/txtMultipleVersion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/master_loginout" />
+
     </LinearLayout>
 
     <LinearLayout
@@ -150,6 +163,13 @@
                     android:textSize="@dimen/list_detail_button"
                     android:text="@string/list_detail_button0" />
 
+                <TextView
+                    android:id="@+id/txtMultipleQcCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="3dp"
+                    android:textColor="@color/master_loginout" />
+
             </LinearLayout>
 
             <LinearLayout
@@ -216,6 +236,13 @@
                     android:layout_marginLeft="5dp"
                     android:layout_gravity="center_vertical"
                     app:srcCompat="@drawable/fail" />
+
+                <TextView
+                    android:id="@+id/txtMultipleErrorCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:textColor="@color/master_loginout" />
 
             </LinearLayout>
 

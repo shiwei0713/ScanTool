@@ -6,7 +6,10 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -40,6 +43,8 @@ import io.reactivex.schedulers.Schedulers;
 import static com.google.zxing.integration.android.IntentIntegrator.REQUEST_CODE;
 
 public class SubMaterialListActivity extends AppCompatActivity {
+
+    private static final String SCANACTION="com.android.server.scannerservice.broadcast";
 
     private String strTitle;
     private int intIndex;
@@ -75,7 +80,7 @@ public class SubMaterialListActivity extends AppCompatActivity {
         }
 
         //获取清单
-        getItemListData("");
+        getItemListData("","");
     }
 
     private void initView(){
@@ -125,16 +130,50 @@ public class SubMaterialListActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+
+        //注册广播接收器
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(SCANACTION);
+        intentFilter.setPriority(Integer.MAX_VALUE);
+        registerReceiver(scanReceiver,intentFilter);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        unregisterReceiver(scanReceiver);
+
+    }
+
+    //PDA扫描数据接收
+    private BroadcastReceiver scanReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if(intent.getAction().equals(SCANACTION)){
+                String qrContent = intent.getStringExtra("scannerdata");
+
+                if(qrContent!=null && qrContent.length()!=0){
+                    getItemImgData(qrContent);
+                }else{
+                    MyToast.myShow(context,"扫描失败,请重新扫描",0,0);
+                }
+            }
+        }
+    };
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if(requestCode==REQUEST_CODE){
             IntentResult intentResult = IntentIntegrator.parseActivityResult(resultCode,data);
             String qrContent = intentResult.getContents();
-            Intent intent = null;
 
             if(qrContent!=null && qrContent.length()!=0){
-
+                getItemImgData(qrContent);
             }else{
                 MyToast.myShow(this,"条码错误,请重新扫描"+qrContent,0,0);
             }
@@ -170,14 +209,14 @@ public class SubMaterialListActivity extends AppCompatActivity {
                     if(sQueryCondition.equals("")||sQueryCondition.isEmpty()){
                         sCondition = "";
                     }
-                    getItemListData(sCondition);
+                    getItemListData(sCondition,"");
                     break;
             }
         }
     }
 
     //获取清单
-    private void getItemListData(String strwhere){
+    private void getItemListData(String strwhere,String qrcode){
         //显示进度条
         if(loadingDialog==null){
             loadingDialog = new LoadingDialog(SubMaterialListActivity.this,"数据查询中",R.drawable.dialog_loading);
@@ -199,6 +238,7 @@ public class SubMaterialListActivity extends AppCompatActivity {
                         "&lt;Field name=\"site\" value=\""+UserInfo.getUserSiteId(getApplicationContext())+"\"/&gt;\n"+
                         "&lt;Field name=\"type\" value=\""+ strType +"\"/&gt;\n"+
                         "&lt;Field name=\"where\" value=\""+ strwhere +"\"/&gt;\n"+
+                        "&lt;Field name=\"qrcode\" value=\""+ qrcode +"\"/&gt;\n"+
                         "&lt;/Record&gt;\n"+
                         "&lt;/Parameter&gt;\n"+
                         "&lt;Document/&gt;\n";
@@ -242,6 +282,92 @@ public class SubMaterialListActivity extends AppCompatActivity {
             public void onComplete() {
                 subMaterialAdapter = new SubMaterialAdapter(mapResponseList,getApplicationContext());
                 subMaterialListView.setAdapter(subMaterialAdapter);
+
+                loadingDialog.dismiss();
+                loadingDialog = null;
+            }
+        });
+    }
+
+    //获取图片URL
+    private void getItemImgData(String qrcode){
+        //显示进度条
+        if(loadingDialog==null){
+            loadingDialog = new LoadingDialog(SubMaterialListActivity.this,"数据查询中",R.drawable.dialog_loading);
+            loadingDialog.show();
+        }
+
+        Observable.create(new ObservableOnSubscribe<List<Map<String,Object>>>(){
+            @Override
+            public void subscribe(ObservableEmitter<List<Map<String, Object>>> e) throws Exception {
+                //初始化T100服务名
+                String webServiceName = "ItemInfoGet";
+                String strType = "2";
+
+                //发送服务器请求
+                T100ServiceHelper t100ServiceHelper = new T100ServiceHelper();
+                String requestBody = "&lt;Parameter&gt;\n"+
+                        "&lt;Record&gt;\n"+
+                        "&lt;Field name=\"enterprise\" value=\""+ UserInfo.getUserEnterprise(getApplicationContext())+"\"/&gt;\n"+
+                        "&lt;Field name=\"site\" value=\""+UserInfo.getUserSiteId(getApplicationContext())+"\"/&gt;\n"+
+                        "&lt;Field name=\"type\" value=\""+ strType +"\"/&gt;\n"+
+                        "&lt;Field name=\"qrcode\" value=\""+ qrcode +"\"/&gt;\n"+
+                        "&lt;/Record&gt;\n"+
+                        "&lt;/Parameter&gt;\n"+
+                        "&lt;Document/&gt;\n";
+                String strResponse = t100ServiceHelper.getT100Data(requestBody,webServiceName,getApplicationContext(),"");
+                mapResponseStatus = t100ServiceHelper.getT100StatusData(strResponse);
+                mapResponseList = t100ServiceHelper.getT100JsonItemData(strResponse,"iteminfo");
+
+                e.onNext(mapResponseStatus);
+                e.onNext(mapResponseList);
+                e.onComplete();
+            }
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<List<Map<String, Object>>>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(List<Map<String, Object>> maps) {
+                if(mapResponseStatus.size()> 0){
+                    for(Map<String,Object> mStatus: mapResponseStatus){
+                        statusCode = mStatus.get("statusCode").toString();
+                        statusDescription = mStatus.get("statusDescription").toString();
+                    }
+                }else{
+                    MyToast.myShow(SubMaterialListActivity.this,"无数据",2,0);
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                MyToast.myShow(SubMaterialListActivity.this,"网络错误",0,0);
+                loadingDialog.dismiss();
+            }
+
+            @Override
+            public void onComplete() {
+                if(!statusCode.equals("0")){
+                    MyToast.myShow(SubMaterialListActivity.this,statusDescription,0,0);
+                }else{
+                    if(mapResponseList.size()> 0) {
+                        Intent intent = null;
+                        for (Map<String, Object> mResponse : mapResponseList) {
+                            String strUrl = mResponse.get("Url").toString();
+                            String strProduct = mResponse.get("ProductName").toString();
+
+                            intent = new Intent(SubMaterialListActivity.this,ShowMaterial.class);
+                            Bundle bundle=new Bundle();
+                            bundle.putString("url",strUrl);
+                            bundle.putString("title",strTitle);
+                            bundle.putString("product_name",strProduct);
+                            intent.putExtras(bundle);
+                            startActivity(intent);
+                        }
+                    }
+                }
 
                 loadingDialog.dismiss();
                 loadingDialog = null;

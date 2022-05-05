@@ -81,6 +81,7 @@ public class SubAdapter extends BaseAdapter {
             holder.txtSubModStatus = view.findViewById(R.id.txtSubModStatus);
             holder.txtSubOperateCount = view.findViewById(R.id.txtSubOperateCount);
             holder.txtSubPrintCount = view.findViewById(R.id.txtSubPrintCount);
+            holder.txtVersion = view.findViewById(R.id.txtVersion);
 
             view.setTag(holder);
         }else{
@@ -113,6 +114,7 @@ public class SubAdapter extends BaseAdapter {
         holder.UpStatus = (String)mData.get(i).get("UpStatus");
         holder.ErrorStartStatus = (String)mData.get(i).get("ErrorStartStatus");
         holder.ErrorStopStatus = (String)mData.get(i).get("ErrorStopStatus");
+        holder.txtVersion.setText((String)mData.get(i).get("Version"));
         holder.txtSubStatus.setText(holder.status);
 
         if(holder.status.equals("F")){
@@ -150,6 +152,7 @@ public class SubAdapter extends BaseAdapter {
         Button listSubBtnConfirm;
         TextView txtSubFlag;
         TextView txtSubModStatus;
+        TextView txtVersion;
 
         String status;
         String StartStatus;

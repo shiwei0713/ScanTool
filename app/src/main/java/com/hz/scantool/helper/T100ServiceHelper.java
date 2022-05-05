@@ -25,7 +25,7 @@ public class T100ServiceHelper {
 
     private static final String SERVICE_IP="192.168.210.3";
     private static final String SERVICE_LISTENER="topprd";   //toptst
-    private static final String SERVICE_ENTERPRISE="12";
+    private static final String SERVICE_ENTERPRISE="10";
     private static final String ARG_NETWORK_WLAN="外部网络";
     private static final String SERVICE_LAN_URL="http://192.168.210.3/wtopprd/ws/r/awsp900?WSDL";  //wtoptst
     private static final String SERVICE_WLAN_URL="http://119.97.210.146:8089/wtopprd/ws/r/awsp900?WSDL";  //wtoptst
@@ -358,6 +358,7 @@ public class T100ServiceHelper {
                 map.put("UpStatus", jsonObject.getString("erpUpStatus").trim());
                 map.put("ErrorStartStatus", jsonObject.getString("erpErrorStartStatus").trim());
                 map.put("ErrorStopStatus", jsonObject.getString("erpErrorStopStatus").trim());
+                map.put("Version", jsonObject.getString("erpVersion").trim());
                 map.put("Status", jsonObject.getString("erpStatus").trim());
                 detailList.add(map);
             } catch (Exception e) {
@@ -805,6 +806,7 @@ public class T100ServiceHelper {
                 JSONArray jsonArray = new JSONArray(strQrJson);
                 JSONObject jsonObject = jsonArray.getJSONObject(0);
                 map.put("Docno",jsonObject.getString("erpDocno").trim());
+                map.put("ErrorCount",jsonObject.getString("erpErrorCount").trim());
                 detailList.add(map);
             }catch (Exception e){
                 e.printStackTrace();

@@ -260,6 +260,7 @@ public class SubActivity extends AppCompatActivity {
             TextView txtSubModStatus = view.findViewById(R.id.txtSubModStatus);
             TextView txtSubOperateCount = view.findViewById(R.id.txtSubOperateCount);
             TextView txtSubPrintCount = view.findViewById(R.id.txtSubPrintCount);
+            TextView txtVersion = view.findViewById(R.id.txtVersion);
             String modStatus = txtSubModStatus.getText().toString();
 
 //            if(modStatus.equals("2")||modStatus.equals("3")||modStatus.equals("4")){
@@ -275,6 +276,7 @@ public class SubActivity extends AppCompatActivity {
                 bundle.putString("UpStatus",subAdapter.getItemValue(i,"UpStatus"));
                 bundle.putString("ErrorStartStatus",subAdapter.getItemValue(i,"ErrorStartStatus"));
                 bundle.putString("ErrorStopStatus",subAdapter.getItemValue(i,"ErrorStopStatus"));
+                bundle.putString("Version",txtVersion.getText().toString());
                 intent.putExtras(bundle);
                 startActivity(intent);
 //            }else{
@@ -309,7 +311,7 @@ public class SubActivity extends AppCompatActivity {
             public void subscribe(ObservableEmitter<List<Map<String, Object>>> e) throws Exception {
                 //初始化T100服务名
                 String webServiceName = "ProductListGet";
-                String strwhere = " sfncuc001='"+UserInfo.getUserId(getApplicationContext())+"'";
+                String strwhere = " sfaauc002='"+UserInfo.getUserId(getApplicationContext())+"'";
 
                 //发送服务器请求
                 T100ServiceHelper t100ServiceHelper = new T100ServiceHelper();
@@ -343,16 +345,12 @@ public class SubActivity extends AppCompatActivity {
                         statusCode = mStatus.get("statusCode").toString();
                         statusDescription = mStatus.get("statusDescription").toString();
 
-                        if(!statusCode.equals("0")){
-                            MyToast.myShow(SubActivity.this,statusDescription,0,0);
-                        }else{
+                        if(statusCode.equals("0")){
                             int progress = progressBar.getProgress();
                             progress = progress + 50;
                             progressBar.setProgress(progress);
                         }
                     }
-                }else{
-                    MyToast.myShow(SubActivity.this,"无备料数据",2,0);
                 }
             }
 
@@ -364,8 +362,10 @@ public class SubActivity extends AppCompatActivity {
 
             @Override
             public void onComplete() {
-                subAdapter = new SubAdapter(mapResponseList,getApplicationContext(),"CJ");
-                listView.setAdapter(subAdapter);
+                if(statusCode.equals("0")){
+                    subAdapter = new SubAdapter(mapResponseList,getApplicationContext(),"CJ");
+                    listView.setAdapter(subAdapter);
+                }
 
                 progressBar.setVisibility(View.GONE);
             }

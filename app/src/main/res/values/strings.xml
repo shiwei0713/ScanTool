@@ -258,6 +258,7 @@
     <string name="sub_detail_multiple_title2">打印次数:</string>
     <string name="sub_detail_multiple_title3">当前状态:</string>
     <string name="sub_detail_multiple_title4">计划单号:</string>
+    <string name="sub_detail_multiple_title5">Ver:</string>
     <string name="show_material_label1">零件号:</string>
     <string name="show_material_label2">零件图</string>
     <string name="show_material_label3">相似件</string>

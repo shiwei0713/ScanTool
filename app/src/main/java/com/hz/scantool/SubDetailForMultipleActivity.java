@@ -63,6 +63,9 @@ public class SubDetailForMultipleActivity extends AppCompatActivity {
     private String strUpStatus;
     private String strErrorStartStatus;
     private String strErrorStopStatus;
+    private String strVersion;
+    private String strErrorLots;
+    private String mRecordSet="";
     private boolean isPrint;
     private int id = 0;
     private int w,h;
@@ -71,6 +74,9 @@ public class SubDetailForMultipleActivity extends AppCompatActivity {
     private TextView txtMultiplePrintCount;
     private TextView txtMultiplePlanNo;
     private TextView txtMultipleModle;
+    private TextView txtMultipleVersion;
+    private TextView txtMultipleErrorCount;
+    private TextView txtMultipleQcCount;
     private ImageView imgMultipleQrcode;
     private ListView subMultipleView;
     private ImageView imgMultipleStartStatus;
@@ -166,6 +172,7 @@ public class SubDetailForMultipleActivity extends AppCompatActivity {
         strUpStatus = bundle.getString("UpStatus");
         strErrorStartStatus = bundle.getString("ErrorStartStatus");
         strErrorStopStatus = bundle.getString("ErrorStopStatus");
+        strVersion  = bundle.getString("Version");
 
         if(strOperateCount.equals("")||strOperateCount.isEmpty()){
             strOperateCount = "0";
@@ -216,6 +223,9 @@ public class SubDetailForMultipleActivity extends AppCompatActivity {
         txtMultipleModle.setText(strModStatus);
         txtMultipleInputCount.setText(String.valueOf(iOperateCount));
         txtMultiplePrintCount.setText(String.valueOf(iPrintCount));
+        txtMultipleVersion.setText(strVersion);
+        txtMultipleErrorCount.setText(strErrorStartStatus);
+        txtMultipleQcCount.setText(strCheckStatus);
     }
 
     //初始化控件
@@ -231,6 +241,9 @@ public class SubDetailForMultipleActivity extends AppCompatActivity {
         imgMultipleErrorBeginStatus = findViewById(R.id.imgMultipleErrorBeginStatus);
         imgMultipleErrorEndStatus = findViewById(R.id.imgMultipleErrorEndStatus);
         subMultipleView = findViewById(R.id.subMultipleView);
+        txtMultipleVersion = findViewById(R.id.txtMultipleVersion);
+        txtMultipleErrorCount = findViewById(R.id.txtMultipleErrorCount);
+        txtMultipleQcCount = findViewById(R.id.txtMultipleQcCount);
 
         btnMultipleStart = findViewById(R.id.btnMultipleStart);
         btnMultipleEnd = findViewById(R.id.btnMultipleEnd);
@@ -264,10 +277,12 @@ public class SubDetailForMultipleActivity extends AppCompatActivity {
                     saveMultipleToT100("insert","14","E");
                     break;
                 case R.id.btnMultipleSave:  //保存数据
+                    strErrorLots = txtMultipleErrorCount.getText().toString();
                     saveMultipleToT100("save","","V");
                     isPrint = true;
                     break;
                 case R.id.btnMultiplePrint: //打印数据
+                    strErrorLots = txtMultipleErrorCount.getText().toString();
                     if(isPrint){
                         saveMultipleToT100("print","","P");
                     }else{
@@ -276,13 +291,16 @@ public class SubDetailForMultipleActivity extends AppCompatActivity {
                     isPrint = false;
                     break;
                 case R.id.btnMultipleQc:    //报首检已报首检:F,首检合格：K
+                    strErrorLots = txtMultipleQcCount.getText().toString();
                     saveMultipleToT100("insert","11","F");
                     break;
                 case R.id.btnMultipleProduct:   //上料检核
                     saveMultipleToT100("insert","12","M");
                     break;
                 case R.id.btnMultipleError:     //异常开始
+                    strErrorLots = txtMultipleErrorCount.getText().toString();
                     saveMultipleToT100("insert","13","S");
+                    imgMultipleErrorEndStatus.setImageDrawable(getResources().getDrawable(R.drawable.fail));
                     break;
             }
         }
@@ -334,7 +352,7 @@ public class SubDetailForMultipleActivity extends AppCompatActivity {
             public void subscribe(ObservableEmitter<List<Map<String, Object>>> e) throws Exception {
                 //初始化T100服务名
                 String webServiceName = "ProductListGet";
-                String strwhere = " sfncuc004='"+strFlag+"' AND sfncuc009='"+strProcessId+"'";
+                String strwhere = " sfaauc014='"+strFlag+"' AND sfaauc007='"+strProcessId+"' AND sfaauc001="+strVersion;
                 String strType = "21";
 
                 //发送服务器请求
@@ -441,6 +459,7 @@ public class SubDetailForMultipleActivity extends AppCompatActivity {
 
     private void saveMultipleToT100(String strAction,String strActionId,String qcstatus){
         int iCount = multipleDetailAdapter.getCount();
+        mRecordSet="";
 
         if(checkListItemQuantity(strAction)){
             for(int i= 0;i<iCount;i++){
@@ -471,9 +490,95 @@ public class SubDetailForMultipleActivity extends AppCompatActivity {
                 String strEmployee = txtMultipleDetailEmployee.getText().toString();
                 String strProductDocno = multipleDetailAdapter.getProductDocno(i);
 
-                saveDataToT100(strAction,strActionId,qcstatus,strProductCode,strDocno,strPlanDate,strProcessId,strProcess,strDevice,strLots,strQuantity,strProductDocno,i,strEmployee);
+//                saveDataToT100(strAction,strActionId,qcstatus,strProductCode,strDocno,strPlanDate,strProcessId,strProcess,strDevice,strLots,strQuantity,strProductDocno,i,strEmployee);
+                genRecordSetStr(strAction,strActionId,qcstatus,strProductCode,strDocno,strPlanDate,strProcessId,strProcess,strDevice,strLots,strQuantity,strProductDocno,i,strEmployee);
             }
+            saveData2ToT100(strAction,strActionId);
         }
+    }
+
+    private void genRecordSetStr(String action,String actionid,String qcstatus,String strProductCode,String strDocno,String strPlanDate,String strProcessId,String strProcess,String strDevice,String strLots,String strQuantity,String strProductDocno,int i,String strEmployee){
+        long timeCurrentTimeMillis = System.currentTimeMillis();
+        SimpleDateFormat simpleTimeFormat = new SimpleDateFormat("HH:mm:ss",Locale.getDefault());
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY/MM/DD",Locale.getDefault());
+        String currentTime = simpleTimeFormat.format(timeCurrentTimeMillis);
+        String currentDate = simpleDateFormat.format(timeCurrentTimeMillis);
+
+        //生成数据集合
+        if(mRecordSet==""||mRecordSet.isEmpty()){
+            mRecordSet = "&lt;Master name=\"sffb_t\" node_id=\""+i+"\"&gt;\n"+
+                    "&lt;Record&gt;\n"+
+                    "&lt;Field name=\"sffbsite\" value=\""+ UserInfo.getUserSiteId(getApplicationContext())+"\"/&gt;\n"+
+                    "&lt;Field name=\"sffbent\" value=\""+UserInfo.getUserEnterprise(getApplicationContext())+"\"/&gt;\n"+
+                    "&lt;Field name=\"sffbdocdt\" value=\""+strPlanDate+"\"/&gt;\n"+
+                    "&lt;Field name=\"sffb002\" value=\""+ UserInfo.getUserId(getApplicationContext()) +"\"/&gt;\n"+  //异动人员
+                    "&lt;Field name=\"sffb004\" value=\""+ strWorkTime +"\"/&gt;\n"+  //班次
+                    "&lt;Field name=\"sffb005\" value=\""+ strDocno +"\"/&gt;\n"+  //工单单号
+                    "&lt;Field name=\"sffbseq\" value=\""+ strProcessId +"\"/&gt;\n"+  //工艺项次
+                    "&lt;Field name=\"sffb010\" value=\""+ strDevice +"\"/&gt;\n"+  //机器编号
+                    "&lt;Field name=\"sffb012\" value=\""+ currentDate +"\"/&gt;\n"+  //批量生产止日期
+                    "&lt;Field name=\"sffb013\" value=\""+ currentTime +"\"/&gt;\n"+  //批量生产止时间
+                    "&lt;Field name=\"sffb029\" value=\""+ strProductCode +"\"/&gt;\n"+  //报工料号
+                    "&lt;Field name=\"sffb017\" value=\""+ strQuantity +"\"/&gt;\n"+  //良品数量
+                    "&lt;Field name=\"processid\" value=\""+ strProcessId +"\"/&gt;\n"+  //工艺项次
+                    "&lt;Field name=\"process\" value=\""+ strProcess +"\"/&gt;\n"+  //工序
+                    "&lt;Field name=\"lots\" value=\""+ strLots +"\"/&gt;\n"+  //批次
+                    "&lt;Field name=\"sffbdocno\" value=\""+ strProductDocno +"\"/&gt;\n"+  //报工单号
+                    "&lt;Field name=\"qcstatus\" value=\""+ qcstatus +"\"/&gt;\n"+  //状态
+                    "&lt;Field name=\"planno\" value=\""+ strFlag +"\"/&gt;\n"+  //计划单号
+                    "&lt;Field name=\"planseq\" value=\""+ txtMultipleInputCount.getText().toString() +"\"/&gt;\n"+  //报工次数
+                    "&lt;Field name=\"planuser\" value=\""+ strEmployee +"\"/&gt;\n"+  //生产人员
+                    "&lt;Field name=\"errorlots\" value=\""+ strErrorLots +"\"/&gt;\n"+  //异常批次
+                    "&lt;Field name=\"models\" value=\""+ strModStatus +"\"/&gt;\n"+  //同模类型
+                    "&lt;Field name=\"version\" value=\""+ strVersion +"\"/&gt;\n"+  //版本
+                    "&lt;Field name=\"act\" value=\""+ action +"\"/&gt;\n"+  //执行动作
+                    "&lt;Field name=\"actcode\" value=\""+ actionid +"\"/&gt;\n"+  //执行命令ID
+                    "&lt;Detail name=\"s_detail1\" node_id=\"1_1\"&gt;\n"+
+                    "&lt;Record&gt;\n"+
+                    "&lt;Field name=\"sffyucseq\" value=\"1.0\"/&gt;\n"+
+                    "&lt;/Record&gt;\n"+
+                    "&lt;/Detail&gt;\n"+
+                    "&lt;Memo/&gt;\n"+
+                    "&lt;Attachment count=\"0\"/&gt;\n"+
+                    "&lt;/Record&gt;\n"+
+                    "&lt;/Master&gt;\n";
+        }else{
+            mRecordSet = mRecordSet + "&lt;Master name=\"sffb_t\" node_id=\""+i+"\"&gt;\n"+
+                    "&lt;Record&gt;\n"+
+                    "&lt;Field name=\"sffbsite\" value=\""+ UserInfo.getUserSiteId(getApplicationContext())+"\"/&gt;\n"+
+                    "&lt;Field name=\"sffbent\" value=\""+UserInfo.getUserEnterprise(getApplicationContext())+"\"/&gt;\n"+
+                    "&lt;Field name=\"sffbdocdt\" value=\""+strPlanDate+"\"/&gt;\n"+
+                    "&lt;Field name=\"sffb002\" value=\""+ UserInfo.getUserId(getApplicationContext()) +"\"/&gt;\n"+  //异动人员
+                    "&lt;Field name=\"sffb004\" value=\""+ strWorkTime +"\"/&gt;\n"+  //班次
+                    "&lt;Field name=\"sffb005\" value=\""+ strDocno +"\"/&gt;\n"+  //工单单号
+                    "&lt;Field name=\"sffbseq\" value=\""+ strProcessId +"\"/&gt;\n"+  //工艺项次
+                    "&lt;Field name=\"sffb010\" value=\""+ strDevice +"\"/&gt;\n"+  //机器编号
+                    "&lt;Field name=\"sffb029\" value=\""+ strProductCode +"\"/&gt;\n"+  //报工料号
+                    "&lt;Field name=\"sffb017\" value=\""+ strQuantity +"\"/&gt;\n"+  //良品数量
+                    "&lt;Field name=\"processid\" value=\""+ strProcessId +"\"/&gt;\n"+  //工艺项次
+                    "&lt;Field name=\"process\" value=\""+ strProcess +"\"/&gt;\n"+  //工序
+                    "&lt;Field name=\"lots\" value=\""+ strLots +"\"/&gt;\n"+  //批次
+                    "&lt;Field name=\"sffbdocno\" value=\""+ strProductDocno +"\"/&gt;\n"+  //报工单号
+                    "&lt;Field name=\"qcstatus\" value=\""+ qcstatus +"\"/&gt;\n"+  //状态
+                    "&lt;Field name=\"planno\" value=\""+ strFlag +"\"/&gt;\n"+  //计划单号
+                    "&lt;Field name=\"planseq\" value=\""+ txtMultipleInputCount.getText().toString() +"\"/&gt;\n"+  //报工次数
+                    "&lt;Field name=\"planuser\" value=\""+ strEmployee +"\"/&gt;\n"+  //生产人员
+                    "&lt;Field name=\"errorlots\" value=\""+ strErrorLots +"\"/&gt;\n"+  //异常批次
+                    "&lt;Field name=\"models\" value=\""+ strModStatus +"\"/&gt;\n"+  //同模类型
+                    "&lt;Field name=\"version\" value=\""+ strVersion +"\"/&gt;\n"+  //版本
+                    "&lt;Field name=\"act\" value=\""+ action +"\"/&gt;\n"+  //执行动作
+                    "&lt;Field name=\"actcode\" value=\""+ actionid +"\"/&gt;\n"+  //执行命令ID
+                    "&lt;Detail name=\"s_detail1\" node_id=\"1_1\"&gt;\n"+
+                    "&lt;Record&gt;\n"+
+                    "&lt;Field name=\"sffyucseq\" value=\"1.0\"/&gt;\n"+
+                    "&lt;/Record&gt;\n"+
+                    "&lt;/Detail&gt;\n"+
+                    "&lt;Memo/&gt;\n"+
+                    "&lt;Attachment count=\"0\"/&gt;\n"+
+                    "&lt;/Record&gt;\n"+
+                    "&lt;/Master&gt;\n";
+        }
+
     }
 
     private void saveDataToT100(String action,String actionid,String qcstatus,String strProductCode,String strDocno,String strPlanDate,String strProcessId,String strProcess,String strDevice,String strLots,String strQuantity,String strProductDocno,int i,String strEmployee){
@@ -585,6 +690,148 @@ public class SubDetailForMultipleActivity extends AppCompatActivity {
                         }else if(actionid.equals("12")){
                             imgMultipleProductStatus.setImageDrawable(getResources().getDrawable(R.drawable.ok));
                         }else if(actionid.equals("13")){
+                            imgMultipleErrorBeginStatus.setImageDrawable(getResources().getDrawable(R.drawable.ok));
+                        }else if(actionid.equals("14")){
+                            imgMultipleErrorEndStatus.setImageDrawable(getResources().getDrawable(R.drawable.ok));
+                        }
+                    }
+
+                }else{
+                    MyToast.myShow(SubDetailForMultipleActivity.this, statusDescription, 0, 1);
+                }
+                loadingDialog.dismiss();
+            }
+        });
+    }
+
+    private void saveData2ToT100(String action,String actionid){
+        //显示进度条
+        if(loadingDialog == null){
+            loadingDialog = new LoadingDialog(SubDetailForMultipleActivity.this,"数据提交中",R.drawable.dialog_loading);
+            loadingDialog.show();
+        }
+
+        Observable.create(new ObservableOnSubscribe<List<Map<String,Object>>>() {
+            @Override
+            public void subscribe(ObservableEmitter<List<Map<String, Object>>> e) throws Exception {
+                //初始化T100服务名
+                String webServiceName = "WorkReportRequestGen";
+
+                //发送服务器请求
+                T100ServiceHelper t100ServiceHelper = new T100ServiceHelper();
+                String requestBody = "&lt;Document&gt;\n"+
+                        "&lt;RecordSet id=\"1\"&gt;\n"+
+                        mRecordSet+
+//                        "&lt;Master name=\"sffb_t\" node_id=\"1\"&gt;\n"+
+//                        "&lt;Record&gt;\n"+
+//                        "&lt;Field name=\"sffbsite\" value=\""+ UserInfo.getUserSiteId(getApplicationContext())+"\"/&gt;\n"+
+//                        "&lt;Field name=\"sffbent\" value=\""+UserInfo.getUserEnterprise(getApplicationContext())+"\"/&gt;\n"+
+//                        "&lt;Field name=\"sffbdocdt\" value=\""+strPlanDate+"\"/&gt;\n"+
+//                        "&lt;Field name=\"sffb002\" value=\""+ UserInfo.getUserId(getApplicationContext()) +"\"/&gt;\n"+  //异动人员
+//                        "&lt;Field name=\"sffb004\" value=\""+ strWorkTime +"\"/&gt;\n"+  //班次
+//                        "&lt;Field name=\"sffb005\" value=\""+ strDocno +"\"/&gt;\n"+  //工单单号
+//                        "&lt;Field name=\"sffbseq\" value=\""+ strProcessId +"\"/&gt;\n"+  //工艺项次
+//                        "&lt;Field name=\"sffb010\" value=\""+ strDevice +"\"/&gt;\n"+  //机器编号
+//                        "&lt;Field name=\"sffb029\" value=\""+ strProductCode +"\"/&gt;\n"+  //报工料号
+//                        "&lt;Field name=\"sffb017\" value=\""+ strQuantity +"\"/&gt;\n"+  //良品数量
+//                        "&lt;Field name=\"processid\" value=\""+ strProcessId +"\"/&gt;\n"+  //工艺项次
+//                        "&lt;Field name=\"process\" value=\""+ strProcess +"\"/&gt;\n"+  //工序
+//                        "&lt;Field name=\"lots\" value=\""+ strLots +"\"/&gt;\n"+  //批次
+//                        "&lt;Field name=\"sffbdocno\" value=\""+ strProductDocno +"\"/&gt;\n"+  //报工单号
+//                        "&lt;Field name=\"qcstatus\" value=\""+ qcstatus +"\"/&gt;\n"+  //状态
+//                        "&lt;Field name=\"planno\" value=\""+ strFlag +"\"/&gt;\n"+  //计划单号
+//                        "&lt;Field name=\"planseq\" value=\""+ txtMultipleInputCount.getText().toString() +"\"/&gt;\n"+  //报工次数
+//                        "&lt;Field name=\"planuser\" value=\""+ strEmployee +"\"/&gt;\n"+  //生产人员
+//                        "&lt;Field name=\"errorlots\" value=\""+ 1 +"\"/&gt;\n"+  //异常批次
+//                        "&lt;Field name=\"models\" value=\""+ strModStatus +"\"/&gt;\n"+  //同模类型
+//                        "&lt;Field name=\"act\" value=\""+ action +"\"/&gt;\n"+  //执行动作
+//                        "&lt;Field name=\"actcode\" value=\""+ actionid +"\"/&gt;\n"+  //执行命令ID
+//                        "&lt;Detail name=\"s_detail1\" node_id=\"1_1\"&gt;\n"+
+//                        "&lt;Record&gt;\n"+
+//                        "&lt;Field name=\"sffyucseq\" value=\"1.0\"/&gt;\n"+
+//                        "&lt;/Record&gt;\n"+
+//                        "&lt;/Detail&gt;\n"+
+//                        "&lt;Memo/&gt;\n"+
+//                        "&lt;Attachment count=\"0\"/&gt;\n"+
+//                        "&lt;/Record&gt;\n"+
+//                        "&lt;/Master&gt;\n"+
+                        "&lt;/RecordSet&gt;\n"+
+                        "&lt;/Document&gt;\n";
+                String strResponse = t100ServiceHelper.getT100Data(requestBody,webServiceName,getApplicationContext(),"");
+                mapResponseStatus = t100ServiceHelper.getT100StatusData(strResponse);
+                mapResponseList = t100ServiceHelper.getT100ResponseDocno(strResponse,"docno");
+
+                e.onNext(mapResponseStatus);
+                e.onNext(mapResponseList);
+                e.onComplete();
+            }
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<List<Map<String, Object>>>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(List<Map<String, Object>> maps) {
+                if(mapResponseStatus.size()> 0){
+                    for(Map<String,Object> mStatus: mapResponseStatus){
+                        statusCode = mStatus.get("statusCode").toString();
+                        statusDescription = mStatus.get("statusDescription").toString();
+                    }
+                }else{
+                    MyToast.myShow(SubDetailForMultipleActivity.this,"执行接口错误",2,0);
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                MyToast.myShow(SubDetailForMultipleActivity.this,"网络错误",0,0);
+                loadingDialog.dismiss();
+            }
+
+            @Override
+            public void onComplete() {
+                if(statusCode.equals("0")){
+                    String strDocno="";
+                    int i=0;
+
+                    if(action.equals("save")){
+                        if(mapResponseList.size()> 0) {
+                            for (Map<String, Object> mResponse : mapResponseList) {
+                                strDocno = mResponse.get("Docno").toString();
+                                multipleDetailAdapter.updateData(i,subMultipleView,strDocno);
+                                i++;
+                            }
+                        }
+                    }
+                    MyToast.myShow(SubDetailForMultipleActivity.this, statusDescription, 1, 1);
+
+                    if(action.equals("print")){
+                        finish();
+                    }else{
+                        if(actionid.equals("10")){
+                            imgMultipleStartStatus.setImageDrawable(getResources().getDrawable(R.drawable.ok));
+                        }else if(actionid.equals("11")){
+                            if(mapResponseList.size()> 0) {
+                                String strErrorCount="";
+                                for (Map<String, Object> mResponse : mapResponseList) {
+                                    strErrorCount = mResponse.get("ErrorCount").toString();
+                                }
+                                txtMultipleQcCount.setText(strErrorCount);
+                            }
+
+                            imgMultipleQcStatus.setImageDrawable(getResources().getDrawable(R.drawable.ok));
+                        }else if(actionid.equals("12")){
+                            imgMultipleProductStatus.setImageDrawable(getResources().getDrawable(R.drawable.ok));
+                        }else if(actionid.equals("13")){
+                            if(mapResponseList.size()> 0) {
+                                String strErrorCount="";
+                                for (Map<String, Object> mResponse : mapResponseList) {
+                                    strErrorCount = mResponse.get("ErrorCount").toString();
+                                }
+                                txtMultipleErrorCount.setText(strErrorCount);
+                            }
+
                             imgMultipleErrorBeginStatus.setImageDrawable(getResources().getDrawable(R.drawable.ok));
                         }else if(actionid.equals("14")){
                             imgMultipleErrorEndStatus.setImageDrawable(getResources().getDrawable(R.drawable.ok));
