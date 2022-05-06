@@ -274,6 +274,7 @@ public class SubDetailForMultipleActivity extends AppCompatActivity {
                     saveMultipleToT100("insert","10","B");
                     break;
                 case R.id.btnMultipleEnd:   //异常结束
+                    strErrorLots = txtMultipleErrorCount.getText().toString();
                     saveMultipleToT100("insert","14","E");
                     break;
                 case R.id.btnMultipleSave:  //保存数据
@@ -553,6 +554,8 @@ public class SubDetailForMultipleActivity extends AppCompatActivity {
                     "&lt;Field name=\"sffb005\" value=\""+ strDocno +"\"/&gt;\n"+  //工单单号
                     "&lt;Field name=\"sffbseq\" value=\""+ strProcessId +"\"/&gt;\n"+  //工艺项次
                     "&lt;Field name=\"sffb010\" value=\""+ strDevice +"\"/&gt;\n"+  //机器编号
+                    "&lt;Field name=\"sffb012\" value=\""+ currentDate +"\"/&gt;\n"+  //批量生产止日期
+                    "&lt;Field name=\"sffb013\" value=\""+ currentTime +"\"/&gt;\n"+  //批量生产止时间
                     "&lt;Field name=\"sffb029\" value=\""+ strProductCode +"\"/&gt;\n"+  //报工料号
                     "&lt;Field name=\"sffb017\" value=\""+ strQuantity +"\"/&gt;\n"+  //良品数量
                     "&lt;Field name=\"processid\" value=\""+ strProcessId +"\"/&gt;\n"+  //工艺项次

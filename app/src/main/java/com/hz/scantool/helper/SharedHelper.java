@@ -14,7 +14,7 @@ public class SharedHelper {
     }
 
     //保存数据
-    public void saveShared(String userId,String userName,String userPassword,String userSite,String network){
+    public void saveShared(String userId,String userName,String userPassword,String userSite,String network,String userPower){
         SharedPreferences sharedPreferences=mContext.getSharedPreferences("userinfo",Context.MODE_PRIVATE);
         SharedPreferences.Editor editor=sharedPreferences.edit();
         editor.putString("userId",userId);
@@ -22,6 +22,7 @@ public class SharedHelper {
         editor.putString("userPassword",userPassword);
         editor.putString("userSite",userSite);
         editor.putString("network",network);
+        editor.putString("userPower",userPower);
         editor.commit();
     }
 
@@ -34,7 +35,7 @@ public class SharedHelper {
         data.put("userPassword",sharedPreferences.getString("userPassword",""));
         data.put("userSite",sharedPreferences.getString("userSite",""));
         data.put("network",sharedPreferences.getString("network",""));
-
+        data.put("userPower",sharedPreferences.getString("userPower",""));
         return data;
     }
 

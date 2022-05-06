@@ -251,6 +251,35 @@ public class T100ServiceHelper {
         return detailList;
     }
 
+    //解析xml单条结果数据
+    public List<Map<String,Object>> getT100UserData(String listJson, String xmlIndexStr){
+        List<Map<String,Object>> detailList = new ArrayList<Map<String,Object>>();
+        Map<String,Object> map = new HashMap<String,Object>();
+
+        //检查索引
+        int iTaskIndex=listJson.indexOf(xmlIndexStr,1);
+        if (iTaskIndex>-1){
+            //扫描明细
+            String strContent =listJson.replaceAll("&amp;quot;","\"");
+            String strQr=strContent.substring(strContent.indexOf(xmlIndexStr,1),strContent.length());
+            String strQrJson=strQr.substring(strQr.indexOf("value",1)+7,strQr.indexOf("&gt;",1)-2);
+            try{
+                JSONArray jsonArray = new JSONArray(strQrJson);
+                JSONObject jsonObject = jsonArray.getJSONObject(0);
+                map.put("UserCode",jsonObject.getString("erpUserCode").trim());
+                map.put("UserName",jsonObject.getString("erpUserName").trim());
+                map.put("MacAddress",jsonObject.getString("erpMacAddress").trim());
+                map.put("UserPassword",jsonObject.getString("erpUserPassword").trim());
+                map.put("Power",jsonObject.getString("erpPower").trim());
+                detailList.add(map);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+
+        return detailList;
+    }
+
     //解析工单xml结果数据
     public List<Map<String,Object>> getT100JsonWorkOrderData(String listJson, String xmlIndexStr){
         List<Map<String,Object>> detailList = new ArrayList<Map<String,Object>>();

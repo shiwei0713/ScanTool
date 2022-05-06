@@ -21,6 +21,9 @@ import com.hz.scantool.helper.T100ServiceHelper;
 import com.hz.scantool.models.Company;
 import com.hz.scantool.models.UserInfo;
 
+import java.util.List;
+import java.util.Map;
+
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
@@ -48,6 +51,10 @@ public class MainActivity extends AppCompatActivity {
     private Context mContext;
     private String nerworkType;
     private LoadingDialog loadingDialog;
+    private String statusCode;
+    private String statusDescription;
+    private List<Map<String,Object>> mapResponseList;
+    private List<Map<String,Object>> mapResponseStatus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,7 +96,8 @@ public class MainActivity extends AppCompatActivity {
 
         //初始化用户、密码、网络
         txtUserName.setText(UserInfo.getUserId(getApplicationContext()));
-        txtUserPassword.setText(UserInfo.getUserPassword(getApplicationContext()));
+//        txtUserPassword.setText(UserInfo.getUserPassword(getApplicationContext()));
+        txtUserPassword.setText("");
         nerworkType = UserInfo.getUserNetwork(getApplicationContext());
 
         if(nerworkType.equals(ARG_NETWORK_WLAN)){
@@ -158,7 +166,8 @@ public class MainActivity extends AppCompatActivity {
             if(strUserName.equals("")){
                 MyToast.myShow(MainActivity.this,"请输入用户工号",2,0);
             }else {
-                getUserLogin();
+//                getUserLogin();
+                getUserData();
                 Log.i("MACADDRESS",UserInfo.getMacAddress());
             }
         }
@@ -242,7 +251,7 @@ public class MainActivity extends AppCompatActivity {
             public void onNext(String s) {
                 if(!userId.isEmpty()){
                     txtUserName.setText(userId);
-                    sharedHelper.saveShared(userId,userName,txtUserPassword.getText().toString(),spinnerSite.getSelectedItem().toString(),nerworkType);
+                    sharedHelper.saveShared(userId,userName,txtUserPassword.getText().toString(),spinnerSite.getSelectedItem().toString(),nerworkType,"");
                     Intent intent=new Intent(MainActivity.this,MasterActivity.class);
                     startActivity(intent);
                     finish();
@@ -264,6 +273,116 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onComplete() {
                 loadingDialog.dismiss();
+            }
+        });
+    }
+
+    //获取用户数据-账号/密码/权限/PDA
+    private void getUserData(){
+        //显示进度条
+        if(loadingDialog==null){
+            loadingDialog = new LoadingDialog(MainActivity.this,"正在登录,请稍后",R.drawable.dialog_loading);
+            loadingDialog.show();
+        }
+
+        Observable.create(new ObservableOnSubscribe<List<Map<String,Object>>>(){
+            @Override
+            public void subscribe(ObservableEmitter<List<Map<String, Object>>> e) throws Exception {
+                //初始化T100服务名
+                String webServiceName = "UserGet";
+
+                //发送服务器请求
+                T100ServiceHelper t100ServiceHelper = new T100ServiceHelper();
+                String requestBody = "&lt;Parameter&gt;\n"+
+                        "&lt;Record&gt;\n"+
+                        "&lt;Field name=\"enterprise\" value=\""+ UserInfo.getUserEnterprise(getApplicationContext())+"\"/&gt;\n"+
+                        "&lt;Field name=\"site\" value=\""+UserInfo.getUserSiteId(getApplicationContext())+"\"/&gt;\n"+
+                        "&lt;Field name=\"account\" value=\""+ txtUserName.getText().toString() +"\"/&gt;\n"+
+                        "&lt;/Record&gt;\n"+
+                        "&lt;/Parameter&gt;\n"+
+                        "&lt;Document/&gt;\n";
+                String strResponse = t100ServiceHelper.getT100Data(requestBody,webServiceName,getApplicationContext(),"");
+                mapResponseStatus = t100ServiceHelper.getT100StatusData(strResponse);
+                mapResponseList = t100ServiceHelper.getT100UserData(strResponse,"userinfo");
+
+                e.onNext(mapResponseStatus);
+                e.onNext(mapResponseList);
+                e.onComplete();
+            }
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<List<Map<String, Object>>>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(List<Map<String, Object>> maps) {
+                if(mapResponseStatus.size()> 0){
+                    for(Map<String,Object> mStatus: mapResponseStatus){
+                        statusCode = mStatus.get("statusCode").toString();
+                        statusDescription = mStatus.get("statusDescription").toString();
+                    }
+                }else{
+                    MyToast.myShow(MainActivity.this,"用户不存在",2,0);
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                MyToast.myShow(MainActivity.this,"网络错误",0,0);
+                loadingDialog.dismiss();
+            }
+
+            @Override
+            public void onComplete() {
+                if(!statusCode.equals("0")){
+                    MyToast.myShow(MainActivity.this,statusDescription,0,0);
+                }else{
+                    if(mapResponseList.size()> 0) {
+                        String strUserCode = "";
+                        String strUserName = "";
+                        String strMacAddress = "";
+                        String strUserPassword = "";
+                        String strPower = "";
+                        boolean isLogin = true;
+
+                        for (Map<String, Object> mResponse : mapResponseList) {
+                            strUserCode = mResponse.get("UserCode").toString();
+                            strUserName = mResponse.get("UserName").toString();
+                            strMacAddress = mResponse.get("MacAddress").toString();
+                            strUserPassword = mResponse.get("UserPassword").toString();
+                            strPower = mResponse.get("Power").toString();
+                        }
+
+                        if(!strUserCode.isEmpty()){
+                            String txtMacAddress = UserInfo.getMacAddress();
+                            if(!strMacAddress.isEmpty()){
+                                if(!txtMacAddress.equals(strMacAddress)){
+                                    isLogin = false;
+                                    MyToast.myShow(MainActivity.this,"此用户不可使用PDA",0,0);
+                                }
+                            }
+
+                            if(isLogin){
+                                String txtPassword = txtUserPassword.getText().toString();
+                                if(strUserPassword.equals(txtPassword) ){
+                                    txtUserName.setText(strUserCode);
+                                    sharedHelper.saveShared(strUserCode,strUserName,txtPassword,spinnerSite.getSelectedItem().toString(),nerworkType,strPower);
+                                    finish();
+                                    Intent intent=new Intent(MainActivity.this,MasterActivity.class);
+                                    startActivity(intent);
+                                }else{
+                                    MyToast.myShow(MainActivity.this,"密码错误",0,0);
+                                }
+                            }
+                        }else{
+                            MyToast.myShow(MainActivity.this,"用户不存在,请联系系统管理员",0,0);
+                        }
+                    }
+                }
+
+                loadingDialog.dismiss();
+                loadingDialog = null;
             }
         });
     }

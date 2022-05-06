@@ -15,6 +15,7 @@ public class UserInfo {
     private static String userName;
     private static String userPassword;
     private static String userSite;
+    private static String userPower;
     private static String userSiteId;
     private static Integer userSiteCode;
     private static String userNetwork;
@@ -56,6 +57,12 @@ public class UserInfo {
         userPassword = getUserData(mContext).get("userPassword");
 
         return userPassword;
+    }
+
+    public static String getUserPower(Context mContext) {
+        userPower = getUserData(mContext).get("userPower");
+
+        return userPower;
     }
 
     //营运据点中文名称

@@ -12,7 +12,9 @@ import android.widget.TextView;
 import com.hz.scantool.adapter.MyToast;
 import com.hz.scantool.models.UserInfo;
 
+import java.lang.reflect.Array;
 import java.util.Calendar;
+import java.util.List;
 import java.util.TimeZone;
 
 public class MasterActivity extends AppCompatActivity {
@@ -109,14 +111,55 @@ public class MasterActivity extends AppCompatActivity {
         txtMasterSite.setText(UserInfo.getUserSite(getApplicationContext()));
 
         //初始化权限
+        initUserPower();
+    }
+
+    private void initUserPower(){
         btnAction1Power =false;    //工序报工
-        btnAction2Power =true;    //质量检验
-        btnAction3Power =true;    //完工入库  //FQC
+        btnAction2Power =false;    //质量检验
+        btnAction3Power =false;    //完工入库  //FQC
         btnAction4Power =false;     //采购入库
         btnAction5Power =false;     //生产备料
         btnAction6Power =false;     //销售出货
         btnAction7Power =false;    //生产协同
         btnAction8Power =false;     //期末盘点
+
+        String strUserPower = UserInfo.getUserPower(getApplicationContext());
+        String[] arrayPower = strUserPower.split(",");
+        for(String power : arrayPower){
+            if(power.equals("10")){
+                btnAction1Power =true;    //工序报工
+            }
+
+            if(power.equals("11")){
+                btnAction2Power =true;    //质量检验
+            }
+
+            if(power.equals("12")){
+                btnAction3Power =true;    //完工入库
+            }
+
+            if(power.equals("13")){
+                btnAction4Power =true;    //采购入库
+            }
+
+            if(power.equals("14")){
+                btnAction5Power =true;    //生产备料
+            }
+
+            if(power.equals("15")){
+                btnAction6Power =true;    //销售出货
+            }
+
+            if(power.equals("16")){
+                btnAction7Power =true;    //生产协同
+            }
+
+            if(power.equals("17")){
+                btnAction8Power =true;    //期末盘点
+            }
+        }
+
     }
 
     //设置导航按钮样式
