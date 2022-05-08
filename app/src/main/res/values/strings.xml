@@ -131,6 +131,7 @@
     <string name="detail_content_title13">零件名:</string>
     <string name="detail_content_title14">批次:</string>
     <string name="detail_content_title15">文件地址:</string>
+    <string name="detail_content_title16">已报工量:</string>
     <string name="master_detail1">报工详情</string>
     <string name="master_detail2">检验详情</string>
     <string name="master_detail3">入库详情</string>
@@ -259,6 +260,10 @@
     <string name="sub_detail_multiple_title3">当前状态:</string>
     <string name="sub_detail_multiple_title4">计划单号:</string>
     <string name="sub_detail_multiple_title5">Ver:</string>
+    <string name="sub_detail_multiple_title6">开始生产:</string>
+    <string name="sub_detail_multiple_title7">报首检:</string>
+    <string name="sub_detail_multiple_title8">上料检核:</string>
+    <string name="sub_detail_multiple_title9">异常时间:</string>
     <string name="show_material_label1">零件号:</string>
     <string name="show_material_label2">零件图</string>
     <string name="show_material_label3">相似件</string>

@@ -18,10 +18,19 @@ import com.hz.scantool.adapter.LoadingDialog;
 import com.hz.scantool.adapter.MyToast;
 import com.hz.scantool.helper.SharedHelper;
 import com.hz.scantool.helper.T100ServiceHelper;
-import com.hz.scantool.models.Company;
 import com.hz.scantool.models.UserInfo;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import io.reactivex.Observable;
@@ -88,6 +97,9 @@ public class MainActivity extends AppCompatActivity {
 
         txtLoginContent = findViewById(R.id.txtLoginContent);
         txtLoginContent.setOnClickListener(new txtClickListener());
+
+        //测试网络
+        testNetwork();
     }
 
     @Override
@@ -154,6 +166,74 @@ public class MainActivity extends AppCompatActivity {
                     break;
             }
         }
+    }
+
+    public String Ping(String str) {
+        String result = "";
+        Process p;
+        try {
+            p = Runtime.getRuntime().exec("ping -c 1 -w 3 " + str);
+            InputStream input = p.getInputStream();
+            BufferedReader in = new BufferedReader(new InputStreamReader(input));
+            StringBuffer buffer = new StringBuffer();
+            String line = "";
+            while ((line = in.readLine()) != null){
+                buffer.append(line);
+            }
+            input.close();
+            in.close();
+            if(buffer.toString().indexOf("100%")!=-1||buffer.toString().equals("")){
+                result = "fail";
+            }  else{
+                result = "success";
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    private void testNetwork(){
+        Observable.create(new ObservableOnSubscribe<String>(){
+
+            @Override
+            public void subscribe(ObservableEmitter<String> e) throws Exception {
+                String ip = "192.168.210.3";
+                String str=Ping(ip);
+
+                e.onNext(str);
+                e.onComplete();
+            }
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<String>(){
+
+            @Override
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(String s) {
+                if(s.equals("success")){
+                    nerworkType=rBtnLan.getText().toString();
+                    rBtnLan.setChecked(true);
+                    rBtnWlan.setChecked(false);
+                }else{
+                    nerworkType=rBtnWlan.getText().toString();
+                    rBtnLan.setChecked(false);
+                    rBtnWlan.setChecked(true);
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
     }
 
     //提交按钮事件
@@ -301,7 +381,7 @@ public class MainActivity extends AppCompatActivity {
                         "&lt;/Record&gt;\n"+
                         "&lt;/Parameter&gt;\n"+
                         "&lt;Document/&gt;\n";
-                String strResponse = t100ServiceHelper.getT100Data(requestBody,webServiceName,getApplicationContext(),"");
+                String strResponse = t100ServiceHelper.getT100Data(requestBody,webServiceName,getApplicationContext(),nerworkType);
                 mapResponseStatus = t100ServiceHelper.getT100StatusData(strResponse);
                 mapResponseList = t100ServiceHelper.getT100UserData(strResponse,"userinfo");
 

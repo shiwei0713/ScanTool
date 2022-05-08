@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:textColor="@color/list_item_icon"
-            android:textSize="18sp"
+            android:textSize="16sp"
             android:textStyle="normal" />
 
         <LinearLayout
@@ -41,6 +41,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:textSize="14sp"
                 android:textColor="@color/list_item_alarm"/>
 
             <ImageView
@@ -79,6 +80,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/master_message"
                 android:layout_gravity="center"
+                android:textSize="12sp"
                 android:textStyle="italic|bold"
                 android:text="@string/sub_detail_multiple_title5"/>
 
@@ -87,6 +89,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:textSize="12sp"
                 android:textStyle="italic|bold"
                 android:textColor="@color/master_message"/>
 
@@ -106,7 +109,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:layout_marginLeft="5dp"
+            android:layout_marginLeft="3dp"
             android:orientation="horizontal">
 
             <LinearLayout
@@ -128,7 +131,7 @@
 
                     <TextView
                         android:id="@+id/txtProductCode"
-                        android:layout_width="@dimen/list_show_sub_textview_width"
+                        android:layout_width="@dimen/list_show_sub_textview_width2"
                         android:layout_height="wrap_content"
                         android:textColor="@color/black"/>
 
@@ -237,18 +240,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical|right"
-                    android:layout_marginRight="10dp"
                     android:textColor="@color/list_item_number"
                     android:textStyle="bold"
                     android:inputType="numberDecimal"
-                    android:textSize="24sp" />
+                    android:textSize="22sp" />
 
                 <TextView
                     android:id="@+id/txtEmployee"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical|right"
-                    android:layout_marginRight="10dp"
                     android:textStyle="italic"
                     android:textColor="@color/list_item_number" />
 
@@ -257,7 +258,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical|right"
-                    android:layout_marginRight="10dp"
                     android:textStyle="italic"
                     android:textColor="@color/master_loginout" />
 
@@ -266,7 +266,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical|right"
-                    android:layout_marginRight="10dp"
                     android:textStyle="italic"
                     android:textColor="@color/master_loginout" />
 

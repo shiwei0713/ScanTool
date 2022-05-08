@@ -64,6 +64,11 @@ public class SubDetailForMultipleActivity extends AppCompatActivity {
     private String strErrorStartStatus;
     private String strErrorStopStatus;
     private String strVersion;
+    private String strStartTime;
+    private String strCheckTime;
+    private String strUpTime;
+    private String strErrorTime;
+    private String strProductTotal;
     private String strErrorLots;
     private String mRecordSet="";
     private boolean isPrint;
@@ -77,6 +82,13 @@ public class SubDetailForMultipleActivity extends AppCompatActivity {
     private TextView txtMultipleVersion;
     private TextView txtMultipleErrorCount;
     private TextView txtMultipleQcCount;
+
+    private TextView txtMultipleSum;
+    private TextView txtMultipleStartTime;
+    private TextView txtMultipleCheckTime;
+    private TextView txtMultipleProductTime;
+    private TextView txtMultipleErrorTime;
+
     private ImageView imgMultipleQrcode;
     private ListView subMultipleView;
     private ImageView imgMultipleStartStatus;
@@ -173,6 +185,12 @@ public class SubDetailForMultipleActivity extends AppCompatActivity {
         strErrorStartStatus = bundle.getString("ErrorStartStatus");
         strErrorStopStatus = bundle.getString("ErrorStopStatus");
         strVersion  = bundle.getString("Version");
+        strStartTime = bundle.getString("StartTime");
+        strCheckTime = bundle.getString("CheckTime");
+        strUpTime = bundle.getString("UpTime");
+        strErrorTime = bundle.getString("ErrorTime");
+        strProductTotal = bundle.getString("ProductTotal");
+        strProductTotal = strProductTotal.replace("/","\n");
 
         if(strOperateCount.equals("")||strOperateCount.isEmpty()){
             strOperateCount = "0";
@@ -226,6 +244,12 @@ public class SubDetailForMultipleActivity extends AppCompatActivity {
         txtMultipleVersion.setText(strVersion);
         txtMultipleErrorCount.setText(strErrorStartStatus);
         txtMultipleQcCount.setText(strCheckStatus);
+
+        txtMultipleSum.setText(strProductTotal);
+        txtMultipleStartTime.setText(strStartTime);
+        txtMultipleCheckTime.setText(strCheckTime);
+        txtMultipleProductTime.setText(strUpTime);
+        txtMultipleErrorTime.setText(strErrorTime);
     }
 
     //初始化控件
@@ -252,6 +276,12 @@ public class SubDetailForMultipleActivity extends AppCompatActivity {
         btnMultipleError = findViewById(R.id.btnMultipleError);
         btnMultipleSave = findViewById(R.id.btnMultipleSave);
         btnMultiplePrint = findViewById(R.id.btnMultiplePrint);
+
+        txtMultipleSum = findViewById(R.id.txtMultipleSum);
+        txtMultipleStartTime = findViewById(R.id.txtMultipleStartTime);
+        txtMultipleCheckTime = findViewById(R.id.txtMultipleCheckTime);
+        txtMultipleProductTime = findViewById(R.id.txtMultipleProductTime);
+        txtMultipleErrorTime = findViewById(R.id.txtMultipleErrorTime);
 
         btnMultipleStart.setOnClickListener(new commandClickListener());
         btnMultipleEnd.setOnClickListener(new commandClickListener());
@@ -501,9 +531,9 @@ public class SubDetailForMultipleActivity extends AppCompatActivity {
     private void genRecordSetStr(String action,String actionid,String qcstatus,String strProductCode,String strDocno,String strPlanDate,String strProcessId,String strProcess,String strDevice,String strLots,String strQuantity,String strProductDocno,int i,String strEmployee){
         long timeCurrentTimeMillis = System.currentTimeMillis();
         SimpleDateFormat simpleTimeFormat = new SimpleDateFormat("HH:mm:ss",Locale.getDefault());
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY/MM/DD",Locale.getDefault());
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd",Locale.getDefault());
         String currentTime = simpleTimeFormat.format(timeCurrentTimeMillis);
-        String currentDate = simpleDateFormat.format(timeCurrentTimeMillis);
+        String currentDate = simpleDateFormat.format(new Date());
 
         //生成数据集合
         if(mRecordSet==""||mRecordSet.isEmpty()){

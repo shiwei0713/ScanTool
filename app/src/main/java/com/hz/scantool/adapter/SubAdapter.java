@@ -115,6 +115,11 @@ public class SubAdapter extends BaseAdapter {
         holder.ErrorStartStatus = (String)mData.get(i).get("ErrorStartStatus");
         holder.ErrorStopStatus = (String)mData.get(i).get("ErrorStopStatus");
         holder.txtVersion.setText((String)mData.get(i).get("Version"));
+        holder.StartTime = (String)mData.get(i).get("StartTime");
+        holder.CheckTime = (String)mData.get(i).get("CheckTime");
+        holder.UpTime = (String)mData.get(i).get("UpTime");
+        holder.ErrorTime = (String)mData.get(i).get("ErrorTime");
+        holder.ProductTotal = (String)mData.get(i).get("ProductTotal");
         holder.txtSubStatus.setText(holder.status);
 
         if(holder.status.equals("F")){
@@ -160,6 +165,12 @@ public class SubAdapter extends BaseAdapter {
         String UpStatus;
         String ErrorStartStatus;
         String ErrorStopStatus;
+
+        String StartTime;
+        String CheckTime;
+        String UpTime;
+        String ErrorTime;
+        String ProductTotal;
     }
 
     public static abstract class UpdateClickListener implements View.OnClickListener{

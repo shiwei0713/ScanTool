@@ -277,6 +277,11 @@ public class SubActivity extends AppCompatActivity {
                 bundle.putString("ErrorStartStatus",subAdapter.getItemValue(i,"ErrorStartStatus"));
                 bundle.putString("ErrorStopStatus",subAdapter.getItemValue(i,"ErrorStopStatus"));
                 bundle.putString("Version",txtVersion.getText().toString());
+                bundle.putString("StartTime",subAdapter.getItemValue(i,"StartTime"));
+                bundle.putString("CheckTime",subAdapter.getItemValue(i,"CheckTime"));
+                bundle.putString("UpTime",subAdapter.getItemValue(i,"UpTime"));
+                bundle.putString("ErrorTime",subAdapter.getItemValue(i,"ErrorTime"));
+                bundle.putString("ProductTotal",subAdapter.getItemValue(i,"ProductTotal"));
                 intent.putExtras(bundle);
                 startActivity(intent);
 //            }else{

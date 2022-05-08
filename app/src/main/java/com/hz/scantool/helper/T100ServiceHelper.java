@@ -388,6 +388,11 @@ public class T100ServiceHelper {
                 map.put("ErrorStartStatus", jsonObject.getString("erpErrorStartStatus").trim());
                 map.put("ErrorStopStatus", jsonObject.getString("erpErrorStopStatus").trim());
                 map.put("Version", jsonObject.getString("erpVersion").trim());
+                map.put("StartTime", jsonObject.getString("erpStartTime").trim());
+                map.put("CheckTime", jsonObject.getString("erpCheckTime").trim());
+                map.put("UpTime", jsonObject.getString("erpUpTime").trim());
+                map.put("ErrorTime", jsonObject.getString("erpErrorTime").trim());
+                map.put("ProductTotal", jsonObject.getString("erpProductTotal").trim());
                 map.put("Status", jsonObject.getString("erpStatus").trim());
                 detailList.add(map);
             } catch (Exception e) {

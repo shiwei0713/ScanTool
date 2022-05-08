@@ -56,40 +56,6 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="3dp"
-        android:layout_gravity="left"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/master_loginout"
-            android:text="@string/sub_detail_multiple_title1"/>
-
-        <TextView
-            android:id="@+id/txtMultipleInputCount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/master_loginout" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:textColor="@color/master_loginout"
-            android:text="@string/sub_detail_multiple_title2"/>
-
-        <TextView
-            android:id="@+id/txtMultiplePrintCount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/master_loginout" />
-
-    </LinearLayout>
-
-    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:background="@color/line"
@@ -330,9 +296,180 @@
     <ListView
         android:id="@+id/subMultipleView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:divider="@color/white"
         android:dividerHeight="5dp"
         android:padding="5dp" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical"
+        android:fadingEdge="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="10dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/teal_700"
+                    android:textStyle="normal"
+                    android:textSize="@dimen/font14"
+                    android:text="@string/sub_detail_multiple_title1"/>
+
+                <TextView
+                    android:id="@+id/txtMultipleInputCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/master_message"
+                    android:textStyle="normal"
+                    android:textSize="@dimen/font18" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:textColor="@color/teal_700"
+                    android:textStyle="normal"
+                    android:textSize="@dimen/font14"
+                    android:text="@string/sub_detail_multiple_title2"/>
+
+                <TextView
+                    android:id="@+id/txtMultiplePrintCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/master_message"
+                    android:textStyle="normal"
+                    android:textSize="@dimen/font18" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/detail_content_title16"
+                    android:textColor="@color/teal_700"
+                    android:textStyle="normal"
+                    android:textSize="@dimen/font14" />
+
+                <TextView
+                    android:id="@+id/txtMultipleSum"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/master_message"
+                    android:textStyle="normal"
+                    android:textSize="@dimen/font14"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sub_detail_multiple_title6"
+                    android:textColor="@color/teal_700"
+                    android:textStyle="normal"
+                    android:textSize="@dimen/font14" />
+
+                <TextView
+                    android:id="@+id/txtMultipleStartTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/master_message"
+                    android:textStyle="normal"
+                    android:textSize="@dimen/font14"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sub_detail_multiple_title7"
+                    android:textColor="@color/teal_700"
+                    android:textStyle="normal"
+                    android:textSize="@dimen/font14" />
+
+                <TextView
+                    android:id="@+id/txtMultipleCheckTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/master_message"
+                    android:textStyle="normal"
+                    android:textSize="@dimen/font14"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sub_detail_multiple_title8"
+                    android:textColor="@color/teal_700"
+                    android:textStyle="normal"
+                    android:textSize="@dimen/font14" />
+
+                <TextView
+                    android:id="@+id/txtMultipleProductTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/master_message"
+                    android:textStyle="normal"
+                    android:textSize="@dimen/font14"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sub_detail_multiple_title9"
+                    android:textColor="@color/teal_700"
+                    android:textStyle="normal"
+                    android:textSize="@dimen/font14" />
+
+                <TextView
+                    android:id="@+id/txtMultipleErrorTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/master_message"
+                    android:textStyle="normal"
+                    android:textSize="@dimen/font14"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
 
 </LinearLayout>
