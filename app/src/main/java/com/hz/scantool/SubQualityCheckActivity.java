@@ -1,11 +1,15 @@
 package com.hz.scantool;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,13 +20,18 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 import com.hz.scantool.adapter.LoadingDialog;
+import com.hz.scantool.adapter.MultipleDetailAdapter;
 import com.hz.scantool.adapter.MyToast;
 import com.hz.scantool.adapter.SubAdapter;
 import com.hz.scantool.helper.T100ServiceHelper;
 import com.hz.scantool.models.UserInfo;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import io.reactivex.Observable;
@@ -33,7 +42,11 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
+import static com.google.zxing.integration.android.IntentIntegrator.REQUEST_CODE;
+
 public class SubQualityCheckActivity extends AppCompatActivity {
+
+    private static final String SCANACTION="com.android.server.scannerservice.broadcast";
 
     private String strTitle;
     private int intIndex;
@@ -100,6 +113,69 @@ public class SubQualityCheckActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        //注册广播接收器
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(SCANACTION);
+        intentFilter.setPriority(Integer.MAX_VALUE);
+        registerReceiver(scanReceiver,intentFilter);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        unregisterReceiver(scanReceiver);
+    }
+
+    //PDA扫描数据接收
+    private BroadcastReceiver scanReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if(intent.getAction().equals(SCANACTION)){
+                String qrContent = intent.getStringExtra("scannerdata");
+
+                if(qrContent!=null && qrContent.length()!=0){
+                    scanResult(qrContent,context,intent);
+                }else{
+                    MyToast.myShow(context,"扫描失败,请重新扫描",0,0);
+                }
+            }
+        }
+    };
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode==REQUEST_CODE){
+            IntentResult intentResult = IntentIntegrator.parseActivityResult(resultCode,data);
+            String qrContent = intentResult.getContents();
+            Intent intent = null;
+
+            if(qrContent!=null && qrContent.length()!=0){
+                scanResult(qrContent,this,intent);
+            }else{
+                MyToast.myShow(this,"条码错误,请重新扫描"+qrContent,0,0);
+            }
+        }
+    }
+
+    //扫描结果解析
+    private void scanResult(String qrContent,Context context, Intent intent){
+        //解析二维码
+        String[] qrCodeValue = qrContent.split("_");
+        int qrIndex = qrContent.indexOf("_");
+        if(qrIndex==-1){
+            MyToast.myShow(context,"条码错误:"+qrContent,0,1);
+        }else{
+
+        }
     }
 
     //初始化传入参数
@@ -254,6 +330,13 @@ public class SubQualityCheckActivity extends AppCompatActivity {
                     String strLots = subAdapter.getItemValue(position,"Lots");
                     String strFlag = subAdapter.getItemValue(position,"Flag");
                     String strSeq = subAdapter.getItemValue(position,"OperateCount");
+                    String strVersion = subAdapter.getItemValue(position,"Version");
+
+                    long timeCurrentTimeMillis = System.currentTimeMillis();
+                    SimpleDateFormat simpleTimeFormat = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd",Locale.getDefault());
+                    String currentTime = simpleTimeFormat.format(timeCurrentTimeMillis);
+                    String currentDate = simpleDateFormat.format(new Date());
 
                     //发送服务器请求
                     T100ServiceHelper t100ServiceHelper = new T100ServiceHelper();
@@ -268,12 +351,15 @@ public class SubQualityCheckActivity extends AppCompatActivity {
                             "&lt;Field name=\"sffb005\" value=\""+ strDocno +"\"/&gt;\n"+  //工单单号
                             "&lt;Field name=\"sffbseq\" value=\""+ strProcessId +"\"/&gt;\n"+  //工艺项次
                             "&lt;Field name=\"sffb010\" value=\""+ strDevice +"\"/&gt;\n"+  //机器编号
+                            "&lt;Field name=\"sffb012\" value=\""+ currentDate +"\"/&gt;\n"+  //批量生产止日期
+                            "&lt;Field name=\"sffb013\" value=\""+ currentTime +"\"/&gt;\n"+  //批量生产止时间
                             "&lt;Field name=\"sffb029\" value=\""+ strProductCode +"\"/&gt;\n"+  //报工料号
                             "&lt;Field name=\"process\" value=\""+ strProcess +"\"/&gt;\n"+  //工序
                             "&lt;Field name=\"lots\" value=\""+ strLots +"\"/&gt;\n"+  //批次
                             "&lt;Field name=\"qcstatus\" value=\""+ qcstatus +"\"/&gt;\n"+  //首检状态
                             "&lt;Field name=\"planno\" value=\""+ strFlag +"\"/&gt;\n"+  //计划单号
                             "&lt;Field name=\"planseq\" value=\""+ strSeq +"\"/&gt;\n"+  //报工次数
+                            "&lt;Field name=\"version\" value=\""+ strVersion +"\"/&gt;\n"+  //版本
                             "&lt;Field name=\"act\" value=\""+ action +"\"/&gt;\n"+  //执行动作
                             "&lt;Detail name=\"s_detail1\" node_id=\"1_1\"&gt;\n"+
                             "&lt;Record&gt;\n"+
@@ -330,4 +416,75 @@ public class SubQualityCheckActivity extends AppCompatActivity {
             });
         }
     };
+
+    //获取清单
+    private void showCheckDetailData(String qrCode){
+        //显示进度条
+        if(loadingDialog == null){
+            loadingDialog = new LoadingDialog(SubQualityCheckActivity.this,"正在刷新",R.drawable.dialog_loading);
+            loadingDialog.show();
+        }
+
+        Observable.create(new ObservableOnSubscribe<List<Map<String,Object>>>(){
+            @Override
+            public void subscribe(ObservableEmitter<List<Map<String, Object>>> e) throws Exception {
+                //初始化T100服务名
+                String webServiceName = "ProductListGet";
+                String strType = "21";
+
+                //发送服务器请求
+                T100ServiceHelper t100ServiceHelper = new T100ServiceHelper();
+                String requestBody = "&lt;Parameter&gt;\n"+
+                        "&lt;Record&gt;\n"+
+                        "&lt;Field name=\"enterprise\" value=\""+ UserInfo.getUserEnterprise(getApplicationContext())+"\"/&gt;\n"+
+                        "&lt;Field name=\"site\" value=\""+UserInfo.getUserSiteId(getApplicationContext())+"\"/&gt;\n"+
+                        "&lt;Field name=\"type\" value=\""+ strType +"\"/&gt;\n"+
+                        "&lt;Field name=\"where\" value=\""+ qrCode +"\"/&gt;\n"+
+                        "&lt;/Record&gt;\n"+
+                        "&lt;/Parameter&gt;\n"+
+                        "&lt;Document/&gt;\n";
+                String strResponse = t100ServiceHelper.getT100Data(requestBody,webServiceName,getApplicationContext(),"");
+                mapResponseStatus = t100ServiceHelper.getT100StatusData(strResponse);
+                mapResponseList = t100ServiceHelper.getT100JsonProductDetailData(strResponse,"workorder");
+
+                e.onNext(mapResponseStatus);
+                e.onNext(mapResponseList);
+                e.onComplete();
+            }
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<List<Map<String, Object>>>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(List<Map<String, Object>> maps) {
+                if(mapResponseStatus.size()> 0){
+                    for(Map<String,Object> mStatus: mapResponseStatus){
+                        statusCode = mStatus.get("statusCode").toString();
+                        statusDescription = mStatus.get("statusDescription").toString();
+
+                        if(!statusCode.equals("0")){
+                            MyToast.myShow(SubQualityCheckActivity.this,statusDescription,0,0);
+                        }
+                    }
+                }else{
+                    MyToast.myShow(SubQualityCheckActivity.this,"无备料数据",2,0);
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                MyToast.myShow(SubQualityCheckActivity.this,"网络错误",0,0);
+                loadingDialog.dismiss();
+            }
+
+            @Override
+            public void onComplete() {
+
+
+                loadingDialog.dismiss();
+            }
+        });
+    }
 }

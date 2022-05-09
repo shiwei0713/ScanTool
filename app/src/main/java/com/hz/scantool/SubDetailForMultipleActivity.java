@@ -190,6 +190,11 @@ public class SubDetailForMultipleActivity extends AppCompatActivity {
         strUpTime = bundle.getString("UpTime");
         strErrorTime = bundle.getString("ErrorTime");
         strProductTotal = bundle.getString("ProductTotal");
+
+        strStartTime = strStartTime.replace("/","\n");
+        strCheckTime = strCheckTime.replace("/","\n");
+        strUpTime = strUpTime.replace("/","\n");
+        strErrorTime = strErrorTime.replace("/","\n");
         strProductTotal = strProductTotal.replace("/","\n");
 
         if(strOperateCount.equals("")||strOperateCount.isEmpty()){

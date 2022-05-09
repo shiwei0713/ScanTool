@@ -437,6 +437,7 @@ public class T100ServiceHelper {
                 map.put("Flag", jsonObject.getString("erpFlag").trim());
                 map.put("ModStatus", jsonObject.getString("erpModStatus").trim());
                 map.put("OperateCount", jsonObject.getString("erpSeq").trim());
+                map.put("Version", jsonObject.getString("erpVersion").trim());
                 map.put("Status", jsonObject.getString("erpStatus").trim());
                 detailList.add(map);
             } catch (Exception e) {
