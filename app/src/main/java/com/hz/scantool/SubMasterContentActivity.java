@@ -193,7 +193,8 @@ public class SubMasterContentActivity extends AppCompatActivity {
         //解析二维码
         String[] qrCodeValue = qrContent.split("_");
         int qrIndex = qrContent.indexOf("_");
-        if(qrIndex==-1){
+//        if(qrIndex==-1){
+        if(qrContent.equals("")||qrContent.isEmpty()){
             MyToast.myShow(context,"条码错误:"+qrContent,0,1);
         }else{
             if(actionId ==62){

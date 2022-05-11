@@ -230,15 +230,14 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/subDetailEndPlanDateTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/detail_content_title6"
+                android:text="@string/item_title_quantity"
                 android:textColor="@color/list_item_icon"
                 android:textSize="@dimen/detail_content_textsize" />
 
             <TextView
-                android:id="@+id/subDetailEndPlanDate"
+                android:id="@+id/subDetailQuantity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/detail_content_input_margin"
@@ -270,6 +269,30 @@
 
             <TextView
                 android:id="@+id/subDetailDocno"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/detail_content_input_margin"
+                android:textColor="@color/list_item_icon"
+                android:textSize="@dimen/detail_content_textsize" />
+
+            <TextView
+                android:id="@+id/subDetailSeq"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/detail_content_input_margin"
+                android:textColor="@color/list_item_icon"
+                android:textSize="@dimen/detail_content_textsize" />
+
+            <TextView
+                android:id="@+id/subDetailSeq1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/detail_content_input_margin"
+                android:textColor="@color/list_item_icon"
+                android:textSize="@dimen/detail_content_textsize" />
+
+            <TextView
+                android:id="@+id/subDetailVersion"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/detail_content_input_margin"

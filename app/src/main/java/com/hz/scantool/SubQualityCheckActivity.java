@@ -169,12 +169,10 @@ public class SubQualityCheckActivity extends AppCompatActivity {
     //扫描结果解析
     private void scanResult(String qrContent,Context context, Intent intent){
         //解析二维码
-        String[] qrCodeValue = qrContent.split("_");
-        int qrIndex = qrContent.indexOf("_");
-        if(qrIndex==-1){
+        if(qrContent.equals("")||qrContent.isEmpty()){
             MyToast.myShow(context,"条码错误:"+qrContent,0,1);
         }else{
-
+            showCheckDetailData(qrContent);
         }
     }
 
@@ -417,20 +415,18 @@ public class SubQualityCheckActivity extends AppCompatActivity {
         }
     };
 
-    //获取清单
+    //获取扫描数据
     private void showCheckDetailData(String qrCode){
         //显示进度条
-        if(loadingDialog == null){
-            loadingDialog = new LoadingDialog(SubQualityCheckActivity.this,"正在刷新",R.drawable.dialog_loading);
-            loadingDialog.show();
-        }
+        loadingDialog = new LoadingDialog(SubQualityCheckActivity.this,"正在刷新",R.drawable.dialog_loading);
+        loadingDialog.show();
 
         Observable.create(new ObservableOnSubscribe<List<Map<String,Object>>>(){
             @Override
             public void subscribe(ObservableEmitter<List<Map<String, Object>>> e) throws Exception {
                 //初始化T100服务名
                 String webServiceName = "ProductListGet";
-                String strType = "21";
+                String strType = "22";
 
                 //发送服务器请求
                 T100ServiceHelper t100ServiceHelper = new T100ServiceHelper();
@@ -445,7 +441,7 @@ public class SubQualityCheckActivity extends AppCompatActivity {
                         "&lt;Document/&gt;\n";
                 String strResponse = t100ServiceHelper.getT100Data(requestBody,webServiceName,getApplicationContext(),"");
                 mapResponseStatus = t100ServiceHelper.getT100StatusData(strResponse);
-                mapResponseList = t100ServiceHelper.getT100JsonProductDetailData(strResponse,"workorder");
+                mapResponseList = t100ServiceHelper.getT100JsonPqcDetailData(strResponse,"workorder");
 
                 e.onNext(mapResponseStatus);
                 e.onNext(mapResponseList);
@@ -481,7 +477,66 @@ public class SubQualityCheckActivity extends AppCompatActivity {
 
             @Override
             public void onComplete() {
+                if(mapResponseList.size()>0){
+                    String strProductName="";
+                    String strPlanDate="";
+                    String strProductCode="";
+                    String strProductModels="";
+                    String strProcessId="";
+                    String strProcess="";
+                    String strDevice="";
+                    String strDocno="";
+                    String strQuantity="";
+                    String strBadQuantity="";
+                    String strNgQuantity="";
+                    String strLots="";
+                    String strVersion="";
+                    String strSeq="";
+                    String strSeq1="";
+                    String strStatus="";
 
+                    for (Map<String, Object> mResponse : mapResponseList) {
+                        strDocno = mResponse.get("Docno").toString();
+                        strProductName = mResponse.get("ProductName").toString();
+                        strPlanDate = mResponse.get("PlanDate").toString();
+                        strProductCode = mResponse.get("ProductCode").toString();
+                        strProductModels = mResponse.get("ProductModels").toString();
+                        strProcessId = mResponse.get("ProcessId").toString();
+                        strProcess = mResponse.get("Process").toString();
+                        strDevice = mResponse.get("Device").toString();
+                        strQuantity = mResponse.get("Quantity").toString();
+                        strBadQuantity = mResponse.get("BadQuantity").toString();
+                        strNgQuantity = mResponse.get("NgQuantity").toString();
+                        strVersion = mResponse.get("Version").toString();
+                        strLots = mResponse.get("Lots").toString();
+                        strSeq = mResponse.get("Seq").toString();
+                        strSeq1 = mResponse.get("Seq1").toString();
+                        strStatus = mResponse.get("Status").toString();
+                    }
+
+                    Intent intent = new Intent(SubQualityCheckActivity.this,SubQualityCheckDetailActivity.class);
+                    Bundle bundle=new Bundle();
+                    bundle.putString("ProductName",strProductName);
+                    bundle.putString("PlanDate",strPlanDate);
+                    bundle.putString("ProductCode",strProductCode);
+                    bundle.putString("ProductModels",strProductModels);
+                    bundle.putString("ProcessId",strProcessId);
+                    bundle.putString("Process",strProcess);
+                    bundle.putString("Device",strDevice);
+                    bundle.putString("Docno",strDocno);
+                    bundle.putString("Quantity",strQuantity);
+                    bundle.putString("BadQuantity",strBadQuantity);
+                    bundle.putString("NgQuantity",strNgQuantity);
+                    bundle.putString("Lots",strLots);
+                    bundle.putString("Version",strVersion);
+                    bundle.putString("Seq",strSeq);
+                    bundle.putString("Seq1",strSeq1);
+                    bundle.putString("Status",strStatus);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }else{
+                    MyToast.myShow(SubQualityCheckActivity.this, statusDescription, 0, 1);
+                }
 
                 loadingDialog.dismiss();
             }
