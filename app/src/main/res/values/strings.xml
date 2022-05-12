@@ -10,7 +10,8 @@
     <string name="login_txtContent">使用说明</string>
     <string name="login_txtLicense">服务协议</string>
     <string name="master_username"></string>
-    <string name="master_logout">注销</string>
+    <string name="master_logout">注销用户</string>
+    <string name="master_password">重置密码</string>
     <string name="master_action1">生产任务</string>
     <string name="master_action2">质量检验</string>
     <string name="master_action3">完工入库</string>

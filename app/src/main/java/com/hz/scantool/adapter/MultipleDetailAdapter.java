@@ -106,6 +106,8 @@ public class MultipleDetailAdapter extends BaseAdapter {
         if(mModStatus.equals("2")||mModStatus.equals("3")){
             if(i>0){
                 holder.txtMultipleDetailQuantity.setVisibility(View.GONE);
+            }else{
+                holder.txtMultipleDetailQuantity.setVisibility(View.VISIBLE);
             }
         }
 

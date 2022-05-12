@@ -12,8 +12,8 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- 读取SD卡权限 -->
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" /> <!-- 扫描二维码库 -->
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-    <uses-permission android:name="android.permission.READ_LOGS"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_LOGS" />
 
     <application
         android:name=".App"
@@ -25,7 +25,8 @@
         android:supportsRtl="true"
         android:theme="@style/ThemeNoBar.ScanTool"
         android:usesCleartextTraffic="true">
-        <activity android:name=".SubMaterialListActivity"></activity>
+        <activity android:name=".ResetUserActivity"></activity>
+        <activity android:name=".SubMaterialListActivity" />
         <activity android:name=".ShowMaterial" />
         <activity android:name=".SubDetailForMultipleActivity" />
         <activity android:name=".SubQualityCheckDetailActivity" />
@@ -65,24 +66,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name="com.tencent.bugly.beta.ui.BetaActivity"
             android:configChanges="keyboardHidden|orientation|screenSize|locale"
-            android:theme="@android:style/Theme.Translucent">
-
-        </activity>
+            android:theme="@android:style/Theme.Translucent"></activity>
 
         <provider
-            android:authorities="${applicationId}.fileProvider"
             android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileProvider"
             android:exported="false"
             android:grantUriPermissions="true">
-
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths"/>
-
+                android:resource="@xml/provider_paths" />
         </provider>
     </application>
 

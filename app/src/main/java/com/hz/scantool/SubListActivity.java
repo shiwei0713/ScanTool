@@ -207,7 +207,8 @@ public class SubListActivity extends AppCompatActivity {
             qrContent= qrContent.trim();
         }
 
-        if(qrIndex==-1){
+//        if(qrIndex==-1){
+        if(qrContent.isEmpty()||qrContent.equals("")){
             MyToast.myShow(context,"条码错误:"+qrContent,0,1);
         }else{
             if(intIndex == 2){

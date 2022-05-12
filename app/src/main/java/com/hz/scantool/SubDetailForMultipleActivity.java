@@ -1,11 +1,15 @@
 package com.hz.scantool;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,6 +28,7 @@ import com.google.zxing.EncodeHintType;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.hz.scantool.adapter.LoadingDialog;
 import com.hz.scantool.adapter.MultipleDetailAdapter;
@@ -50,7 +55,11 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
+import static com.google.zxing.integration.android.IntentIntegrator.REQUEST_CODE;
+
 public class SubDetailForMultipleActivity extends AppCompatActivity {
+
+    private static final String SCANACTION="com.android.server.scannerservice.broadcast";
 
     private String strTitle;
     private String strFlag;
@@ -71,7 +80,6 @@ public class SubDetailForMultipleActivity extends AppCompatActivity {
     private String strProductTotal;
     private String strErrorLots;
     private String mRecordSet="";
-    private boolean isPrint;
     private int id = 0;
     private int w,h;
 
@@ -167,10 +175,43 @@ public class SubDetailForMultipleActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        //注册广播接收器
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(SCANACTION);
+        intentFilter.setPriority(Integer.MAX_VALUE);
+        registerReceiver(scanReceiver,intentFilter);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        unregisterReceiver(scanReceiver);
+    }
+
+    //PDA扫描数据接收
+    private BroadcastReceiver scanReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if(intent.getAction().equals(SCANACTION)){
+                String qrContent = intent.getStringExtra("scannerdata");
+
+                if(qrContent!=null && qrContent.length()!=0){
+                    scanResult(qrContent,context,intent);
+                }else{
+                    MyToast.myShow(context,"扫描失败,请重新扫描",0,0);
+                }
+            }
+        }
+    };
+
     //初始化传入参数
     private void initBundle(){
         strTitle = this.getResources().getString(R.string.master_detail1);
-        isPrint = false;
 
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
@@ -306,39 +347,65 @@ public class SubDetailForMultipleActivity extends AppCompatActivity {
         public void onClick(View view) {
             switch (view.getId()){
                 case R.id.btnMultipleStart: //开始生产
-                    saveMultipleToT100("insert","10","B");
+                    saveMultipleToT100("insert","10","B","");
                     break;
                 case R.id.btnMultipleEnd:   //异常结束
                     strErrorLots = txtMultipleErrorCount.getText().toString();
-                    saveMultipleToT100("insert","14","E");
+                    saveMultipleToT100("insert","14","E","");
                     break;
                 case R.id.btnMultipleSave:  //保存数据
                     strErrorLots = txtMultipleErrorCount.getText().toString();
-                    saveMultipleToT100("save","","V");
-                    isPrint = true;
+                    saveMultipleToT100("save","","V","");
                     break;
                 case R.id.btnMultiplePrint: //打印数据
                     strErrorLots = txtMultipleErrorCount.getText().toString();
-                    if(isPrint){
-                        saveMultipleToT100("print","","P");
-                    }else{
-                        MyToast.myShow(SubDetailForMultipleActivity.this,"请先保存数据,再打印",2,0);
-                    }
-                    isPrint = false;
+                    saveMultipleToT100("print","","P","");
                     break;
                 case R.id.btnMultipleQc:    //报首检已报首检:F,首检合格：K
                     strErrorLots = txtMultipleQcCount.getText().toString();
-                    saveMultipleToT100("insert","11","F");
+                    saveMultipleToT100("insert","11","F","");
                     break;
                 case R.id.btnMultipleProduct:   //上料检核
-                    saveMultipleToT100("insert","12","M");
+                    //调用zxing扫码界面
+                    IntentIntegrator intentIntegrator = new IntentIntegrator(SubDetailForMultipleActivity.this);
+                    intentIntegrator.setTimeout(5000);
+                    intentIntegrator.setDesiredBarcodeFormats();  //IntentIntegrator.QR_CODE
+                    //开始扫描
+                    intentIntegrator.initiateScan();
                     break;
                 case R.id.btnMultipleError:     //异常开始
                     strErrorLots = txtMultipleErrorCount.getText().toString();
-                    saveMultipleToT100("insert","13","S");
+                    saveMultipleToT100("insert","13","S","");
                     imgMultipleErrorEndStatus.setImageDrawable(getResources().getDrawable(R.drawable.fail));
                     break;
             }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode==REQUEST_CODE){
+            IntentResult intentResult = IntentIntegrator.parseActivityResult(resultCode,data);
+            String qrContent = intentResult.getContents();
+            Intent intent = null;
+
+            if(qrContent!=null && qrContent.length()!=0){
+                scanResult(qrContent,this,intent);
+            }else{
+                MyToast.myShow(this,"条码错误,请重新扫描"+qrContent,0,0);
+            }
+        }
+    }
+
+    //扫描结果解析
+    private void scanResult(String qrContent, Context context, Intent intent){
+        //解析二维码
+        if(qrContent.equals("")||qrContent.isEmpty()){
+            MyToast.myShow(context,"条码错误:"+qrContent,0,1);
+        }else{
+            saveMultipleToT100("insert","12","M",qrContent);
         }
     }
 
@@ -493,7 +560,7 @@ public class SubDetailForMultipleActivity extends AppCompatActivity {
         return true;
     }
 
-    private void saveMultipleToT100(String strAction,String strActionId,String qcstatus){
+    private void saveMultipleToT100(String strAction,String strActionId,String qcstatus,String qrcode){
         int iCount = multipleDetailAdapter.getCount();
         mRecordSet="";
 
@@ -527,13 +594,13 @@ public class SubDetailForMultipleActivity extends AppCompatActivity {
                 String strProductDocno = multipleDetailAdapter.getProductDocno(i);
 
 //                saveDataToT100(strAction,strActionId,qcstatus,strProductCode,strDocno,strPlanDate,strProcessId,strProcess,strDevice,strLots,strQuantity,strProductDocno,i,strEmployee);
-                genRecordSetStr(strAction,strActionId,qcstatus,strProductCode,strDocno,strPlanDate,strProcessId,strProcess,strDevice,strLots,strQuantity,strProductDocno,i,strEmployee);
+                genRecordSetStr(strAction,strActionId,qcstatus,strProductCode,strDocno,strPlanDate,strProcessId,strProcess,strDevice,strLots,strQuantity,strProductDocno,i,strEmployee,qrcode);
             }
             saveData2ToT100(strAction,strActionId);
         }
     }
 
-    private void genRecordSetStr(String action,String actionid,String qcstatus,String strProductCode,String strDocno,String strPlanDate,String strProcessId,String strProcess,String strDevice,String strLots,String strQuantity,String strProductDocno,int i,String strEmployee){
+    private void genRecordSetStr(String action,String actionid,String qcstatus,String strProductCode,String strDocno,String strPlanDate,String strProcessId,String strProcess,String strDevice,String strLots,String strQuantity,String strProductDocno,int i,String strEmployee,String qrcode){
         long timeCurrentTimeMillis = System.currentTimeMillis();
         SimpleDateFormat simpleTimeFormat = new SimpleDateFormat("HH:mm:ss",Locale.getDefault());
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd",Locale.getDefault());
@@ -568,6 +635,7 @@ public class SubDetailForMultipleActivity extends AppCompatActivity {
                     "&lt;Field name=\"models\" value=\""+ strModStatus +"\"/&gt;\n"+  //同模类型
                     "&lt;Field name=\"version\" value=\""+ strVersion +"\"/&gt;\n"+  //版本
                     "&lt;Field name=\"act\" value=\""+ action +"\"/&gt;\n"+  //执行动作
+                    "&lt;Field name=\"qrcode\" value=\""+ qrcode +"\"/&gt;\n"+  //二维码
                     "&lt;Field name=\"actcode\" value=\""+ actionid +"\"/&gt;\n"+  //执行命令ID
                     "&lt;Detail name=\"s_detail1\" node_id=\"1_1\"&gt;\n"+
                     "&lt;Record&gt;\n"+

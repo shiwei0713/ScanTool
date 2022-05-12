@@ -54,6 +54,16 @@
             android:textColor="@color/master_loginout"
             android:text="@string/master_logout"/>
 
+        <TextView
+            android:id="@+id/txtPassword"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/txtMasterUser"
+            android:layout_marginLeft="10dp"
+            android:layout_centerHorizontal="true"
+            android:textColor="@color/master_loginout"
+            android:text="@string/master_password"/>
+
     </LinearLayout>
 
     <TextView
