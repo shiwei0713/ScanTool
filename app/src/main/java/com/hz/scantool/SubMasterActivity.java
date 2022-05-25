@@ -286,7 +286,7 @@ public class SubMasterActivity extends AppCompatActivity {
                     //生产协同：6;质量检验：1;销售出货：5
                     if(intIndex == 5) {
                         //OQC检验
-                        intent = new Intent(SubMasterActivity.this, SubMasterListActivity.class);
+                        intent = new Intent(SubMasterActivity.this, DeliveryOrderActivity.class);//SubMasterListActivity
                         btnId = 16;
                         bundle.putInt("btnId",btnId);
                         bundle.putString("title",subMasterAction6.getText().toString());

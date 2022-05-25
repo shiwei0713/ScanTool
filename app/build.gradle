@@ -18,6 +18,12 @@ android {
         ndk{
             abiFilters 'armeabi'
         }
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += ["room.schemaLocation": "$projectDir/schemas".toString()]
+            }
+        }
     }
 
     buildTypes {
@@ -53,4 +59,8 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation 'com.tencent.bugly:crashreport_upgrade:latest.release'
     implementation 'com.tencent.bugly:nativecrashreport:latest.release'
+    implementation "android.arch.persistence.room:runtime:2.4.2"
+    annotationProcessor "android.arch.persistence.room:compiler:2.4.2"
+//    implementation 'com.github.VictorAlbertos.RxCache:runtime:1.8.3-2.x'
+//    implementation 'com.github.VictorAlbertos.Jolyglot:gson:0.0.4'
 }

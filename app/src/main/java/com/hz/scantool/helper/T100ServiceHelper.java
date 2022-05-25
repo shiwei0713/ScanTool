@@ -280,6 +280,35 @@ public class T100ServiceHelper {
         return detailList;
     }
 
+    //解析xml单条结果数据
+    public List<Map<String,Object>> getT100StockData(String listJson, String xmlIndexStr){
+        List<Map<String,Object>> detailList = new ArrayList<Map<String,Object>>();
+        Map<String,Object> map = new HashMap<String,Object>();
+
+        //检查索引
+        int iTaskIndex=listJson.indexOf(xmlIndexStr,1);
+        if (iTaskIndex>-1){
+            //扫描明细
+            String strContent =listJson.replaceAll("&amp;quot;","\"");
+            String strQr=strContent.substring(strContent.indexOf(xmlIndexStr,1),strContent.length());
+            String strQrJson=strQr.substring(strQr.indexOf("value",1)+7,strQr.indexOf("&gt;",1)-2);
+            try{
+                JSONArray jsonArray = new JSONArray(strQrJson);
+                JSONObject jsonObject = jsonArray.getJSONObject(0);
+                map.put("StockId",jsonObject.getString("erpStockId").trim());
+                map.put("StockLocationId",jsonObject.getString("erpStockLocationId").trim());
+                map.put("StockLocation",jsonObject.getString("erpStockLocation").trim());
+                map.put("StockType",jsonObject.getString("erpStockType").trim());
+                map.put("PlanDate",jsonObject.getString("erpPlanDate").trim());
+                detailList.add(map);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+
+        return detailList;
+    }
+
     //解析工单xml结果数据
     public List<Map<String,Object>> getT100JsonWorkOrderData(String listJson, String xmlIndexStr){
         List<Map<String,Object>> detailList = new ArrayList<Map<String,Object>>();
@@ -537,6 +566,45 @@ public class T100ServiceHelper {
 
             strDetailContent = strSubContent.substring(iCurrentStartId, iCurrentEndId);
             iStartId = strDetailContent.indexOf(xmlIndexStr, 1);
+        }
+
+        return detailList;
+    }
+
+    //解析扫码盘点xml单条结果数据
+    public List<Map<String,Object>> getT100CheckData(String listJson, String xmlIndexStr){
+        List<Map<String,Object>> detailList = new ArrayList<Map<String,Object>>();
+        Map<String,Object> map = new HashMap<String,Object>();
+
+        //检查索引
+        int iTaskIndex=listJson.indexOf(xmlIndexStr,1);
+        if (iTaskIndex>-1){
+            //扫描明细
+            String strContent =listJson.replaceAll("&amp;quot;","\"");
+            String strQr=strContent.substring(strContent.indexOf(xmlIndexStr,1),strContent.length());
+            String strQrJson=strQr.substring(strQr.indexOf("value",1)+7,strQr.indexOf("&gt;",1)-2);
+            try{
+                JSONArray jsonArray = new JSONArray(strQrJson);
+                JSONObject jsonObject = jsonArray.getJSONObject(0);
+                map.put("ProductCode",jsonObject.getString("erpProductCode").trim());
+                map.put("ProductName",jsonObject.getString("erpProductName").trim());
+                map.put("ProductModels",jsonObject.getString("erpProductModels").trim());
+                map.put("ProductSize",jsonObject.getString("erpProductSize").trim());
+                map.put("StockId",jsonObject.getString("erpStockId").trim());
+                map.put("Stock",jsonObject.getString("erpStock").trim());
+                map.put("StockLocationId",jsonObject.getString("erpStockLocationId").trim());
+                map.put("StockLocation",jsonObject.getString("erpStockLocation").trim());
+                map.put("Quantity",jsonObject.getString("erpQuantity").trim());
+                map.put("Features",jsonObject.getString("erpFeatures").trim());
+                map.put("FeaturesName",jsonObject.getString("erpFeaturesName").trim());
+                map.put("FeaturesModels",jsonObject.getString("erpFeaturesModels").trim());
+                map.put("Lots",jsonObject.getString("erpLots").trim());
+                map.put("Weight",jsonObject.getString("erpWeight").trim());
+                map.put("Tray",jsonObject.getString("erpTray").trim());
+                detailList.add(map);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
         }
 
         return detailList;

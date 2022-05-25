@@ -633,11 +633,11 @@ public class DetailActivity extends AppCompatActivity {
         if(erpQty.equals(" ") || erpQty.length()==0){
             erpQty = "0";
         }
-        int iErpQty = Integer.parseInt(erpQty);
-        int iSaleQty = 0;
+        float iErpQty = Float.parseFloat(erpQty);
+        float iSaleQty = 0;
 
         try{
-            iSaleQty = Integer.parseInt(saleQty);
+            iSaleQty = Float.parseFloat(saleQty);
         }catch (Exception e){
             e.printStackTrace();
             iSaleQty = 0;

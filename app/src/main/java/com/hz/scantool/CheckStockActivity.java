@@ -10,27 +10,29 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
-import com.hz.scantool.adapter.ListItemAdapter;
+import com.hz.scantool.adapter.LoadingDialog;
 import com.hz.scantool.adapter.MainListItemAdapter;
 import com.hz.scantool.adapter.MyToast;
+import com.hz.scantool.dialog.DeptConfigDialog;
 import com.hz.scantool.helper.T100ServiceHelper;
 import com.hz.scantool.models.UserInfo;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -48,21 +50,40 @@ public class CheckStockActivity extends AppCompatActivity {
 
     private int intIndex;
     private String strTitle;
-    private String strWhere;
+    private String strStockId;
+    private String strStockType;
+    private String strArrayDept;
     private String statusCode;
     private String statusDescription;
-    private String qrSid;
-    private String productCode;
 
     private List<Map<String,Object>> mapResponseList;
     private List<Map<String,Object>> mapResponseStatus;
     private MainListItemAdapter mainListItemAdapter;
 
-    private ProgressBar checkStockProgressBar;
-    private ListView checkStockListView;
-    private TextView txtTask1;
-    private TextView txtTask2;
-    private TextView txtTask3;
+    private TextView checkStockDept;
+    private TextView checkStockDate;
+
+    private TextView checkDetailProductCode;
+    private TextView checkDetailProductModels;
+    private TextView checkDetailModel;
+    private TextView checkDetailStartPlanDate;
+    private TextView checkDetailQuantity;
+    private TextView checkDetailQuantityPcs;
+    private TextView checkDetailStockId;
+    private TextView checkDetailStock;
+    private TextView checkDetailPositionId;
+    private TextView checkDetailPosition;
+    private TextView checkDetailLot;
+    private TextView checkDetailFeatures;
+    private TextView checkDetailDocno;
+
+    private Button checkBtnDept;
+    private Button checkBtnQuery;
+//    private Button btnCheckGet;
+//    private Button btnCheckPost;
+
+    private LoadingDialog loadingDialog;
+    private Calendar calendar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +95,6 @@ public class CheckStockActivity extends AppCompatActivity {
 
         //初始化控件
         initView();
-        initQueryCondition();
 
         //获取工具栏
         Toolbar toolbar=findViewById(R.id.checkStockToolBar);
@@ -88,8 +108,6 @@ public class CheckStockActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        //显示盘点清单
-        getStorageForCheck();
     }
 
     @Override
@@ -174,50 +192,61 @@ public class CheckStockActivity extends AppCompatActivity {
 
     //扫描结果解析
     private void scanResult(String qrContent,Context context, Intent intent){
+
+        //初始化仓库
+        initStock();
+        //盘点日期检查
+//        String sDate = checkStockDate.getText().toString();
+//        if(sDate.isEmpty()||sDate.equals("")){
+//            MyToast.myShow(context,"无盘点日期,请通知财务开始盘点",0,1);
+//            return;
+//        }
+
+        //解析二维码
         //解析二维码
         String[] qrCodeValue = qrContent.split("_");
-        int qrIndex = qrContent.indexOf("_");
-        if(qrIndex==-1){
+        if(qrContent.isEmpty()||qrContent.equals("")){
             MyToast.myShow(context,"条码错误:"+qrContent,0,1);
         }else{
-            qrSid = qrCodeValue[0].trim();
-            productCode = qrCodeValue[1].trim();
-            updateStorageForCheck();
+            if(strStockType.equals("Y")){
+                getScanQrData(qrCodeValue[0].toString());
+            }else{
+                String where = " inab001='"+ strStockId +"' AND inab002='"+qrContent.trim()+"'";
+                getStockData(where,"1");
+            }
         }
     }
 
     private void initView(){
-        checkStockProgressBar = findViewById(R.id.progressBar);
-        checkStockListView = findViewById(R.id.checkStockListView);
+        checkStockDept = findViewById(R.id.checkStockDept);
+        checkStockDate = findViewById(R.id.checkStockDate);
 
-        txtTask1 = findViewById(R.id.txtTask1);
-        txtTask2 = findViewById(R.id.txtTask2);
-        txtTask3 = findViewById(R.id.txtTask3);
+        checkDetailProductCode = findViewById(R.id.checkDetailProductCode);
+        checkDetailProductModels = findViewById(R.id.checkDetailProductModels);
+        checkDetailModel = findViewById(R.id.checkDetailModel);
+        checkDetailStartPlanDate = findViewById(R.id.checkDetailStartPlanDate);
+        checkDetailQuantity = findViewById(R.id.checkDetailQuantity);
+        checkDetailQuantityPcs = findViewById(R.id.checkDetailQuantityPcs);
+        checkDetailStockId = findViewById(R.id.checkDetailStockId);
+        checkDetailStock = findViewById(R.id.checkDetailStock);
+        checkDetailPositionId = findViewById(R.id.checkDetailPositionId);
+        checkDetailPosition = findViewById(R.id.checkDetailPosition);
+        checkDetailLot = findViewById(R.id.checkDetailLot);
+        checkDetailFeatures = findViewById(R.id.checkDetailFeatures);
+        checkDetailDocno = findViewById(R.id.checkDetailDocno);
 
-        //声明按钮ID和图片ID
-        int[] btnId = new int[]{R.id.txtTask1, R.id.txtTask2, R.id.txtTask3};
-        int[] imgId = new int[]{R.drawable.task1, R.drawable.task2, R.drawable.task3};
-        int[] titleId = new int[]{R.string.list_task1,R.string.list_task2,R.string.list_task3};
+        checkBtnDept = findViewById(R.id.checkBtnDept);
+        checkBtnQuery  = findViewById(R.id.checkBtnQuery);
+//        btnCheckGet= findViewById(R.id.btnCheckGet);
+//        btnCheckPost= findViewById(R.id.btnCheckPost);
 
-        //初始化按钮和图片
-        TextView textAction;
-        Drawable drawable;
+        //初始化
+        checkStockDept.setText(UserInfo.getDept(CheckStockActivity.this));
 
-        //设置按钮样式
-        for(int i=0;i<btnId.length;i++){
-            textAction=findViewById(btnId[i]);
-            drawable=getResources().getDrawable(imgId[i]);
-            drawable.setBounds(0,0,50,50);
-            textAction.setCompoundDrawables(drawable,null,null,null);
-            textAction.setCompoundDrawablePadding(10);
-            textAction.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-            textAction.setText(getResources().getString(titleId[i]));
-        }
-
-        //事件绑定
-        txtTask1.setOnClickListener(new queryClickListener());
-        txtTask2.setOnClickListener(new queryClickListener());
-        txtTask3.setOnClickListener(new queryClickListener());
+        checkBtnDept.setOnClickListener(new btnClickListener());
+        checkBtnQuery.setOnClickListener(new btnClickListener());
+//        btnCheckGet.setOnClickListener(new btnClickListener());
+//        btnCheckPost.setOnClickListener(new btnClickListener());
     }
 
 
@@ -229,49 +258,70 @@ public class CheckStockActivity extends AppCompatActivity {
         intIndex = bundle.getInt("index");
     }
 
-    //初始化查询条件
-    private void initQueryCondition(){
-        strWhere = "";
+    private void initStock(){
+        //解析部门
+        strArrayDept = checkStockDept.getText().toString();
+        if(strArrayDept.isEmpty()){
+            MyToast.myShow(CheckStockActivity.this,"盘点仓库不可为空",0,1);
+            return;
+        }else{
+            String[] arrayDept = strArrayDept.split("_");
+            strStockId = arrayDept[0].toString();
+            strStockType = arrayDept[2].toString();
+        }
+
+        //初始化盘点日期
+//        String where = " bcah005='"+ strStockId +"'";
+//        getStockData(where,"2");
+        //初始化日期
+        calendar= Calendar.getInstance();
+        calendar.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
+        String year=String.valueOf(calendar.get(Calendar.YEAR));
+        String month=String.valueOf(calendar.get(Calendar.MONTH)+1);
+        String day=String.valueOf(calendar.get(Calendar.DATE));
+        checkStockDate.setText(year+month+day);
     }
 
-    //刷新总数
-    private void refreshCount(){
-        txtTask1.setText(getResources().getString(R.string.list_task1)+String.valueOf(mainListItemAdapter.getCount()));
-        txtTask2.setText(getResources().getString(R.string.list_task2)+String.valueOf(mainListItemAdapter.getCount("Y")));
-        txtTask3.setText(getResources().getString(R.string.list_task3)+String.valueOf(mainListItemAdapter.getCount("N")));
-    }
-
-    private class queryClickListener implements View.OnClickListener{
+    private class btnClickListener implements View.OnClickListener{
 
         @Override
         public void onClick(View view) {
             switch (view.getId()){
-                case R.id.txtTask1:
-                    strWhere = " 1=1";
+                case R.id.checkBtnDept:
+                    DeptConfigDialog deptConfigDialog = new DeptConfigDialog(CheckStockActivity.this,handler);
+                    deptConfigDialog.showStock();
                     break;
-                case R.id.txtTask2:
-                    strWhere = " round(bcah011,3)=round(bcah016,3)";
-                    break;
-                case R.id.txtTask3:
-                    strWhere = " round(bcah011,3)<>round(bcah016,3)";
+                case R.id.checkBtnQuery:
+
                     break;
             }
-
-            //显示盘点清单
-            getStorageForCheck();
         }
     }
 
-    //显示盘点清单
-    private void getStorageForCheck(){
+    //刷新显示部门
+    private Handler handler =new Handler(Looper.getMainLooper()){
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            super.handleMessage(msg);
+
+            if(msg.what==1){
+                String strDept = msg.getData().getString("dept");
+                checkStockDept.setText(strDept);
+            }
+        }
+    };
+
+    //获取扫描条码信息
+    private void getStockData(String where,String stocktype){
         //显示进度条
-        checkStockProgressBar.setVisibility(View.VISIBLE);
+        loadingDialog = new LoadingDialog(this,"数据查询中",R.drawable.dialog_loading);
+        loadingDialog.show();
 
         Observable.create(new ObservableOnSubscribe<List<Map<String,Object>>>() {
             @Override
             public void subscribe(ObservableEmitter<List<Map<String, Object>>> e) throws Exception {
                 //初始化T100服务名
-                String webServiceName = "AppListGet";
+                String webServiceName = "StockGet";
 
                 //发送服务器请求
                 T100ServiceHelper t100ServiceHelper = new T100ServiceHelper();
@@ -279,14 +329,14 @@ public class CheckStockActivity extends AppCompatActivity {
                         "&lt;Record&gt;\n"+
                         "&lt;Field name=\"enterprise\" value=\""+ UserInfo.getUserEnterprise(getApplicationContext())+"\"/&gt;\n"+
                         "&lt;Field name=\"site\" value=\""+UserInfo.getUserSiteId(getApplicationContext())+"\"/&gt;\n"+
-                        "&lt;Field name=\"type\" value=\""+intIndex+"\"/&gt;\n"+
-                        "&lt;Field name=\"where\" value=\""+strWhere+"\"/&gt;\n"+
+                        "&lt;Field name=\"where\" value=\""+ where +"\"/&gt;\n"+
+                        "&lt;Field name=\"type\" value=\""+ stocktype +"\"/&gt;\n"+
                         "&lt;/Record&gt;\n"+
                         "&lt;/Parameter&gt;\n"+
                         "&lt;Document/&gt;\n";
                 String strResponse = t100ServiceHelper.getT100Data(requestBody,webServiceName,getApplicationContext(),"");
+                mapResponseList = t100ServiceHelper.getT100StockData(strResponse,"stockinfo");
                 mapResponseStatus = t100ServiceHelper.getT100StatusData(strResponse);
-                mapResponseList = t100ServiceHelper.getT100JsonCheckStockData(strResponse,"checklist");
 
                 e.onNext(mapResponseStatus);
                 e.onNext(mapResponseList);
@@ -307,51 +357,67 @@ public class CheckStockActivity extends AppCompatActivity {
 
                         if(!statusCode.equals("0")){
                             MyToast.myShow(CheckStockActivity.this,statusDescription,0,0);
-                        }else{
-                            int progress = checkStockProgressBar.getProgress();
-                            progress = progress + 50;
-                            checkStockProgressBar.setProgress(progress);
                         }
                     }
                 }else{
-                    MyToast.myShow(CheckStockActivity.this,"接口执行失败",2,0);
+                    MyToast.myShow(CheckStockActivity.this,"执行接口错误",2,0);
                 }
             }
 
             @Override
             public void onError(Throwable e) {
                 MyToast.myShow(CheckStockActivity.this,"网络错误",0,0);
+                loadingDialog.dismiss();
             }
 
             @Override
             public void onComplete() {
                 if(mapResponseList.size()>0){
-                    mainListItemAdapter = new MainListItemAdapter(mapResponseList,getApplicationContext());
-                    checkStockListView.setAdapter(mainListItemAdapter);
+                    String sStockId="";
+                    String sStockLocationId="";
+                    String sStockLocation="";
+                    String sStockType="";
+                    String sPlanDate="";
 
-                    //刷新总数
-                    refreshCount();
-                }else{
-                    MyToast.myShow(CheckStockActivity.this,"无盘点数据",2,0);
+                    for(Map<String,Object> mData: mapResponseList){
+                        sStockId = mData.get("StockId").toString();
+                        sStockLocationId = mData.get("StockLocationId").toString();
+                        sStockLocation = mData.get("StockLocation").toString();
+                        sStockType = mData.get("StockType").toString();
+                        sPlanDate = mData.get("PlanDate").toString();
+
+                    }
+
+                    if(stocktype.equals("1")){
+                        Intent intent = new Intent(CheckStockActivity.this,PositionActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putString("title", strTitle);
+                        bundle.putString("stockid", sStockId);
+                        bundle.putString("positionid", sStockLocationId);
+                        bundle.putString("position", sStockLocation);
+                        bundle.putString("stocktype", sStockType);
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                    }else{
+                        checkStockDate.setText(sPlanDate);
+                    }
                 }
-                
-                //隐藏滚动条
-                checkStockProgressBar.setVisibility(View.GONE);
+                loadingDialog.dismiss();
             }
         });
-
     }
 
-    //扫描更新盘点数据
-    private void updateStorageForCheck(){
+    //获取扫描条码信息
+    private void getScanQrData(String qrCode){
         //显示进度条
-        checkStockProgressBar.setVisibility(View.VISIBLE);
+        loadingDialog = new LoadingDialog(this,"数据提交中",R.drawable.dialog_loading);
+        loadingDialog.show();
 
         Observable.create(new ObservableOnSubscribe<List<Map<String,Object>>>() {
             @Override
-            public void subscribe(ObservableEmitter<List<Map<String,Object>>> e) throws Exception {
+            public void subscribe(ObservableEmitter<List<Map<String, Object>>> e) throws Exception {
                 //初始化T100服务名
-                String webServiceName = "StorageCheckRequestUpdate";
+                String webServiceName = "StorageCheckRequestInsert";
 
                 T100ServiceHelper t100ServiceHelper = new T100ServiceHelper();
                 String requestBody = "&lt;Document&gt;\n"+
@@ -360,9 +426,10 @@ public class CheckStockActivity extends AppCompatActivity {
                         "&lt;Record&gt;\n"+
                         "&lt;Field name=\"bcahsite\" value=\""+ UserInfo.getUserSiteId(getApplicationContext())+"\"/&gt;\n"+
                         "&lt;Field name=\"bcahent\" value=\""+UserInfo.getUserEnterprise(getApplicationContext())+"\"/&gt;\n"+
-                        "&lt;Field name=\"bcah002\" value=\""+productCode+"\"/&gt;\n"+
                         "&lt;Field name=\"bcah018\" value=\""+ UserInfo.getUserId(getApplicationContext()) +"\"/&gt;\n"+
-                        "&lt;Field name=\"qrsid\" value=\""+qrSid+"\"/&gt;\n"+
+                        "&lt;Field name=\"qrsid\" value=\""+qrCode+"\"/&gt;\n"+
+                        "&lt;Field name=\"bcah005\" value=\""+strStockId+"\"/&gt;\n"+   //盘点仓库
+                        "&lt;Field name=\"stocktype\" value=\""+strStockType+"\"/&gt;\n"+   //仓库类别,区分材料(Y)和非材料(N)
                         "&lt;Detail name=\"s_detail1\" node_id=\"1_1\"&gt;\n"+
                         "&lt;Record&gt;\n"+
                         "&lt;Field name=\"bcahseq\" value=\"1.0\"/&gt;\n"+
@@ -376,46 +443,76 @@ public class CheckStockActivity extends AppCompatActivity {
                         "&lt;/Document&gt;\n";
                 String strResponse = t100ServiceHelper.getT100Data(requestBody,webServiceName,getApplicationContext(),"");
                 mapResponseStatus = t100ServiceHelper.getT100StatusData(strResponse);
+                mapResponseList = t100ServiceHelper.getT100CheckData(strResponse,"qrcode");
 
                 e.onNext(mapResponseStatus);
+                e.onNext(mapResponseList);
                 e.onComplete();
             }
-        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<List<Map<String,Object>>>() {
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<List<Map<String, Object>>>() {
             @Override
             public void onSubscribe(Disposable d) {
 
             }
 
             @Override
-            public void onNext(List<Map<String,Object>> maps) {
+            public void onNext(List<Map<String, Object>> maps) {
                 if(mapResponseStatus.size()> 0){
                     for(Map<String,Object> mStatus: mapResponseStatus){
                         statusCode = mStatus.get("statusCode").toString();
                         statusDescription = mStatus.get("statusDescription").toString();
 
-                        if(statusCode.equals("0")){
-                            int progress = checkStockProgressBar.getProgress();
-                            progress = progress + 50;
-                            checkStockProgressBar.setProgress(progress);
-                            MyToast.myShow(CheckStockActivity.this,statusDescription,1,0);
-                        }else{
+                        if(!statusCode.equals("0")){
                             MyToast.myShow(CheckStockActivity.this,statusDescription,0,0);
                         }
                     }
                 }else{
-                    MyToast.myShow(CheckStockActivity.this,"接口执行失败",2,0);
+                    MyToast.myShow(CheckStockActivity.this,"执行接口错误",2,0);
                 }
             }
 
             @Override
             public void onError(Throwable e) {
                 MyToast.myShow(CheckStockActivity.this,"网络错误",0,0);
+                loadingDialog.dismiss();
             }
 
             @Override
             public void onComplete() {
-                //隐藏滚动条
-                checkStockProgressBar.setVisibility(View.GONE);
+                if(mapResponseList.size()>0){
+                    for(Map<String,Object> mData: mapResponseList){
+                        String sProductCode = mData.get("ProductCode").toString();
+                        String sProductName = mData.get("ProductName").toString();
+                        String sProductModels = mData.get("ProductModels").toString();
+                        String sProductSize = mData.get("ProductSize").toString();
+                        String sQuantity = mData.get("Quantity").toString();
+                        String sStockId = mData.get("StockId").toString();
+                        String sStock = mData.get("Stock").toString();
+                        String sStockLocationId = mData.get("StockLocationId").toString();
+                        String sStockLocation = mData.get("StockLocation").toString();
+                        String sWeight = mData.get("Weight").toString();
+                        String sLots = mData.get("Lots").toString();
+                        String sFeatures = mData.get("Features").toString();
+                        String sFeaturesName = mData.get("FeaturesName").toString();
+                        String sFeaturesModels = mData.get("FeaturesModels").toString();
+//                        String sPlanDate = mData.get("PlanDate").toString();
+
+                        checkDetailProductCode.setText(sProductCode);
+                        checkDetailProductModels.setText(sProductName);
+                        checkDetailModel.setText(sProductModels+"_"+sProductSize);
+//                        checkDetailStartPlanDate.setText(sPlanDate);
+                        checkDetailQuantity.setText(sQuantity);
+                        checkDetailStockId.setText(sStockId);
+                        checkDetailStock.setText(sStock);
+                        checkDetailQuantityPcs.setText(sWeight);
+                        checkDetailPositionId.setText(sStockLocationId);
+                        checkDetailPosition.setText(sStockLocation);
+                        checkDetailLot.setText(sLots);
+                        checkDetailFeatures.setText(sFeatures);
+                        checkDetailDocno.setText(qrCode);
+                    }
+                }
+                loadingDialog.dismiss();
             }
         });
     }

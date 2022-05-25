@@ -25,7 +25,11 @@
         android:supportsRtl="true"
         android:theme="@style/ThemeNoBar.ScanTool"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ResetUserActivity"></activity>
+        <activity android:name=".DeliveryOrderCheckActivity"></activity>
+        <activity android:name=".DeliveryOrderActivity" />
+        <activity android:name=".PositionActivity" />
+        <activity android:name=".CheckStockListActivity" />
+        <activity android:name=".ResetUserActivity" />
         <activity android:name=".SubMaterialListActivity" />
         <activity android:name=".ShowMaterial" />
         <activity android:name=".SubDetailForMultipleActivity" />
@@ -69,7 +73,7 @@
         <activity
             android:name="com.tencent.bugly.beta.ui.BetaActivity"
             android:configChanges="keyboardHidden|orientation|screenSize|locale"
-            android:theme="@android:style/Theme.Translucent"></activity>
+            android:theme="@android:style/Theme.Translucent" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

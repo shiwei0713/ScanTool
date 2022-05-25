@@ -250,7 +250,7 @@ public class SubQualityCheckDetailActivity extends AppCompatActivity {
         int iQuantity = Integer.valueOf(strQuantity);
 
         if(iBadQty==0 && iNgQty==0){
-            isCheck = false;
+            isCheck = true;  //不检核数量为0
         }else{
             int iQty = iQuantity - iBadQty - iNgQty;
             if(iQty<0){
