@@ -25,7 +25,8 @@
         android:supportsRtl="true"
         android:theme="@style/ThemeNoBar.ScanTool"
         android:usesCleartextTraffic="true">
-        <activity android:name=".DeliveryOrderCheckActivity"></activity>
+        <activity android:name=".OqcCheckLabelActivity"></activity>
+        <activity android:name=".DeliveryOrderCheckActivity" />
         <activity android:name=".DeliveryOrderActivity" />
         <activity android:name=".PositionActivity" />
         <activity android:name=".CheckStockListActivity" />

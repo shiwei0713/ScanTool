@@ -90,9 +90,9 @@ public class SubMasterActivity extends AppCompatActivity {
                 imgId= new int[]{R.drawable.sub_master1, R.drawable.sub_master10,R.drawable.sub_master2, R.drawable.sub_master3, R.drawable.sub_master4,R.drawable.sub_master15,R.drawable.sub_master16,R.drawable.sub_master18,R.drawable.sub_master19};
                 titleId = new int[]{R.string.tab_product1,R.string.tab_product10,R.string.tab_product2,R.string.tab_product3,R.string.tab_product4,R.string.tab_product15,R.string.tab_product16,R.string.tab_product18,R.string.tab_product19};
             }else{
-                btnId= new int[]{R.id.subMasterAction1, R.id.subMasterAction2, R.id.subMasterAction5,R.id.subMasterAction6,R.id.subMasterAction3};
-                imgId= new int[]{R.drawable.sub_master11, R.drawable.sub_master12,R.drawable.sub_master13,R.drawable.sub_master8,R.drawable.sub_master14};
-                titleId = new int[]{R.string.tab_product11,R.string.tab_product12,R.string.tab_product13,R.string.tab_product8,R.string.tab_product14};
+                btnId= new int[]{R.id.subMasterAction1, R.id.subMasterAction2, R.id.subMasterAction5,R.id.subMasterAction6,R.id.subMasterAction3,R.id.subMasterAction12};
+                imgId= new int[]{R.drawable.sub_master11, R.drawable.sub_master12,R.drawable.sub_master13,R.drawable.sub_master8,R.drawable.sub_master14,R.drawable.sub_master19};
+                titleId = new int[]{R.string.tab_product11,R.string.tab_product12,R.string.tab_product13,R.string.tab_product8,R.string.tab_product14,R.string.tab_product19};
             }
         }
 
@@ -286,7 +286,7 @@ public class SubMasterActivity extends AppCompatActivity {
                     //生产协同：6;质量检验：1;销售出货：5
                     if(intIndex == 5) {
                         //OQC检验
-                        intent = new Intent(SubMasterActivity.this, DeliveryOrderActivity.class);//SubMasterListActivity
+                        intent = new Intent(SubMasterActivity.this, SubMasterListActivity.class); //SubMasterListActivity
                         btnId = 16;
                         bundle.putInt("btnId",btnId);
                         bundle.putString("title",subMasterAction6.getText().toString());
@@ -334,7 +334,7 @@ public class SubMasterActivity extends AppCompatActivity {
                     //生产协同：6;质量检验：1;销售出货：5
                     if(intIndex == 1) {
                         //标签确认，尾数拆包和包重新打印标签FQC确认
-                        intent = new Intent(SubMasterActivity.this, SubMasterDetailActivity.class);
+                        intent = new Intent(SubMasterActivity.this, OqcCheckLabelActivity.class); //SubMasterDetailActivity
                         btnId = 110;
                         bundle.putInt("btnId",btnId);
                         bundle.putString("title",subMasterAction10.getText().toString());
@@ -356,15 +356,13 @@ public class SubMasterActivity extends AppCompatActivity {
                     break;
                 case R.id.subMasterAction12:
                     //生产协同：6;质量检验：1;销售出货：5
-                    if(intIndex != 5) {
-                        //零件查询
-                        intent = new Intent(SubMasterActivity.this, SubMaterialListActivity.class);
-                        btnId = 120;
-                        bundle.putInt("btnId",btnId);
-                        bundle.putString("title",subMasterAction12.getText().toString());
-                        intent.putExtras(bundle);
-                        startActivity(intent);
-                    }
+                    //零件查询
+                    intent = new Intent(SubMasterActivity.this, SubMaterialListActivity.class);
+                    btnId = 120;
+                    bundle.putInt("btnId",btnId);
+                    bundle.putString("title",subMasterAction12.getText().toString());
+                    intent.putExtras(bundle);
+                    startActivity(intent);
                     break;
             }
 

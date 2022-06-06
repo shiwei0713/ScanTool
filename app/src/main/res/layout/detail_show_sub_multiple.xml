@@ -22,7 +22,7 @@
 
         <TextView
             android:id="@+id/txtMultipleDetailProductName"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/list_show_sub_textview_width"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:textColor="@color/list_item_icon"
@@ -106,7 +106,7 @@
 
                 <TextView
                     android:id="@+id/txtMultipleDetailProductModels"
-                    android:layout_width="wrap_content"
+                    android:layout_width="@dimen/list_show_sub_textview_width"
                     android:layout_height="wrap_content"
                     android:textColor="@color/black"/>
 

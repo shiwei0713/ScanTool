@@ -36,15 +36,35 @@
             android:textStyle="bold"
             android:textSize="@dimen/font50" />
 
-        <Button
-            android:id="@+id/btnCheckError"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:background="@drawable/list_button_selector"
-            android:textColor="@color/teal_700"
-            android:focusable="false"
-            android:textSize="@dimen/list_detail_button"
-            android:text="@string/check_stock_error" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnCheckError"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:background="@drawable/list_button_selector"
+                android:textColor="@color/teal_700"
+                android:focusable="false"
+                android:textSize="@dimen/list_detail_button"
+                android:text="@string/check_stock_error" />
+
+            <Button
+                android:id="@+id/btnCancelCheckError"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:background="@drawable/list_button_selector"
+                android:textColor="@color/teal_700"
+                android:layout_marginLeft="10dp"
+                android:focusable="false"
+                android:textSize="@dimen/list_detail_button"
+                android:text="@string/cancel_check_stock_error" />
+
+        </LinearLayout>
+
 
     </LinearLayout>
 

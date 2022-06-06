@@ -119,6 +119,13 @@
     <string name="check_stock_get">盘点开始</string>
     <string name="check_stock_post">盘点结束</string>
     <string name="check_stock_error">空储位</string>
+    <string name="cancel_check_stock_error">清除储位</string>
+    <string name="oqc_check_title1">出货标签</string>
+    <string name="oqc_check_title2">回仓标签</string>
+    <string name="oqc_check_title3">原始标签</string>
+    <string name="oqc_check_title4">出货标签:</string>
+    <string name="oqc_check_title5">回仓标签:</string>
+    <string name="oqc_check_title6">原始标签:</string>
     <string name="detail_content_title">盘点部门:</string>
     <string name="detail_content_title1">料件编码:</string>
     <string name="detail_content_title2">零件号:</string>
@@ -147,6 +154,8 @@
     <string name="detail_content_title25">钢卷号:</string>
     <string name="detail_content_title26">零件编码:</string>
     <string name="detail_content_title27">单据编号:</string>
+    <string name="detail_content_title28">客户:</string>
+    <string name="detail_content_title29">二维码:</string>
     <string name="master_detail1">报工详情</string>
     <string name="master_detail2">检验详情</string>
     <string name="master_detail3">入库详情</string>

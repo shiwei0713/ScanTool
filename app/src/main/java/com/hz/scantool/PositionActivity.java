@@ -65,7 +65,7 @@ public class PositionActivity extends AppCompatActivity {
     private TextView checkDetailPosition;
     private EditText checkDetailQuantityPcs;
     private TextView checkDetailDocno;
-    private Button btnCheckError;
+    private Button btnCheckError,btnCancelCheckError;
     private Button btnCheckModify;
 
     private LoadingDialog loadingDialog;
@@ -203,10 +203,12 @@ public class PositionActivity extends AppCompatActivity {
         checkDetailDocno = findViewById(R.id.checkDetailDocno);
 
         btnCheckError= findViewById(R.id.btnCheckError);
+        btnCancelCheckError = findViewById(R.id.btnCancelCheckError);
         btnCheckModify = findViewById(R.id.btnCheckModify);
         checkPosition.setText(strPosition);
 
         btnCheckError.setOnClickListener(new btnClickListener());
+        btnCancelCheckError.setOnClickListener(new btnClickListener());
         btnCheckModify.setOnClickListener(new btnClickListener());
     }
 
@@ -228,6 +230,9 @@ public class PositionActivity extends AppCompatActivity {
             switch (view.getId()){
                 case R.id.btnCheckError:
                     getScanQrData("","check");
+                    break;
+                case R.id.btnCancelCheckError:
+                    getScanQrData("","clear");
                     break;
                 case R.id.btnCheckModify:
                     getScanQrData("","update");
@@ -260,7 +265,8 @@ public class PositionActivity extends AppCompatActivity {
                         "&lt;Field name=\"bcah005\" value=\""+strStockId+"\"/&gt;\n"+   //盘点仓库
                         "&lt;Field name=\"bcah006\" value=\""+strPositionId+"\"/&gt;\n"+   //储位编号
                         "&lt;Field name=\"stocktype\" value=\""+strStockType+"\"/&gt;\n"+   //仓库类别,区分材料(Y)和非材料(N)
-                        "&lt;Field name=\"bcah017\" value=\""+checkDetailQuantityPcs.getText().toString()+"\"/&gt;\n"+     //托盘数量
+                        "&lt;Field name=\"bcah016\" value=\""+checkDetailQuantity.getText().toString()+"\"/&gt;\n"+     //托盘数量
+                        "&lt;Field name=\"bcah017\" value=\""+checkDetailQuantityPcs.getText().toString()+"\"/&gt;\n"+     //托盘箱数
                         "&lt;Field name=\"bcah001\" value=\""+checkDetailDocno.getText().toString()+"\"/&gt;\n"+     //单据编号
                         "&lt;Field name=\"actcode\" value=\""+actcode+"\"/&gt;\n"+     //执行动作
                         "&lt;Detail name=\"s_detail1\" node_id=\"1_1\"&gt;\n"+
@@ -362,9 +368,9 @@ public class PositionActivity extends AppCompatActivity {
 
                         btnCheckError.setVisibility(View.GONE);
 
-                        if(sTray.equals("N")){
-                            finish();
-                        }
+//                        if(sTray.equals("N")){
+//                            finish();
+//                        }
                     }
                 }else{
                     if(statusCode.equals("0")){

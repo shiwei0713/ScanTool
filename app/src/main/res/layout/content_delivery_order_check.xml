@@ -20,7 +20,6 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/checkDetailProductCodeTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/detail_content_title1"
@@ -28,12 +27,11 @@
                 android:textSize="@dimen/detail_content_textsize" />
 
             <TextView
-                android:id="@+id/checkDetailProductCode"
+                android:id="@+id/cOrderCheckProductCode"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/detail_content_input_margin"
-                android:textColor="@color/red"
-                android:textStyle="italic"
+                android:textColor="@color/list_item_icon"
                 android:textSize="@dimen/detail_content_textsize" />
 
         </LinearLayout>
@@ -52,7 +50,6 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/checkDetailProductModelsTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/detail_content_title2"
@@ -60,111 +57,12 @@
                 android:textSize="@dimen/detail_content_textsize" />
 
             <TextView
-                android:id="@+id/checkDetailProductModels"
+                android:id="@+id/cOrderCheckProductModels"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/detail_content_input_margin"
-                android:textColor="@color/red"
-                android:textStyle="italic"
-                android:textSize="@dimen/detail_content_textsize" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/line"
-            android:orientation="vertical" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/detail_content_height"
-            android:gravity="center|left"
-            android:layout_marginLeft="@dimen/detail_content_margin"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/checkDetailModelTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/detail_content_title21"
                 android:textColor="@color/list_item_icon"
                 android:textSize="@dimen/detail_content_textsize" />
-
-            <TextView
-                android:id="@+id/checkDetailModel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/detail_content_input_margin"
-                android:textColor="@color/red"
-                android:textStyle="italic"
-                android:textSize="@dimen/detail_content_textsize" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/line"
-            android:orientation="vertical" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/detail_content_height"
-            android:gravity="center|left"
-            android:layout_marginLeft="@dimen/detail_content_margin"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/checkDetailStartPlanDateTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/detail_content_title18"
-                android:textColor="@color/list_item_icon"
-                android:textSize="@dimen/detail_content_textsize" />
-
-            <TextView
-                android:id="@+id/checkDetailStartPlanDate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/detail_content_input_margin"
-                android:textColor="@color/red"
-                android:textStyle="italic"
-                android:textSize="@dimen/detail_content_textsize" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/line"
-            android:orientation="vertical" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/detail_content_height"
-            android:gravity="center|left"
-            android:layout_marginLeft="@dimen/detail_content_margin"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/inputDetailQuantityTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/detail_content_title10"
-                android:textColor="@color/list_item_icon"
-                android:textSize="@dimen/detail_content_textsize" />
-
-            <EditText
-                android:id="@+id/checkDetailQuantity"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/detail_content_input_margin"
-                android:inputType="number"
-                android:ems="10"
-                android:textColor="@color/red"
-                android:textSize="@dimen/detail_content_textsize"
-                android:textStyle="italic" />
 
         </LinearLayout>
 
@@ -184,31 +82,17 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/detail_content_title22"
+                android:text="@string/detail_content_title28"
                 android:textColor="@color/list_item_icon"
                 android:textSize="@dimen/detail_content_textsize" />
 
-            <EditText
-                android:id="@+id/checkDetailQuantityPcs"
+            <TextView
+                android:id="@+id/cOrderCheckSaler"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/detail_content_input_margin"
-                android:inputType="number"
-                android:ems="10"
-                android:textColor="@color/red"
-                android:textSize="@dimen/detail_content_textsize"
-                android:textStyle="italic" />
-
-            <Button
-                android:id="@+id/btnCheckModify"
-                android:layout_width="80dp"
-                android:layout_height="25dp"
-                android:background="@drawable/list_button_selector"
-                android:textColor="@color/teal_700"
-                android:textStyle="normal"
-                android:focusable="false"
-                android:textSize="@dimen/font12"
-                android:text="@string/dept_config_save" />
+                android:textColor="@color/list_item_icon"
+                android:textSize="@dimen/detail_content_textsize" />
 
         </LinearLayout>
 
@@ -228,27 +112,17 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/detail_content_title19"
+                android:text="@string/detail_content_title7"
                 android:textColor="@color/list_item_icon"
                 android:textSize="@dimen/detail_content_textsize" />
 
             <TextView
-                android:id="@+id/checkDetailStockId"
+                android:id="@+id/cOrderCheckQuantity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/detail_content_input_margin"
-                android:textColor="@color/red"
-                android:textSize="@dimen/detail_content_textsize"
-                android:textStyle="italic" />
-
-            <TextView
-                android:id="@+id/checkDetailStock"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/detail_content_input_margin"
-                android:textColor="@color/red"
-                android:textSize="@dimen/detail_content_textsize"
-                android:textStyle="italic" />
+                android:textColor="@color/list_item_icon"
+                android:textSize="@dimen/detail_content_textsize" />
 
         </LinearLayout>
 
@@ -268,27 +142,17 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/detail_content_title20"
+                android:text="@string/detail_content_title8"
                 android:textColor="@color/list_item_icon"
                 android:textSize="@dimen/detail_content_textsize" />
 
             <TextView
-                android:id="@+id/checkDetailPositionId"
+                android:id="@+id/cOrderCheckDocno"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/detail_content_input_margin"
-                android:textColor="@color/red"
-                android:textSize="@dimen/detail_content_textsize"
-                android:textStyle="italic" />
-
-            <TextView
-                android:id="@+id/checkDetailPosition"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/detail_content_input_margin"
-                android:textColor="@color/red"
-                android:textSize="@dimen/detail_content_textsize"
-                android:textStyle="italic" />
+                android:textColor="@color/list_item_icon"
+                android:textSize="@dimen/detail_content_textsize" />
 
         </LinearLayout>
 
@@ -308,18 +172,17 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/detail_content_title27"
+                android:text="@string/detail_content_title29"
                 android:textColor="@color/list_item_icon"
                 android:textSize="@dimen/detail_content_textsize" />
 
             <TextView
-                android:id="@+id/checkDetailDocno"
+                android:id="@+id/cOrderCheckQrcode"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/detail_content_input_margin"
-                android:textColor="@color/red"
-                android:textSize="@dimen/detail_content_textsize"
-                android:textStyle="italic" />
+                android:textColor="@color/list_item_icon"
+                android:textSize="@dimen/detail_content_textsize" />
 
         </LinearLayout>
 
@@ -328,7 +191,6 @@
             android:layout_height="1dp"
             android:background="@color/line"
             android:orientation="vertical" />
-
 
     </LinearLayout>
 
