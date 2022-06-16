@@ -169,10 +169,19 @@ public class SubQualityCheckActivity extends AppCompatActivity {
     //扫描结果解析
     private void scanResult(String qrContent,Context context, Intent intent){
         //解析二维码
-        if(qrContent.equals("")||qrContent.isEmpty()){
+        String[] qrCodeValue = qrContent.split("_");
+        int qrIndex = qrContent.indexOf("_");
+        String qrCode="";
+        if(qrIndex==-1){
+            qrCode = qrContent;
+        }else{
+            qrCode = qrCodeValue[0];
+        }
+
+        if(qrCode.equals("")||qrCode.isEmpty()){
             MyToast.myShow(context,"条码错误:"+qrContent,0,1);
         }else{
-            showCheckDetailData(qrContent);
+            showCheckDetailData(qrCode);
         }
     }
 
@@ -253,6 +262,7 @@ public class SubQualityCheckActivity extends AppCompatActivity {
                         "&lt;Field name=\"site\" value=\""+UserInfo.getUserSiteId(getApplicationContext())+"\"/&gt;\n"+
                         "&lt;Field name=\"type\" value=\""+ strType +"\"/&gt;\n"+
                         "&lt;Field name=\"where\" value=\""+ strwhere +"\"/&gt;\n"+
+                        "&lt;Field name=\"user\" value=\""+ UserInfo.getUserId(getApplicationContext()) +"\"/&gt;\n"+
                         "&lt;/Record&gt;\n"+
                         "&lt;/Parameter&gt;\n"+
                         "&lt;Document/&gt;\n";
@@ -352,11 +362,12 @@ public class SubQualityCheckActivity extends AppCompatActivity {
                             "&lt;Field name=\"sffb012\" value=\""+ currentDate +"\"/&gt;\n"+  //批量生产止日期
                             "&lt;Field name=\"sffb013\" value=\""+ currentTime +"\"/&gt;\n"+  //批量生产止时间
                             "&lt;Field name=\"sffb029\" value=\""+ strProductCode +"\"/&gt;\n"+  //报工料号
-                            "&lt;Field name=\"process\" value=\""+ strProcess +"\"/&gt;\n"+  //工序
                             "&lt;Field name=\"lots\" value=\""+ strLots +"\"/&gt;\n"+  //批次
                             "&lt;Field name=\"qcstatus\" value=\""+ qcstatus +"\"/&gt;\n"+  //首检状态
                             "&lt;Field name=\"planno\" value=\""+ strFlag +"\"/&gt;\n"+  //计划单号
                             "&lt;Field name=\"planseq\" value=\""+ strSeq +"\"/&gt;\n"+  //报工次数
+                            "&lt;Field name=\"processid\" value=\""+ strProcessId +"\"/&gt;\n"+  //工艺项次
+                            "&lt;Field name=\"process\" value=\""+ strProcess +"\"/&gt;\n"+  //工序
                             "&lt;Field name=\"version\" value=\""+ strVersion +"\"/&gt;\n"+  //版本
                             "&lt;Field name=\"act\" value=\""+ action +"\"/&gt;\n"+  //执行动作
                             "&lt;Detail name=\"s_detail1\" node_id=\"1_1\"&gt;\n"+
@@ -491,9 +502,11 @@ public class SubQualityCheckActivity extends AppCompatActivity {
                     String strNgQuantity="";
                     String strLots="";
                     String strVersion="";
+                    String strUnit="";
                     String strSeq="";
                     String strSeq1="";
                     String strStatus="";
+                    String strAttribute="";
 
                     for (Map<String, Object> mResponse : mapResponseList) {
                         strDocno = mResponse.get("Docno").toString();
@@ -509,9 +522,11 @@ public class SubQualityCheckActivity extends AppCompatActivity {
                         strNgQuantity = mResponse.get("NgQuantity").toString();
                         strVersion = mResponse.get("Version").toString();
                         strLots = mResponse.get("Lots").toString();
+                        strUnit = mResponse.get("Unit").toString();
                         strSeq = mResponse.get("Seq").toString();
                         strSeq1 = mResponse.get("Seq1").toString();
                         strStatus = mResponse.get("Status").toString();
+                        strAttribute= mResponse.get("Attribute").toString();
                     }
 
                     Intent intent = new Intent(SubQualityCheckActivity.this,SubQualityCheckDetailActivity.class);
@@ -529,9 +544,12 @@ public class SubQualityCheckActivity extends AppCompatActivity {
                     bundle.putString("NgQuantity",strNgQuantity);
                     bundle.putString("Lots",strLots);
                     bundle.putString("Version",strVersion);
+                    bundle.putString("Unit",strUnit);
                     bundle.putString("Seq",strSeq);
                     bundle.putString("Seq1",strSeq1);
                     bundle.putString("Status",strStatus);
+                    bundle.putString("Attribute",strAttribute);
+                    bundle.putString("qrCode",qrCode);
                     intent.putExtras(bundle);
                     startActivity(intent);
                 }else{

@@ -80,6 +80,16 @@
                 android:text="@string/query_price"
                 android:textColor="@color/button_color" />
 
+            <TextView
+                android:id="@+id/txtQueryStock"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:textSize="18sp"
+                android:clickable="true"
+                android:text="@string/query_stock"
+                android:textColor="@color/button_color" />
+
         </LinearLayout>
 
     </LinearLayout>

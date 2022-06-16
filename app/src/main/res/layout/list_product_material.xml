@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/list_style_white"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/listMaterialSeq"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:textSize="@dimen/font14"
+        android:textColor="@color/teal_700"
+        android:layout_marginLeft="5dp"
+        android:background="@drawable/textview_bg_gray"/>
+
+    <TextView
+        android:id="@+id/listMaterialProductCode"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:textSize="@dimen/font14"
+        android:textColor="@color/teal_700"
+        android:layout_marginLeft="5dp"
+        android:background="@drawable/textview_bg_gray"/>
+
+<!--    <TextView-->
+<!--        android:id="@+id/listMaterialProcessId"-->
+<!--        android:layout_width="40dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:padding="5dp"-->
+<!--        android:textSize="@dimen/font14"-->
+<!--        android:textColor="@color/teal_700"-->
+<!--        android:layout_marginLeft="5dp"-->
+<!--        android:background="@drawable/textview_bg_gray"/>-->
+
+    <TextView
+        android:id="@+id/listMaterialProcess"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:textSize="@dimen/font14"
+        android:textColor="@color/teal_700"
+        android:layout_marginLeft="5dp"
+        android:background="@drawable/textview_bg_gray"/>
+
+    <TextView
+        android:id="@+id/listMaterialQuantity"
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:textSize="@dimen/font14"
+        android:textColor="@color/teal_700"
+        android:layout_marginLeft="5dp"
+        android:background="@drawable/textview_bg_gray"/>
+
+    <TextView
+        android:id="@+id/listMaterialFlag"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:textSize="@dimen/font14"
+        android:textColor="@color/teal_700"
+        android:layout_marginLeft="5dp"
+        android:background="@drawable/textview_bg_gray"/>
+
+</LinearLayout>

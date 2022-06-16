@@ -25,6 +25,7 @@
     <dimen name="list_detil_qty">20sp</dimen>
     <dimen name="error">20sp</dimen>
     <dimen name="tableline">0.4dp</dimen>
+    <dimen name="tableline_1">3dp</dimen>
     <dimen name="print_title">16sp</dimen>
     <dimen name="print_title2">14sp</dimen>
     <dimen name="print_content">10sp</dimen>
@@ -32,7 +33,13 @@
     <dimen name="list_show_sub_textview_width">180dp</dimen>
     <dimen name="list_show_sub_textview_width2">190dp</dimen>
     <dimen name="font12">12sp</dimen>
+    <dimen name="font13">13sp</dimen>
     <dimen name="font14">14sp</dimen>
+    <dimen name="font16">16sp</dimen>
     <dimen name="font18">18sp</dimen>
+    <dimen name="font20">20sp</dimen>
     <dimen name="font50">50sp</dimen>
+    <dimen name="toolbar_height">40dp</dimen>
+    <dimen name="button_height">30dp</dimen>
+    <dimen name="button_width">100dp</dimen>
 </resources>

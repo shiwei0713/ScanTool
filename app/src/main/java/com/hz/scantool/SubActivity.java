@@ -95,7 +95,7 @@ public class SubActivity extends AppCompatActivity {
     private SubAdapter subAdapter;
     private TextView txtLoginout;
     private TextView txtWorktime;
-    private TextView txtQuery;
+    private TextView txtQuery,txtQueryStock;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -198,11 +198,13 @@ public class SubActivity extends AppCompatActivity {
         txtLoginout = findViewById(R.id.txtLoginout);
         txtWorktime = findViewById(R.id.txtWorktime);
         txtQuery = findViewById(R.id.txtQuery);
+        txtQueryStock = findViewById(R.id.txtQueryStock);
         progressBar = findViewById(R.id.progressBar);
         listView = findViewById(R.id.subView);
 
         txtLoginout.setText("工号:"+UserInfo.getUserId(getApplicationContext()));
         txtQuery.setOnClickListener(new queryClickListener());
+        txtQueryStock.setOnClickListener(new queryClickListener());
         listView.setOnItemClickListener(new listItemClickListener());
     }
 
@@ -231,9 +233,15 @@ public class SubActivity extends AppCompatActivity {
 
         @Override
         public void onClick(View view) {
+            Intent intent;
+
             switch (view.getId()){
                 case R.id.txtQuery:
-                    Intent intent = new Intent(SubActivity.this,EmployeeReportActivity.class);
+                    intent = new Intent(SubActivity.this,EmployeeReportActivity.class);
+                    startActivity(intent);
+                    break;
+                case R.id.txtQueryStock:
+                    intent = new Intent(SubActivity.this,QueryStockActivity.class);
                     startActivity(intent);
                     break;
             }
@@ -263,46 +271,27 @@ public class SubActivity extends AppCompatActivity {
             TextView txtVersion = view.findViewById(R.id.txtVersion);
             String modStatus = txtSubModStatus.getText().toString();
 
-//            if(modStatus.equals("2")||modStatus.equals("3")||modStatus.equals("4")){
-                Intent intent = new Intent(SubActivity.this,SubDetailForMultipleActivity.class);
-                Bundle bundle=new Bundle();
-                bundle.putString("Flag",txtSubFlag.getText().toString());
-                bundle.putString("ProcessId",txtProcessId.getText().toString());
-                bundle.putString("ModStatus",modStatus);
-                bundle.putString("OperateCount",txtSubOperateCount.getText().toString());
-                bundle.putString("PrintCount",txtSubPrintCount.getText().toString());
-                bundle.putString("StartStatus",subAdapter.getItemValue(i,"StartStatus"));
-                bundle.putString("CheckStatus",subAdapter.getItemValue(i,"CheckStatus"));
-                bundle.putString("UpStatus",subAdapter.getItemValue(i,"UpStatus"));
-                bundle.putString("ErrorStartStatus",subAdapter.getItemValue(i,"ErrorStartStatus"));
-                bundle.putString("ErrorStopStatus",subAdapter.getItemValue(i,"ErrorStopStatus"));
-                bundle.putString("Version",txtVersion.getText().toString());
-                bundle.putString("StartTime",subAdapter.getItemValue(i,"StartTime"));
-                bundle.putString("CheckTime",subAdapter.getItemValue(i,"CheckTime"));
-                bundle.putString("UpTime",subAdapter.getItemValue(i,"UpTime"));
-                bundle.putString("ErrorTime",subAdapter.getItemValue(i,"ErrorTime"));
-                bundle.putString("ProductTotal",subAdapter.getItemValue(i,"ProductTotal"));
-                intent.putExtras(bundle);
-                startActivity(intent);
-//            }else{
-//                Intent intent = new Intent(SubActivity.this,SubDetailActivity.class);
-//                Bundle bundle=new Bundle();
-//                bundle.putString("ProductName",txtProductName.getText().toString());
-//                bundle.putString("PlanDate",txtPlanDate.getText().toString());
-//                bundle.putString("ProductCode",txtProductCode.getText().toString());
-//                bundle.putString("ProductModels",txtProductModels.getText().toString());
-//                bundle.putString("ProcessId",txtProcessId.getText().toString());
-//                bundle.putString("Process",txtProcess.getText().toString());
-//                bundle.putString("Device",txtDevice.getText().toString());
-//                bundle.putString("Docno",txtDocno.getText().toString());
-//                bundle.putString("Quantity",txtQuantity.getText().toString());
-//                bundle.putString("Worktime",txtWorktime.getText().toString());
-//                bundle.putString("Employee",txtEmployee.getText().toString());
-//                bundle.putString("Lots",txtLots.getText().toString());
-//                bundle.putString("Flag",txtSubFlag.getText().toString());
-//                intent.putExtras(bundle);
-//                startActivity(intent);
-//            }
+            Intent intent = new Intent(SubActivity.this,SubDetailForMultipleActivity.class);
+            Bundle bundle=new Bundle();
+            bundle.putString("Flag",txtSubFlag.getText().toString());
+            bundle.putString("ProcessId",txtProcessId.getText().toString());
+            bundle.putString("Process",txtProcess.getText().toString());
+            bundle.putString("ModStatus",modStatus);
+            bundle.putString("OperateCount",txtSubOperateCount.getText().toString());
+            bundle.putString("PrintCount",txtSubPrintCount.getText().toString());
+            bundle.putString("StartStatus",subAdapter.getItemValue(i,"StartStatus"));
+            bundle.putString("CheckStatus",subAdapter.getItemValue(i,"CheckStatus"));
+            bundle.putString("UpStatus",subAdapter.getItemValue(i,"UpStatus"));
+            bundle.putString("ErrorStartStatus",subAdapter.getItemValue(i,"ErrorStartStatus"));
+            bundle.putString("ErrorStopStatus",subAdapter.getItemValue(i,"ErrorStopStatus"));
+            bundle.putString("Version",txtVersion.getText().toString());
+            bundle.putString("StartTime",subAdapter.getItemValue(i,"StartTime"));
+            bundle.putString("CheckTime",subAdapter.getItemValue(i,"CheckTime"));
+            bundle.putString("UpTime",subAdapter.getItemValue(i,"UpTime"));
+            bundle.putString("ErrorTime",subAdapter.getItemValue(i,"ErrorTime"));
+            bundle.putString("ProductTotal",subAdapter.getItemValue(i,"ProductTotal"));
+            intent.putExtras(bundle);
+            startActivity(intent);
         }
     }
 
@@ -361,7 +350,7 @@ public class SubActivity extends AppCompatActivity {
 
             @Override
             public void onError(Throwable e) {
-                MyToast.myShow(SubActivity.this,"网络错误",0,0);
+                MyToast.myShow(SubActivity.this,e.getMessage(),0,0);
                 progressBar.setVisibility(View.GONE);
             }
 

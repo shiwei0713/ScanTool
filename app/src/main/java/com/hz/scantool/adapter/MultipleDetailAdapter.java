@@ -55,6 +55,10 @@ public class MultipleDetailAdapter extends BaseAdapter {
         return (String)mData.get(i).get("ProductDocno");
     }
 
+    public String getItemValue(int i,String sItem){
+        return (String)mData.get(i).get(sItem);
+    }
+
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         MultipleDetailViewHolder holder = null;

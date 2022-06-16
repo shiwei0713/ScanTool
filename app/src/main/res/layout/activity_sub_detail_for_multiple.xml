@@ -111,6 +111,33 @@
                 android:orientation="horizontal">
 
                 <ImageView
+                    android:id="@+id/imgMultipleProductStatus"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_gravity="center_vertical"
+                    app:srcCompat="@drawable/fail" />
+
+                <Button
+                    android:id="@+id/btnMultipleProduct"
+                    android:layout_width="70dp"
+                    android:layout_height="25dp"
+                    android:background="@drawable/list_flag_selector"
+                    android:textColor="@color/teal_700"
+                    android:textStyle="normal"
+                    android:focusable="false"
+                    android:textSize="@dimen/list_detail_button"
+                    android:text="@string/list_detail_button12" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <ImageView
                     android:id="@+id/imgMultipleQcStatus"
                     android:layout_width="16dp"
                     android:layout_height="16dp"
@@ -138,33 +165,6 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:id="@+id/imgMultipleProductStatus"
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:layout_marginRight="5dp"
-                    android:layout_gravity="center_vertical"
-                    app:srcCompat="@drawable/fail" />
-
-                <Button
-                    android:id="@+id/btnMultipleProduct"
-                    android:layout_width="70dp"
-                    android:layout_height="25dp"
-                    android:background="@drawable/list_flag_selector"
-                    android:textColor="@color/teal_700"
-                    android:textStyle="normal"
-                    android:focusable="false"
-                    android:textSize="@dimen/list_detail_button"
-                    android:text="@string/list_detail_button12" />
-
-            </LinearLayout>
-
         </LinearLayout>
 
         <ImageView
@@ -188,7 +188,7 @@
                     android:id="@+id/btnMultipleError"
                     android:layout_width="70dp"
                     android:layout_height="25dp"
-                    android:background="@drawable/list_flag_selector"
+                    android:background="@drawable/button_selector_red"
                     android:textColor="@color/master_message"
                     android:textStyle="normal"
                     android:focusable="false"
@@ -236,6 +236,25 @@
                     android:layout_marginLeft="5dp"
                     android:layout_gravity="center_vertical"
                     app:srcCompat="@drawable/fail" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btnMultipleQuery"
+                    android:layout_width="70dp"
+                    android:layout_height="25dp"
+                    android:background="@drawable/list_flag_selector"
+                    android:textColor="@color/teal_700"
+                    android:textStyle="normal"
+                    android:focusable="false"
+                    android:textSize="@dimen/list_detail_button"
+                    android:text="@string/list_detail_button17" />
 
             </LinearLayout>
 
@@ -301,175 +320,9 @@
         android:dividerHeight="5dp"
         android:padding="5dp" />
 
-    <ScrollView
+    <include
+        layout="@layout/content_multiple_detail"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="vertical"
-        android:fadingEdge="vertical">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="10dp"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/teal_700"
-                    android:textStyle="normal"
-                    android:textSize="@dimen/font14"
-                    android:text="@string/sub_detail_multiple_title1"/>
-
-                <TextView
-                    android:id="@+id/txtMultipleInputCount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/master_message"
-                    android:textStyle="normal"
-                    android:textSize="@dimen/font18" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:textColor="@color/teal_700"
-                    android:textStyle="normal"
-                    android:textSize="@dimen/font14"
-                    android:text="@string/sub_detail_multiple_title2"/>
-
-                <TextView
-                    android:id="@+id/txtMultiplePrintCount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/master_message"
-                    android:textStyle="normal"
-                    android:textSize="@dimen/font18" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/detail_content_title16"
-                    android:textColor="@color/teal_700"
-                    android:textStyle="normal"
-                    android:textSize="@dimen/font14" />
-
-                <TextView
-                    android:id="@+id/txtMultipleSum"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/master_message"
-                    android:textStyle="normal"
-                    android:textSize="@dimen/font14"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/sub_detail_multiple_title6"
-                    android:textColor="@color/teal_700"
-                    android:textStyle="normal"
-                    android:textSize="@dimen/font14" />
-
-                <TextView
-                    android:id="@+id/txtMultipleStartTime"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/master_message"
-                    android:textStyle="normal"
-                    android:textSize="@dimen/font14"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/sub_detail_multiple_title7"
-                    android:textColor="@color/teal_700"
-                    android:textStyle="normal"
-                    android:textSize="@dimen/font14" />
-
-                <TextView
-                    android:id="@+id/txtMultipleCheckTime"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/master_message"
-                    android:textStyle="normal"
-                    android:textSize="@dimen/font14"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/sub_detail_multiple_title8"
-                    android:textColor="@color/teal_700"
-                    android:textStyle="normal"
-                    android:textSize="@dimen/font14" />
-
-                <TextView
-                    android:id="@+id/txtMultipleProductTime"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/master_message"
-                    android:textStyle="normal"
-                    android:textSize="@dimen/font14"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/sub_detail_multiple_title9"
-                    android:textColor="@color/teal_700"
-                    android:textStyle="normal"
-                    android:textSize="@dimen/font14" />
-
-                <TextView
-                    android:id="@+id/txtMultipleErrorTime"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/master_message"
-                    android:textStyle="normal"
-                    android:textSize="@dimen/font14"/>
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-    </ScrollView>
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>

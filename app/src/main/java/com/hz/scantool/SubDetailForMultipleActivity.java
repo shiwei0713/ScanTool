@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.room.Room;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -33,9 +34,14 @@ import com.google.zxing.qrcode.QRCodeWriter;
 import com.hz.scantool.adapter.LoadingDialog;
 import com.hz.scantool.adapter.MultipleDetailAdapter;
 import com.hz.scantool.adapter.MyToast;
+import com.hz.scantool.adapter.ProductMaterialAdapter;
 import com.hz.scantool.adapter.SubAdapter;
+import com.hz.scantool.database.HzDb;
+import com.hz.scantool.database.ProductEntity;
+import com.hz.scantool.dialog.ShowAlertDialog;
 import com.hz.scantool.helper.T100ServiceHelper;
 import com.hz.scantool.models.UserInfo;
+import com.tencent.bugly.proguard.B;
 
 import org.w3c.dom.Text;
 
@@ -61,9 +67,13 @@ public class SubDetailForMultipleActivity extends AppCompatActivity {
 
     private static final String SCANACTION="com.android.server.scannerservice.broadcast";
 
+    private HzDb hzDb;
+    private String dataBaseName = "HzDb";
+
     private String strTitle;
     private String strFlag;
-    private String strProcessId;
+    private String strQrcode;
+    private String strProcessId,strProcess;
     private String strModStatus;
     private String strOperateCount;
     private String strPrintCount;
@@ -111,15 +121,17 @@ public class SubDetailForMultipleActivity extends AppCompatActivity {
     private Button btnMultipleError;
     private Button btnMultipleSave;
     private Button btnMultiplePrint;
+    private Button btnMultipleQuery;
 
     private String statusCode;
     private String statusDescription;
     private String strWorkTime;
 
-    private List<Map<String,Object>> mapResponseList;
-    private List<Map<String,Object>> mapResponseStatus;
+    private List<Map<String,Object>> mapResponseList,mapResponseStatus,mapList;
     private LoadingDialog loadingDialog;
     private MultipleDetailAdapter multipleDetailAdapter;
+    private ProductEntity productEntity;
+    private List<ProductEntity> productEntityList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,6 +141,7 @@ public class SubDetailForMultipleActivity extends AppCompatActivity {
         //初始化
         initView();
         initBundle();
+        initDataBase();
 
         //获取工具栏
         Toolbar toolbar=findViewById(R.id.subDetailMultipleToolBar);
@@ -142,7 +155,7 @@ public class SubDetailForMultipleActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        createQrcode(strFlag+"_"+ UserInfo.getUserId(getApplicationContext()));
+        createQrcode(strFlag+"_"+txtMultipleVersion.getText().toString()+"_"+ UserInfo.getUserId(getApplicationContext())+"_"+strProcessId+"_"+strProcess+"_"+txtMultipleInputCount.getText().toString());
 
         //获取显示数据
         getMultipleDetailData();
@@ -162,7 +175,7 @@ public class SubDetailForMultipleActivity extends AppCompatActivity {
             case R.id.action_scan:
                 //调用zxing扫码界面
                 IntentIntegrator intentIntegrator = new IntentIntegrator(SubDetailForMultipleActivity.this);
-                intentIntegrator.setTimeout(5000);
+//                intentIntegrator.setTimeout(5000);
                 intentIntegrator.setDesiredBarcodeFormats();  //IntentIntegrator.QR_CODE
                 //开始扫描
                 intentIntegrator.initiateScan();
@@ -193,6 +206,13 @@ public class SubDetailForMultipleActivity extends AppCompatActivity {
         unregisterReceiver(scanReceiver);
     }
 
+    /*
+     *后台操作，创建数据库
+     */
+    private void initDataBase(){
+        hzDb = Room.databaseBuilder(this,HzDb.class,dataBaseName).build();
+    }
+
     //PDA扫描数据接收
     private BroadcastReceiver scanReceiver = new BroadcastReceiver() {
         @Override
@@ -217,6 +237,7 @@ public class SubDetailForMultipleActivity extends AppCompatActivity {
         Bundle bundle = intent.getExtras();
         strFlag = bundle.getString("Flag");
         strProcessId = bundle.getString("ProcessId");
+        strProcess = bundle.getString("Process");
         strModStatus = bundle.getString("ModStatus");
         strOperateCount = bundle.getString("OperateCount");
         strPrintCount = bundle.getString("PrintCount");
@@ -322,6 +343,7 @@ public class SubDetailForMultipleActivity extends AppCompatActivity {
         btnMultipleError = findViewById(R.id.btnMultipleError);
         btnMultipleSave = findViewById(R.id.btnMultipleSave);
         btnMultiplePrint = findViewById(R.id.btnMultiplePrint);
+        btnMultipleQuery = findViewById(R.id.btnMultipleQuery);
 
         txtMultipleSum = findViewById(R.id.txtMultipleSum);
         txtMultipleStartTime = findViewById(R.id.txtMultipleStartTime);
@@ -336,6 +358,7 @@ public class SubDetailForMultipleActivity extends AppCompatActivity {
         btnMultipleError.setOnClickListener(new commandClickListener());
         btnMultipleSave.setOnClickListener(new commandClickListener());
         btnMultiplePrint.setOnClickListener(new commandClickListener());
+        btnMultipleQuery.setOnClickListener(new commandClickListener());
 
         //初始化班次
         setWorktime();
@@ -354,12 +377,15 @@ public class SubDetailForMultipleActivity extends AppCompatActivity {
                     saveMultipleToT100("insert","14","E","");
                     break;
                 case R.id.btnMultipleSave:  //保存数据
+                    //注释保存直接写入服务器，修改为保存至本地，点击打印再写入服务器
                     strErrorLots = txtMultipleErrorCount.getText().toString();
-                    saveMultipleToT100("save","","V","");
+//                    saveMultipleToT100("save","","V","");
+                    saveData("save","","V","");
                     break;
                 case R.id.btnMultiplePrint: //打印数据
                     strErrorLots = txtMultipleErrorCount.getText().toString();
-                    saveMultipleToT100("print","","P","");
+//                    saveMultipleToT100("print","","P","");
+                    savePrintToT100("print","","P","");
                     break;
                 case R.id.btnMultipleQc:    //报首检已报首检:F,首检合格：K
                     strErrorLots = txtMultipleQcCount.getText().toString();
@@ -367,16 +393,20 @@ public class SubDetailForMultipleActivity extends AppCompatActivity {
                     break;
                 case R.id.btnMultipleProduct:   //上料检核
                     //调用zxing扫码界面
-                    IntentIntegrator intentIntegrator = new IntentIntegrator(SubDetailForMultipleActivity.this);
-                    intentIntegrator.setTimeout(5000);
-                    intentIntegrator.setDesiredBarcodeFormats();  //IntentIntegrator.QR_CODE
-                    //开始扫描
-                    intentIntegrator.initiateScan();
+//                    IntentIntegrator intentIntegrator = new IntentIntegrator(SubDetailForMultipleActivity.this);
+//                    intentIntegrator.setTimeout(10000);
+//                    intentIntegrator.setDesiredBarcodeFormats();  //IntentIntegrator.QR_CODE
+//                    //开始扫描
+//                    intentIntegrator.initiateScan();
+                    checkMaterial();
                     break;
                 case R.id.btnMultipleError:     //异常开始
                     strErrorLots = txtMultipleErrorCount.getText().toString();
                     saveMultipleToT100("insert","13","S","");
                     imgMultipleErrorEndStatus.setImageDrawable(getResources().getDrawable(R.drawable.fail));
+                    break;
+                case R.id.btnMultipleQuery:    //辅助信息
+
                     break;
             }
         }
@@ -405,10 +435,48 @@ public class SubDetailForMultipleActivity extends AppCompatActivity {
         if(qrContent.equals("")||qrContent.isEmpty()){
             MyToast.myShow(context,"条码错误:"+qrContent,0,1);
         }else{
-            saveMultipleToT100("insert","12","M",qrContent);
+//            saveMultipleToT100("insert","12","M",qrContent);   //取消上料检核扫描
+            //标签确认
+            updQrcodeData("GX","12","C",qrContent);
         }
     }
 
+    /**
+    *描述: 上料检核
+    *日期：2022/6/12
+    **/
+    private void checkMaterial(){
+        //获取工单信息
+        int iCount = multipleDetailAdapter.getCount();
+        String strProductDocno = "";
+
+        for(int i= 0;i<iCount;i++){
+            if(strProductDocno.equals("")||strProductDocno.isEmpty()){
+                strProductDocno = multipleDetailAdapter.getItemValue(i,"Docno");
+            }else{
+                strProductDocno = strProductDocno + ","+multipleDetailAdapter.getItemValue(i,"Docno");
+            }
+
+        }
+
+        //打开上料检核界面
+        Intent intent = new Intent(SubDetailForMultipleActivity.this,CheckMaterialActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("Docno",strFlag);
+        bundle.putString("Version",strVersion);
+        bundle.putString("ProcessId",strProcessId);
+        bundle.putString("Process",strProcess);
+        bundle.putString("ProductDocno",strProductDocno);
+        bundle.putString("PlanSeq",txtMultipleInputCount.getText().toString());
+        bundle.putString("WorkTime",strWorkTime);
+        intent.putExtras(bundle);
+        startActivity(intent);
+    }
+
+    /**
+    *描述: 创建二维码，用于模具安装和PQC检验扫码确认生产任务单信息
+    *日期：2022/6/10
+    **/
     private void createQrcode(String qrcode){
         w=300;
         h=300;
@@ -501,8 +569,9 @@ public class SubDetailForMultipleActivity extends AppCompatActivity {
 
             @Override
             public void onError(Throwable e) {
-                MyToast.myShow(SubDetailForMultipleActivity.this,"网络错误",0,0);
+                MyToast.myShow(SubDetailForMultipleActivity.this,e.getMessage(),0,0);
                 loadingDialog.dismiss();
+                loadingDialog = null;
             }
 
             @Override
@@ -511,6 +580,7 @@ public class SubDetailForMultipleActivity extends AppCompatActivity {
                 subMultipleView.setAdapter(multipleDetailAdapter);
 
                 loadingDialog.dismiss();
+                loadingDialog = null;
             }
         });
     }
@@ -560,6 +630,248 @@ public class SubDetailForMultipleActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+    *描述: 检查保存数据合理性，合理则写入本地数据库
+    *日期：2022/6/10
+    **/
+    private void saveData(String strAction,String strActionId,String qcstatus,String qrcode){
+        if(checkListItemQuantity(strAction)){
+            saveDbData(strAction,strActionId,qcstatus,qrcode);
+        }
+    }
+
+    /**
+    *描述: 暂存数据至本地，点击打印才提交至服务器
+    *日期：2022/6/10
+    **/
+    private void saveDbData(String strAction,String strActionId,String qcstatus,String qrcode){
+        //显示进度条
+        if(loadingDialog == null){
+            loadingDialog = new LoadingDialog(SubDetailForMultipleActivity.this,"数据提交中",R.drawable.dialog_loading);
+            loadingDialog.show();
+        }
+
+        Observable.create(new ObservableOnSubscribe<String>() {
+            @Override
+            public void subscribe(ObservableEmitter<String> e) throws Exception {
+
+                int iCount = 0;
+                statusCode = "-1";
+                statusDescription = "保存失败";
+
+                //检查是否存在数据
+                iCount = hzDb.productDao().getCount();
+                if(iCount>0){
+                    //清空数据
+                    hzDb.productDao().deleteAll();
+                }
+
+                //写入暂存数据
+                int iCnt = multipleDetailAdapter.getCount();
+                for(int i= 0;i<iCnt;i++){
+                    LinearLayout linearLayout = (LinearLayout)subMultipleView.getAdapter().getView(i,null,null);
+                    TextView txtMultipleDetailProductCode = (TextView)linearLayout.findViewById(R.id.txtMultipleDetailProductCode);
+                    TextView txtMultipleDetailDocno = (TextView)linearLayout.findViewById(R.id.txtMultipleDetailDocno);
+                    TextView txtMultipleDetailProcessId = (TextView)linearLayout.findViewById(R.id.txtMultipleDetailProcessId);
+                    TextView txtMultipleDetailProcess = (TextView)linearLayout.findViewById(R.id.txtMultipleDetailProcess);
+                    TextView txtMultipleDetailDevice = (TextView)linearLayout.findViewById(R.id.txtMultipleDetailDevice);
+                    TextView txtMultipleDetailLots = (TextView)linearLayout.findViewById(R.id.txtMultipleDetailLots);
+                    TextView txtMultipleDetailEmployee = (TextView)linearLayout.findViewById(R.id.txtMultipleDetailEmployee);
+
+                    String strQuantity;
+                    if(strModStatus.equals("2")||strModStatus.equals("3")){
+                        strQuantity = multipleDetailAdapter.getQuantity(0);
+                    }else{
+                        strQuantity = multipleDetailAdapter.getQuantity(i);
+                    }
+
+                    String strProductCode = txtMultipleDetailProductCode.getText().toString();
+                    String strDocno = txtMultipleDetailDocno.getText().toString();
+                    String strProcessId = txtMultipleDetailProcessId.getText().toString();
+                    String strProcess = txtMultipleDetailProcess.getText().toString();
+                    String strDevice = txtMultipleDetailDevice.getText().toString();
+                    String strLots = txtMultipleDetailLots.getText().toString();
+                    String strEmployee = txtMultipleDetailEmployee.getText().toString();
+                    float fQuantity = Float.valueOf(strQuantity);
+
+                    genRecordSetStr(strAction,strActionId,qcstatus,strProductCode,strDocno,"",strProcessId,strProcess,strDevice,strLots,strQuantity,"",i,strEmployee,qrcode);
+
+                    //写入sqllite
+                    productEntity = new ProductEntity(strDocno,strFlag,0,0,strProductCode,strProcessId,strProcess,strDevice,strEmployee,strLots,fQuantity);
+                    hzDb.productDao().insert(productEntity);
+                }
+
+                //初始化T100服务名
+                String webServiceName = "WorkReportRequestGen";
+
+                //发送服务器请求
+                T100ServiceHelper t100ServiceHelper = new T100ServiceHelper();
+                String requestBody = "&lt;Document&gt;\n"+
+                        "&lt;RecordSet id=\"1\"&gt;\n"+
+                        mRecordSet+
+                        "&lt;/RecordSet&gt;\n"+
+                        "&lt;/Document&gt;\n";
+                String strResponse = t100ServiceHelper.getT100Data(requestBody,webServiceName,getApplicationContext(),"");
+                mapResponseStatus = t100ServiceHelper.getT100StatusData(strResponse);
+
+                if(mapResponseStatus.size()> 0){
+                    for(Map<String,Object> mStatus: mapResponseStatus){
+                        statusCode = mStatus.get("statusCode").toString();
+                        statusDescription = mStatus.get("statusDescription").toString();
+                    }
+
+                    if(!statusCode.equals("0")){
+                        //执行失败，删除本地数据
+                        hzDb.productDao().deleteAll();
+                    }
+
+                }else{
+                    //执行失败，删除本地数据
+                    hzDb.productDao().deleteAll();
+                }
+
+                //检查是否写入成功
+                iCount = hzDb.productDao().getCount();
+                if(iCount>0){
+                    statusCode = "0";
+                    statusDescription = "保存成功";
+                }
+
+                e.onNext(statusCode);
+                e.onNext(statusDescription);
+                e.onComplete();
+            }
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<String>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(String s) {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                MyToast.myShow(SubDetailForMultipleActivity.this,e.getMessage(),0,0);
+                loadingDialog.dismiss();
+                loadingDialog = null;
+            }
+
+            @Override
+            public void onComplete() {
+                if(statusCode.equals("0")){
+                    MyToast.myShow(SubDetailForMultipleActivity.this, statusDescription, 1, 1);
+                }else{
+                    MyToast.myShow(SubDetailForMultipleActivity.this,statusDescription,0,0);
+                }
+                loadingDialog.dismiss();
+                loadingDialog = null;
+            }
+        });
+    }
+
+    /**
+    *描述: 提交打印数据至ERP
+    *日期：2022/6/10
+    **/
+    private void savePrintToT100(String strAction,String strActionId,String qcstatus,String qrcode){
+        //显示进度条
+        if(loadingDialog == null){
+            loadingDialog = new LoadingDialog(SubDetailForMultipleActivity.this,"数据打印中",R.drawable.dialog_loading);
+            loadingDialog.show();
+        }
+
+        Observable.create(new ObservableOnSubscribe<String>() {
+            @Override
+            public void subscribe(ObservableEmitter<String> e) throws Exception {
+
+                //变量
+                statusCode = "-1";
+                statusDescription = "无报工数据,打印失败";
+
+                //检查是否存在数据
+                productEntityList = hzDb.productDao().getAll();
+                if(productEntityList.size()>0){
+                    for(int i=0;i<productEntityList.size();i++){
+                        String strProductCode = productEntityList.get(i).getProductCode();
+                        String strDocno = productEntityList.get(i).getProductDocno();
+                        String strProcessId = productEntityList.get(i).getProcessId();
+                        String strProcess = productEntityList.get(i).getProcess();
+                        String strDevice = productEntityList.get(i).getDevices();
+                        String strLots = productEntityList.get(i).getLots();
+                        String strEmployee = productEntityList.get(i).getProductUser();
+                        float fQuantity = productEntityList.get(i).getQuantity();
+                        String strQuantity = String.valueOf(fQuantity);
+
+                        genRecordSetStr(strAction,strActionId,qcstatus,strProductCode,strDocno,"",strProcessId,strProcess,strDevice,strLots,strQuantity,"",i,strEmployee,qrcode);
+                    }
+
+                    //初始化T100服务名
+                    String webServiceName = "WorkReportRequestGen";
+
+                    //发送服务器请求
+                    T100ServiceHelper t100ServiceHelper = new T100ServiceHelper();
+                    String requestBody = "&lt;Document&gt;\n"+
+                            "&lt;RecordSet id=\"1\"&gt;\n"+
+                            mRecordSet+
+                            "&lt;/RecordSet&gt;\n"+
+                            "&lt;/Document&gt;\n";
+                    String strResponse = t100ServiceHelper.getT100Data(requestBody,webServiceName,getApplicationContext(),"");
+                    mapResponseStatus = t100ServiceHelper.getT100StatusData(strResponse);
+
+                    if(mapResponseStatus.size()> 0){
+                        for(Map<String,Object> mStatus: mapResponseStatus){
+                            statusCode = mStatus.get("statusCode").toString();
+                            statusDescription = mStatus.get("statusDescription").toString();
+                        }
+
+                        //执行成功，删除本地数据
+                        hzDb.productDao().deleteAll();
+                    }
+                }
+
+                e.onNext(statusCode);
+                e.onNext(statusDescription);
+                e.onComplete();
+            }
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<String>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(String s) {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                MyToast.myShow(SubDetailForMultipleActivity.this,e.getMessage(),0,0);
+                loadingDialog.dismiss();
+                loadingDialog = null;
+            }
+
+            @Override
+            public void onComplete() {
+                if(statusCode.equals("0")){
+                    finish();
+                    MyToast.myShow(SubDetailForMultipleActivity.this, statusDescription, 1, 1);
+                }else{
+                    MyToast.myShow(SubDetailForMultipleActivity.this,statusDescription,0,0);
+                }
+                loadingDialog.dismiss();
+                loadingDialog = null;
+            }
+        });
+    }
+
+    /**
+    *描述: 提交request请求至ERP
+    *日期：2022/6/10
+    **/
     private void saveMultipleToT100(String strAction,String strActionId,String qcstatus,String qrcode){
         int iCount = multipleDetailAdapter.getCount();
         mRecordSet="";
@@ -593,13 +905,16 @@ public class SubDetailForMultipleActivity extends AppCompatActivity {
                 String strEmployee = txtMultipleDetailEmployee.getText().toString();
                 String strProductDocno = multipleDetailAdapter.getProductDocno(i);
 
-//                saveDataToT100(strAction,strActionId,qcstatus,strProductCode,strDocno,strPlanDate,strProcessId,strProcess,strDevice,strLots,strQuantity,strProductDocno,i,strEmployee);
                 genRecordSetStr(strAction,strActionId,qcstatus,strProductCode,strDocno,strPlanDate,strProcessId,strProcess,strDevice,strLots,strQuantity,strProductDocno,i,strEmployee,qrcode);
             }
             saveData2ToT100(strAction,strActionId);
         }
     }
 
+    /**
+    *描述: XML文件生成
+    *日期：2022/6/10
+    **/
     private void genRecordSetStr(String action,String actionid,String qcstatus,String strProductCode,String strDocno,String strPlanDate,String strProcessId,String strProcess,String strDevice,String strLots,String strQuantity,String strProductDocno,int i,String strEmployee,String qrcode){
         long timeCurrentTimeMillis = System.currentTimeMillis();
         SimpleDateFormat simpleTimeFormat = new SimpleDateFormat("HH:mm:ss",Locale.getDefault());
@@ -673,6 +988,7 @@ public class SubDetailForMultipleActivity extends AppCompatActivity {
                     "&lt;Field name=\"models\" value=\""+ strModStatus +"\"/&gt;\n"+  //同模类型
                     "&lt;Field name=\"version\" value=\""+ strVersion +"\"/&gt;\n"+  //版本
                     "&lt;Field name=\"act\" value=\""+ action +"\"/&gt;\n"+  //执行动作
+                    "&lt;Field name=\"qrcode\" value=\""+ qrcode +"\"/&gt;\n"+  //二维码
                     "&lt;Field name=\"actcode\" value=\""+ actionid +"\"/&gt;\n"+  //执行命令ID
                     "&lt;Detail name=\"s_detail1\" node_id=\"1_1\"&gt;\n"+
                     "&lt;Record&gt;\n"+
@@ -687,129 +1003,10 @@ public class SubDetailForMultipleActivity extends AppCompatActivity {
 
     }
 
-    private void saveDataToT100(String action,String actionid,String qcstatus,String strProductCode,String strDocno,String strPlanDate,String strProcessId,String strProcess,String strDevice,String strLots,String strQuantity,String strProductDocno,int i,String strEmployee){
-        //显示进度条
-        if(loadingDialog == null){
-            loadingDialog = new LoadingDialog(SubDetailForMultipleActivity.this,"数据提交中",R.drawable.dialog_loading);
-            loadingDialog.show();
-        }
-
-        Observable.create(new ObservableOnSubscribe<List<Map<String,Object>>>() {
-            @Override
-            public void subscribe(ObservableEmitter<List<Map<String, Object>>> e) throws Exception {
-                //初始化T100服务名
-                String webServiceName = "WorkReportRequestGen";
-
-                //发送服务器请求
-                T100ServiceHelper t100ServiceHelper = new T100ServiceHelper();
-                String requestBody = "&lt;Document&gt;\n"+
-                        "&lt;RecordSet id=\"1\"&gt;\n"+
-                        "&lt;Master name=\"sffb_t\" node_id=\"1\"&gt;\n"+
-                        "&lt;Record&gt;\n"+
-                        "&lt;Field name=\"sffbsite\" value=\""+ UserInfo.getUserSiteId(getApplicationContext())+"\"/&gt;\n"+
-                        "&lt;Field name=\"sffbent\" value=\""+UserInfo.getUserEnterprise(getApplicationContext())+"\"/&gt;\n"+
-                        "&lt;Field name=\"sffbdocdt\" value=\""+strPlanDate+"\"/&gt;\n"+
-                        "&lt;Field name=\"sffb002\" value=\""+ UserInfo.getUserId(getApplicationContext()) +"\"/&gt;\n"+  //异动人员
-                        "&lt;Field name=\"sffb004\" value=\""+ strWorkTime +"\"/&gt;\n"+  //班次
-                        "&lt;Field name=\"sffb005\" value=\""+ strDocno +"\"/&gt;\n"+  //工单单号
-                        "&lt;Field name=\"sffbseq\" value=\""+ strProcessId +"\"/&gt;\n"+  //工艺项次
-                        "&lt;Field name=\"sffb010\" value=\""+ strDevice +"\"/&gt;\n"+  //机器编号
-                        "&lt;Field name=\"sffb029\" value=\""+ strProductCode +"\"/&gt;\n"+  //报工料号
-                        "&lt;Field name=\"sffb017\" value=\""+ strQuantity +"\"/&gt;\n"+  //良品数量
-                        "&lt;Field name=\"processid\" value=\""+ strProcessId +"\"/&gt;\n"+  //工艺项次
-                        "&lt;Field name=\"process\" value=\""+ strProcess +"\"/&gt;\n"+  //工序
-                        "&lt;Field name=\"lots\" value=\""+ strLots +"\"/&gt;\n"+  //批次
-                        "&lt;Field name=\"sffbdocno\" value=\""+ strProductDocno +"\"/&gt;\n"+  //报工单号
-                        "&lt;Field name=\"qcstatus\" value=\""+ qcstatus +"\"/&gt;\n"+  //状态
-                        "&lt;Field name=\"planno\" value=\""+ strFlag +"\"/&gt;\n"+  //计划单号
-                        "&lt;Field name=\"planseq\" value=\""+ txtMultipleInputCount.getText().toString() +"\"/&gt;\n"+  //报工次数
-                        "&lt;Field name=\"planuser\" value=\""+ strEmployee +"\"/&gt;\n"+  //生产人员
-                        "&lt;Field name=\"errorlots\" value=\""+ 1 +"\"/&gt;\n"+  //异常批次
-                        "&lt;Field name=\"models\" value=\""+ strModStatus +"\"/&gt;\n"+  //同模类型
-                        "&lt;Field name=\"act\" value=\""+ action +"\"/&gt;\n"+  //执行动作
-                        "&lt;Field name=\"actcode\" value=\""+ actionid +"\"/&gt;\n"+  //执行命令ID
-                        "&lt;Detail name=\"s_detail1\" node_id=\"1_1\"&gt;\n"+
-                        "&lt;Record&gt;\n"+
-                        "&lt;Field name=\"sffyucseq\" value=\"1.0\"/&gt;\n"+
-                        "&lt;/Record&gt;\n"+
-                        "&lt;/Detail&gt;\n"+
-                        "&lt;Memo/&gt;\n"+
-                        "&lt;Attachment count=\"0\"/&gt;\n"+
-                        "&lt;/Record&gt;\n"+
-                        "&lt;/Master&gt;\n"+
-                        "&lt;/RecordSet&gt;\n"+
-                        "&lt;/Document&gt;\n";
-                String strResponse = t100ServiceHelper.getT100Data(requestBody,webServiceName,getApplicationContext(),"");
-                mapResponseStatus = t100ServiceHelper.getT100StatusData(strResponse);
-                mapResponseList = t100ServiceHelper.getT100ResponseDocno(strResponse,"docno");
-
-                e.onNext(mapResponseStatus);
-                e.onNext(mapResponseList);
-                e.onComplete();
-            }
-        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<List<Map<String, Object>>>() {
-            @Override
-            public void onSubscribe(Disposable d) {
-
-            }
-
-            @Override
-            public void onNext(List<Map<String, Object>> maps) {
-                if(mapResponseStatus.size()> 0){
-                    for(Map<String,Object> mStatus: mapResponseStatus){
-                        statusCode = mStatus.get("statusCode").toString();
-                        statusDescription = mStatus.get("statusDescription").toString();
-                    }
-                }else{
-                    MyToast.myShow(SubDetailForMultipleActivity.this,"执行接口错误",2,0);
-                }
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                MyToast.myShow(SubDetailForMultipleActivity.this,"网络错误",0,0);
-                loadingDialog.dismiss();
-            }
-
-            @Override
-            public void onComplete() {
-                if(statusCode.equals("0")){
-                    String strDocno="";
-
-                    if(action.equals("save")){
-                        if(mapResponseList.size()> 0) {
-                            for (Map<String, Object> mResponse : mapResponseList) {
-                                strDocno = mResponse.get("Docno").toString();
-                                multipleDetailAdapter.updateData(i,subMultipleView,strDocno);
-                            }
-                        }
-                    }
-                    MyToast.myShow(SubDetailForMultipleActivity.this, statusDescription, 1, 1);
-
-                    if(action.equals("print")){
-                        finish();
-                    }else{
-                        if(actionid.equals("10")){
-                            imgMultipleStartStatus.setImageDrawable(getResources().getDrawable(R.drawable.ok));
-                        }else if(actionid.equals("11")){
-                            imgMultipleQcStatus.setImageDrawable(getResources().getDrawable(R.drawable.ok));
-                        }else if(actionid.equals("12")){
-                            imgMultipleProductStatus.setImageDrawable(getResources().getDrawable(R.drawable.ok));
-                        }else if(actionid.equals("13")){
-                            imgMultipleErrorBeginStatus.setImageDrawable(getResources().getDrawable(R.drawable.ok));
-                        }else if(actionid.equals("14")){
-                            imgMultipleErrorEndStatus.setImageDrawable(getResources().getDrawable(R.drawable.ok));
-                        }
-                    }
-
-                }else{
-                    MyToast.myShow(SubDetailForMultipleActivity.this, statusDescription, 0, 1);
-                }
-                loadingDialog.dismiss();
-            }
-        });
-    }
-
+    /**
+    *描述: 执行webservice写入操作
+    *日期：2022/6/10
+    **/
     private void saveData2ToT100(String action,String actionid){
         //显示进度条
         if(loadingDialog == null){
@@ -828,44 +1025,11 @@ public class SubDetailForMultipleActivity extends AppCompatActivity {
                 String requestBody = "&lt;Document&gt;\n"+
                         "&lt;RecordSet id=\"1\"&gt;\n"+
                         mRecordSet+
-//                        "&lt;Master name=\"sffb_t\" node_id=\"1\"&gt;\n"+
-//                        "&lt;Record&gt;\n"+
-//                        "&lt;Field name=\"sffbsite\" value=\""+ UserInfo.getUserSiteId(getApplicationContext())+"\"/&gt;\n"+
-//                        "&lt;Field name=\"sffbent\" value=\""+UserInfo.getUserEnterprise(getApplicationContext())+"\"/&gt;\n"+
-//                        "&lt;Field name=\"sffbdocdt\" value=\""+strPlanDate+"\"/&gt;\n"+
-//                        "&lt;Field name=\"sffb002\" value=\""+ UserInfo.getUserId(getApplicationContext()) +"\"/&gt;\n"+  //异动人员
-//                        "&lt;Field name=\"sffb004\" value=\""+ strWorkTime +"\"/&gt;\n"+  //班次
-//                        "&lt;Field name=\"sffb005\" value=\""+ strDocno +"\"/&gt;\n"+  //工单单号
-//                        "&lt;Field name=\"sffbseq\" value=\""+ strProcessId +"\"/&gt;\n"+  //工艺项次
-//                        "&lt;Field name=\"sffb010\" value=\""+ strDevice +"\"/&gt;\n"+  //机器编号
-//                        "&lt;Field name=\"sffb029\" value=\""+ strProductCode +"\"/&gt;\n"+  //报工料号
-//                        "&lt;Field name=\"sffb017\" value=\""+ strQuantity +"\"/&gt;\n"+  //良品数量
-//                        "&lt;Field name=\"processid\" value=\""+ strProcessId +"\"/&gt;\n"+  //工艺项次
-//                        "&lt;Field name=\"process\" value=\""+ strProcess +"\"/&gt;\n"+  //工序
-//                        "&lt;Field name=\"lots\" value=\""+ strLots +"\"/&gt;\n"+  //批次
-//                        "&lt;Field name=\"sffbdocno\" value=\""+ strProductDocno +"\"/&gt;\n"+  //报工单号
-//                        "&lt;Field name=\"qcstatus\" value=\""+ qcstatus +"\"/&gt;\n"+  //状态
-//                        "&lt;Field name=\"planno\" value=\""+ strFlag +"\"/&gt;\n"+  //计划单号
-//                        "&lt;Field name=\"planseq\" value=\""+ txtMultipleInputCount.getText().toString() +"\"/&gt;\n"+  //报工次数
-//                        "&lt;Field name=\"planuser\" value=\""+ strEmployee +"\"/&gt;\n"+  //生产人员
-//                        "&lt;Field name=\"errorlots\" value=\""+ 1 +"\"/&gt;\n"+  //异常批次
-//                        "&lt;Field name=\"models\" value=\""+ strModStatus +"\"/&gt;\n"+  //同模类型
-//                        "&lt;Field name=\"act\" value=\""+ action +"\"/&gt;\n"+  //执行动作
-//                        "&lt;Field name=\"actcode\" value=\""+ actionid +"\"/&gt;\n"+  //执行命令ID
-//                        "&lt;Detail name=\"s_detail1\" node_id=\"1_1\"&gt;\n"+
-//                        "&lt;Record&gt;\n"+
-//                        "&lt;Field name=\"sffyucseq\" value=\"1.0\"/&gt;\n"+
-//                        "&lt;/Record&gt;\n"+
-//                        "&lt;/Detail&gt;\n"+
-//                        "&lt;Memo/&gt;\n"+
-//                        "&lt;Attachment count=\"0\"/&gt;\n"+
-//                        "&lt;/Record&gt;\n"+
-//                        "&lt;/Master&gt;\n"+
                         "&lt;/RecordSet&gt;\n"+
                         "&lt;/Document&gt;\n";
                 String strResponse = t100ServiceHelper.getT100Data(requestBody,webServiceName,getApplicationContext(),"");
                 mapResponseStatus = t100ServiceHelper.getT100StatusData(strResponse);
-                mapResponseList = t100ServiceHelper.getT100ResponseDocno(strResponse,"docno");
+                mapResponseList = t100ServiceHelper.getT100ResponseDocno3(strResponse,"docno");
 
                 e.onNext(mapResponseStatus);
                 e.onNext(mapResponseList);
@@ -891,14 +1055,16 @@ public class SubDetailForMultipleActivity extends AppCompatActivity {
 
             @Override
             public void onError(Throwable e) {
-                MyToast.myShow(SubDetailForMultipleActivity.this,"网络错误",0,0);
+                MyToast.myShow(SubDetailForMultipleActivity.this,e.getMessage(),0,0);
                 loadingDialog.dismiss();
+                loadingDialog = null;
             }
 
             @Override
             public void onComplete() {
                 if(statusCode.equals("0")){
                     String strDocno="";
+
                     int i=0;
 
                     if(action.equals("save")){
@@ -929,6 +1095,50 @@ public class SubDetailForMultipleActivity extends AppCompatActivity {
                             imgMultipleQcStatus.setImageDrawable(getResources().getDrawable(R.drawable.ok));
                         }else if(actionid.equals("12")){
                             imgMultipleProductStatus.setImageDrawable(getResources().getDrawable(R.drawable.ok));
+
+                            //打开上料检核数据
+                            if(mapResponseList.size()> 0) {
+                                String sProductCode="";
+                                String sProductName="";
+                                String sProductModels="";
+                                String sProcessId="";
+                                String sProcess="";
+                                String sDevice="";
+                                String sQuantity="";
+                                String sEmp="";
+                                String sStatus="";
+                                String sAttribute="";
+
+                                for (Map<String, Object> mResponse : mapResponseList) {
+                                    sProductCode = mResponse.get("ProductCode").toString();
+                                    sProductName = mResponse.get("ProductName").toString();
+                                    sProductModels = mResponse.get("ProductModels").toString();
+                                    sProcessId = mResponse.get("ProcessId").toString();
+                                    sProcess = mResponse.get("Process").toString();
+                                    sDevice = mResponse.get("Device").toString();
+                                    sQuantity = mResponse.get("Quantity").toString();
+                                    sEmp = mResponse.get("Emp").toString();
+                                    sStatus = mResponse.get("Status").toString();
+                                    sAttribute = mResponse.get("Attribute").toString();
+                                }
+
+                                Intent intent = new Intent(SubDetailForMultipleActivity.this,CheckMaterialActivity.class);
+                                Bundle bundle = new Bundle();
+                                bundle.putString("Docno",strFlag);
+                                bundle.putString("ProductCode",sProductCode);
+                                bundle.putString("ProductName",sProductName);
+                                bundle.putString("ProductModels",sProductModels);
+                                bundle.putString("ProcessId",sProcessId);
+                                bundle.putString("Process",sProcess);
+                                bundle.putString("Device",sDevice);
+                                bundle.putString("Quantity",sQuantity);
+                                bundle.putString("Emp",sEmp);
+                                bundle.putString("Status",sStatus);
+                                bundle.putString("Attribute",sAttribute);
+                                intent.putExtras(bundle);
+                                startActivity(intent);
+                            }
+
                         }else if(actionid.equals("13")){
                             if(mapResponseList.size()> 0) {
                                 String strErrorCount="";
@@ -939,6 +1149,7 @@ public class SubDetailForMultipleActivity extends AppCompatActivity {
                             }
 
                             imgMultipleErrorBeginStatus.setImageDrawable(getResources().getDrawable(R.drawable.ok));
+                            imgMultipleQcStatus.setImageDrawable(getResources().getDrawable(R.drawable.fail));
                         }else if(actionid.equals("14")){
                             imgMultipleErrorEndStatus.setImageDrawable(getResources().getDrawable(R.drawable.ok));
                         }
@@ -948,6 +1159,135 @@ public class SubDetailForMultipleActivity extends AppCompatActivity {
                     MyToast.myShow(SubDetailForMultipleActivity.this, statusDescription, 0, 1);
                 }
                 loadingDialog.dismiss();
+                loadingDialog = null;
+            }
+        });
+    }
+
+    /**
+    *描述: 更新当前标签状态,更新为N
+    *日期：2022/6/12
+    **/
+    private void updQrcodeData(String strAction,String strActionId,String qcstatus,String qrcode){
+        //显示进度条
+        if(loadingDialog == null){
+            loadingDialog = new LoadingDialog(SubDetailForMultipleActivity.this,"数据更新中",R.drawable.dialog_loading);
+            loadingDialog.show();
+        }
+
+        Observable.create(new ObservableOnSubscribe<List<Map<String, Object>>>() {
+            @Override
+            public void subscribe(ObservableEmitter<List<Map<String, Object>>> e) throws Exception {
+
+                //初始化T100服务名:cwssp022
+                String webServiceName = "MaterialCheckInsert";
+
+                //初始化日期时间
+                long timeCurrentTimeMillis = System.currentTimeMillis();
+                SimpleDateFormat simpleTimeFormat = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd",Locale.getDefault());
+                String currentTime = simpleTimeFormat.format(timeCurrentTimeMillis);
+                String currentDate = simpleDateFormat.format(new Date());
+
+                //获取工单信息
+                int iCount = multipleDetailAdapter.getCount();
+                String strProductDocno = "";
+
+                for(int i= 0;i<iCount;i++){
+                    if(strProductDocno.equals("")||strProductDocno.isEmpty()){
+                        strProductDocno = multipleDetailAdapter.getItemValue(i,"Docno");
+                    }else{
+                        strProductDocno = strProductDocno + ","+multipleDetailAdapter.getItemValue(i,"Docno");
+                    }
+
+                }
+
+                //发送服务器请求
+                T100ServiceHelper t100ServiceHelper = new T100ServiceHelper();
+                String requestBody = "&lt;Document&gt;\n"+
+                        "&lt;RecordSet id=\"1\"&gt;\n"+
+                        "&lt;Master name=\"sffb_t\" node_id=\"1\"&gt;\n"+
+                        "&lt;Record&gt;\n"+
+                        "&lt;Field name=\"sffbsite\" value=\""+ UserInfo.getUserSiteId(getApplicationContext())+"\"/&gt;\n"+
+                        "&lt;Field name=\"sffbent\" value=\""+UserInfo.getUserEnterprise(getApplicationContext())+"\"/&gt;\n"+
+                        "&lt;Field name=\"sffb002\" value=\""+ UserInfo.getUserId(getApplicationContext()) +"\"/&gt;\n"+  //异动人员
+                        "&lt;Field name=\"sffb005\" value=\""+ strProductDocno +"\"/&gt;\n"+  //工单单号
+                        "&lt;Field name=\"sffb012\" value=\""+ currentDate +"\"/&gt;\n"+  //批量生产止日期
+                        "&lt;Field name=\"sffb013\" value=\""+ currentTime +"\"/&gt;\n"+  //批量生产止时间
+                        "&lt;Field name=\"planuser\" value=\""+ UserInfo.getUserId(getApplicationContext()) +"\"/&gt;\n"+  //生产人员
+                        "&lt;Field name=\"processid\" value=\""+ strProcessId +"\"/&gt;\n"+  //工艺项次
+                        "&lt;Field name=\"process\" value=\""+ strProcess +"\"/&gt;\n"+  //工序
+                        "&lt;Field name=\"qcstatus\" value=\""+ qcstatus +"\"/&gt;\n"+  //状态
+                        "&lt;Field name=\"qrcode\" value=\""+ qrcode +"\"/&gt;\n"+  //二维码
+                        "&lt;Field name=\"act\" value=\""+ strAction +"\"/&gt;\n"+  //操作类别
+                        "&lt;Field name=\"actcode\" value=\""+ strActionId +"\"/&gt;\n"+  //执行命令ID
+                        "&lt;Detail name=\"s_detail1\" node_id=\"1_1\"&gt;\n"+
+                        "&lt;Record&gt;\n"+
+                        "&lt;Field name=\"sffyucseq\" value=\"1.0\"/&gt;\n"+
+                        "&lt;/Record&gt;\n"+
+                        "&lt;/Detail&gt;\n"+
+                        "&lt;Memo/&gt;\n"+
+                        "&lt;Attachment count=\"0\"/&gt;\n"+
+                        "&lt;/Record&gt;\n"+
+                        "&lt;/Master&gt;\n"+
+                        "&lt;/RecordSet&gt;\n"+
+                        "&lt;/Document&gt;\n";
+                String strResponse = t100ServiceHelper.getT100Data(requestBody,webServiceName,getApplicationContext(),"");
+                mapResponseStatus = t100ServiceHelper.getT100StatusData(strResponse);
+                mapList = t100ServiceHelper.getT100ResponseDocno4(strResponse,"docno");
+
+                e.onNext(mapResponseStatus);
+                e.onNext(mapList);
+                e.onComplete();
+            }
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<List<Map<String, Object>>>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(List<Map<String, Object>> maps) {
+                if(mapResponseStatus.size()> 0){
+                    for(Map<String,Object> mStatus: mapResponseStatus){
+                        statusCode = mStatus.get("statusCode").toString();
+                        statusDescription = mStatus.get("statusDescription").toString();
+                    }
+                }else{
+                    MyToast.myShow(SubDetailForMultipleActivity.this,"执行接口错误",2,0);
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                MyToast.myShow(SubDetailForMultipleActivity.this,e.getMessage(),0,0);
+                loadingDialog.dismiss();
+                loadingDialog = null;
+            }
+
+            @Override
+            public void onComplete() {
+                if(statusCode.equals("0")){
+//                    String sDocno = "";
+//                    String sProductCode = "";
+                    String sProductName = "";
+//                    String sProcessId = "";
+
+                    if(mapList.size()> 0) {
+                        for (Map<String, Object> mResponse : mapList) {
+//                            sDocno = mResponse.get("Docno").toString();
+//                            sProductCode = mResponse.get("ProductCode").toString();
+                            sProductName = mResponse.get("ProductName").toString();
+//                            sProcessId = mResponse.get("ProcessId").toString();
+                        }
+                    }
+                    MyToast.myShow(SubDetailForMultipleActivity.this, "零件:"+sProductName+",标签确认成功", 1, 1);
+                }else{
+//                    MyToast.myShow(SubDetailForMultipleActivity.this,statusDescription,0,0);
+                    ShowAlertDialog.myShow(SubDetailForMultipleActivity.this,statusDescription);
+                }
+                loadingDialog.dismiss();
+                loadingDialog = null;
             }
         });
     }

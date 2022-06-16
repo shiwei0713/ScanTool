@@ -284,13 +284,22 @@ public class DetailActivity extends AppCompatActivity {
 
         //初始化传入值
         if(intIndex!=53){
-            String[] strQrCode = qrCode.split("_");
-            qrSid = strQrCode[0].trim();
+            int iIndex = qrCode.indexOf("_");
+            String sProductCode="0";
+            String sProductName="0";
+            if(iIndex==-1){
+                qrSid = qrCode.trim();
+            }else{
+                String[] strQrCode = qrCode.split("_");
+                qrSid = strQrCode[0].trim();
+                sProductCode = strQrCode[1].trim();
+                sProductName = strQrCode[2].trim();
+            }
 
             //隐藏控件
             if(doctype.equals("XM")){
                 try{
-                    qrContent = docno+"_"+strQrCode[1].trim()+"_"+0+"_"+strQrCode[0].trim();
+                    qrContent = docno+"_"+sProductCode+"_"+0+"_"+qrSid;
                 }catch (Exception e){
                     e.printStackTrace();
                 }
@@ -309,7 +318,7 @@ public class DetailActivity extends AppCompatActivity {
                     if(qrSid.isEmpty() || qrSid.length() == 0){
                         qrContent = "";
                     }else{
-                        qrContent = qrType+"_"+strQrCode[1].trim()+"_"+strQrCode[2].trim()+"_"+strQrCode[0].trim();
+                        qrContent = qrType+"_"+sProductCode+"_"+sProductName+"_"+qrSid;
                     }
                 }catch (Exception e){
                     e.printStackTrace();

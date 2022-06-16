@@ -409,7 +409,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onError(Throwable e) {
-                MyToast.myShow(MainActivity.this,"网络错误",0,0);
+                MyToast.myShow(MainActivity.this,e.getMessage(),0,0);
                 loadingDialog.dismiss();
             }
 

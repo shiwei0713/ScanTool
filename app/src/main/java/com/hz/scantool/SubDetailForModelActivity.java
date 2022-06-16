@@ -27,7 +27,10 @@ import com.hz.scantool.adapter.SubAdapter;
 import com.hz.scantool.helper.T100ServiceHelper;
 import com.hz.scantool.models.UserInfo;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import io.reactivex.Observable;
@@ -54,12 +57,12 @@ public class SubDetailForModelActivity extends AppCompatActivity {
     private EditText subForModelQuantity;
     private TextView subDetailProductCode;
     private TextView subDetailProductModels;
-    private TextView subDetailProcess;
+    private TextView subDetailProcessId,subDetailProcess;
     private TextView subDetailDevice;
     private TextView subDetailStartPlanDate;
-    private TextView subDetailEndPlanDate;
+    private TextView subDetailVersion,subDetailSeq;
     private TextView subDetailDocno;
-    private Button btnSave;
+    private Button btnSave,btnSaveForUser;
     private LoadingDialog loadingDialog;
 
     private List<Map<String,Object>> mapResponseList;
@@ -102,7 +105,7 @@ public class SubDetailForModelActivity extends AppCompatActivity {
             case R.id.action_scan:
                 //调用zxing扫码界面
                 IntentIntegrator intentIntegrator = new IntentIntegrator(SubDetailForModelActivity.this);
-                intentIntegrator.setTimeout(5000);
+//                intentIntegrator.setTimeout(5000);
                 intentIntegrator.setDesiredBarcodeFormats();  //IntentIntegrator.QR_CODE
                 //开始扫描
                 intentIntegrator.initiateScan();
@@ -179,14 +182,18 @@ public class SubDetailForModelActivity extends AppCompatActivity {
         subForModelQuantity= findViewById(R.id.subForModelQuantity);
         subDetailProductCode = findViewById(R.id.subDetailProductCode);
         subDetailProductModels= findViewById(R.id.subDetailProductModels);
+        subDetailProcessId = findViewById(R.id.subDetailProcessId);
         subDetailProcess = findViewById(R.id.subDetailProcess);
         subDetailDevice = findViewById(R.id.subDetailDevice);
         subDetailStartPlanDate= findViewById(R.id.subDetailStartPlanDate);
-        subDetailEndPlanDate= findViewById(R.id.subDetailEndPlanDate);
+        subDetailVersion= findViewById(R.id.subDetailVersion);
         subDetailDocno= findViewById(R.id.subDetailDocno);
+        subDetailSeq = findViewById(R.id.subDetailSeq);
         btnSave= findViewById(R.id.btnSave);
+        btnSaveForUser = findViewById(R.id.btnSaveForUser);
 
         btnSave.setOnClickListener(new btnClickListener());
+        btnSaveForUser.setOnClickListener(new btnClickListener());
     }
 
     //扫描结果解析
@@ -197,7 +204,7 @@ public class SubDetailForModelActivity extends AppCompatActivity {
         if(qrIndex==-1){
             MyToast.myShow(context,"条码错误:"+qrContent,0,1);
         }else{
-            getModelsData(qrCodeValue[0],qrCodeValue[2]);
+            getModelsData(qrCodeValue[0],qrCodeValue[1],qrCodeValue[2],qrCodeValue[5]);
         }
     }
 
@@ -208,13 +215,19 @@ public class SubDetailForModelActivity extends AppCompatActivity {
         public void onClick(View view) {
             switch (view.getId()){
                 case R.id.btnSave:
+                    //按照协同类别区分：model分为20：单独安装；21：人员协同
+                    saveModelToT100("model","20");
+                    break;
+                case R.id.btnSaveForUser:
+                    //按照协同类别区分：model分为20：单独安装；21：人员协同
+                    saveModelToT100("model","21");
                     break;
             }
         }
     }
 
     //获取清单
-    private void getModelsData(String docno,String empcode){
+    private void getModelsData(String docno,String sVersion,String empcode,String seq){
         //显示进度条
         loadingDialog = new LoadingDialog(this,"数据获取中",R.drawable.dialog_loading);
         loadingDialog.show();
@@ -224,7 +237,7 @@ public class SubDetailForModelActivity extends AppCompatActivity {
             public void subscribe(ObservableEmitter<List<Map<String, Object>>> e) throws Exception {
                 //初始化T100服务名
                 String webServiceName = "ProductListGet";
-                String strwhere = " sfncucdocno='"+docno.trim()+"' AND sfncuc001='"+ empcode.trim()+"'";
+                String strwhere = " sfaauc014='"+docno.trim()+"' AND sfaauc001='"+sVersion+"'";// AND sfaauc002='"+ empcode.trim()+"'
                 String strType = "2";
 
                 //发送服务器请求
@@ -272,7 +285,7 @@ public class SubDetailForModelActivity extends AppCompatActivity {
 
             @Override
             public void onError(Throwable e) {
-                MyToast.myShow(SubDetailForModelActivity.this,"网络错误",0,0);
+                MyToast.myShow(SubDetailForModelActivity.this,e.getMessage(),0,0);
                 loadingDialog.dismiss();
             }
 
@@ -284,14 +297,127 @@ public class SubDetailForModelActivity extends AppCompatActivity {
                         subForModelUserName.setText(mData.get("Emp").toString());
                         subDetailProductCode.setText(mData.get("ProductCode").toString());
                         subDetailProductModels.setText(mData.get("ProductModels").toString());
+                        subDetailProcessId.setText(mData.get("ProcessId").toString());
                         subDetailProcess.setText(mData.get("Process").toString());
                         subDetailDevice.setText(mData.get("Device").toString());
                         subDetailStartPlanDate.setText(mData.get("PlanDate").toString());
-                        subDetailEndPlanDate.setText(mData.get("PlanDate").toString());
-                        subDetailDocno.setText(mData.get("Docno").toString());
+                        subDetailDocno.setText(docno);
+                        subDetailVersion.setText(sVersion);
+                        subDetailSeq.setText(seq);
                     }
                 }
                 loadingDialog.dismiss();
+            }
+        });
+    }
+
+    /**
+    *描述: 保存数据至服务器
+    *日期：2022/6/10
+    **/
+    private void saveModelToT100(String strAction,String strActionId){
+        //显示进度条
+        if(loadingDialog == null){
+            loadingDialog = new LoadingDialog(SubDetailForModelActivity.this,"数据保存中",R.drawable.dialog_loading);
+            loadingDialog.show();
+        }
+
+        Observable.create(new ObservableOnSubscribe<List<Map<String, Object>>>() {
+            @Override
+            public void subscribe(ObservableEmitter<List<Map<String, Object>>> e) throws Exception {
+
+                //初始化T100服务名
+                String webServiceName = "WorkReportRequestGen";
+
+                //获取当前时间
+                long timeCurrentTimeMillis = System.currentTimeMillis();
+                SimpleDateFormat simpleTimeFormat = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd",Locale.getDefault());
+                String currentTime = simpleTimeFormat.format(timeCurrentTimeMillis);
+                String currentDate = simpleDateFormat.format(new Date());
+
+                //按照协同类别区分：model分为20：单独安装；21：人员协同
+                String sUser="";
+                if(strActionId.equals("20")){
+                    sUser = UserInfo.getUserId(getApplicationContext());
+                }else{
+                    sUser = subForModelUserName.getText().toString();
+                }
+
+                //发送服务器请求
+                T100ServiceHelper t100ServiceHelper = new T100ServiceHelper();
+                String requestBody = "&lt;Document&gt;\n"+
+                        "&lt;RecordSet id=\"1\"&gt;\n"+
+                        "&lt;Master name=\"sffb_t\" node_id=\"1\"&gt;\n"+
+                        "&lt;Record&gt;\n"+
+                        "&lt;Field name=\"sffbsite\" value=\""+ UserInfo.getUserSiteId(getApplicationContext())+"\"/&gt;\n"+
+                        "&lt;Field name=\"sffbent\" value=\""+UserInfo.getUserEnterprise(getApplicationContext())+"\"/&gt;\n"+
+                        "&lt;Field name=\"sffb002\" value=\""+ UserInfo.getUserId(getApplicationContext()) +"\"/&gt;\n"+  //异动人员
+                        "&lt;Field name=\"sffbseq\" value=\""+ subDetailProcessId.getText().toString() +"\"/&gt;\n"+  //工艺项次
+                        "&lt;Field name=\"sffb012\" value=\""+ currentDate +"\"/&gt;\n"+  //批量生产止日期
+                        "&lt;Field name=\"sffb013\" value=\""+ currentTime +"\"/&gt;\n"+  //批量生产止时间
+                        "&lt;Field name=\"sffb029\" value=\""+ subDetailProductCode.getText().toString() +"\"/&gt;\n"+  //报工料号
+                        "&lt;Field name=\"sffb017\" value=\""+ subForModelQuantity.getText().toString() +"\"/&gt;\n"+  //良品数量
+                        "&lt;Field name=\"processid\" value=\""+ subDetailProcessId.getText().toString() +"\"/&gt;\n"+  //工艺项次
+                        "&lt;Field name=\"process\" value=\""+ subDetailProcess.getText().toString() +"\"/&gt;\n"+  //工序
+                        "&lt;Field name=\"planseq\" value=\""+ subDetailSeq.getText().toString() +"\"/&gt;\n"+  //报工次数
+                        "&lt;Field name=\"planno\" value=\""+ subDetailDocno.getText().toString() +"\"/&gt;\n"+  //计划单号
+                        "&lt;Field name=\"planuser\" value=\""+ sUser +"\"/&gt;\n"+  //生产人员
+                        "&lt;Field name=\"version\" value=\""+ subDetailVersion.getText().toString() +"\"/&gt;\n"+  //版本
+                        "&lt;Field name=\"act\" value=\""+ strAction +"\"/&gt;\n"+  //执行动作
+                        "&lt;Field name=\"actcode\" value=\""+ strActionId +"\"/&gt;\n"+  //执行命令ID
+                        "&lt;Detail name=\"s_detail1\" node_id=\"1_1\"&gt;\n"+
+                        "&lt;Record&gt;\n"+
+                        "&lt;Field name=\"sffyucseq\" value=\"1.0\"/&gt;\n"+
+                        "&lt;/Record&gt;\n"+
+                        "&lt;/Detail&gt;\n"+
+                        "&lt;Memo/&gt;\n"+
+                        "&lt;Attachment count=\"0\"/&gt;\n"+
+                        "&lt;/Record&gt;\n"+
+                        "&lt;/Master&gt;\n"+
+                        "&lt;/RecordSet&gt;\n"+
+                        "&lt;/Document&gt;\n";
+                String strResponse = t100ServiceHelper.getT100Data(requestBody,webServiceName,getApplicationContext(),"");
+                mapResponseStatus = t100ServiceHelper.getT100StatusData(strResponse);
+
+                e.onNext(mapResponseStatus);
+                e.onComplete();
+            }
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<List<Map<String, Object>>>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(List<Map<String, Object>> maps) {
+                if(mapResponseStatus.size()> 0){
+                    for(Map<String,Object> mStatus: mapResponseStatus){
+                        statusCode = mStatus.get("statusCode").toString();
+                        statusDescription = mStatus.get("statusDescription").toString();
+                    }
+                }else{
+                    MyToast.myShow(SubDetailForModelActivity.this,"执行接口错误",2,0);
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                MyToast.myShow(SubDetailForModelActivity.this,e.getMessage(),0,0);
+                loadingDialog.dismiss();
+                loadingDialog = null;
+            }
+
+            @Override
+            public void onComplete() {
+                if(statusCode.equals("0")){
+                    MyToast.myShow(SubDetailForModelActivity.this, statusDescription, 1, 1);
+                    finish();
+                }else{
+                    MyToast.myShow(SubDetailForModelActivity.this,statusDescription,0,0);
+                }
+                loadingDialog.dismiss();
+                loadingDialog = null;
             }
         });
     }

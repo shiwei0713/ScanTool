@@ -1,11 +1,20 @@
+/**
+*文件：SubQualityCheckDetailActivity,2022/6/7
+*描述: PQC扫描检验详情
+*作者：shiwei
+**/
 package com.hz.scantool;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,9 +22,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 import com.hz.scantool.adapter.LoadingDialog;
 import com.hz.scantool.adapter.MyToast;
 import com.hz.scantool.helper.T100ServiceHelper;
@@ -35,50 +46,27 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
+import static com.google.zxing.integration.android.IntentIntegrator.REQUEST_CODE;
+
 public class SubQualityCheckDetailActivity extends AppCompatActivity {
 
-    private String strTitle;
-    private String strProductName="";
-    private String strPlanDate="";
-    private String strProductCode="";
-    private String strProductModels="";
-    private String strProcessId="";
-    private String strProcess="";
-    private String strDevice="";
-    private String strDocno="";
-    private String strQuantity="";
-    private String strBadQuantity="";
-    private String strNgQuantity="";
-    private String strLots="";
-    private String strVersion="";
-    private String strSeq="";
-    private String strSeq1="";
-    private String strStatus="";
+    private static final String SCANACTION="com.android.server.scannerservice.broadcast";
 
-    private TextView subQualityCheckDetailProductName;
-    private EditText subQualityCheckDetailNgQuantity;
-    private EditText subQualityCheckDetailBadQuantity;
-    private TextView subDetailProductCode;
-    private TextView subDetailProductModels;
-    private TextView subDetailProcessId;
-    private TextView subDetailProcess;
-    private TextView subDetailDevice;
-    private TextView subDetailLots;
-    private TextView subDetailStartPlanDate;
-    private TextView subDetailQuantity;
-    private TextView subDetailDocno;
-    private TextView subDetailSeq;
-    private TextView subDetailSeq1;
-    private TextView subDetailVersion;
+    private String strTitle;
+    private String strProductName,strPlanDate,strProductCode,strProductModels,strProcessId,strProcess,strDevice,strDocno;
+    private String strQuantity,strBadQuantity,strNgQuantity;
+    private String strLots,strVersion,strUnit,strSeq,strSeq1,strStatus,strAttribute,strQrcode;
+
+    private TextView checkDetailProductCode,checkDetailProductName,checkDetailProductModels,checkDetailProcessId,checkDetailProcess,checkDetailLots;
+    private TextView checkDetailDocno,checkDetailQuantity,checkDetailUnit,checkDetailAttribute,checkDetailPlanno,checkDetailVersion,checkDetailQrcode;
+    private EditText checkDetailNgQuantity,checkDetailBadQuantity;
     private ImageView imageViewResult;
-    private Button btnSave;
-    private Button btnCancel;
+    private Button btncheckDetailCancel,btncheckDetailFinish;
 
     private String statusCode;
     private String statusDescription;
 
-    private List<Map<String,Object>> mapResponseList;
-    private List<Map<String,Object>> mapResponseStatus;
+    private List<Map<String,Object>> mapResponseList,mapResponseStatus;
     private LoadingDialog loadingDialog;
 
     @Override
@@ -89,18 +77,6 @@ public class SubQualityCheckDetailActivity extends AppCompatActivity {
         //初始化
         initBundle();
         initView();
-
-        //获取工具栏
-        Toolbar toolbar=findViewById(R.id.subQualityCheckDetailToolBar);
-        setSupportActionBar(toolbar);
-
-        //工具栏增加返回按钮和标题显示
-        ActionBar actionBar=getSupportActionBar();
-        if(actionBar!=null){
-            actionBar.setTitle(strTitle);
-            actionBar.setHomeButtonEnabled(true);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
     }
 
     @Override
@@ -149,68 +125,153 @@ public class SubQualityCheckDetailActivity extends AppCompatActivity {
         strNgQuantity = bundle.getString("NgQuantity");
         strLots = bundle.getString("Lots");
         strVersion = bundle.getString("Version");
+        strUnit = bundle.getString("Unit");
         strSeq = bundle.getString("Seq");
         strSeq1 = bundle.getString("Seq1");
         strStatus = bundle.getString("Status");
+        strAttribute = bundle.getString("Attribute");
+        strQrcode = bundle.getString("qrCode");
+        strQrcode = strQrcode.trim();
     }
 
     //初始化控件
     private void initView(){
-        subQualityCheckDetailProductName = findViewById(R.id.subQualityCheckDetailProductName);
-        subQualityCheckDetailNgQuantity = findViewById(R.id.subQualityCheckDetailNgQuantity);
-        subQualityCheckDetailBadQuantity = findViewById(R.id.subQualityCheckDetailBadQuantity);
-        subDetailProductCode = findViewById(R.id.subDetailProductCode);
-        subDetailProductModels = findViewById(R.id.subDetailProductModels);
-        subDetailProcessId = findViewById(R.id.subDetailProcessId);
-        subDetailProcess = findViewById(R.id.subDetailProcess);
-        subDetailDevice = findViewById(R.id.subDetailDevice);
-        subDetailLots = findViewById(R.id.subDetailLots);
-        subDetailStartPlanDate = findViewById(R.id.subDetailStartPlanDate);
-        subDetailQuantity = findViewById(R.id.subDetailQuantity);
-        subDetailDocno = findViewById(R.id.subDetailDocno);
-        subDetailSeq = findViewById(R.id.subDetailSeq);
-        subDetailSeq1 = findViewById(R.id.subDetailSeq1);
-        subDetailVersion = findViewById(R.id.subDetailVersion);
-        imageViewResult = findViewById(R.id.imageViewResult);
-        btnSave = findViewById(R.id.btnSave);
-        btnCancel = findViewById(R.id.btnCancel);
+        //获取工具栏
+        Toolbar toolbar=findViewById(R.id.subQualityCheckDetailToolBar);
+        setSupportActionBar(toolbar);
 
-        subQualityCheckDetailProductName.setText(strProductName);
-        subDetailProductCode.setText(strProductCode);
-        subDetailProductModels.setText(strProductModels);
-        subDetailProcessId.setText(strProcessId);
-        subDetailProcess.setText(strProcess);
-        subDetailDevice.setText(strDevice);
-        subDetailLots.setText(strLots);
-        subDetailStartPlanDate.setText(strPlanDate);
-        subDetailQuantity.setText(strQuantity);
-        subDetailDocno.setText(strDocno);
-        subDetailSeq.setText(strSeq);
-        subDetailSeq1.setText(strSeq1);
-        subDetailVersion.setText(strVersion);
+        //工具栏增加返回按钮和标题显示
+        ActionBar actionBar=getSupportActionBar();
+        if(actionBar!=null){
+            actionBar.setTitle(strTitle);
+            actionBar.setHomeButtonEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
+        //初始化控件
+        checkDetailProductCode = findViewById(R.id.checkDetailProductCode);
+        checkDetailProductName = findViewById(R.id.checkDetailProductName);
+        checkDetailProductModels = findViewById(R.id.checkDetailProductModels);
+        checkDetailProcessId = findViewById(R.id.checkDetailProcessId);
+        checkDetailProcess = findViewById(R.id.checkDetailProcess);
+        checkDetailLots = findViewById(R.id.checkDetailLots);
+        checkDetailDocno = findViewById(R.id.checkDetailDocno);
+        checkDetailQuantity = findViewById(R.id.checkDetailQuantity);
+        checkDetailUnit = findViewById(R.id.checkDetailUnit);
+        checkDetailNgQuantity = findViewById(R.id.checkDetailNgQuantity);
+        checkDetailBadQuantity = findViewById(R.id.checkDetailBadQuantity);
+        checkDetailAttribute = findViewById(R.id.checkDetailAttribute);
+        checkDetailPlanno = findViewById(R.id.checkDetailPlanno);
+        checkDetailVersion = findViewById(R.id.checkDetailVersion);
+        checkDetailQrcode = findViewById(R.id.checkDetailQrcode);
+        btncheckDetailCancel = findViewById(R.id.btncheckDetailCancel);
+        btncheckDetailFinish = findViewById(R.id.btncheckDetailFinish);
+        imageViewResult = findViewById(R.id.imageViewResult);
+
+        //初始值
+        checkDetailProductName.setText(strProductName);
+        checkDetailProductCode.setText(strProductCode);
+        checkDetailProductModels.setText(strProductModels);
+        checkDetailProcessId.setText(strProcessId);
+        checkDetailProcess.setText(strProcess);
+        checkDetailLots.setText(strLots);
+        checkDetailDocno.setText(strDocno);
+        checkDetailQuantity.setText(strQuantity);
+        checkDetailUnit.setText(strUnit);
+        checkDetailAttribute.setText(strAttribute);
+        checkDetailQrcode.setText(strQrcode);
 
         if(strStatus.equals("K")){
-            subQualityCheckDetailNgQuantity.setEnabled(false);
-            subQualityCheckDetailBadQuantity.setEnabled(false);
-            btnSave.setEnabled(false);
+//            checkDetailNgQuantity.setEnabled(false);
+//            checkDetailBadQuantity.setEnabled(false);
+//            btncheckDetailFinish.setEnabled(false);
+//            btncheckDetailCancel.setEnabled(false);
             if(strNgQuantity.equals("")||strNgQuantity.isEmpty()){
                 strNgQuantity = "0";
             }
             if(strBadQuantity.equals("")||strBadQuantity.isEmpty()){
                 strBadQuantity = "0";
             }
-            subQualityCheckDetailNgQuantity.setText(strNgQuantity);
-            subQualityCheckDetailBadQuantity.setText(strBadQuantity);
+            checkDetailNgQuantity.setText(strNgQuantity);
+            checkDetailBadQuantity.setText(strBadQuantity);
             imageViewResult.setImageDrawable(getResources().getDrawable(R.drawable.detail_status_ok));
         }else{
-            subQualityCheckDetailNgQuantity.setEnabled(true);
-            subQualityCheckDetailBadQuantity.setEnabled(true);
-            btnSave.setEnabled(true);
+//            checkDetailNgQuantity.setEnabled(true);
+//            checkDetailBadQuantity.setEnabled(true);
+//            btncheckDetailFinish.setEnabled(true);
+//            btncheckDetailCancel.setEnabled(true);
             imageViewResult.setImageDrawable(getResources().getDrawable(R.drawable.detail_status_deal));
         }
 
-        btnSave.setOnClickListener(new commandClickListener());
-        btnCancel.setOnClickListener(new commandClickListener());
+        btncheckDetailFinish.setOnClickListener(new commandClickListener());
+        btncheckDetailCancel.setOnClickListener(new commandClickListener());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        //注册广播接收器
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(SCANACTION);
+        intentFilter.setPriority(Integer.MAX_VALUE);
+        registerReceiver(scanReceiver,intentFilter);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        unregisterReceiver(scanReceiver);
+    }
+
+    //PDA扫描数据接收
+    private BroadcastReceiver scanReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if(intent.getAction().equals(SCANACTION)){
+                String qrContent = intent.getStringExtra("scannerdata");
+
+                if(qrContent!=null && qrContent.length()!=0){
+                    scanResult(qrContent,context,intent);
+                }else{
+                    MyToast.myShow(context,"扫描失败,请重新扫描",0,0);
+                }
+            }
+        }
+    };
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode==REQUEST_CODE){
+            IntentResult intentResult = IntentIntegrator.parseActivityResult(resultCode,data);
+            String qrContent = intentResult.getContents();
+            Intent intent = null;
+
+            if(qrContent!=null && qrContent.length()!=0){
+                scanResult(qrContent,this,intent);
+            }else{
+                MyToast.myShow(this,"条码错误,请重新扫描"+qrContent,0,0);
+            }
+        }
+    }
+
+    //扫描结果解析
+    private void scanResult(String qrContent,Context context, Intent intent){
+        //解析二维码
+        String[] qrCodeValue = qrContent.split("_");
+        int qrIndex = qrContent.indexOf("_");
+
+        if(qrIndex==-1){
+            MyToast.myShow(context,"条码错误:"+qrContent,0,1);
+        }else{
+            checkDetailProcessId.setText(qrCodeValue[3].trim());
+            checkDetailProcess.setText(qrCodeValue[4].trim());
+            checkDetailPlanno.setText(qrCodeValue[0].trim());
+            checkDetailVersion.setText(qrCodeValue[1].trim());
+        }
     }
 
     private class commandClickListener implements View.OnClickListener{
@@ -218,24 +279,63 @@ public class SubQualityCheckDetailActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             switch (view.getId()){
-                case R.id.btnSave: //保存
-                    if(checkQty()){
-                        updatePqcData();
+                case R.id.btncheckDetailFinish: //合格
+                    if(checkDocno()){
+                        if(checkQty("OK")){
+                            updatePqcData("K");
+                        }else{
+                            MyToast.myShow(SubQualityCheckDetailActivity.this,"合格产品,不良品和废品量应全为0",2,0);
+                        }
                     }else{
-                        MyToast.myShow(SubQualityCheckDetailActivity.this,"数量不可为0或不可大于标签量",2,0);
+                        MyToast.myShow(SubQualityCheckDetailActivity.this,"计划信息和工序不可为空",2,0);
                     }
                     break;
-                case R.id.btnCancel://取消
-                    finish();
+                case R.id.btncheckDetailCancel://异常
+//                    strErrorLots = txtMultipleErrorCount.getText().toString();
+//                    saveMultipleToT100("insert","13","S","");
+                    if(checkDocno()){
+                        if(checkQty("NG")){
+                            updatePqcData("KO");
+                        }else{
+                            MyToast.myShow(SubQualityCheckDetailActivity.this,"异常产品，不良品和废品量不可为0或不可大于报工量",2,0);
+                        }
+                    }else{
+                        MyToast.myShow(SubQualityCheckDetailActivity.this,"计划信息和工序不可为空",2,0);
+                    }
                     break;
             }
         }
     }
 
-    private boolean checkQty(){
+    /**
+    *描述: 检核单号是否完整
+    *日期：2022/6/7
+    **/
+    private boolean checkDocno(){
         boolean isCheck = true;
-        String strBadQty=subQualityCheckDetailBadQuantity.getText().toString();
-        String strNgQty=subQualityCheckDetailNgQuantity.getText().toString();
+        String strProcessId = checkDetailProcessId.getText().toString();
+        String strProcess = checkDetailProcess.getText().toString();
+        String strPlanno = checkDetailPlanno.getText().toString();
+        String strVersion = checkDetailVersion.getText().toString();
+        String strAttribute = checkDetailAttribute.getText().toString();
+
+        if(strAttribute.equals("BL")){
+            if(strProcessId.equals("")||strProcessId.isEmpty()||strProcess.equals("")||strProcess.isEmpty()||strPlanno.equals("")||strPlanno.isEmpty()||strVersion.equals("")||strVersion.isEmpty()){
+                isCheck = false;
+            }
+        }
+
+        return isCheck;
+    }
+
+    /**
+    *描述: 核对数量是否录入
+    *日期：2022/6/7
+    **/
+    private boolean checkQty(String sFlag){
+        boolean isCheck = true;
+        String strBadQty = checkDetailBadQuantity.getText().toString();
+        String strNgQty = checkDetailNgQuantity.getText().toString();
 
         if(strBadQty.equals("")||strBadQty.isEmpty()){
             strBadQty = "0";
@@ -249,19 +349,27 @@ public class SubQualityCheckDetailActivity extends AppCompatActivity {
         int iNgQty = Integer.valueOf(strNgQty);
         int iQuantity = Integer.valueOf(strQuantity);
 
-        if(iBadQty==0 && iNgQty==0){
-            isCheck = true;  //不检核数量为0
-        }else{
-            int iQty = iQuantity - iBadQty - iNgQty;
-            if(iQty<0){
+        if(sFlag.equals("OK")){
+            //合格
+            if(iBadQty>0 || iNgQty>0 ){
                 isCheck = false;
+            }
+        }else{
+            //异常
+            if(iBadQty==0 && iNgQty==0 ){
+                isCheck = false;
+            }else{
+                int iQty = iQuantity - iBadQty - iNgQty;
+                if(iQty<0){
+                    isCheck = false;
+                }
             }
         }
 
         return isCheck;
     }
 
-    private void updatePqcData(){
+    private void updatePqcData(String qcstatus){
         //显示进度条
         loadingDialog = new LoadingDialog(SubQualityCheckDetailActivity.this,"数据提交中",R.drawable.dialog_loading);
         loadingDialog.show();
@@ -271,7 +379,6 @@ public class SubQualityCheckDetailActivity extends AppCompatActivity {
             public void subscribe(ObservableEmitter<List<Map<String, Object>>> e) throws Exception {
                 //初始化T100服务名
                 String webServiceName = "WorkReportRequestGen";
-                String qcstatus = "K";
                 String action = "pqccheck";
 
                 long timeCurrentTimeMillis = System.currentTimeMillis();
@@ -296,13 +403,15 @@ public class SubQualityCheckDetailActivity extends AppCompatActivity {
                         "&lt;Field name=\"sffb012\" value=\""+ currentDate +"\"/&gt;\n"+  //批量生产止日期
                         "&lt;Field name=\"sffb013\" value=\""+ currentTime +"\"/&gt;\n"+  //批量生产止时间
                         "&lt;Field name=\"sffb029\" value=\""+ strProductCode +"\"/&gt;\n"+  //报工料号
-                        "&lt;Field name=\"sffb018\" value=\""+ subQualityCheckDetailBadQuantity.getText().toString() +"\"/&gt;\n"+  //报废数量
-                        "&lt;Field name=\"sffb019\" value=\""+ subQualityCheckDetailNgQuantity.getText().toString() +"\"/&gt;\n"+  //当站下线数量
+                        "&lt;Field name=\"sffb018\" value=\""+ checkDetailBadQuantity.getText().toString() +"\"/&gt;\n"+  //报废数量
+                        "&lt;Field name=\"sffb019\" value=\""+ checkDetailNgQuantity.getText().toString() +"\"/&gt;\n"+  //当站下线数量
+                        "&lt;Field name=\"processid\" value=\""+ strProcessId +"\"/&gt;\n"+  //工艺项次
                         "&lt;Field name=\"process\" value=\""+ strProcess +"\"/&gt;\n"+  //工序
                         "&lt;Field name=\"lots\" value=\""+ strLots +"\"/&gt;\n"+  //批次
                         "&lt;Field name=\"qcstatus\" value=\""+ qcstatus +"\"/&gt;\n"+  //首检状态
                         "&lt;Field name=\"planseq\" value=\""+ strSeq +"\"/&gt;\n"+  //报工次数
                         "&lt;Field name=\"version\" value=\""+ strVersion +"\"/&gt;\n"+  //版本
+                        "&lt;Field name=\"qrcode\" value=\""+ strQrcode +"\"/&gt;\n"+  //二维码
                         "&lt;Field name=\"act\" value=\""+ action +"\"/&gt;\n"+  //执行动作
                         "&lt;Detail name=\"s_detail1\" node_id=\"1_1\"&gt;\n"+
                         "&lt;Record&gt;\n"+
@@ -351,6 +460,7 @@ public class SubQualityCheckDetailActivity extends AppCompatActivity {
             public void onComplete() {
                 if(statusCode.equals("0")){
                     MyToast.myShow(SubQualityCheckDetailActivity.this, statusDescription, 1, 1);
+                    finish();
                 }else{
                     MyToast.myShow(SubQualityCheckDetailActivity.this, statusDescription, 0, 1);
                 }
@@ -358,4 +468,5 @@ public class SubQualityCheckDetailActivity extends AppCompatActivity {
             }
         });
     }
+
 }

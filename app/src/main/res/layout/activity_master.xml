@@ -36,13 +36,33 @@
         <TextView
             android:id="@+id/txtMasterUser"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_centerHorizontal="true"
             android:layout_toRightOf="@id/imgMasterUser"
             android:textColor="@color/login_title"
             android:textSize="26sp"
             android:textStyle="bold"
             android:text="@string/master_username" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_toRightOf="@id/imgMasterUser"
+        android:layout_below="@id/linearMasterTitle"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="15dp">
+
+        <TextView
+            android:id="@+id/txtMasterDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:textColor="@color/login_title"
+            android:textSize="16sp"
+            android:text="" />
 
         <TextView
             android:id="@+id/txtLoginout"
@@ -54,30 +74,7 @@
             android:textColor="@color/master_loginout"
             android:text="@string/master_logout"/>
 
-        <TextView
-            android:id="@+id/txtPassword"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/txtMasterUser"
-            android:layout_marginLeft="10dp"
-            android:layout_centerHorizontal="true"
-            android:textColor="@color/master_loginout"
-            android:text="@string/master_password"/>
-
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/txtMasterDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_toRightOf="@id/imgMasterUser"
-        android:layout_below="@id/linearMasterTitle"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="5dp"
-        android:textColor="@color/login_title"
-        android:textSize="16sp"
-        android:text="" />
 
     <LinearLayout
         android:id="@+id/linearMasterAction"

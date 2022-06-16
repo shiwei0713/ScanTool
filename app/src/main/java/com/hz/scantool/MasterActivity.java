@@ -25,7 +25,6 @@ public class MasterActivity extends AppCompatActivity {
     TextView txtMasterDate;
     TextView txtMasterSite;
     TextView txtLoginout;
-    TextView txtPassword;
     Button btnAction1;
     Button btnAction2;
     Button btnAction3;
@@ -69,15 +68,6 @@ public class MasterActivity extends AppCompatActivity {
                 Intent intent = new Intent(MasterActivity.this,MainActivity.class);
                 startActivity(intent);
                 finish();
-            }
-        });
-
-        txtPassword = findViewById(R.id.txtPassword);
-        txtPassword.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MasterActivity.this,ResetUserActivity.class);
-                startActivity(intent);
             }
         });
 

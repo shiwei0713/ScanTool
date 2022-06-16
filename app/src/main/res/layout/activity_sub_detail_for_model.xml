@@ -10,131 +10,152 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/subForModelToolBar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/toolbar_height"
         android:background="@drawable/action_style"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_weight="1"
-            app:srcCompat="@drawable/detail_icon" />
-
-        <TextView
-            android:id="@+id/subForModelProductName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:textColor="@color/list_item_number" />
-    </LinearLayout>
-
-    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/line"
+        android:layout_height="match_parent"
+        android:padding="5dp"
+        android:layout_marginTop="5dp"
+        android:gravity="left"
+        android:layout_gravity="left"
         android:orientation="vertical">
 
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_weight="1"
-            app:srcCompat="@drawable/emp" />
-
-        <TextView
-            android:id="@+id/subForModelUserName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:textColor="@color/list_item_number" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/line"
-        android:orientation="vertical">
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:padding="5dp"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_weight="1"
-            app:srcCompat="@drawable/detail_input" />
-
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/detail_title8"
-            android:padding="5dp"
-            android:textSize="@dimen/detail_content_titlesizte"
+            android:textSize="@dimen/font14"
             android:textStyle="bold"
-            android:textColor="@color/master_loginout" />
+            android:textColor="@color/black"
+            android:text="@string/content_title1"/>
 
-        <EditText
-            android:id="@+id/subForModelQuantity"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:textSize="@dimen/detail_content_titlesizte"
-            android:textStyle="bold"
-            android:inputType="number"
-            android:ems="4"
-            android:background="@drawable/edittext_style"
-            android:textColor="@color/master_loginout" />
-
-        <Button
-            android:id="@+id/btnSave"
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:layout_marginLeft="10dp"
-            android:background="@drawable/list_button_selector"
-            android:textColor="@color/teal_700"
-            android:textStyle="normal"
-            android:focusable="false"
-            android:textSize="@dimen/list_detail_button"
-            android:text="@string/list_detail_button6" />
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
+                android:text="@string/content_title31"
+                android:background="@drawable/textview_bg_gray"/>
+
+            <TextView
+                android:id="@+id/subForModelProductName"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textStyle="bold"
+                android:textColor="@color/master_message"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/textview_bg_gray"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
+                android:text="@string/content_title16"
+                android:background="@drawable/textview_bg_gray"/>
+
+            <TextView
+                android:id="@+id/subForModelUserName"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textStyle="bold"
+                android:textColor="@color/master_message"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/textview_bg_gray"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
+                android:text="@string/detail_title8"
+                android:background="@drawable/textview_bg_gray"/>
+
+            <EditText
+                android:id="@+id/subForModelQuantity"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:layout_marginLeft="5dp"
+                android:textStyle="bold"
+                android:inputType="number"
+                android:hint="@string/hint_hours"
+                android:ems="4"
+                android:background="@drawable/textview_bg_gray"
+                android:textColor="@color/master_message" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="5dp"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnSave"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/button_height"
+                android:background="@drawable/list_button_selector"
+                android:textColor="@color/teal_700"
+                android:textStyle="normal"
+                android:focusable="false"
+                android:textSize="@dimen/list_detail_button"
+                android:text="@string/list_detail_button15" />
+
+            <Button
+                android:id="@+id/btnSaveForUser"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/button_height"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/list_button_selector"
+                android:textColor="@color/teal_700"
+                android:textStyle="normal"
+                android:focusable="false"
+                android:textSize="@dimen/list_detail_button"
+                android:text="@string/list_detail_button16" />
+
+        </LinearLayout>
+
+        <include
+            layout="@layout/sub_product_content"
+            android:layout_width="match_parent"
+            android:layout_height="400dp"/>
 
     </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="5dp"
-        android:background="@color/line"
-        android:orientation="vertical">
-
-    </LinearLayout>
-
-    <include
-        layout="@layout/sub_product_content"
-        android:layout_width="match_parent"
-        android:layout_height="400dp"/>
 
 </LinearLayout>

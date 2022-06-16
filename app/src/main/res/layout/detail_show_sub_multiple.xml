@@ -215,7 +215,7 @@
                     android:textStyle="bold"
                     android:inputType="numberDecimal"
                     android:hint="@string/hint_quantity"
-                    android:textSize="22sp" />
+                    android:textSize="@dimen/font18" />
 
             </LinearLayout>
 

@@ -108,7 +108,6 @@ public class SubDetailActivity extends AppCompatActivity {
     private TextView subDetailEndPlanDate;
     private TextView subDetailDocno;
     private TextView subDetailProductDocno;
-    private TextView subDetailEmployee;
     private TextView subDetailLots;
     private ImageView imgQrcode;
 
@@ -195,7 +194,6 @@ public class SubDetailActivity extends AppCompatActivity {
         subDetailStartPlanDate.setText(bundle.getString("PlanDate"));
         subDetailEndPlanDate.setText(bundle.getString("PlanDate"));
         subDetailDocno.setText(bundle.getString("Docno"));
-        subDetailEmployee.setText("("+bundle.getString("Employee")+")");
         subDetailLots.setText(bundle.getString("Lots"));
     }
 
@@ -212,7 +210,6 @@ public class SubDetailActivity extends AppCompatActivity {
         subDetailEndPlanDate = findViewById(R.id.subDetailEndPlanDate);
         subDetailDocno = findViewById(R.id.subDetailDocno);
         subDetailProductDocno = findViewById(R.id.subDetailProductDocno);
-        subDetailEmployee = findViewById(R.id.subDetailEmployee);
         subDetailLots = findViewById(R.id.subDetailLots);
         imgQrcode = findViewById(R.id.imgQrcode);
 

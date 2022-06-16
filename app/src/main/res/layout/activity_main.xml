@@ -194,7 +194,7 @@
             android:layout_marginLeft="30dp"
             android:background="@drawable/button_selector"
             android:textColor="@color/white"
-            android:text="@string/login_btnReset" />
+            android:text="@string/master_password" />
     </LinearLayout>
 
     <RelativeLayout

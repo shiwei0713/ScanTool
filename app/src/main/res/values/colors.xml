@@ -23,4 +23,5 @@
     <color name="hover">#B2018786</color>
     <color name="backgroud">#FF018786</color>
     <color name="list_detail_item">#FF000000</color>
+    <color name="gray">#F1F1EE</color>
 </resources>
