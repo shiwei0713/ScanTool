@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -57,15 +58,17 @@ public class CheckStockDetailActivity extends AppCompatActivity {
     private Button checkBtnDept;
 
     private TextView inputDetailProductCode;
-    private TextView inputDetailProductModels;
-    private TextView inputDetailModel;
+    private TextView inputDetailProductModels,inputDetailProductModelsTitle;
+    private TextView inputDetailModel,inputDetailModelTitle;
     private TextView inputDetailStartPlanDate;
     private EditText inputDetailQuantity;
+    private TextView inputDetailScanQuantity;
     private TextView inputDetailDocno;
     private TextView inputDetailFeatures;
     private TextView inputDetailFeaturesName;
     private TextView inputDetailFeaturesModels;
     private Button btnDetailSubmit;
+    private LinearLayout viewFeatures,viewFeaturesName,viewFeaturesModels;
 
     private LoadingDialog loadingDialog;
 
@@ -111,15 +114,22 @@ public class CheckStockDetailActivity extends AppCompatActivity {
         inputDetailModel = findViewById(R.id.inputDetailModel);
         inputDetailStartPlanDate = findViewById(R.id.inputDetailStartPlanDate);
         inputDetailQuantity = findViewById(R.id.inputDetailQuantity);
+        inputDetailScanQuantity = findViewById(R.id.inputDetailScanQuantity);
         inputDetailDocno = findViewById(R.id.inputDetailDocno);
         inputDetailFeatures = findViewById(R.id.inputDetailFeatures);
         inputDetailFeaturesName = findViewById(R.id.inputDetailFeaturesName);
         inputDetailFeaturesModels = findViewById(R.id.inputDetailFeaturesModels);
         btnDetailSubmit = findViewById(R.id.btnDetailSubmit);
+        inputDetailProductModelsTitle = findViewById(R.id.inputDetailProductModelsTitle);
+        inputDetailModelTitle = findViewById(R.id.inputDetailModelTitle);
+        viewFeatures = findViewById(R.id.viewFeatures);
+        viewFeaturesName = findViewById(R.id.viewFeaturesName);
+        viewFeaturesModels = findViewById(R.id.viewFeaturesModels);
 
         //初始化
         checkStockDetailDept.setText(UserInfo.getDept(CheckStockDetailActivity.this));
 
+        //事件定义
         checkBtnDept.setOnClickListener(new submitDataClickListener());
         btnDetailSubmit.setOnClickListener(new submitDataClickListener());
     }
@@ -133,9 +143,13 @@ public class CheckStockDetailActivity extends AppCompatActivity {
                     if(inputDetailDocno.getText().toString().isEmpty()){
                         MyToast.myShow(CheckStockDetailActivity.this,"扫描成功才可提交",0,0);
                     }else{
-                        getScanQrData(inputDetailDocno.getText().toString(),"U");
-                        inputDetailQuantity.setVisibility(View.INVISIBLE);
-                        btnDetailSubmit.setVisibility(View.GONE);
+                        String sQuantity = inputDetailQuantity.getText().toString();
+                        if(sQuantity.isEmpty()||sQuantity.equals("")){
+                            MyToast.myShow(CheckStockDetailActivity.this,"实盘数不可为0",0,0);
+                        }else{
+                            getScanQrData(inputDetailDocno.getText().toString(),"U");
+                        }
+                        inputDetailQuantity.clearFocus();
                     }
                     break;
                 case R.id.checkBtnDept:
@@ -173,7 +187,7 @@ public class CheckStockDetailActivity extends AppCompatActivity {
             case R.id.action_scan:
                 //调用zxing扫码界面
                 IntentIntegrator intentIntegrator = new IntentIntegrator(CheckStockDetailActivity.this);
-                intentIntegrator.setTimeout(5000);
+//                intentIntegrator.setTimeout(5000);
                 intentIntegrator.setDesiredBarcodeFormats();  //IntentIntegrator.QR_CODE
                 //开始扫描
                 intentIntegrator.initiateScan();
@@ -239,9 +253,6 @@ public class CheckStockDetailActivity extends AppCompatActivity {
 
     //扫描结果解析
     private void scanResult(String qrContent,Context context, Intent intent){
-        inputDetailQuantity.setVisibility(View.VISIBLE);
-        btnDetailSubmit.setVisibility(View.VISIBLE);
-
         //解析部门
         strArrayDept = checkStockDetailDept.getText().toString();
         if(strArrayDept.isEmpty()){
@@ -253,13 +264,13 @@ public class CheckStockDetailActivity extends AppCompatActivity {
         }
 
         //解析二维码
-        String[] qrCodeValue = qrContent.split("_");
+        String sQrcode = qrContent;
         int qrIndex = qrContent.indexOf("_");
-        if(qrIndex==-1){
-            MyToast.myShow(context,"条码错误:"+qrContent,0,1);
-        }else{
-            getScanQrData(qrCodeValue[0].toString(),"A");
+        if(qrIndex>-1){
+            String[] qrCodeValue = qrContent.split("_");
+            sQrcode = qrCodeValue[0].toString();
         }
+        getScanQrData(sQrcode,"A");
     }
 
     //获取扫描条码信息
@@ -328,10 +339,6 @@ public class CheckStockDetailActivity extends AppCompatActivity {
                     for(Map<String,Object> mStatus: mapResponseStatus){
                         statusCode = mStatus.get("statusCode").toString();
                         statusDescription = mStatus.get("statusDescription").toString();
-
-                        if(!statusCode.equals("0")){
-                            MyToast.myShow(CheckStockDetailActivity.this,statusDescription,0,0);
-                        }
                     }
                 }else{
                     MyToast.myShow(CheckStockDetailActivity.this,"执行接口错误",2,0);
@@ -346,32 +353,58 @@ public class CheckStockDetailActivity extends AppCompatActivity {
 
             @Override
             public void onComplete() {
-                if(mapResponseList.size()>0){
-                    for(Map<String,Object> mData: mapResponseList){
-                        String sProductCode = mData.get("ProductCode").toString();
-                        String sProductName = mData.get("ProductName").toString();
-                        String sProductModels = mData.get("ProductModels").toString();
-                        String sProductSize = mData.get("ProductSize").toString();
-                        String sDocno = mData.get("Docno").toString();
-                        String sPlanDate = mData.get("PlanDate").toString();
-                        String sQuantity = mData.get("Quantity").toString();
-                        String sWeight = mData.get("Weight").toString();
-                        String sLots = mData.get("Lots").toString();
-                        String sFeatures = mData.get("Features").toString();
-                        String sFeaturesName = mData.get("FeaturesName").toString();
-                        String sFeaturesModels = mData.get("FeaturesModels").toString();
+                if(!statusCode.equals("0")){
+                    MyToast.myShow(CheckStockDetailActivity.this,statusDescription,0,0);
+                }else{
+                    if(scmd.equals("U")){
+                        MyToast.myShow(CheckStockDetailActivity.this,statusDescription,1,0);
+                    }else{
+                        if(mapResponseList.size()>0){
+                            for(Map<String,Object> mData: mapResponseList){
+                                String sProductCode = mData.get("ProductCode").toString();
+                                String sProductName = mData.get("ProductName").toString();
+                                String sProductModels = mData.get("ProductModels").toString();
+                                String sProductSize = mData.get("ProductSize").toString();
+                                String sDocno = mData.get("Docno").toString();
+                                String sPlanDate = mData.get("PlanDate").toString();
+                                String sQuantity = mData.get("Quantity").toString();
+                                String sWeight = mData.get("Weight").toString();
+                                String sLots = mData.get("Lots").toString();
+                                String sFeatures = mData.get("Features").toString();
+                                String sFeaturesName = mData.get("FeaturesName").toString();
+                                String sFeaturesModels = mData.get("FeaturesModels").toString();
 
-                        inputDetailProductCode.setText(sProductCode);
-                        inputDetailProductModels.setText(sProductName);
-                        inputDetailModel.setText(sProductSize+"/"+sProductModels);
-                        inputDetailStartPlanDate.setText(sPlanDate);
-                        inputDetailQuantity.setText(sQuantity);
-                        inputDetailDocno.setText(sDocno);
-                        inputDetailFeatures.setText(sFeatures);
-                        inputDetailFeaturesName.setText(sFeaturesName);
-                        inputDetailFeaturesModels.setText(sFeaturesModels);
+                                //显示扫描结果
+                                inputDetailProductCode.setText(sProductCode);
+                                inputDetailProductModels.setText(sProductName);
+                                inputDetailStartPlanDate.setText(sPlanDate);
+                                inputDetailScanQuantity.setText(sQuantity);
+                                inputDetailQuantity.setText("");
+                                inputDetailDocno.setText(sDocno);
+                                if(sProductSize.equals("")||sProductSize.isEmpty()){
+                                    //如果为零件
+                                    inputDetailModel.setText(sProductModels);
+                                    viewFeatures.setVisibility(View.GONE);
+                                    viewFeaturesName.setVisibility(View.GONE);
+                                    viewFeaturesModels.setVisibility(View.GONE);
+                                }else{
+                                    //如果原材料
+                                    viewFeatures.setVisibility(View.VISIBLE);
+                                    viewFeaturesName.setVisibility(View.VISIBLE);
+                                    viewFeaturesModels.setVisibility(View.VISIBLE);
+                                    inputDetailModel.setText(sProductSize+"/"+sProductModels);
+                                    inputDetailFeatures.setText(sFeatures);
+                                    inputDetailFeaturesName.setText(sFeaturesName);
+                                    inputDetailFeaturesModels.setText(sFeaturesModels);
+                                    inputDetailProductModelsTitle.setText(getResources().getString(R.string.check_product_label3));
+                                    inputDetailModelTitle.setText(getResources().getString(R.string.check_product_label4));
+                                }
+
+                            }
+                        }
                     }
                 }
+
                 loadingDialog.dismiss();
             }
         });

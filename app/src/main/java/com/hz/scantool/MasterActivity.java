@@ -166,7 +166,7 @@ public class MasterActivity extends AppCompatActivity {
     private void setBtnStyle(){
         //声明按钮ID和图片ID
         int[] btnId= {R.id.btnAction1,R.id.btnAction2,R.id.btnAction3,R.id.btnAction4,R.id.btnAction5,R.id.btnAction6,R.id.btnAction7,R.id.btnAction8};
-        int[] imgId= {R.drawable.master_action1,R.drawable.master_action2,R.drawable.master_action3,R.drawable.master_action4,R.drawable.master_action5,R.drawable.master_action6,R.drawable.master_action7,R.drawable.master_action8};
+        int[] imgId= {R.drawable.master_action1,R.drawable.master_action2,R.drawable.master_action3,R.drawable.master_action4,R.drawable.master_action5,R.drawable.master_action6,R.drawable.master_action7,R.drawable.master_action9};
 
         //初始化按钮和图片
         Button btnAction;
@@ -243,7 +243,7 @@ public class MasterActivity extends AppCompatActivity {
                 //生产领退料
                 case R.id.btnAction5:
                     if(btnAction5Power){
-                        intent=new Intent(MasterActivity.this,SubListActivity.class);
+                        intent=new Intent(MasterActivity.this,WarehouseListActivity.class); //SubListActivity->WarehouseListActivity
                         bundle=new Bundle();
                         bundle.putString("title",getString(agrTitle[4]));
                         bundle.putInt("index",4);

@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center|left"
+        android:layout_marginLeft="@dimen/detail_content_margin"
+        android:layout_marginRight="@dimen/detail_content_margin"
+        android:layout_marginTop="5dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/font14"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:text="@string/check_product_title"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
+                android:text="@string/detail_content_title1"
+                android:background="@drawable/textview_bg_gray"/>
+
+            <TextView
+                android:id="@+id/inputDetailProductCode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/textview_bg_gray"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/inputDetailProductModelsTitle"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
+                android:text="@string/detail_content_title2"
+                android:background="@drawable/textview_bg_gray"/>
+
+            <TextView
+                android:id="@+id/inputDetailProductModels"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/textview_bg_gray"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/inputDetailModelTitle"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
+                android:text="@string/detail_content_title21"
+                android:background="@drawable/textview_bg_gray"/>
+
+            <TextView
+                android:id="@+id/inputDetailModel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/textview_bg_gray"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/viewFeatures"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
+                android:text="@string/detail_content_title11"
+                android:background="@drawable/textview_bg_gray"/>
+
+            <TextView
+                android:id="@+id/inputDetailFeatures"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/textview_bg_gray"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/viewFeaturesName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
+                android:text="@string/detail_content_title12"
+                android:background="@drawable/textview_bg_gray"/>
+
+            <TextView
+                android:id="@+id/inputDetailFeaturesName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/textview_bg_gray"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/viewFeaturesModels"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
+                android:text="@string/detail_content_title13"
+                android:background="@drawable/textview_bg_gray"/>
+
+            <TextView
+                android:id="@+id/inputDetailFeaturesModels"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/textview_bg_gray"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
+                android:text="@string/detail_content_title5"
+                android:background="@drawable/textview_bg_gray"/>
+
+            <TextView
+                android:id="@+id/inputDetailStartPlanDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/textview_bg_gray"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
+                android:text="@string/check_product_label2"
+                android:background="@drawable/textview_bg_gray"/>
+
+            <TextView
+                android:id="@+id/inputDetailScanQuantity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/textview_bg_gray"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/master_loginout"
+                android:text="@string/check_product_label1"
+                android:background="@drawable/textview_bg_gray"/>
+
+            <EditText
+                android:id="@+id/inputDetailQuantity"
+                android:layout_width="180dp"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:layout_marginLeft="5dp"
+                android:textStyle="bold"
+                android:inputType="number"
+                android:hint="@string/check_product_hint"
+                android:ems="10"
+                android:background="@drawable/textview_bg_gray"
+                android:textColor="@color/master_message" />
+
+            <Button
+                android:id="@+id/btnDetailSubmit"
+                android:layout_width="60dp"
+                android:layout_height="25dp"
+                android:background="@drawable/button_selector_red"
+                android:textColor="@color/master_loginout"
+                android:textStyle="normal"
+                android:layout_marginLeft="10dp"
+                android:focusable="false"
+                android:textSize="@dimen/font14"
+                android:text="@string/check_product_button_title2" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
+                android:text="@string/check_product_label5"
+                android:background="@drawable/textview_bg_gray"/>
+
+            <TextView
+                android:id="@+id/inputDetailDocno"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/textview_bg_gray"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>

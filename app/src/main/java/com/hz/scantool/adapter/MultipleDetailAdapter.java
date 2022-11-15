@@ -82,6 +82,8 @@ public class MultipleDetailAdapter extends BaseAdapter {
             holder.txtMultipleDetailEmployee = view.findViewById(R.id.txtMultipleDetailEmployee);
             holder.txtMultipleDetailLots = view.findViewById(R.id.txtMultipleDetailLots);
             holder.txtMultipleProductDocno = view.findViewById(R.id.txtMultipleProductDocno);
+            holder.txtMultipleDetailTray = view.findViewById(R.id.txtMultipleDetailTray);
+            holder.txtMultipleDetailPackage = view.findViewById(R.id.txtMultipleDetailPackage);
 
             view.setTag(holder);
         }else{
@@ -103,6 +105,8 @@ public class MultipleDetailAdapter extends BaseAdapter {
         holder.txtMultipleDetailEmployee.setText((String)mData.get(i).get("Employee"));
         holder.txtMultipleDetailLots.setText((String)mData.get(i).get("Lots"));
         holder.status = (String)mData.get(i).get("Status");
+        holder.txtMultipleDetailTray.setText((String)mData.get(i).get("Tray"));
+        holder.txtMultipleDetailPackage.setText((String)mData.get(i).get("Package"));
 
         holder.txtMultipleDetailQuantity.addTextChangedListener(new InputTextWatcher(holder));
         holder.txtMultipleDetailQuantity.setTag(i);
@@ -133,6 +137,7 @@ public class MultipleDetailAdapter extends BaseAdapter {
         TextView txtMultipleDetailEmployee;
         TextView txtMultipleDetailLots;
         TextView txtMultipleProductDocno;
+        TextView txtMultipleDetailTray,txtMultipleDetailPackage;
 
         String status;
     }

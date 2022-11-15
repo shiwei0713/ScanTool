@@ -64,39 +64,62 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="50dp"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/txtQuery"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="18sp"
-                android:clickable="true"
-                android:text="@string/query_price"
-                android:textColor="@color/button_color" />
-
-            <TextView
-                android:id="@+id/txtQueryStock"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:textSize="18sp"
-                android:clickable="true"
-                android:text="@string/query_stock"
-                android:textColor="@color/button_color" />
-
-        </LinearLayout>
-
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="3dp"
+        android:layout_height="2dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:background="@color/line"
+        android:orientation="vertical">
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="3dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/subAction1"
+            android:layout_width="70dp"
+            android:layout_height="37dp"
+            android:textColor="@color/teal_700"/>
+
+        <Button
+            android:id="@+id/subAction2"
+            android:layout_width="70dp"
+            android:layout_height="37dp"
+            android:textColor="@color/teal_700"
+            android:layout_marginLeft="7dp"/>
+
+        <Button
+            android:id="@+id/subAction3"
+            android:layout_width="70dp"
+            android:layout_height="37dp"
+            android:textColor="@color/teal_700"
+            android:layout_marginLeft="7dp"/>
+
+        <Button
+            android:id="@+id/subAction4"
+            android:layout_width="70dp"
+            android:layout_height="37dp"
+            android:textColor="@color/teal_700"
+            android:layout_marginLeft="7dp"/>
+
+    </LinearLayout>
+
+    <com.hz.scantool.dialog.SearchView
+        android:id="@+id/searchView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
         android:background="@color/line"

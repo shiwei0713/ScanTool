@@ -32,6 +32,7 @@
     <dimen name="print_content_lager">14sp</dimen>
     <dimen name="list_show_sub_textview_width">180dp</dimen>
     <dimen name="list_show_sub_textview_width2">190dp</dimen>
+    <dimen name="list_show_sub_linearlayout_width">250dp</dimen>
     <dimen name="font12">12sp</dimen>
     <dimen name="font13">13sp</dimen>
     <dimen name="font14">14sp</dimen>
@@ -41,5 +42,6 @@
     <dimen name="font50">50sp</dimen>
     <dimen name="toolbar_height">40dp</dimen>
     <dimen name="button_height">30dp</dimen>
+    <dimen name="button_height25">25dp</dimen>
     <dimen name="button_width">100dp</dimen>
 </resources>

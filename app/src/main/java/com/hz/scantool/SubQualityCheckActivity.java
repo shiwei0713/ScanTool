@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -25,10 +26,12 @@ import com.hz.scantool.adapter.LoadingDialog;
 import com.hz.scantool.adapter.MultipleDetailAdapter;
 import com.hz.scantool.adapter.MyToast;
 import com.hz.scantool.adapter.SubAdapter;
+import com.hz.scantool.dialog.SearchView;
 import com.hz.scantool.helper.T100ServiceHelper;
 import com.hz.scantool.models.UserInfo;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -58,6 +61,9 @@ public class SubQualityCheckActivity extends AppCompatActivity {
     private LoadingDialog loadingDialog;
     private ListView listView;
     private SubAdapter subAdapter;
+    private Button btnFlag1,btnFlag2;
+    private TextView subCheckTitle;
+    private SearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,7 +104,7 @@ public class SubQualityCheckActivity extends AppCompatActivity {
             case R.id.action_scan:
                 //调用zxing扫码界面
                 IntentIntegrator intentIntegrator = new IntentIntegrator(SubQualityCheckActivity.this);
-                intentIntegrator.setTimeout(5000);
+//                intentIntegrator.setTimeout(5000);
                 intentIntegrator.setDesiredBarcodeFormats();  //IntentIntegrator.QR_CODE
                 //开始扫描
                 intentIntegrator.initiateScan();
@@ -194,9 +200,68 @@ public class SubQualityCheckActivity extends AppCompatActivity {
     }
 
     private void initView(){
+        btnFlag1 = findViewById(R.id.btnFlag1);
+        btnFlag2 = findViewById(R.id.btnFlag2);
+        subCheckTitle = findViewById(R.id.subCheckTitle);
         listView = findViewById(R.id.subQualityCheckView);
 
         listView.setOnItemClickListener(new listItemClickListener());
+        btnFlag1.setOnClickListener(new btnClickListenter());
+        btnFlag2.setOnClickListener(new btnClickListenter());
+
+        subCheckTitle.setText(getResources().getString(R.string.content_title39)+"-"+btnFlag1.getText());
+
+        //初始化查询
+        searchView = (SearchView) findViewById(R.id.searchView);
+        searchView.setSearchViewListener(new SearchView.onSearchViewListener() {
+            @Override
+            public boolean onQueryTextChange(String text) {
+                searchItem("ProductName",text);
+                return false;
+            }
+        });
+    }
+
+    /**
+     *描述: 查询结果解析
+     *日期：2022/7/18
+     **/
+    public void searchItem(String name,String query) {
+        List<Map<String,Object>> mSearchList = new ArrayList<Map<String,Object>>();
+        for (int i = 0; i < mapResponseList.size(); i++) {
+            String sProductName = (String)mapResponseList.get(i).get(name);
+            int index = sProductName.indexOf(query);
+            //存在匹配的数据
+            if (index != -1) {
+                mSearchList.add(mapResponseList.get(i));
+            }
+        }
+
+        //填充清单
+        if(mSearchList.size()>0){
+            subAdapter = new SubAdapter(mSearchList,getApplicationContext(),mUpdateClickListener,mCancelClickListener,"QC");
+            listView.setAdapter(subAdapter);
+        }
+
+    }
+
+    private class btnClickListenter implements  View.OnClickListener{
+
+        @Override
+        public void onClick(View view) {
+            switch (view.getId()){
+                case R.id.btnFlag1:
+                    //首检
+                    subCheckTitle.setText(getResources().getString(R.string.content_title39)+"-"+btnFlag1.getText());
+                    getSubListData("12");
+                    break;
+                case R.id.btnFlag2:
+                    //中检
+                    subCheckTitle.setText(getResources().getString(R.string.content_title39)+"-"+btnFlag2.getText());
+                    getSubListData("13");
+                    break;
+            }
+        }
     }
 
     //行单击事件
@@ -304,7 +369,7 @@ public class SubQualityCheckActivity extends AppCompatActivity {
 
             @Override
             public void onComplete() {
-                subAdapter = new SubAdapter(mapResponseList,getApplicationContext(),mUpdateClickListener,"QC");
+                subAdapter = new SubAdapter(mapResponseList,getApplicationContext(),mUpdateClickListener,mCancelClickListener,"QC");
                 listView.setAdapter(subAdapter);
 
                 loadingDialog.dismiss();
@@ -317,114 +382,135 @@ public class SubQualityCheckActivity extends AppCompatActivity {
     private SubAdapter.UpdateClickListener mUpdateClickListener = new SubAdapter.UpdateClickListener() {
         @Override
         public void UpdateClick(int position, View view) {
-            //显示进度条
-            loadingDialog = new LoadingDialog(SubQualityCheckActivity.this,"数据提交中",R.drawable.dialog_loading);
-            loadingDialog.show();
-
-            Observable.create(new ObservableOnSubscribe<List<Map<String,Object>>>() {
-                @Override
-                public void subscribe(ObservableEmitter<List<Map<String, Object>>> e) throws Exception {
-                    //初始化T100服务名
-                    String webServiceName = "WorkReportRequestGen";
-                    String qcstatus = "K";
-                    String action = "check";
-
-                    String strPlanDate = subAdapter.getItemValue(position,"PlanDate");
-                    String strDocno = subAdapter.getItemValue(position,"Docno");
-                    String strProcessId = subAdapter.getItemValue(position,"ProcessId");
-                    String strDevice = subAdapter.getItemValue(position,"Device");
-                    String strProductCode = subAdapter.getItemValue(position,"ProductCode");
-                    String strProcess = subAdapter.getItemValue(position,"Process");
-                    String strLots = subAdapter.getItemValue(position,"Lots");
-                    String strFlag = subAdapter.getItemValue(position,"Flag");
-                    String strSeq = subAdapter.getItemValue(position,"OperateCount");
-                    String strVersion = subAdapter.getItemValue(position,"Version");
-
-                    long timeCurrentTimeMillis = System.currentTimeMillis();
-                    SimpleDateFormat simpleTimeFormat = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
-                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd",Locale.getDefault());
-                    String currentTime = simpleTimeFormat.format(timeCurrentTimeMillis);
-                    String currentDate = simpleDateFormat.format(new Date());
-
-                    //发送服务器请求
-                    T100ServiceHelper t100ServiceHelper = new T100ServiceHelper();
-                    String requestBody = "&lt;Document&gt;\n"+
-                            "&lt;RecordSet id=\"1\"&gt;\n"+
-                            "&lt;Master name=\"sffb_t\" node_id=\"1\"&gt;\n"+
-                            "&lt;Record&gt;\n"+
-                            "&lt;Field name=\"sffbsite\" value=\""+ UserInfo.getUserSiteId(getApplicationContext())+"\"/&gt;\n"+
-                            "&lt;Field name=\"sffbent\" value=\""+UserInfo.getUserEnterprise(getApplicationContext())+"\"/&gt;\n"+
-                            "&lt;Field name=\"sffbdocdt\" value=\""+strPlanDate+"\"/&gt;\n"+
-                            "&lt;Field name=\"sffb002\" value=\""+ UserInfo.getUserId(getApplicationContext()) +"\"/&gt;\n"+  //异动人员
-                            "&lt;Field name=\"sffb005\" value=\""+ strDocno +"\"/&gt;\n"+  //工单单号
-                            "&lt;Field name=\"sffbseq\" value=\""+ strProcessId +"\"/&gt;\n"+  //工艺项次
-                            "&lt;Field name=\"sffb010\" value=\""+ strDevice +"\"/&gt;\n"+  //机器编号
-                            "&lt;Field name=\"sffb012\" value=\""+ currentDate +"\"/&gt;\n"+  //批量生产止日期
-                            "&lt;Field name=\"sffb013\" value=\""+ currentTime +"\"/&gt;\n"+  //批量生产止时间
-                            "&lt;Field name=\"sffb029\" value=\""+ strProductCode +"\"/&gt;\n"+  //报工料号
-                            "&lt;Field name=\"lots\" value=\""+ strLots +"\"/&gt;\n"+  //批次
-                            "&lt;Field name=\"qcstatus\" value=\""+ qcstatus +"\"/&gt;\n"+  //首检状态
-                            "&lt;Field name=\"planno\" value=\""+ strFlag +"\"/&gt;\n"+  //计划单号
-                            "&lt;Field name=\"planseq\" value=\""+ strSeq +"\"/&gt;\n"+  //报工次数
-                            "&lt;Field name=\"processid\" value=\""+ strProcessId +"\"/&gt;\n"+  //工艺项次
-                            "&lt;Field name=\"process\" value=\""+ strProcess +"\"/&gt;\n"+  //工序
-                            "&lt;Field name=\"version\" value=\""+ strVersion +"\"/&gt;\n"+  //版本
-                            "&lt;Field name=\"act\" value=\""+ action +"\"/&gt;\n"+  //执行动作
-                            "&lt;Detail name=\"s_detail1\" node_id=\"1_1\"&gt;\n"+
-                            "&lt;Record&gt;\n"+
-                            "&lt;Field name=\"sffyucseq\" value=\"1.0\"/&gt;\n"+
-                            "&lt;/Record&gt;\n"+
-                            "&lt;/Detail&gt;\n"+
-                            "&lt;Memo/&gt;\n"+
-                            "&lt;Attachment count=\"0\"/&gt;\n"+
-                            "&lt;/Record&gt;\n"+
-                            "&lt;/Master&gt;\n"+
-                            "&lt;/RecordSet&gt;\n"+
-                            "&lt;/Document&gt;\n";
-                    String strResponse = t100ServiceHelper.getT100Data(requestBody,webServiceName,getApplicationContext(),"");
-                    mapResponseStatus = t100ServiceHelper.getT100StatusData(strResponse);
-                    mapResponseList = t100ServiceHelper.getT100ResponseDocno(strResponse,"docno");
-
-                    e.onNext(mapResponseStatus);
-                    e.onNext(mapResponseList);
-                    e.onComplete();
-                }
-            }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<List<Map<String, Object>>>() {
-                @Override
-                public void onSubscribe(Disposable d) {
-
-                }
-
-                @Override
-                public void onNext(List<Map<String, Object>> maps) {
-                    if(mapResponseStatus.size()> 0){
-                        for(Map<String,Object> mStatus: mapResponseStatus){
-                            statusCode = mStatus.get("statusCode").toString();
-                            statusDescription = mStatus.get("statusDescription").toString();
-                        }
-                    }else{
-                        MyToast.myShow(SubQualityCheckActivity.this,"执行接口错误",2,0);
-                    }
-                }
-
-                @Override
-                public void onError(Throwable e) {
-                    MyToast.myShow(SubQualityCheckActivity.this,"网络错误",0,0);
-                    loadingDialog.dismiss();
-                }
-
-                @Override
-                public void onComplete() {
-                    if(statusCode.equals("0")){
-                        MyToast.myShow(SubQualityCheckActivity.this, statusDescription, 1, 1);
-                    }else{
-                        MyToast.myShow(SubQualityCheckActivity.this, statusDescription, 0, 1);
-                    }
-                    getSubListData("12");
-                }
-            });
+            updateQcStatus(position,"check","K");
         }
     };
+
+    //首检异常
+    private SubAdapter.CancelClickListener mCancelClickListener = new SubAdapter.CancelClickListener() {
+
+        @Override
+        public void CancelClick(int position, View view) {
+            updateQcStatus(position,"exccheck","F");
+        }
+    };
+
+    /**
+    *描述: 更新PQC检验数据
+    *日期：2022/10/9
+    **/
+    private void updateQcStatus(int position,String action,String qcstatus){
+        //显示进度条
+        loadingDialog = new LoadingDialog(SubQualityCheckActivity.this,"数据提交中",R.drawable.dialog_loading);
+        loadingDialog.show();
+
+        Observable.create(new ObservableOnSubscribe<List<Map<String,Object>>>() {
+            @Override
+            public void subscribe(ObservableEmitter<List<Map<String, Object>>> e) throws Exception {
+                //初始化T100服务名
+                String webServiceName = "WorkReportRequestGen";
+//                String qcstatus = "K";
+//                String action = "check";
+
+                String strPlanDate = subAdapter.getItemValue(position,"PlanDate");
+                String strDocno = subAdapter.getItemValue(position,"Docno");
+                String strProcessId = subAdapter.getItemValue(position,"ProcessId");
+                String strDevice = subAdapter.getItemValue(position,"Device");
+                String strProductCode = subAdapter.getItemValue(position,"ProductCode");
+                String strProcess = subAdapter.getItemValue(position,"Process");
+                String strLots = subAdapter.getItemValue(position,"Lots");
+                String strFlag = subAdapter.getItemValue(position,"Flag");
+                String strSeq = subAdapter.getItemValue(position,"OperateCount");
+                String strVersion = subAdapter.getItemValue(position,"Version");
+                String strPlanuser = subAdapter.getItemValue(position,"Employee");
+                String strGroupId = subAdapter.getItemValue(position,"GroupId");
+
+                long timeCurrentTimeMillis = System.currentTimeMillis();
+                SimpleDateFormat simpleTimeFormat = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd",Locale.getDefault());
+                String currentTime = simpleTimeFormat.format(timeCurrentTimeMillis);
+                String currentDate = simpleDateFormat.format(new Date());
+
+                //发送服务器请求
+                T100ServiceHelper t100ServiceHelper = new T100ServiceHelper();
+                String requestBody = "&lt;Document&gt;\n"+
+                        "&lt;RecordSet id=\"1\"&gt;\n"+
+                        "&lt;Master name=\"sffb_t\" node_id=\"1\"&gt;\n"+
+                        "&lt;Record&gt;\n"+
+                        "&lt;Field name=\"sffbsite\" value=\""+ UserInfo.getUserSiteId(getApplicationContext())+"\"/&gt;\n"+
+                        "&lt;Field name=\"sffbent\" value=\""+UserInfo.getUserEnterprise(getApplicationContext())+"\"/&gt;\n"+
+                        "&lt;Field name=\"sffbdocdt\" value=\""+strPlanDate+"\"/&gt;\n"+
+                        "&lt;Field name=\"sffb002\" value=\""+ UserInfo.getUserId(getApplicationContext()) +"\"/&gt;\n"+  //异动人员
+                        "&lt;Field name=\"sffb004\" value=\""+ strGroupId +"\"/&gt;\n"+  //报工班次
+                        "&lt;Field name=\"sffb005\" value=\""+ strDocno +"\"/&gt;\n"+  //工单单号
+                        "&lt;Field name=\"sffbseq\" value=\""+ strProcessId +"\"/&gt;\n"+  //工艺项次
+                        "&lt;Field name=\"sffb010\" value=\""+ strDevice +"\"/&gt;\n"+  //机器编号
+                        "&lt;Field name=\"sffb012\" value=\""+ currentDate +"\"/&gt;\n"+  //批量生产止日期
+                        "&lt;Field name=\"sffb013\" value=\""+ currentTime +"\"/&gt;\n"+  //批量生产止时间
+                        "&lt;Field name=\"sffb029\" value=\""+ strProductCode +"\"/&gt;\n"+  //报工料号
+                        "&lt;Field name=\"lots\" value=\""+ strLots +"\"/&gt;\n"+  //批次
+                        "&lt;Field name=\"qcstatus\" value=\""+ qcstatus +"\"/&gt;\n"+  //首检状态
+                        "&lt;Field name=\"planno\" value=\""+ strFlag +"\"/&gt;\n"+  //计划单号
+                        "&lt;Field name=\"planseq\" value=\""+ strSeq +"\"/&gt;\n"+  //报工次数
+                        "&lt;Field name=\"planuser\" value=\""+ strPlanuser +"\"/&gt;\n"+  //生产人员
+                        "&lt;Field name=\"processid\" value=\""+ strProcessId +"\"/&gt;\n"+  //工艺项次
+                        "&lt;Field name=\"process\" value=\""+ strProcess +"\"/&gt;\n"+  //工序
+                        "&lt;Field name=\"version\" value=\""+ strVersion +"\"/&gt;\n"+  //版本
+                        "&lt;Field name=\"act\" value=\""+ action +"\"/&gt;\n"+  //执行动作
+                        "&lt;Detail name=\"s_detail1\" node_id=\"1_1\"&gt;\n"+
+                        "&lt;Record&gt;\n"+
+                        "&lt;Field name=\"sffyucseq\" value=\"1.0\"/&gt;\n"+
+                        "&lt;/Record&gt;\n"+
+                        "&lt;/Detail&gt;\n"+
+                        "&lt;Memo/&gt;\n"+
+                        "&lt;Attachment count=\"0\"/&gt;\n"+
+                        "&lt;/Record&gt;\n"+
+                        "&lt;/Master&gt;\n"+
+                        "&lt;/RecordSet&gt;\n"+
+                        "&lt;/Document&gt;\n";
+                String strResponse = t100ServiceHelper.getT100Data(requestBody,webServiceName,getApplicationContext(),"");
+                mapResponseStatus = t100ServiceHelper.getT100StatusData(strResponse);
+                mapResponseList = t100ServiceHelper.getT100ResponseDocno(strResponse,"docno");
+
+                e.onNext(mapResponseStatus);
+                e.onNext(mapResponseList);
+                e.onComplete();
+            }
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<List<Map<String, Object>>>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(List<Map<String, Object>> maps) {
+                if(mapResponseStatus.size()> 0){
+                    for(Map<String,Object> mStatus: mapResponseStatus){
+                        statusCode = mStatus.get("statusCode").toString();
+                        statusDescription = mStatus.get("statusDescription").toString();
+                    }
+                }else{
+                    MyToast.myShow(SubQualityCheckActivity.this,"执行接口错误",2,0);
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                MyToast.myShow(SubQualityCheckActivity.this,"网络错误",0,0);
+                loadingDialog.dismiss();
+            }
+
+            @Override
+            public void onComplete() {
+                if(statusCode.equals("0")){
+                    MyToast.myShow(SubQualityCheckActivity.this, statusDescription, 1, 1);
+                }else{
+                    MyToast.myShow(SubQualityCheckActivity.this, statusDescription, 0, 1);
+                }
+                getSubListData("12");
+            }
+        });
+    }
 
     //获取扫描数据
     private void showCheckDetailData(String qrCode){
@@ -470,10 +556,6 @@ public class SubQualityCheckActivity extends AppCompatActivity {
                     for(Map<String,Object> mStatus: mapResponseStatus){
                         statusCode = mStatus.get("statusCode").toString();
                         statusDescription = mStatus.get("statusDescription").toString();
-
-                        if(!statusCode.equals("0")){
-                            MyToast.myShow(SubQualityCheckActivity.this,statusDescription,0,0);
-                        }
                     }
                 }else{
                     MyToast.myShow(SubQualityCheckActivity.this,"无备料数据",2,0);
@@ -488,72 +570,82 @@ public class SubQualityCheckActivity extends AppCompatActivity {
 
             @Override
             public void onComplete() {
-                if(mapResponseList.size()>0){
-                    String strProductName="";
-                    String strPlanDate="";
-                    String strProductCode="";
-                    String strProductModels="";
-                    String strProcessId="";
-                    String strProcess="";
-                    String strDevice="";
-                    String strDocno="";
-                    String strQuantity="";
-                    String strBadQuantity="";
-                    String strNgQuantity="";
-                    String strLots="";
-                    String strVersion="";
-                    String strUnit="";
-                    String strSeq="";
-                    String strSeq1="";
-                    String strStatus="";
-                    String strAttribute="";
-
-                    for (Map<String, Object> mResponse : mapResponseList) {
-                        strDocno = mResponse.get("Docno").toString();
-                        strProductName = mResponse.get("ProductName").toString();
-                        strPlanDate = mResponse.get("PlanDate").toString();
-                        strProductCode = mResponse.get("ProductCode").toString();
-                        strProductModels = mResponse.get("ProductModels").toString();
-                        strProcessId = mResponse.get("ProcessId").toString();
-                        strProcess = mResponse.get("Process").toString();
-                        strDevice = mResponse.get("Device").toString();
-                        strQuantity = mResponse.get("Quantity").toString();
-                        strBadQuantity = mResponse.get("BadQuantity").toString();
-                        strNgQuantity = mResponse.get("NgQuantity").toString();
-                        strVersion = mResponse.get("Version").toString();
-                        strLots = mResponse.get("Lots").toString();
-                        strUnit = mResponse.get("Unit").toString();
-                        strSeq = mResponse.get("Seq").toString();
-                        strSeq1 = mResponse.get("Seq1").toString();
-                        strStatus = mResponse.get("Status").toString();
-                        strAttribute= mResponse.get("Attribute").toString();
-                    }
-
-                    Intent intent = new Intent(SubQualityCheckActivity.this,SubQualityCheckDetailActivity.class);
-                    Bundle bundle=new Bundle();
-                    bundle.putString("ProductName",strProductName);
-                    bundle.putString("PlanDate",strPlanDate);
-                    bundle.putString("ProductCode",strProductCode);
-                    bundle.putString("ProductModels",strProductModels);
-                    bundle.putString("ProcessId",strProcessId);
-                    bundle.putString("Process",strProcess);
-                    bundle.putString("Device",strDevice);
-                    bundle.putString("Docno",strDocno);
-                    bundle.putString("Quantity",strQuantity);
-                    bundle.putString("BadQuantity",strBadQuantity);
-                    bundle.putString("NgQuantity",strNgQuantity);
-                    bundle.putString("Lots",strLots);
-                    bundle.putString("Version",strVersion);
-                    bundle.putString("Unit",strUnit);
-                    bundle.putString("Seq",strSeq);
-                    bundle.putString("Seq1",strSeq1);
-                    bundle.putString("Status",strStatus);
-                    bundle.putString("Attribute",strAttribute);
-                    bundle.putString("qrCode",qrCode);
-                    intent.putExtras(bundle);
-                    startActivity(intent);
+                if(!statusCode.equals("0")){
+                    MyToast.myShow(SubQualityCheckActivity.this,statusDescription,0,0);
                 }else{
-                    MyToast.myShow(SubQualityCheckActivity.this, statusDescription, 0, 1);
+                    if(mapResponseList.size()>0){
+                        String strProductName="";
+                        String strPlanDate="";
+                        String strProductCode="";
+                        String strProductModels="";
+                        String strProcessId="";
+                        String strProcess="";
+                        String strDevice="";
+                        String strDocno="";
+                        String strQuantity="";
+                        String strBadQuantity="";
+                        String strNgQuantity="";
+                        String strLots="";
+                        String strVersion="";
+                        String strUnit="";
+                        String strSeq="";
+                        String strSeq1="";
+                        String strStatus="";
+                        String strAttribute="";
+                        String strPlanno = "";
+                        String strProductDocno = "";
+
+                        for (Map<String, Object> mResponse : mapResponseList) {
+                            strDocno = mResponse.get("Docno").toString();
+                            strProductName = mResponse.get("ProductName").toString();
+                            strPlanDate = mResponse.get("PlanDate").toString();
+                            strProductCode = mResponse.get("ProductCode").toString();
+                            strProductModels = mResponse.get("ProductModels").toString();
+                            strProcessId = mResponse.get("ProcessId").toString();
+                            strProcess = mResponse.get("Process").toString();
+                            strDevice = mResponse.get("Device").toString();
+                            strQuantity = mResponse.get("Quantity").toString();
+                            strBadQuantity = mResponse.get("BadQuantity").toString();
+                            strNgQuantity = mResponse.get("NgQuantity").toString();
+                            strVersion = mResponse.get("Version").toString();
+                            strLots = mResponse.get("Lots").toString();
+                            strUnit = mResponse.get("Unit").toString();
+                            strSeq = mResponse.get("Seq").toString();
+                            strSeq1 = mResponse.get("Seq1").toString();
+                            strStatus = mResponse.get("Status").toString();
+                            strAttribute= mResponse.get("Attribute").toString();
+                            strPlanno= mResponse.get("Planno").toString();
+                            strProductDocno= mResponse.get("ProductDocno").toString();
+                        }
+
+                        Intent intent = new Intent(SubQualityCheckActivity.this,SubQualityCheckDetailActivity.class);
+                        Bundle bundle=new Bundle();
+                        bundle.putString("ProductName",strProductName);
+                        bundle.putString("PlanDate",strPlanDate);
+                        bundle.putString("ProductCode",strProductCode);
+                        bundle.putString("ProductModels",strProductModels);
+                        bundle.putString("ProcessId",strProcessId);
+                        bundle.putString("Process",strProcess);
+                        bundle.putString("Device",strDevice);
+                        bundle.putString("Docno",strDocno);
+                        bundle.putString("Quantity",strQuantity);
+                        bundle.putString("BadQuantity",strBadQuantity);
+                        bundle.putString("NgQuantity",strNgQuantity);
+                        bundle.putString("Lots",strLots);
+                        bundle.putString("Version",strVersion);
+                        bundle.putString("Unit",strUnit);
+                        bundle.putString("Seq",strSeq);
+                        bundle.putString("Seq1",strSeq1);
+                        bundle.putString("Status",strStatus);
+                        bundle.putString("Attribute",strAttribute);
+                        bundle.putString("qrCode",qrCode);
+                        bundle.putString("Planno",strPlanno);
+                        bundle.putString("ProductDocno",strProductDocno);
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                    }else{
+                        MyToast.myShow(SubQualityCheckActivity.this, statusDescription, 0, 1);
+                    }
                 }
 
                 loadingDialog.dismiss();

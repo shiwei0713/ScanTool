@@ -92,14 +92,6 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:background="@color/line"
-        android:orientation="vertical">
-
-    </LinearLayout>
-
 <!--    <LinearLayout-->
 <!--        android:layout_width="match_parent"-->
 <!--        android:layout_height="50dp"-->
@@ -130,10 +122,9 @@
 <!--            android:text="@string/check_stock_post" />-->
 
 <!--    </LinearLayout>-->
-
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="2dp"
+        android:layout_height="1dp"
         android:background="@color/line"
         android:orientation="vertical">
 
@@ -142,7 +133,8 @@
     <include
         layout="@layout/check_detail_content_material"
         android:layout_width="match_parent"
-        android:layout_height="400dp"/>
+        android:layout_height="400dp"
+        android:layout_marginTop="5dp"/>
 
 
 </LinearLayout>

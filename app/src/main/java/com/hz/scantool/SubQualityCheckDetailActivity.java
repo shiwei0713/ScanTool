@@ -53,7 +53,7 @@ public class SubQualityCheckDetailActivity extends AppCompatActivity {
     private static final String SCANACTION="com.android.server.scannerservice.broadcast";
 
     private String strTitle;
-    private String strProductName,strPlanDate,strProductCode,strProductModels,strProcessId,strProcess,strDevice,strDocno;
+    private String strProductName,strPlanDate,strProductCode,strProductModels,strProcessId,strProcess,strDevice,strDocno,strProductDocno,strPlanno;
     private String strQuantity,strBadQuantity,strNgQuantity;
     private String strLots,strVersion,strUnit,strSeq,strSeq1,strStatus,strAttribute,strQrcode;
 
@@ -130,6 +130,8 @@ public class SubQualityCheckDetailActivity extends AppCompatActivity {
         strSeq1 = bundle.getString("Seq1");
         strStatus = bundle.getString("Status");
         strAttribute = bundle.getString("Attribute");
+        strPlanno = bundle.getString("Planno");
+        strProductDocno = bundle.getString("ProductDocno");
         strQrcode = bundle.getString("qrCode");
         strQrcode = strQrcode.trim();
     }
@@ -180,6 +182,8 @@ public class SubQualityCheckDetailActivity extends AppCompatActivity {
         checkDetailUnit.setText(strUnit);
         checkDetailAttribute.setText(strAttribute);
         checkDetailQrcode.setText(strQrcode);
+        checkDetailPlanno.setText(strPlanno);
+        checkDetailVersion.setText(strVersion);
 
         if(strStatus.equals("K")){
 //            checkDetailNgQuantity.setEnabled(false);
@@ -319,11 +323,11 @@ public class SubQualityCheckDetailActivity extends AppCompatActivity {
         String strVersion = checkDetailVersion.getText().toString();
         String strAttribute = checkDetailAttribute.getText().toString();
 
-        if(strAttribute.equals("BL")){
-            if(strProcessId.equals("")||strProcessId.isEmpty()||strProcess.equals("")||strProcess.isEmpty()||strPlanno.equals("")||strPlanno.isEmpty()||strVersion.equals("")||strVersion.isEmpty()){
-                isCheck = false;
-            }
-        }
+//        if(strAttribute.equals("BL")){
+//            if(strProcessId.equals("")||strProcessId.isEmpty()||strProcess.equals("")||strProcess.isEmpty()||strPlanno.equals("")||strPlanno.isEmpty()||strVersion.equals("")||strVersion.isEmpty()){
+//                isCheck = false;
+//            }
+//        }
 
         return isCheck;
     }
@@ -351,15 +355,15 @@ public class SubQualityCheckDetailActivity extends AppCompatActivity {
 
         if(sFlag.equals("OK")){
             //合格
-            if(iBadQty>0 || iNgQty>0 ){
+            if(iNgQty>0 ){
                 isCheck = false;
             }
         }else{
             //异常
-            if(iBadQty==0 && iNgQty==0 ){
+            if(iNgQty==0 ){
                 isCheck = false;
             }else{
-                int iQty = iQuantity - iBadQty - iNgQty;
+                int iQty = iQuantity + iBadQty - iNgQty;
                 if(iQty<0){
                     isCheck = false;
                 }
@@ -387,6 +391,9 @@ public class SubQualityCheckDetailActivity extends AppCompatActivity {
                 String currentTime = simpleTimeFormat.format(timeCurrentTimeMillis);
                 String currentDate = simpleDateFormat.format(new Date());
 
+                String strBadQty = checkDetailBadQuantity.getText().toString();
+                String strNgQty = checkDetailNgQuantity.getText().toString();
+
                 //发送服务器请求
                 T100ServiceHelper t100ServiceHelper = new T100ServiceHelper();
                 String requestBody = "&lt;Document&gt;\n"+
@@ -399,17 +406,19 @@ public class SubQualityCheckDetailActivity extends AppCompatActivity {
                         "&lt;Field name=\"sffb002\" value=\""+ UserInfo.getUserId(getApplicationContext()) +"\"/&gt;\n"+  //异动人员
                         "&lt;Field name=\"sffbdocno\" value=\""+ strDocno +"\"/&gt;\n"+  //报工单号
                         "&lt;Field name=\"sffbseq\" value=\""+ strProcessId +"\"/&gt;\n"+  //工艺项次
+                        "&lt;Field name=\"sffb005\" value=\""+ strProductDocno +"\"/&gt;\n"+  //工单单号
                         "&lt;Field name=\"sffb010\" value=\""+ strDevice +"\"/&gt;\n"+  //机器编号
                         "&lt;Field name=\"sffb012\" value=\""+ currentDate +"\"/&gt;\n"+  //批量生产止日期
                         "&lt;Field name=\"sffb013\" value=\""+ currentTime +"\"/&gt;\n"+  //批量生产止时间
                         "&lt;Field name=\"sffb029\" value=\""+ strProductCode +"\"/&gt;\n"+  //报工料号
-                        "&lt;Field name=\"sffb018\" value=\""+ checkDetailBadQuantity.getText().toString() +"\"/&gt;\n"+  //报废数量
-                        "&lt;Field name=\"sffb019\" value=\""+ checkDetailNgQuantity.getText().toString() +"\"/&gt;\n"+  //当站下线数量
+                        "&lt;Field name=\"sffb018\" value=\""+ strBadQty +"\"/&gt;\n"+  //报废数量
+                        "&lt;Field name=\"sffb019\" value=\""+ strNgQty +"\"/&gt;\n"+  //当站下线数量
                         "&lt;Field name=\"processid\" value=\""+ strProcessId +"\"/&gt;\n"+  //工艺项次
                         "&lt;Field name=\"process\" value=\""+ strProcess +"\"/&gt;\n"+  //工序
                         "&lt;Field name=\"lots\" value=\""+ strLots +"\"/&gt;\n"+  //批次
                         "&lt;Field name=\"qcstatus\" value=\""+ qcstatus +"\"/&gt;\n"+  //首检状态
                         "&lt;Field name=\"planseq\" value=\""+ strSeq +"\"/&gt;\n"+  //报工次数
+                        "&lt;Field name=\"planno\" value=\""+ strPlanno +"\"/&gt;\n"+  //计划单号
                         "&lt;Field name=\"version\" value=\""+ strVersion +"\"/&gt;\n"+  //版本
                         "&lt;Field name=\"qrcode\" value=\""+ strQrcode +"\"/&gt;\n"+  //二维码
                         "&lt;Field name=\"act\" value=\""+ action +"\"/&gt;\n"+  //执行动作

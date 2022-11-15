@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/action_scan"
+        android:icon="@drawable/sub_menu_scan"
+        app:showAsAction="always"
+        android:title="扫描">
+
+    </item>
+
+    <item android:id="@+id/action_info"
+        android:icon="@drawable/sub_menu_info"
+        app:showAsAction="always"
+        android:title="辅助信息">
+    </item>
+</menu>

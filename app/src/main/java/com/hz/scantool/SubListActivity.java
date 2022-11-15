@@ -122,7 +122,7 @@ public class SubListActivity extends AppCompatActivity {
             case R.id.action_scan:
                 //调用zxing扫码界面
                 IntentIntegrator intentIntegrator = new IntentIntegrator(SubListActivity.this);
-                intentIntegrator.setTimeout(5000);
+//                intentIntegrator.setTimeout(5000);
                 intentIntegrator.setDesiredBarcodeFormats();  //IntentIntegrator.QR_CODE
                 //开始扫描
                 intentIntegrator.initiateScan();

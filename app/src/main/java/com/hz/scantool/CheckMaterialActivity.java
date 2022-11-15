@@ -17,6 +17,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -35,6 +36,7 @@ import com.hz.scantool.adapter.ProductMaterialAdapter;
 import com.hz.scantool.adapter.SubAdapter;
 import com.hz.scantool.database.HzDb;
 import com.hz.scantool.database.ProductEntity;
+import com.hz.scantool.dialog.ShowAlertDialog;
 import com.hz.scantool.helper.T100ServiceHelper;
 import com.hz.scantool.models.UserInfo;
 
@@ -61,11 +63,12 @@ public class CheckMaterialActivity extends AppCompatActivity {
     private HzDb hzDb;
     private String dataBaseName = "HzDb";
     private String strTitle;
-    private String sDocno,sProcessId,sProcess,sProductDocno,sVersion,sWorkTime,sPlanSeq;
-    private TextView checkMaterialProductCode,checkMaterialProductName,checkMaterialProductModels,checkMaterialQuantity,checkMaterialProcess,checkMaterialDocno;
+    private String sDocno,sProcessId,sProcess,sProductDocno,sVersion,sWorkTime,sPlanSeq,sProcessEnd,sDevice,sConnectProcessId,sConnectProcess,sCheckMaterial;
+    private TextView checkMaterialProductCode,checkMaterialProductName,checkMaterialProductModels,checkMaterialQuantity,checkMaterialProcess,checkMaterialDocno,checkMaterialDevices;
     private TextView checkMaterialProcessId,checkMaterialAttribute,checkMaterialVersion,checkMaterialProductDocno,checkMaterialSeq,checkMaterialCurrentProcessId,checkMaterialCurrentProcess;
     private EditText inputMaterialQrcode;
-    private Button btnCheckMaterialQrcode;
+    private Button btnCheckMaterialQrcode,btnCheckMaterialPrint,btnHidden,btnShow;
+    private LinearLayout viewBasic;
     private ListView materialList;
     private LoadingDialog loadingDialog;
 
@@ -144,6 +147,7 @@ public class CheckMaterialActivity extends AppCompatActivity {
         if(qrContent.equals("")||qrContent.isEmpty()){
             MyToast.myShow(context,"条码错误:"+qrContent,0,1);
         }else{
+            Log.i("qrContent",qrContent);
             getQrcodeData("BL","12","M",qrContent);
         }
     }
@@ -160,9 +164,14 @@ public class CheckMaterialActivity extends AppCompatActivity {
         sVersion = bundle.getString("Version");
         sProcessId = bundle.getString("ProcessId");
         sProcess = bundle.getString("Process");
+        sDevice = bundle.getString("Device");
         sProductDocno = bundle.getString("ProductDocno");
         sPlanSeq = bundle.getString("PlanSeq");
         sWorkTime = bundle.getString("WorkTime");
+        sProcessEnd = bundle.getString("ProcessEnd");
+        sConnectProcessId = bundle.getString("ConnectProcessId");
+        sConnectProcess = bundle.getString("ConnectProcess");
+        sCheckMaterial = bundle.getString("CheckMaterial");
     }
 
     /**
@@ -188,6 +197,7 @@ public class CheckMaterialActivity extends AppCompatActivity {
         checkMaterialProductName = findViewById(R.id.checkMaterialProductName);
         checkMaterialProductModels = findViewById(R.id.checkMaterialProductModels);
         checkMaterialQuantity = findViewById(R.id.checkMaterialQuantity);
+        checkMaterialDevices = findViewById(R.id.checkMaterialDevices);
         checkMaterialProcess = findViewById(R.id.checkMaterialProcess);
         checkMaterialDocno = findViewById(R.id.checkMaterialDocno);
         checkMaterialProcessId = findViewById(R.id.checkMaterialProcessId);
@@ -200,10 +210,14 @@ public class CheckMaterialActivity extends AppCompatActivity {
         materialList = findViewById(R.id.materialList);
         inputMaterialQrcode = findViewById(R.id.inputMaterialQrcode);
         btnCheckMaterialQrcode = findViewById(R.id.btnCheckMaterialQrcode);
+        btnCheckMaterialPrint = findViewById(R.id.btnCheckMaterialPrint);
+        btnShow = findViewById(R.id.btnShow);
+        btnHidden = findViewById(R.id.btnHidden);
+        viewBasic = findViewById(R.id.viewBasic);
 
         //ListView增加表头
-        View header = getLayoutInflater().inflate(R.layout.list_product_material_head,null);
-        materialList.addHeaderView(header);
+//        View header = getLayoutInflater().inflate(R.layout.list_product_material_head,null);
+//        materialList.addHeaderView(header);
 
         //初始化
         checkMaterialProcessId.setText(sProcessId);
@@ -212,9 +226,18 @@ public class CheckMaterialActivity extends AppCompatActivity {
         checkMaterialVersion.setText(sVersion);
         checkMaterialProductDocno.setText(sProductDocno);
         checkMaterialSeq.setText(sPlanSeq);
+        checkMaterialDevices.setText(sDevice);
+
+        //初始化控件状态
+        viewBasic.setVisibility(View.GONE);
+        btnShow.setSelected(false);
+        btnHidden.setSelected(true);
 
         //定义事件
         btnCheckMaterialQrcode.setOnClickListener(new btnClickListener());
+        btnCheckMaterialPrint.setOnClickListener(new btnClickListener());
+        btnShow.setOnClickListener(new btnClickListener());
+        btnHidden.setOnClickListener(new btnClickListener());
     }
 
     /**
@@ -233,6 +256,19 @@ public class CheckMaterialActivity extends AppCompatActivity {
                     }else{
                         getQrcodeData("BL","12","M",sInputQrcode.toUpperCase());
                     }
+                    break;
+                case R.id.btnCheckMaterialPrint:
+                    MyToast.myShow(CheckMaterialActivity.this,"此功能还未开通",2,0);
+                    break;
+                case R.id.btnShow:
+                    btnShow.setSelected(true);
+                    btnHidden.setSelected(false);
+                    viewBasic.setVisibility(View.VISIBLE);
+                    break;
+                case R.id.btnHidden:
+                    btnShow.setSelected(false);
+                    btnHidden.setSelected(true);
+                    viewBasic.setVisibility(View.GONE);
                     break;
             }
         }
@@ -324,13 +360,20 @@ public class CheckMaterialActivity extends AppCompatActivity {
                         if(i==0){
                             strwhere2 = "'"+ sDocArray[0]+"'";
                         }else{
-                            strwhere2 = strwhere2 +",'"+ sDocArray[0]+"'";
+                            strwhere2 = strwhere2 +",'"+ sDocArray[i]+"'";
                         }
                     }
                 }else{
                     strwhere2 = "'"+sDocno+"'";
                 }
-                String strwhere = strwhere1.trim()+strwhere2.trim()+strwhere3.trim();//+" AND sfba004='"+checkMaterialProcess.getText().toString()+"'";
+                String strwhere = strwhere1.trim()+strwhere2.trim()+strwhere3.trim()+" AND REPLACE(sfba004,' ','CY10')='"+checkMaterialProcess.getText().toString()+"'";
+                String strgwhere = strwhere1.trim()+strwhere2.trim()+strwhere3.trim()+" AND sfcc002='"+checkMaterialProcessId.getText().toString()+"'";
+
+//                //连线生产上料检核只匹配首序
+//                if(sProcessEnd.equals("Y")){
+//                    strwhere = strwhere1.trim()+strwhere2.trim()+strwhere3.trim();
+//                    strgwhere = strwhere1.trim()+strwhere2.trim()+strwhere3.trim();
+//                }
 
                 //发送服务器请求
                 T100ServiceHelper t100ServiceHelper = new T100ServiceHelper();
@@ -338,8 +381,15 @@ public class CheckMaterialActivity extends AppCompatActivity {
                         "&lt;Record&gt;\n"+
                         "&lt;Field name=\"enterprise\" value=\""+ UserInfo.getUserEnterprise(getApplicationContext())+"\"/&gt;\n"+
                         "&lt;Field name=\"site\" value=\""+UserInfo.getUserSiteId(getApplicationContext())+"\"/&gt;\n"+
+                        "&lt;Field name=\"user\" value=\""+UserInfo.getUserId(getApplicationContext())+"\"/&gt;\n"+
                         "&lt;Field name=\"type\" value=\""+ strType +"\"/&gt;\n"+
                         "&lt;Field name=\"where\" value=\""+ strwhere +"\"/&gt;\n"+
+                        "&lt;Field name=\"gwhere\" value=\""+ strgwhere +"\"/&gt;\n"+
+                        "&lt;Field name=\"gversion\" value=\""+ checkMaterialVersion.getText().toString() +"\"/&gt;\n"+
+                        "&lt;Field name=\"gplanno\" value=\""+ checkMaterialDocno.getText().toString() +"\"/&gt;\n"+
+                        "&lt;Field name=\"gconnect\" value=\""+ sProcessEnd +"\"/&gt;\n"+
+                        "&lt;Field name=\"connectProcessId\" value=\""+ sConnectProcessId +"\"/&gt;\n"+
+                        "&lt;Field name=\"connectProcess\" value=\""+ sConnectProcess +"\"/&gt;\n"+
                         "&lt;/Record&gt;\n"+
                         "&lt;/Parameter&gt;\n"+
                         "&lt;Document/&gt;\n";
@@ -397,6 +447,12 @@ public class CheckMaterialActivity extends AppCompatActivity {
     *日期：2022/6/10
     **/
     private void getQrcodeData(String strAction,String strActionId,String qcstatus,String qrcode){
+        //检查是否可上料检核
+        if(sCheckMaterial.equals("N")){
+            MyToast.myShow(CheckMaterialActivity.this,"连线生产只首序上料检核",0,1);
+            return;
+        }
+
         //显示进度条
         if(loadingDialog == null){
             loadingDialog = new LoadingDialog(CheckMaterialActivity.this,"数据查询中",R.drawable.dialog_loading);
@@ -428,7 +484,7 @@ public class CheckMaterialActivity extends AppCompatActivity {
                         "&lt;Field name=\"sffb002\" value=\""+ UserInfo.getUserId(getApplicationContext()) +"\"/&gt;\n"+  //异动人员
                         "&lt;Field name=\"sffb004\" value=\""+ sWorkTime +"\"/&gt;\n"+  //班次
                         "&lt;Field name=\"sffb005\" value=\""+ checkMaterialProductDocno.getText().toString() +"\"/&gt;\n"+  //工单单号
-//                        "&lt;Field name=\"sffb010\" value=\""+  +"\"/&gt;\n"+  //机器编号
+                        "&lt;Field name=\"sffb010\" value=\""+ checkMaterialDevices.getText().toString() +"\"/&gt;\n"+  //机器编号
                         "&lt;Field name=\"sffb012\" value=\""+ currentDate +"\"/&gt;\n"+  //批量生产止日期
                         "&lt;Field name=\"sffb013\" value=\""+ currentTime +"\"/&gt;\n"+  //批量生产止时间
                         "&lt;Field name=\"processid\" value=\""+ checkMaterialProcessId.getText().toString() +"\"/&gt;\n"+  //工艺项次
@@ -441,6 +497,9 @@ public class CheckMaterialActivity extends AppCompatActivity {
                         "&lt;Field name=\"qrcode\" value=\""+ qrcode +"\"/&gt;\n"+  //二维码
                         "&lt;Field name=\"act\" value=\""+ strAction +"\"/&gt;\n"+  //操作类别
                         "&lt;Field name=\"actcode\" value=\""+ strActionId +"\"/&gt;\n"+  //执行命令ID
+                        "&lt;Field name=\"connectProduct\" value=\""+ sProcessEnd +"\"/&gt;\n"+  //连线生产
+                        "&lt;Field name=\"connectProcessId\" value=\""+ sConnectProcessId +"\"/&gt;\n"+  //连线生产工序ID
+                        "&lt;Field name=\"connectProcess\" value=\""+ sConnectProcess +"\"/&gt;\n"+  //连线生产工序
                         "&lt;Detail name=\"s_detail1\" node_id=\"1_1\"&gt;\n"+
                         "&lt;Record&gt;\n"+
                         "&lt;Field name=\"sffyucseq\" value=\"1.0\"/&gt;\n"+
@@ -516,16 +575,24 @@ public class CheckMaterialActivity extends AppCompatActivity {
                         checkMaterialAttribute.setText(sAttribute);
 
                         //刷新备料清单
-                        checkMaterialList(sProductCode,sProcess);
+                        if(sProcessId.equals("")||sProcessId.isEmpty()){
+                            sProcess = checkMaterialProcess.getText().toString();
+                        }
+//                        checkMaterialList(sProductCode,sProcess,sQuantity);
                     }
 
 
                     MyToast.myShow(CheckMaterialActivity.this, statusDescription, 1, 1);
                 }else{
-                    MyToast.myShow(CheckMaterialActivity.this,statusDescription,0,0);
+//                    MyToast.myShow(CheckMaterialActivity.this,statusDescription,0,0);
+                    ShowAlertDialog.myShow(CheckMaterialActivity.this,statusDescription);
                 }
+
                 loadingDialog.dismiss();
                 loadingDialog = null;
+
+                //获取备料清单
+                getMaterialListData("3");
             }
         });
     }
@@ -534,12 +601,12 @@ public class CheckMaterialActivity extends AppCompatActivity {
     *描述: 核对清单零件结果
     *日期：2022/6/12
     **/
-    private void checkMaterialList(String sProductCode,String sProcess){
+    private void checkMaterialList(String sProductCode,String sProcess,String sQuantity){
         for(int i=0;i<mapList.size();i++){
             String sMapProductCode = (String)mapList.get(i).get("ProductCode");
             String sMapProcess = (String)mapList.get(i).get("Process");
             if(sMapProductCode.equals(sProductCode) && sMapProcess.equals(sProcess)){
-                mapList.get(i).put("Status","Y");
+                mapList.get(i).put("Quantity",sQuantity);
             }
         }
 

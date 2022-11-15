@@ -3,45 +3,48 @@ package com.hz.scantool.printer;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.os.Environment;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import com.gprinter.command.CpclCommand;
 import com.gprinter.command.EscCommand;
 import com.gprinter.command.LabelCommand;
-import com.hz.scantool.App;
+import com.gprinter.utils.Menu58Utils;
+import com.gprinter.utils.Menu80Utils;
 import com.hz.scantool.R;
-import com.hz.scantool.SubActivity;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.io.IOException;
 import java.util.Vector;
 
+/**
+ * Copyright (C), 2012-2020, 打印机有限公司
+ * FileName: PrintConntent
+ * Author: Circle
+ * Date: 2020/7/20 10:04
+ * Description: 打印内容
+ */
 public class PrintContent {
-
-    public static Vector<Byte> getReceipt() {
+    /**
+     * 小票案例
+     * @param context
+     * @return
+     */
+    public static Vector<Byte> getReceiptChinese(Context context, int width) {
         EscCommand esc = new EscCommand();
         //初始化打印机
         esc.addInitializePrinter();
-        //打印走纸多少个单位
-        esc.addPrintAndFeedLines((byte) 3);
         // 设置打印居中
         esc.addSelectJustification(EscCommand.JUSTIFICATION.CENTER);
-        // 设置为倍高倍宽
-        esc.addSelectPrintModes(EscCommand.FONT.FONTA, EscCommand.ENABLE.OFF, EscCommand.ENABLE.ON, EscCommand.ENABLE.ON, EscCommand.ENABLE.OFF);
+        //字体放大两倍
+        esc.addSetCharcterSize(EscCommand.WIDTH_ZOOM.MUL_2, EscCommand.HEIGHT_ZOOM.MUL_2);
         // 打印文字
         esc.addText("票据测试\n");
+        //字体正常
+        esc.addSetCharcterSize(EscCommand.WIDTH_ZOOM.MUL_1, EscCommand.HEIGHT_ZOOM.MUL_1);
         //打印并换行
         esc.addPrintAndLineFeed();
-        // 取消倍高倍宽
-        esc.addSelectPrintModes(EscCommand.FONT.FONTA, EscCommand.ENABLE.OFF, EscCommand.ENABLE.OFF, EscCommand.ENABLE.OFF, EscCommand.ENABLE.OFF);
         // 设置打印左对齐
         esc.addSelectJustification(EscCommand.JUSTIFICATION.LEFT);
         // 打印文字
@@ -49,211 +52,415 @@ public class PrintContent {
         // 打印文字
         esc.addText("欢迎使用打印机!\n");
         esc.addPrintAndLineFeed();
+        //对齐方式
         esc.addText("打印对齐方式测试:\n");
-        // 设置打印左对齐
+        //设置居左
         esc.addSelectJustification(EscCommand.JUSTIFICATION.LEFT);
         esc.addText("居左");
         esc.addPrintAndLineFeed();
-        // 设置打印居中对齐
+        //设置居中
         esc.addSelectJustification(EscCommand.JUSTIFICATION.CENTER);
         esc.addText("居中");
         esc.addPrintAndLineFeed();
-        // 设置打印居右对齐
+        //设置居右
         esc.addSelectJustification(EscCommand.JUSTIFICATION.RIGHT);
         esc.addText("居右");
         esc.addPrintAndLineFeed();
         esc.addPrintAndLineFeed();
-        // 设置打印左对齐
         esc.addSelectJustification(EscCommand.JUSTIFICATION.LEFT);
+        // 打印图片
         esc.addText("打印Bitmap图测试:\n");
-        Bitmap b = BitmapFactory.decodeResource(App.getContext().getResources(), R.drawable.list_alarm);
-        // 打印图片  光栅位图  384代表打印图片像素  0代表打印模式
-        // 58mm打印机 可打印区域最大点数为 384 ，80mm 打印机 可打印区域最大点数为 576
-        esc.addRastBitImage(b, 384, 0);
+        Bitmap b = BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher);//二维码图片，图片类型bitmap
+        // 打印图片,58打印机图片宽度最大为384dot  1mm=8dot 用尺子量取图片的宽度单位为Xmm  传入宽度值为 X*8
+        //打印图片,80打印机图片宽度最大为576dot  1mm=8dot 用尺子量取图片的宽度单位为Xmm  传入宽度值为 X*8
+        esc.drawImage(b, width);
         esc.addPrintAndLineFeed();
-        // 打印文字
+        esc.addPrintAndLineFeed();
+        //打印条码
         esc.addText("打印条码测试:\n");
-        esc.addSelectPrintingPositionForHRICharacters(EscCommand.HRI_POSITION.BELOW);
         // 设置条码可识别字符位置在条码下方
+        esc.addSelectPrintingPositionForHRICharacters(EscCommand.HRI_POSITION.BELOW);
         // 设置条码高度为60点
         esc.addSetBarcodeHeight((byte) 60);
-        // 设置条码宽窄比为2
-        esc.addSetBarcodeWidth((byte) 2);
-        // 打印Code128码
+        // 设置条码单元宽度为1
+        esc.addSetBarcodeWidth((byte) 1);
+        // 打印Code128码内容
         esc.addCODE128(esc.genCodeB("barcode128"));
         esc.addPrintAndLineFeed();
-        /*
-         * QRCode命令打印 此命令只在支持QRCode命令打印的机型才能使用。 在不支持二维码指令打印的机型上，则需要发送二维条码图片
-         */
+        // 打印二维码
         esc.addText("打印二维码测试:\n");
         // 设置纠错等级
         esc.addSelectErrorCorrectionLevelForQRCode((byte) 0x31);
         // 设置qrcode模块大小
         esc.addSelectSizeOfModuleForQRCode((byte) 4);
         // 设置qrcode内容
-        esc.addStoreQRCodeData("www.smarnet.cc");
+        esc.addStoreQRCodeData("www.baidu.com");
         // 打印QRCode
         esc.addPrintQRCode();
-        //打印并走纸换行
         esc.addPrintAndLineFeed();
-        // 设置打印居中对齐
+
         esc.addSelectJustification(EscCommand.JUSTIFICATION.CENTER);
-        //打印fontB文字字体
+        //打印文字
         esc.addSelectCharacterFont(EscCommand.FONT.FONTB);
         esc.addText("测试完成!\r\n");
-        //打印并换行
+        // 设置打印居左
+        esc.addSelectJustification(EscCommand.JUSTIFICATION.LEFT);
         esc.addPrintAndLineFeed();
-        //打印走纸n个单位
         esc.addPrintAndFeedLines((byte) 4);
+        //切纸（带切刀打印机才可用）
+        esc.addCutPaper();
         // 开钱箱
         esc.addGeneratePlus(LabelCommand.FOOT.F2, (byte) 255, (byte) 255);
-        //开启切刀
-        esc.addCutPaper();
-        //添加缓冲区打印完成查询
-        byte [] bytes={0x1D,0x72,0x01};
-        //添加用户指令
-        esc.addUserCommand(bytes);
-        Vector<Byte> datas = esc.getCommand();
-        return datas;
+        esc.addInitializePrinter();
+        //返回指令集
+        return esc.getCommand();
     }
 
     /**
-     * 标签打印测试页
-     * @return
-     */
-    public static Vector<Byte> getLabel(Bitmap b,String qrcode) {
-        LabelCommand tsc = new LabelCommand();
-        // 设置标签尺寸宽高，按照实际尺寸设置 单位mm
-        tsc.addSize(100, 70);
-        // 设置标签间隙，按照实际尺寸设置，如果为无间隙纸则设置为0 单位mm
-        tsc.addGap(2);
-        // 设置打印方向
-        tsc.addDirection(LabelCommand.DIRECTION.FORWARD, LabelCommand.MIRROR.NORMAL);
-        // 开启带Response的打印，用于连续打印
-        tsc.addQueryPrinterStatus(LabelCommand.RESPONSE_MODE.ON);
-        // 设置原点坐标
-        tsc.addReference(0, 0);
-        //设置浓度
-        tsc.addDensity(LabelCommand.DENSITY.DNESITY10);
-        // 撕纸模式开启
-        tsc.addTear(EscCommand.ENABLE.ON);
-        // 清除打印缓冲区
-        tsc.addCls();
-
-        // 绘制简体中文
-//        tsc.addText(100, 10, LabelCommand.FONTTYPE.SIMPLIFIED_CHINESE, LabelCommand.ROTATION.ROTATION_0, LabelCommand.FONTMUL.MUL_1, LabelCommand.FONTMUL.MUL_1,
-//                "华滋东江汽车零部件有限公司");
-
-//        Bitmap b2 = BitmapFactory.decodeResource(App.getContext().getResources(), R.drawable.test2);
-//        Bitmap b3 = BitmapFactory.decodeFile(Environment.getExternalStorageDirectory().getAbsolutePath()+"/hzimages/testlabel");
-        // 绘制图片
-        tsc.addBitmap(50, 80, LabelCommand.BITMAP_MODE.OVERWRITE,1050, b);
-        //绘制二维码显示内容
-        tsc.addText(50, 20, LabelCommand.FONTTYPE.SIMPLIFIED_CHINESE, LabelCommand.ROTATION.ROTATION_0, LabelCommand.FONTMUL.MUL_1, LabelCommand.FONTMUL.MUL_1,
-                qrcode);
-        //绘制二维码
-        tsc.addQRCode(960,30, LabelCommand.EEC.LEVEL_L, 7, LabelCommand.ROTATION.ROTATION_0, qrcode);
-
-        // 打印标签
-        tsc.addPrint(1, 1);
-        // 打印标签后 蜂鸣器响
-        tsc.addSound(2, 100);
-        //开启钱箱
-//        tsc.addCashdrwer(LabelCommand.FOOT.F5, 255, 255);
-        Vector<Byte> datas = tsc.getCommand();
-        // 发送数据
-        return  datas;
-    }
-
-    /**
-     * 标签打印长图
+     * 成品标签样式--右件
      *
-     * @param bitmap
+    */
+    public static Vector<Byte> getProductLabel(Context context,String qrcode,String productName,String productModel,String lots,String emp,String programe,String tray,String saler,String kinds,String position,String qty) {
+        EscCommand esc = new EscCommand();
+        //初始化打印机
+        esc.addInitializePrinter();
+        // 设置打印居中
+        esc.addSelectJustification(EscCommand.JUSTIFICATION.CENTER);
+
+        // 设置纠错等级
+        esc.addSelectErrorCorrectionLevelForQRCode((byte) 0x31);
+
+        esc.addText("--------------------------------\n");
+        esc.addText(qrcode+"\n");
+        // 设置qrcode模块大小
+        esc.addSelectSizeOfModuleForQRCode((byte) 6);
+        // 设置qrcode内容
+        esc.addStoreQRCodeData(qrcode);
+        // 打印QRCode
+        esc.addPrintQRCode();
+        esc.addPrintAndLineFeed();
+
+        // 设置为倍高倍宽
+        //字体放大两倍
+        esc.addSetCharcterSize(EscCommand.WIDTH_ZOOM.MUL_2, EscCommand.HEIGHT_ZOOM.MUL_2);
+        // 打印文字
+        esc.addTurnEmphasizedModeOnOrOff(EscCommand.ENABLE.ON);
+        esc.addText("华滋东江汽车零部件有限公司\n\n");
+        esc.addSetCharcterSize(EscCommand.WIDTH_ZOOM.MUL_3, EscCommand.HEIGHT_ZOOM.MUL_3);
+        esc.addText(productName+"\n");
+        esc.addTurnEmphasizedModeOnOrOff(EscCommand.ENABLE.OFF);
+        //字体正常
+        esc.addSetCharcterSize(EscCommand.WIDTH_ZOOM.MUL_1, EscCommand.HEIGHT_ZOOM.MUL_1);
+        esc.addText("--------------------------------\n");
+        esc.addSelectJustification(EscCommand.JUSTIFICATION.LEFT);
+        esc.addText(Menu58Utils.printTwoData("零件名:", productModel));
+        esc.addText(Menu58Utils.printTwoData("批次:", lots));
+        esc.addText(Menu58Utils.printTwoData("末序操作者:", emp));
+        esc.addText(Menu58Utils.printTwoData("车型:", programe));
+        esc.addText(Menu58Utils.printTwoData("容器型号:", tray));
+        esc.addText(Menu58Utils.printTwoData("客户:", saler));
+        esc.addText(Menu58Utils.printTwoData("左右件:", kinds));
+        esc.addPrintAndLineFeed();
+        esc.addSelectJustification(EscCommand.JUSTIFICATION.CENTER);
+        esc.addText("--------------------------------\n");
+        esc.addSetCharcterSize(EscCommand.WIDTH_ZOOM.MUL_3, EscCommand.HEIGHT_ZOOM.MUL_3);
+        esc.addTurnEmphasizedModeOnOrOff(EscCommand.ENABLE.ON);
+        esc.addText(position+"\n\n");
+        esc.addText("数量:"+qty+"\n");
+        esc.addTurnEmphasizedModeOnOrOff(EscCommand.ENABLE.OFF);
+        esc.addText("\n\n\n\n");
+        esc.addPrintAndLineFeed();
+
+        //切纸（带切刀打印机才可用）
+        esc.addCutPaper();
+        // 开钱箱
+        esc.addGeneratePlus(LabelCommand.FOOT.F2, (byte) 255, (byte) 255);
+        esc.addInitializePrinter();
+        //返回指令集
+        return esc.getCommand();
+    }
+
+    /**
+     * 成品标签样式--左件
+     *
+     */
+    public static Vector<Byte> getLeftProductLabel(Context context,String qrcode,String productName,String productModel,String lots,String emp,String programe,String tray,String saler,String kinds,String position,String qty) {
+        EscCommand esc = new EscCommand();
+        //初始化打印机
+        esc.addInitializePrinter();
+        // 设置打印居中
+        esc.addSelectJustification(EscCommand.JUSTIFICATION.CENTER);
+
+        // 设置纠错等级
+        esc.addSelectErrorCorrectionLevelForQRCode((byte) 0x31);
+
+        esc.addText("--------------------------------\n");
+        esc.addSetCharcterSize(EscCommand.WIDTH_ZOOM.MUL_3, EscCommand.HEIGHT_ZOOM.MUL_3);
+        esc.addTurnEmphasizedModeOnOrOff(EscCommand.ENABLE.ON);
+        esc.addText(position+"\n\n");
+        esc.addText("数量:"+qty+"\n");
+        esc.addTurnEmphasizedModeOnOrOff(EscCommand.ENABLE.OFF);
+        esc.addPrintAndLineFeed();
+
+        // 设置为倍高倍宽
+        //字体放大两倍
+        esc.addSetCharcterSize(EscCommand.WIDTH_ZOOM.MUL_2, EscCommand.HEIGHT_ZOOM.MUL_2);
+        // 打印文字
+        esc.addTurnEmphasizedModeOnOrOff(EscCommand.ENABLE.ON);
+        esc.addText("华滋东江汽车零部件有限公司\n\n");
+        esc.addSetCharcterSize(EscCommand.WIDTH_ZOOM.MUL_3, EscCommand.HEIGHT_ZOOM.MUL_3);
+        esc.addText(productName+"\n");
+        esc.addTurnEmphasizedModeOnOrOff(EscCommand.ENABLE.OFF);
+        //字体正常
+        esc.addSetCharcterSize(EscCommand.WIDTH_ZOOM.MUL_1, EscCommand.HEIGHT_ZOOM.MUL_1);
+        esc.addText("--------------------------------\n");
+        esc.addSelectJustification(EscCommand.JUSTIFICATION.LEFT);
+        esc.addText(Menu58Utils.printTwoData("零件名:", productModel));
+        esc.addText(Menu58Utils.printTwoData("批次:", lots));
+        esc.addText(Menu58Utils.printTwoData("末序操作者:", emp));
+        esc.addText(Menu58Utils.printTwoData("车型:", programe));
+        esc.addText(Menu58Utils.printTwoData("容器型号:", tray));
+        esc.addText(Menu58Utils.printTwoData("客户:", saler));
+        esc.addText(Menu58Utils.printTwoData("左右件:", kinds));
+        esc.addPrintAndLineFeed();
+        esc.addSelectJustification(EscCommand.JUSTIFICATION.CENTER);
+        esc.addText("--------------------------------\n");
+        esc.addText(qrcode+"\n");
+        // 设置qrcode模块大小
+        esc.addSelectSizeOfModuleForQRCode((byte) 6);
+        // 设置qrcode内容
+        esc.addStoreQRCodeData(qrcode);
+        // 打印QRCode
+        esc.addPrintQRCode();
+        esc.addPrintAndLineFeed();
+        esc.addText("\n\n\n\n");
+        esc.addPrintAndLineFeed();
+
+        //切纸（带切刀打印机才可用）
+        esc.addCutPaper();
+        // 开钱箱
+        esc.addGeneratePlus(LabelCommand.FOOT.F2, (byte) 255, (byte) 255);
+        esc.addInitializePrinter();
+        //返回指令集
+        return esc.getCommand();
+    }
+
+    /**
+     * 菜单样例
+     * @param context
      * @return
      */
-    public static Vector<Byte> printViewPhoto(Bitmap bitmap){
-        LabelCommand labelCommand=new LabelCommand();
-        /**
-         * 参数说明
-         * 0：打印图片x轴
-         * 0：打印图片Y轴
-         * 576：打印图片宽度  纸张可打印宽度  72 *8
-         * bitmap:图片
-         */
-        labelCommand.addZLibNoTrembleBitmapheight(0,0,576,bitmap);
-        return labelCommand.getCommand();
+    public static Vector<Byte> get58Menu(Context context) {
+        EscCommand esc = new EscCommand();
+        //初始化打印机
+        esc.addInitializePrinter();
+        // 设置打印居中
+        esc.addSelectJustification(EscCommand.JUSTIFICATION.CENTER);
+        Bitmap b = BitmapFactory.decodeResource(context.getResources(), R.drawable.ok);//二维码图片，图片类型bitmap
+        // 打印图片,图片宽度为384dot  1mm=8dot 用尺子量取图片的宽度单位为Xmm  传入宽度值为 X*8
+        esc.drawJpgImage(b, 200);
+        // 设置为倍高倍宽
+        //字体放大两倍
+        esc.addSetCharcterSize(EscCommand.WIDTH_ZOOM.MUL_2, EscCommand.HEIGHT_ZOOM.MUL_2);
+        // 打印文字
+        esc.addText("爱情餐厅\n\n");
+        esc.addSelectJustification(EscCommand.JUSTIFICATION.LEFT);
+        esc.addText("520号桌\n\n");
+        //字体正常
+        esc.addSetCharcterSize(EscCommand.WIDTH_ZOOM.MUL_1, EscCommand.HEIGHT_ZOOM.MUL_1);
+        esc.addText("点菜时间 2020-05-20 5:20\n");
+        esc.addText("上菜时间 2020-05-20 13:14\n");
+        esc.addText("人数：2人 点菜员：新疆包工头\n");
+        esc.addText("--------------------------------\n");
+        //开启加粗
+        esc.addTurnEmphasizedModeOnOrOff(EscCommand.ENABLE.ON);
+        esc.addText(Menu58Utils.printThreeData("菜名", "数量", "金额"));
+        esc.addTurnEmphasizedModeOnOrOff(EscCommand.ENABLE.OFF);
+        esc.addText(Menu58Utils.printThreeData("北京烤鸭", "1", "99.99"));
+        esc.addText(Menu58Utils.printThreeData("四川麻婆豆腐", "1", "39.99"));
+        esc.addText(Menu58Utils.printThreeData("西湖醋鱼", "1", "59.99"));
+        esc.addText(Menu58Utils.printThreeData("飞龙汤", "1", "66.66"));
+        esc.addText(Menu58Utils.printThreeData("无为熏鸭", "1", "88.88"));
+        esc.addText(Menu58Utils.printThreeData("东坡肉", "1", "39.99"));
+        esc.addText(Menu58Utils.printThreeData("辣子鸡", "1", "66.66"));
+        esc.addText(Menu58Utils.printThreeData("腊味合蒸", "1", "108.00"));
+        esc.addText(Menu58Utils.printThreeData("东安子鸡", "1", "119.00"));
+        esc.addText(Menu58Utils.printThreeData("清蒸武昌鱼", "1", "88.88"));
+        esc.addText(Menu58Utils.printThreeData("再来两瓶82年的快乐肥宅水(去冰)", "1", "9.99"));
+        esc.addText(Menu58Utils.printThreeData("老干妈拌饭(加辣、加香菜)", "1", "6.66"));
+        esc.addText("--------------------------------\n\n");
+        esc.addTurnEmphasizedModeOnOrOff(EscCommand.ENABLE.ON);
+        esc.addText(Menu58Utils.printTwoData("合计：", "1314.00"));
+        esc.addText(Menu58Utils.printTwoData("抹零：", "14.00"));
+        esc.addText(Menu58Utils.printTwoData("应收：", "1300.00"));
+        esc.addTurnEmphasizedModeOnOrOff(EscCommand.ENABLE.OFF);
+        esc.addText("--------------------------------\n");
+        esc.addSelectJustification(EscCommand.JUSTIFICATION.RIGHT);
+        esc.addText("收银员：广东包租公\n");
+        esc.addSelectJustification(EscCommand.JUSTIFICATION.LEFT);
+        esc.addText("宣言：我点个鸡蛋都是爱你的形状哦");
+        esc.addPrintAndLineFeed();
+        esc.addPrintAndLineFeed();
+        esc.addSelectJustification(EscCommand.JUSTIFICATION.CENTER);
+        // 设置纠错等级
+        esc.addSelectErrorCorrectionLevelForQRCode((byte) 0x31);
+        // 设置qrcode模块大小
+        esc.addSelectSizeOfModuleForQRCode((byte) 4);
+        // 设置qrcode内容
+        esc.addStoreQRCodeData("https://www.baidu.com");
+        // 打印QRCode
+        esc.addPrintQRCode();
+        esc.addText("\n(扫二维码送手机)\n");
+        esc.addText("\n\n\n\n");
+        esc.addPrintAndLineFeed();
+        //切纸（带切刀打印机才可用）
+        esc.addCutPaper();
+        // 开钱箱
+        esc.addGeneratePlus(LabelCommand.FOOT.F2, (byte) 255, (byte) 255);
+        esc.addInitializePrinter();
+        //返回指令集
+        return esc.getCommand();
     }
     /**
-     * 面单打印测试页
+     * 菜单样例
+     * @param context
      * @return
      */
-    public static Vector<Byte> getCPCL() {
-        CpclCommand cpcl = new CpclCommand();
-        cpcl.addInitializePrinter(1130, 1);
-        cpcl.addJustification(CpclCommand.ALIGNMENT.CENTER);
-        cpcl.addSetmag(1, 1);
-        cpcl.addText(CpclCommand.TEXT_FONT.FONT_4, 0, 30, "Sample");
-        cpcl.addSetmag(0, 0);
-        cpcl.addJustification(CpclCommand.ALIGNMENT.LEFT);
-        cpcl.addText(CpclCommand.TEXT_FONT.FONT_4, 0, 65, "Print text");
-        cpcl.addText(CpclCommand.TEXT_FONT.FONT_4, 0, 95, "Welcom to use SMARNET printer!");
-        cpcl.addText(CpclCommand.TEXT_FONT.FONT_13, 0, 135, "佳博智匯標籤打印機");
-        cpcl.addText(CpclCommand.TEXT_FONT.FONT_4, 0, 195, "智汇");
-        cpcl.addJustification(CpclCommand.ALIGNMENT.CENTER);
-        cpcl.addText(CpclCommand.TEXT_FONT.FONT_4, 0, 195, "网络");
-        cpcl.addJustification(CpclCommand.ALIGNMENT.RIGHT);
-        cpcl.addText(CpclCommand.TEXT_FONT.FONT_4, 0, 195, "设备");
-        cpcl.addJustification(CpclCommand.ALIGNMENT.LEFT);
-        cpcl.addText(CpclCommand.TEXT_FONT.FONT_4, 0, 230, "Print bitmap!");
-        Bitmap bitmap = BitmapFactory.decodeResource(App.getContext().getResources(), R.drawable.list_alarm);
-        cpcl.addEGraphics(0, 255, 385, bitmap);
-        cpcl.addText(CpclCommand.TEXT_FONT.FONT_4, 0, 645, "Print code128!");
-        cpcl.addBarcodeText(5, 2);
-        cpcl.addBarcode(CpclCommand.COMMAND.BARCODE, CpclCommand.CPCLBARCODETYPE.CODE128, 50, 0, 680, "SMARNET");
-        cpcl.addText(CpclCommand.TEXT_FONT.FONT_4, 0, 775, "Print QRcode");
-        cpcl.addBQrcode(0, 810, "QRcode");
-        cpcl.addJustification(CpclCommand.ALIGNMENT.CENTER);
-        cpcl.addText(CpclCommand.TEXT_FONT.FONT_4, 0, 1010, "Completed");
-        cpcl.addJustification(CpclCommand.ALIGNMENT.LEFT);
-        cpcl.addPrint();
-        Vector<Byte> datas = cpcl.getCommand();
-        return datas;
+    public static Vector<Byte> get80Menu(Context context) {
+        EscCommand esc = new EscCommand();
+        //初始化打印机
+        esc.addInitializePrinter();
+        // 设置打印居中
+        esc.addSelectJustification(EscCommand.JUSTIFICATION.CENTER);
+        Bitmap b = BitmapFactory.decodeResource(context.getResources(), R.drawable.ok);//二维码图片，图片类型bitmap
+        // 打印图片,图片宽度为384dot  1mm=8dot 用尺子量取图片的宽度单位为Xmm  传入宽度值为 X*8
+        esc.drawJpgImage(b, 200);
+        // 设置为倍高倍宽
+        //字体放大两倍
+        esc.addSetCharcterSize(EscCommand.WIDTH_ZOOM.MUL_2, EscCommand.HEIGHT_ZOOM.MUL_2);
+        // 打印文字
+        esc.addText("爱情餐厅\n\n");
+        esc.addSelectJustification(EscCommand.JUSTIFICATION.LEFT);
+        esc.addText("520号桌\n\n");
+        //字体正常
+        esc.addSetCharcterSize(EscCommand.WIDTH_ZOOM.MUL_1, EscCommand.HEIGHT_ZOOM.MUL_1);
+        esc.addText("点菜时间 2020-05-20 5:20\n");
+        esc.addText("上菜时间 2020-05-20 13:14\n");
+        esc.addText("人数：2人 点菜员：新疆包工头\n");
+        esc.addText("------------------三行菜单案例------------------\n");
+        esc.addText(Menu80Utils.printThreeData("菜名", "数量", "金额"));
+        esc.addTurnEmphasizedModeOnOrOff(EscCommand.ENABLE.OFF);
+        esc.addText(Menu80Utils.printThreeData("北京烤鸭", "1", "99.99"));
+        esc.addText(Menu80Utils.printThreeData("四川麻婆豆腐", "1", "39.99"));
+        esc.addText(Menu80Utils.printThreeData("西湖醋鱼", "1", "59.99"));
+        esc.addText(Menu80Utils.printThreeData("飞龙汤", "1", "66.66"));
+        esc.addText(Menu80Utils.printThreeData("无为熏鸭", "1", "88.88"));
+        esc.addText(Menu80Utils.printThreeData("东坡肉", "1", "39.99"));
+        esc.addText("------------------四行菜单案例------------------\n");
+        //开启加粗
+        esc.addTurnEmphasizedModeOnOrOff(EscCommand.ENABLE.ON);
+        esc.addText(Menu80Utils.printFourData("菜名", "单价","数量", "金额"));
+        esc.addTurnEmphasizedModeOnOrOff(EscCommand.ENABLE.OFF);
+        esc.addText(Menu80Utils.printFourData("北京烤鸭", "99.99","1", "99.99"));
+        esc.addText(Menu80Utils.printFourData("四川麻婆豆腐", "39.99","1", "39.99"));
+        esc.addText(Menu80Utils.printFourData("西湖醋鱼", "59.99","1", "59.99"));
+        esc.addText(Menu80Utils.printFourData("飞龙汤", "66.66","1", "66.66"));
+        esc.addText(Menu80Utils.printFourData("无为熏鸭", "88.88","1", "88.88"));
+        esc.addText(Menu80Utils.printFourData("东坡肉", "39.99","1", "39.99"));
+        esc.addText(Menu80Utils.printFourData("辣子鸡", "66.66","1", "66.66"));
+        esc.addText(Menu80Utils.printFourData("腊味合蒸", "108.00","1", "108.00"));
+        esc.addText(Menu80Utils.printFourData("东安子鸡", "119.00","1", "119.00"));
+        esc.addText(Menu80Utils.printFourData("清蒸武昌鱼", "88.88","1", "88.88"));
+        esc.addText(Menu80Utils.printFourData("再来两瓶82年的快乐肥宅水(去冰)", "9.00","11", "99.00"));
+        esc.addText(Menu80Utils.printFourData("老干妈拌饭", "6.66","1", "6.66"));
+        esc.addText("------------------------------------------------\n");
+        esc.addText(Menu80Utils.printTwoData("合计：", "1314.00"));
+        esc.addText(Menu80Utils.printTwoData("抹零：", "14.00"));
+        esc.addText(Menu80Utils.printTwoData("应收：", "1300.00"));
+        esc.addText("------------------------------------------------\n");
+        esc.addSelectJustification(EscCommand.JUSTIFICATION.RIGHT);
+        esc.addText("收银员：广东包租公\n");
+        esc.addSelectJustification(EscCommand.JUSTIFICATION.LEFT);
+        esc.addText("宣言：我点个鸡蛋都是爱你的形状哦\n");
+
+        esc.addSelectJustification(EscCommand.JUSTIFICATION.CENTER);
+        // 设置纠错等级
+        esc.addSelectErrorCorrectionLevelForQRCode((byte) 0x31);
+        // 设置qrcode模块大小
+        esc.addSelectSizeOfModuleForQRCode((byte) 4);
+        // 设置qrcode内容
+        esc.addStoreQRCodeData("www.baidu.com");
+        // 打印QRCode
+        esc.addPrintQRCode();
+        esc.addText("\n(扫二维码送手机)\n");
+        esc.addText("\n\n\n\n\n");
+        esc.addPrintAndLineFeed();
+        //切纸（带切刀打印机才可用）
+        esc.addCutPaper();
+        // 开钱箱
+        esc.addGeneratePlus(LabelCommand.FOOT.F2, (byte) 255, (byte) 255);
+        esc.addInitializePrinter();
+        //返回指令集
+        return esc.getCommand();
+    }
+
+    /**
+     * 打印自检页
+     * @return
+     */
+    public static Vector<Byte> getSelfTest() {
+        EscCommand esc = new EscCommand();
+        byte[] escSelfTestCommand = {0x1f, 0x1b, 0x1f, (byte) 0x93, 0x10, 0x11, 0x12, 0x15, 0x16, 0x17, 0x10, 0x00};
+       esc.addUserCommand(escSelfTestCommand);
+        return esc.getCommand();
     }
 
     /**
      * 获取图片
-     * @param mcontext
+     * @param context
      * @return
      */
-    public static Bitmap getBitmap(Context mcontext, List<Map<String,Object>> mData) {
-        View v = View.inflate(App.getContext(), R.layout.print_content, null);
-//        View v = View.inflate(App.getContext(), R.layout.print_content_sale, null);
+    public static Bitmap getLabelBitmap(Context context) {
+        View v = View.inflate(context, R.layout.print_content_sale, null);
+        TableLayout tableLayout = (TableLayout) v.findViewById(R.id.line);
+        TextView total = (TextView) v.findViewById(R.id.total);
+        TextView cashier = (TextView) v.findViewById(R.id.cashier);
+        final Bitmap bitmap = convertViewToBitmap(v);
+        return bitmap;
+    }
 
-        //标签表头数据获取
-        TextView txtPrintProductName = (TextView)v.findViewById(R.id.txtPrintProductName);
-        TextView txtPrintDept = (TextView)v.findViewById(R.id.txtPrintDept);
-        TextView txtPrintCk = (TextView)v.findViewById(R.id.txtPrintCk);
-        TextView txtPrintProductModel = (TextView)v.findViewById(R.id.txtPrintProductModel);
-        TextView txtPrintPrograme = (TextView)v.findViewById(R.id.txtPrintPrograme);
-        TextView txtPrintLots = (TextView)v.findViewById(R.id.txtPrintLots);
-
-        txtPrintProductName.setText((String)mData.get(0).get("ProductName"));
-        txtPrintProductModel.setText((String)mData.get(0).get("ProductModels"));
-        txtPrintCk.setText((String)mData.get(0).get("StockId"));
-        txtPrintPrograme.setText((String)mData.get(0).get("Program"));
-        txtPrintLots.setText((String)mData.get(0).get("Lots"));
-
-        TableLayout tableLayout = (TableLayout) v.findViewById(R.id.li);
-        for(Map<String,Object> mResponse: mData){
-            //mResponse.get("Quantity").toString();
-            tableLayout.addView(ctv(mcontext, mResponse.get("PlanDate").toString(), mResponse.get("Process").toString(), Integer.valueOf(mResponse.get("Quantity").toString()),mResponse.get("Employee").toString(),""));
-        }
-
+    /**
+     * 获取图片
+     * @param context
+     * @return
+     */
+    public static Bitmap getBitmap(Context context) {
+        View v = View.inflate(context, R.layout.page, null);
+        TableLayout tableLayout = (TableLayout) v.findViewById(R.id.line);
+        TextView total = (TextView) v.findViewById(R.id.total);
+        TextView cashier = (TextView) v.findViewById(R.id.cashier);
+        tableLayout.addView(ctv(context, "红茶\n加热\n加糖", 3, 8));
+        tableLayout.addView(ctv(context, "绿茶", 899, 109));
+        tableLayout.addView(ctv(context, "咖啡", 4, 15));
+        tableLayout.addView(ctv(context, "红茶", 3, 8));
+        tableLayout.addView(ctv(context, "绿茶", 8, 10));
+        tableLayout.addView(ctv(context, "咖啡", 4, 15));
+        tableLayout.addView(ctv(context, "红茶", 3, 8));
+        tableLayout.addView(ctv(context, "绿茶", 8, 10));
+        tableLayout.addView(ctv(context, "咖啡", 4, 15));
+        tableLayout.addView(ctv(context, "红茶", 3, 8));
+        tableLayout.addView(ctv(context, "绿茶", 8, 10));
+        tableLayout.addView(ctv(context, "咖啡", 4, 15));
+        tableLayout.addView(ctv(context, "红茶", 3, 8));
+        tableLayout.addView(ctv(context, "绿茶", 8, 10));
+        tableLayout.addView(ctv(context, "咖啡", 4, 15));
+        total.setText("998");
+        cashier.setText("张三");
         final Bitmap bitmap = convertViewToBitmap(v);
         return bitmap;
     }
     /**
-     * xml转bitmap图片
+     * mxl转bitmap图片
      * @param view
      * @return
      */
@@ -265,89 +472,27 @@ public class PrintContent {
         return bitmap;
     }
 
-    public static TableRow ctv(Context context, String name,String product,int qty,String code,String qc){
-        int iTextSize = 11;
-
+    public static TableRow ctv(Context context, String name, int k, int n){
         TableRow tb=new TableRow(context);
-        tb.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT ,TableLayout.LayoutParams.WRAP_CONTENT));
-
+        tb.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT , TableLayout.LayoutParams.WRAP_CONTENT));
         TextView tv1=new TextView(context);
-        tv1.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT ,TableRow.LayoutParams.WRAP_CONTENT));
+        tv1.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT , TableRow.LayoutParams.WRAP_CONTENT));
         tv1.setText(name);
         tv1.setTextColor(Color.BLACK);
-        tv1.setBackgroundColor(Color.WHITE);
-        tv1.setTextSize(iTextSize);
+        tv1.setTextSize(30);
         tb.addView(tv1);
         TextView tv2=new TextView(context);
-        tv2.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT ,TableRow.LayoutParams.WRAP_CONTENT));
-        tv2.setText(product+"");
+        tv2.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT , TableRow.LayoutParams.WRAP_CONTENT));
+        tv2.setText(k+"");
         tv2.setTextColor(Color.BLACK);
-        tv2.setBackgroundColor(Color.WHITE);
-        tv2.setTextSize(iTextSize);
+        tv2.setTextSize(30);
         tb.addView(tv2);
         TextView tv3=new TextView(context);
-        tv3.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT ,TableRow.LayoutParams.WRAP_CONTENT));
-        tv3.setText(qty+"");
+        tv3.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT , TableRow.LayoutParams.WRAP_CONTENT));
+        tv3.setText(n+"");
         tv3.setTextColor(Color.BLACK);
-        tv3.setBackgroundColor(Color.WHITE);
-        tv3.setTextSize(iTextSize);
+        tv3.setTextSize(30);
         tb.addView(tv3);
-        TextView tv4=new TextView(context);
-        tv4.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT ,TableRow.LayoutParams.WRAP_CONTENT));
-        tv4.setText(code+"");
-        tv4.setTextColor(Color.BLACK);
-        tv4.setBackgroundColor(Color.WHITE);
-        tv4.setTextSize(iTextSize);
-        tb.addView(tv4);
-        TextView tv5=new TextView(context);
-        tv5.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT ,TableRow.LayoutParams.WRAP_CONTENT));
-        tv5.setText(qc+"");
-        tv5.setTextColor(Color.BLACK);
-        tv5.setBackgroundColor(Color.WHITE);
-        tv5.setTextSize(iTextSize);
-        tb.addView(tv5);
         return tb;
-    }
-    /**
-     * 打印矩阵二维码
-     * @return
-     */
-    public static Vector<Byte> getNewCommandToPrintQrcode() {
-        LabelCommand tsc = new LabelCommand();
-        // 设置标签尺寸，按照实际尺寸设置
-        tsc.addSize(80, 80);
-        // 设置标签间隙，按照实际尺寸设置，如果为无间隙纸则设置为0
-        tsc.addGap(0);
-        // 设置打印方向
-        tsc.addDirection(LabelCommand.DIRECTION.FORWARD, LabelCommand.MIRROR.NORMAL);
-        // 设置原点坐标
-        tsc.addReference(0, 0);
-        // 撕纸模式开启
-        tsc.addTear(EscCommand.ENABLE.ON);
-        // 清除打印缓冲区
-        tsc.addCls();
-        //添加矩阵打印二维码  旋转
-        /**
-         * 参数 说明  x横坐标打印起始点   y 纵坐标打印起始点   width  打印宽度 height 打印高度  ROTATION：旋转   content：内容
-         */
-        tsc.addDMATRIX(10,10,400,400, LabelCommand.ROTATION.ROTATION_90,"DMATRIX EXAMPLE 1");
-        /**
-         * 参数 说明  x横坐标打印起始点   y 纵坐标打印起始点   width  打印宽度 height 打印高度  content：内容
-         */
-        tsc.addDMATRIX(110,10,200,200,"DMATRIX EXAMPLE 1");
-        /**
-         * 参数 说明  x横坐标打印起始点   y 纵坐标打印起始点   width  打印宽度 height 打印高度  Xzoom：放大倍数   content：内容
-         */
-        tsc.addDMATRIX(210,10,400,400, 6,"DMATRIX EXAMPLE 2");
-        /**
-         * 参数 说明  x横坐标打印起始点   y 纵坐标打印起始点   width  打印宽度 height 打印高度  c：ASCLL码  Xzomm：放大倍数 content：内容
-         */
-        tsc.addDMATRIX(10,200,100,100,126,6,"~1010465011125193621Gsz9YC24xBbQD~12406404~191ffd0~192Ypg+oU9uLHdR9J5ms0UlqzSPEW7wYQbknUrwOehbz+s+a+Nfxk8JlwVhgItknQEZyfG4Al26Rs/Ncj60ubNCWg==");
-        tsc.addPrint(1, 1);
-        // 打印标签后 蜂鸣器响
-        tsc.addSound(2, 100);
-        Vector<Byte> datas = tsc.getCommand();
-        // 发送数据
-        return datas;
     }
 }

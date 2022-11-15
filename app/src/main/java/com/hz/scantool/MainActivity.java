@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -49,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
     private String userId="";
     private String userName="";
     private String userStatus="";
+    private int iServerVersion;
     private TextView txtUserName;
     private TextView txtUserPassword;
     private TextView txtAppVersion;
@@ -248,6 +250,7 @@ public class MainActivity extends AppCompatActivity {
             }else {
 //                getUserLogin();
                 getUserData();
+
                 Log.i("MACADDRESS",UserInfo.getMacAddress());
             }
         }
@@ -258,7 +261,8 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onClick(View v) {
-            txtUserName.setText("");
+            Intent intent=new Intent(MainActivity.this,ResetUserActivity.class);
+            startActivity(intent);
         }
     }
 
@@ -266,8 +270,13 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onClick(View view) {
-//            Intent intent = new Intent(MainActivity.this,PrinterActivity.class);
-//            startActivity(intent);
+            switch (view.getId()){
+                case R.id.txtLoginContent:
+                    Uri uri = Uri.parse("http://192.168.210.1/app");
+                    Intent intent = new Intent(Intent.ACTION_VIEW,uri);
+                    startActivity(intent);
+                    break;
+            }
         }
     }
 
@@ -357,6 +366,48 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+    *描述: 获取系统版本
+    *日期：2022/7/28
+    **/
+    private void getServerVersion(){
+
+        Observable.create(new ObservableOnSubscribe<Integer>(){
+
+            @Override
+            public void subscribe(ObservableEmitter<Integer> e) throws Exception {
+                //检查版本
+                int serverVersion = UpdateManager.getInstance(nerworkType).getServerVersion();
+
+                e.onNext(serverVersion);
+                e.onComplete();
+            }
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<Integer>(){
+
+
+            @Override
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(Integer integer) {
+                iServerVersion = integer;
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                MyToast.myShow(MainActivity.this,e.getMessage(),0,0);
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
+
+    }
+
     //获取用户数据-账号/密码/权限/PDA
     private void getUserData(){
         //显示进度条
@@ -370,6 +421,8 @@ public class MainActivity extends AppCompatActivity {
             public void subscribe(ObservableEmitter<List<Map<String, Object>>> e) throws Exception {
                 //初始化T100服务名
                 String webServiceName = "UserGet";
+                int iVersion = getPackageManager().getPackageInfo("com.hz.scantool",0).versionCode;
+                String sVersion = getPackageManager().getPackageInfo("com.hz.scantool",0).versionName;
 
                 //发送服务器请求
                 T100ServiceHelper t100ServiceHelper = new T100ServiceHelper();
@@ -378,6 +431,8 @@ public class MainActivity extends AppCompatActivity {
                         "&lt;Field name=\"enterprise\" value=\""+ UserInfo.getUserEnterprise(getApplicationContext())+"\"/&gt;\n"+
                         "&lt;Field name=\"site\" value=\""+UserInfo.getUserSiteId(getApplicationContext())+"\"/&gt;\n"+
                         "&lt;Field name=\"account\" value=\""+ txtUserName.getText().toString() +"\"/&gt;\n"+
+                        "&lt;Field name=\"appversion\" value=\""+ iVersion +"\"/&gt;\n"+
+                        "&lt;Field name=\"appversionname\" value=\""+ sVersion +"\"/&gt;\n"+
                         "&lt;/Record&gt;\n"+
                         "&lt;/Parameter&gt;\n"+
                         "&lt;Document/&gt;\n";

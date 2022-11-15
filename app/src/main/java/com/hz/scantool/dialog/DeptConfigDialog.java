@@ -29,7 +29,7 @@ public class DeptConfigDialog {
     }
 
     public void show(){
-        final String[] items = {"10337_薛峰冲压线边仓","10237_凤二冲压线边仓","10137_凤一冲压线边仓"};
+        final String[] items = {"10337_薛峰冲压线边仓","10237_凤二冲压线边仓","10137_凤一冲压线边仓","10247_凤二焊接线边仓"};
 
         sharedHelper=new SharedHelper(mContext);
 
@@ -83,6 +83,57 @@ public class DeptConfigDialog {
         choiceItem = -1;
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         builder.setTitle("请选择仓库");
+//        builder.setIcon(R.drawable.dialog_error);
+        builder.setSingleChoiceItems(items,-1, new DialogInterface.OnClickListener(){
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                choiceItem = which;
+            }
+        });
+
+        builder.setPositiveButton("保存", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if(choiceItem != -1){
+                    String strDept = items[choiceItem];
+                    sharedHelper.saveDept(strDept);
+
+                    Message message = Message.obtain();
+                    message.what = 1;
+                    Bundle bundle = new Bundle();
+                    bundle.putString("dept", strDept);
+                    message.setData(bundle);
+                    mHandler.sendMessage(message);
+                }else{
+                    Toast.makeText(mContext,"未选择任何选项，更新失败！",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+
+        builder.show();
+
+    }
+
+    /**
+    *描述: 显示车间线边
+    *日期：2022/7/11
+    **/
+    public void showProductDept(){
+        final String[] items = {"10137_凤一冲压线边仓_N","10237_凤二冲压线边仓_N","10247_凤二焊接线边仓_N","10337_薛峰冲压线边仓_N"};
+
+        sharedHelper=new SharedHelper(mContext);
+
+        choiceItem = -1;
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setTitle("请选择线边仓");
 //        builder.setIcon(R.drawable.dialog_error);
         builder.setSingleChoiceItems(items,-1, new DialogInterface.OnClickListener(){
 

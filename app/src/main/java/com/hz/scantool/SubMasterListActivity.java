@@ -454,7 +454,8 @@ public class SubMasterListActivity extends AppCompatActivity {
         //解析二维码
         String[] qrCodeValue = qrContent.split("_");
         int qrIndex = qrContent.indexOf("_");
-        if(qrIndex==-1){
+//        if(qrIndex==-1){
+        if(qrContent.isEmpty()||qrContent.equals("")){
             MyToast.myShow(context,"条码错误:"+qrContent,0,1);
         }else{
             boolean isOqc = false;  //是否OQC
@@ -515,8 +516,11 @@ public class SubMasterListActivity extends AppCompatActivity {
                     }else{
                         intent = new Intent(context,DetailActivity.class);
                         //设置传入参数
+                        String qrContent2 = qrContent.replace("\"","^");
+
                         bundle=new Bundle();
-                        bundle.putString("qrCode",qrContent);
+                        bundle.putString("qrCode",qrContent2);
+
                         bundle.putString("docno",docno);
                         bundle.putInt("index",index);
                         intent.putExtras(bundle);

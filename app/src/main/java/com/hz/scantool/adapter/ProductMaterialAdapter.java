@@ -48,12 +48,17 @@ public class ProductMaterialAdapter extends BaseAdapter {
 
             view = LayoutInflater.from(mContext).inflate(R.layout.list_product_material,viewGroup,false);
 
-            holder.listMaterialSeq = view.findViewById(R.id.listMaterialSeq);
+            holder.listMaterialQpa = view.findViewById(R.id.listMaterialQpa);
             holder.listMaterialProductCode = view.findViewById(R.id.listMaterialProductCode);
-//            holder.listMaterialProcessId = view.findViewById(R.id.listMaterialProcessId);
             holder.listMaterialProcess = view.findViewById(R.id.listMaterialProcess);
             holder.listMaterialFlag = view.findViewById(R.id.listMaterialFlag);
             holder.listMaterialQuantity = view.findViewById(R.id.listMaterialQuantity);
+            holder.listMaterialUsedQuantity = view.findViewById(R.id.listMaterialUsedQuantity);
+            holder.listMaterialUnUsedQuantity = view.findViewById(R.id.listMaterialUnUsedQuantity);
+            holder.listMaterialPrintQuantity = view.findViewById(R.id.listMaterialPrintQuantity);
+            holder.listMaterialAvialQuantity = view.findViewById(R.id.listMaterialAvialQuantity);
+            holder.listMaterialDiffQuantity = view.findViewById(R.id.listMaterialDiffQuantity);
+            holder.listMaterialBadQuantity = view.findViewById(R.id.listMaterialBadQuantity);
 
             view.setTag(holder);
         }else{
@@ -61,17 +66,22 @@ public class ProductMaterialAdapter extends BaseAdapter {
         }
 
         //值显示
-        holder.listMaterialSeq.setText(String.valueOf(i+1));
+        holder.listMaterialQpa.setText((String)mData.get(i).get("Qpa"));
         holder.listMaterialProductCode.setText((String)mData.get(i).get("ProductName"));
-//        holder.listMaterialProcessId.setText((String)mData.get(i).get("ProcessId"));
         holder.listMaterialProcess.setText((String)mData.get(i).get("Process"));
         holder.listMaterialFlag.setText((String)mData.get(i).get("Attribute"));
         holder.listMaterialQuantity.setText((String)mData.get(i).get("Quantity"));
+        holder.listMaterialUsedQuantity.setText((String)mData.get(i).get("UsedQuantity"));
+        holder.listMaterialUnUsedQuantity.setText((String)mData.get(i).get("UnUsedQuantity"));
+        holder.listMaterialPrintQuantity.setText((String)mData.get(i).get("PrintQuantity"));
+        holder.listMaterialAvialQuantity.setText((String)mData.get(i).get("AvialQuantity"));
+        holder.listMaterialDiffQuantity.setText((String)mData.get(i).get("DiffQuantity"));
+        holder.listMaterialBadQuantity.setText((String)mData.get(i).get("BadQuantity"));
         holder.sStatus = (String)mData.get(i).get("Status");
 
         //颜色区分状态
         if(holder.sStatus.equals("Y")){
-            holder.listMaterialSeq.setTextColor(Color.RED);
+            holder.listMaterialQpa.setTextColor(Color.RED);
             holder.listMaterialProductCode.setTextColor(Color.RED);
             holder.listMaterialProcessId.setTextColor(Color.RED);
             holder.listMaterialProcess.setTextColor(Color.RED);
@@ -83,12 +93,13 @@ public class ProductMaterialAdapter extends BaseAdapter {
     }
 
     public static class ProductMaterialViewHolder{
-        TextView listMaterialSeq;
+        TextView listMaterialQpa;
         TextView listMaterialProductCode;
         TextView listMaterialProcessId;
         TextView listMaterialProcess;
         TextView listMaterialFlag;
-        TextView listMaterialQuantity;
+        TextView listMaterialQuantity,listMaterialUsedQuantity,listMaterialUnUsedQuantity;
+        TextView listMaterialPrintQuantity,listMaterialAvialQuantity,listMaterialDiffQuantity,listMaterialBadQuantity;
 
         String sStatus;
 

@@ -24,9 +24,12 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.hz.scantool.adapter.LoadingDialog;
 import com.hz.scantool.adapter.MyToast;
+import com.hz.scantool.adapter.StockPositionAdapter;
 import com.hz.scantool.helper.T100ServiceHelper;
 import com.hz.scantool.models.UserInfo;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -65,6 +68,8 @@ public class SubMasterListDetailActivity extends AppCompatActivity {
     private Button btnCancel;
     private Bundle bundle;
     private LoadingDialog loadingDialog;
+    private ListView stockPositionList;
+    private StockPositionAdapter stockPositionAdapter;
 
     private List<Map<String,Object>> mapResponseStatus;
 
@@ -76,6 +81,9 @@ public class SubMasterListDetailActivity extends AppCompatActivity {
         //初始化传入参数
         initBundle();
         initView();
+
+        //填充清单
+        initListView();
 
         //获取工具栏
         Toolbar toolbar=findViewById(R.id.subMasterListDetailToolBar);
@@ -136,6 +144,7 @@ public class SubMasterListDetailActivity extends AppCompatActivity {
         txtSubListDetailPlanQuantity = findViewById(R.id.txtSubListDetailPlanQuantity);
         txtSubListDetailPlanQuantityPcs = findViewById(R.id.txtSubListDetailPlanQuantityPcs);
         txtSubListDetailContainer = findViewById(R.id.txtSubListDetailContainer);
+        stockPositionList = findViewById(R.id.stockPositionList);
         btnSubmit = findViewById(R.id.btnSubmit);
         btnCancel = findViewById(R.id.btnCancel);
 
@@ -175,6 +184,51 @@ public class SubMasterListDetailActivity extends AppCompatActivity {
 
         btnSubmit.setOnClickListener(new listDetailClickListener());
         btnCancel.setOnClickListener(new listDetailClickListener());
+    }
+
+    private void initListView(){
+        String sStorage = bundle.getString("Storage");
+        if(sStorage.isEmpty()||sStorage.equals("")){
+            return;
+        }else{
+            int iArrayIndex = sStorage.indexOf("/");
+
+            List<Map<String,Object>> mapList = new ArrayList<Map<String,Object>>();
+            if(iArrayIndex>-1){
+                String[] sArray = sStorage.split("/");
+
+                for(int i=0;i<sArray.length;i++){
+                    String sDesc = sArray[i];
+                    int iIndex = sDesc.indexOf("_");
+                    String sMapDesc = sDesc.substring(iIndex,sDesc.length());
+                    if(sMapDesc.equals("_")){
+                        sMapDesc = "不合箱";
+                    }
+                    String sMapPosition = sDesc.substring(0,iIndex);
+
+                    Map<String, Object> map = new HashMap<String, Object>();
+                    map.put("Desc", sMapDesc);
+                    map.put("Position", sMapPosition);
+                    mapList.add(map);
+                }
+            }else{
+                String sDesc = sStorage;
+                int iIndex = sDesc.indexOf("_");
+                String sMapDesc = sDesc.substring(iIndex,sDesc.length());
+                if(sMapDesc.equals("_")){
+                    sMapDesc = "不合箱";
+                }
+                String sMapPosition = sDesc.substring(0,iIndex);
+
+                Map<String, Object> map = new HashMap<String, Object>();
+                map.put("Desc", sMapDesc);
+                map.put("Position", sMapPosition);
+                mapList.add(map);
+            }
+
+            stockPositionAdapter = new StockPositionAdapter(mapList,getApplicationContext());
+            stockPositionList.setAdapter(stockPositionAdapter);
+        }
     }
 
     @Override

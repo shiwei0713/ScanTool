@@ -124,7 +124,7 @@ public class CheckStockActivity extends AppCompatActivity {
             case R.id.action_scan:
                 //调用zxing扫码界面
                 IntentIntegrator intentIntegrator = new IntentIntegrator(CheckStockActivity.this);
-                intentIntegrator.setTimeout(5000);
+//                intentIntegrator.setTimeout(5000);
                 intentIntegrator.setDesiredBarcodeFormats();  //IntentIntegrator.QR_CODE
                 //开始扫描
                 intentIntegrator.initiateScan();
@@ -211,7 +211,7 @@ public class CheckStockActivity extends AppCompatActivity {
             if(strStockType.equals("Y")){
                 getScanQrData(qrCodeValue[0].toString());
             }else{
-                String where = " inab001='"+ strStockId +"' AND inab002='"+qrContent.trim()+"'";
+                String where = " inab001='"+ strStockId +"' AND (inab002='"+qrContent.trim()+"' OR inabud001='"+qrContent.trim()+"')";
                 getStockData(where,"1");
             }
         }
@@ -311,7 +311,7 @@ public class CheckStockActivity extends AppCompatActivity {
         }
     };
 
-    //获取扫描条码信息
+    //获取扫描储位信息
     private void getStockData(String where,String stocktype){
         //显示进度条
         loadingDialog = new LoadingDialog(this,"数据查询中",R.drawable.dialog_loading);

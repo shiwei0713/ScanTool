@@ -83,7 +83,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/black"
-                    android:text="@string/detail_content_title1"/>
+                    android:text="@string/multiple_detail_label1"/>
 
                 <TextView
                     android:id="@+id/txtMultipleDetailProductCode"
@@ -102,7 +102,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/black"
-                    android:text="@string/detail_content_title21"/>
+                    android:text="@string/multiple_detail_label2"/>
 
                 <TextView
                     android:id="@+id/txtMultipleDetailProductModels"
@@ -173,13 +173,32 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/black"
-                    android:text="@string/detail_content_title8"/>
+                    android:text="@string/multiple_detail_label3"/>
 
                 <TextView
                     android:id="@+id/txtMultipleDetailDocno"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/black"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:text="@string/detail_content_title33"/>
+
+                <TextView
+                    android:id="@+id/txtMultipleDetailTray"
+                    android:layout_width="@dimen/list_show_sub_textview_width2"
+                    android:layout_height="match_parent"
+                    android:textColor="@color/black" />
 
             </LinearLayout>
 
@@ -215,7 +234,7 @@
                     android:textStyle="bold"
                     android:inputType="numberDecimal"
                     android:hint="@string/hint_quantity"
-                    android:textSize="@dimen/font18" />
+                    android:textSize="@dimen/font16" />
 
             </LinearLayout>
 
@@ -244,6 +263,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="2dp"
         android:background="@color/line"
         android:orientation="horizontal">
 
@@ -263,6 +284,40 @@
             android:layout_gravity="center_vertical|right"
             android:layout_marginLeft="10dp"
             android:textColor="@color/master_loginout" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/master_message"
+            android:layout_marginLeft="10dp"
+            android:textStyle="bold"
+            android:text="@string/multiple_detail_label4"/>
+
+        <TextView
+            android:id="@+id/txtMultipleDetailPackage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textColor="@color/master_message"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right">
+
+            <Button
+                android:id="@+id/multipleBtnPrint"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/list_button_size"
+                android:background="@drawable/list_flag_selector"
+                android:textColor="@color/teal_700"
+                android:textStyle="normal"
+                android:layout_marginRight="10dp"
+                android:focusable="false"
+                android:textSize="@dimen/list_detail_button"
+                android:text="@string/list_detail_button23"/>
+
+        </LinearLayout>
 
     </LinearLayout>
 

@@ -16,9 +16,9 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/detail_content_height"
+        android:layout_height="wrap_content"
         android:gravity="center|left"
-        android:layout_marginLeft="@dimen/detail_content_margin"
+        android:padding="@dimen/detail_content_margin"
         android:orientation="horizontal">
 
         <TextView
@@ -26,64 +26,43 @@
             android:layout_height="wrap_content"
             android:text="@string/detail_content_title"
             android:textColor="@color/list_item_number"
-            android:textStyle="bold"
-            android:textSize="@dimen/check_detail_content_textsize" />
+            android:textSize="@dimen/font14" />
 
         <TextView
             android:id="@+id/checkStockDetailDept"
-            android:layout_width="wrap_content"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/detail_content_input_margin"
-            android:textColor="@color/list_item_number"
-            android:textStyle="bold"
-            android:textSize="@dimen/check_detail_content_textsize" />
+            android:padding="5dp"
+            android:textSize="@dimen/font14"
+            android:textColor="@color/teal_700"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/textview_bg_gray"/>
 
         <Button
             android:id="@+id/checkBtnDept"
-            android:layout_width="wrap_content"
+            android:layout_width="60dp"
             android:layout_height="25dp"
-            android:background="@drawable/list_button_selector"
+            android:background="@drawable/list_flag_selector"
             android:textColor="@color/teal_700"
             android:textStyle="normal"
-            android:layout_gravity="center|right"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="10dp"
             android:focusable="false"
-            android:textSize="@dimen/list_detail_button"
-            android:text="@string/check_stock_btn" />
+            android:textSize="@dimen/font14"
+            android:text="@string/check_product_button_title" />
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="3dp"
+        android:layout_height="1dp"
         android:background="@color/line"
         android:orientation="vertical">
 
     </LinearLayout>
 
     <include
-        layout="@layout/detail_input_content"
+        layout="@layout/check_product_detail_content"
         android:layout_width="match_parent"
         android:layout_height="450dp"/>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:gravity="bottom|center"
-        android:layout_marginBottom="20dp"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/btnDetailSubmit"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:background="@drawable/list_button_selector"
-            android:textColor="@color/teal_700"
-            android:textStyle="normal"
-            android:focusable="false"
-            android:textSize="@dimen/list_detail_button"
-            android:text="@string/detail_submit" />
-
-    </LinearLayout>
 
 </LinearLayout>

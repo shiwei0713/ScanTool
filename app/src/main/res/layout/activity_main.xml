@@ -71,7 +71,7 @@
             android:layout_centerHorizontal="true"
             android:ems="12"
             android:hint="@string/login_username"
-            android:inputType="number"
+            android:inputType="textCapSentences"
             android:textSize="16sp"
             android:textColorHint="@color/hint_color"/>
     </LinearLayout>>
@@ -209,7 +209,7 @@
             android:id="@+id/linearBtn2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingBottom="10dp"
+            android:paddingBottom="15dp"
             android:layout_alignParentBottom="true"
             android:orientation="horizontal">
 
@@ -221,6 +221,7 @@
                 android:clickable="true"
                 android:text="@string/login_txtContent"
                 android:textColor="@color/login_bottom"
+                android:textStyle="bold"
                 android:textSize="14sp" />
 
             <TextView
@@ -231,6 +232,7 @@
                 android:layout_marginLeft="10dp"
                 android:textColor="@color/login_bottom"
                 android:layout_alignParentBottom="true"
+                android:textStyle="bold"
                 android:textSize="14sp" />
 
             <TextView
@@ -242,6 +244,7 @@
                 android:clickable="true"
                 android:text="@string/login_txtLicense"
                 android:textColor="@color/login_bottom"
+                android:textStyle="bold"
                 android:textSize="14sp" />
         </LinearLayout>>
     </RelativeLayout>

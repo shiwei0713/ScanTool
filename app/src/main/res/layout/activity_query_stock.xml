@@ -269,17 +269,18 @@
                     android:textSize="@dimen/font14"
                     android:textColor="@color/teal_700"
                     android:text="@string/content_title24"
+                    android:layout_marginLeft="5dp"
                     android:background="@drawable/textview_bg_gray"/>
 
                 <TextView
                     android:id="@+id/queryStockCountNg"
                     android:layout_width="120dp"
-                    android:layout_height="wrap_content"
-                    android:padding="5dp"
-                    android:textSize="@dimen/font14"
-                    android:textColor="@color/master_message"
+                    android:layout_height="match_parent"
                     android:layout_marginLeft="5dp"
-                    android:background="@drawable/textview_bg_gray"/>
+                    android:background="@drawable/textview_bg_gray"
+                    android:padding="5dp"
+                    android:textColor="@color/master_message"
+                    android:textSize="@dimen/font14" />
 
             </LinearLayout>
 
@@ -294,14 +295,36 @@
                     android:layout_height="wrap_content"
                     android:padding="5dp"
                     android:textSize="@dimen/font14"
+                    android:textColor="@color/teal_700"
+                    android:textStyle="bold"
+                    android:text="@string/content_title34"
+                    android:background="@drawable/textview_bg_gray"/>
+
+                <TextView
+                    android:id="@+id/queryStockCountNo"
+                    android:layout_width="90dp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textSize="@dimen/font14"
+                    android:textColor="@color/teal_700"
+                    android:textStyle="bold"
+                    android:layout_marginLeft="5dp"
+                    android:background="@drawable/textview_bg_gray"/>
+
+                <TextView
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textSize="@dimen/font14"
                     android:textColor="@color/red"
                     android:textStyle="bold"
+                    android:layout_marginLeft="5dp"
                     android:text="@string/content_title25"
                     android:background="@drawable/textview_bg_gray"/>
 
                 <TextView
                     android:id="@+id/queryStockQty"
-                    android:layout_width="300dp"
+                    android:layout_width="120dp"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
                     android:textSize="@dimen/font14"
@@ -342,20 +365,21 @@
                     android:layout_height="wrap_content"
                     android:padding="5dp"
                     android:textSize="@dimen/font14"
-                    android:textColor="@color/teal_700"
-                    android:text="@string/content_title27"
-                    android:visibility="invisible"
+                    android:textColor="@color/red"
+                    android:layout_marginLeft="5dp"
+                    android:textStyle="bold"
+                    android:text="@string/content_title28"
                     android:background="@drawable/textview_bg_gray"/>
 
                 <TextView
-                    android:id="@+id/queryProductCountNg"
+                    android:id="@+id/queryProductQty"
                     android:layout_width="120dp"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
                     android:textSize="@dimen/font14"
-                    android:textColor="@color/master_message"
+                    android:textColor="@color/red"
+                    android:textStyle="bold"
                     android:layout_marginLeft="5dp"
-                    android:visibility="invisible"
                     android:background="@drawable/textview_bg_gray"/>
 
             </LinearLayout>
@@ -366,26 +390,7 @@
                 android:layout_marginTop="5dp"
                 android:orientation="horizontal">
 
-                <TextView
-                    android:layout_width="80dp"
-                    android:layout_height="wrap_content"
-                    android:padding="5dp"
-                    android:textSize="@dimen/font14"
-                    android:textColor="@color/red"
-                    android:textStyle="bold"
-                    android:text="@string/content_title28"
-                    android:background="@drawable/textview_bg_gray"/>
 
-                <TextView
-                    android:id="@+id/queryProductQty"
-                    android:layout_width="300dp"
-                    android:layout_height="wrap_content"
-                    android:padding="5dp"
-                    android:textSize="@dimen/font14"
-                    android:textColor="@color/red"
-                    android:textStyle="bold"
-                    android:layout_marginLeft="5dp"
-                    android:background="@drawable/textview_bg_gray"/>
 
             </LinearLayout>
 

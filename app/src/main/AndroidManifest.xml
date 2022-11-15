@@ -5,6 +5,8 @@
 
     <uses-sdk tools:overrideLibrary="com.google.zxing.client.android" />
 
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -13,7 +15,8 @@
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" /> <!-- 扫描二维码库 -->
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.READ_LOGS" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:name=".App"
@@ -25,7 +28,24 @@
         android:supportsRtl="true"
         android:theme="@style/ThemeNoBar.ScanTool"
         android:usesCleartextTraffic="true">
-        <activity android:name=".PrintLabelActivity"></activity>
+        <activity android:name=".WarehouseDetailActivity"></activity>
+        <activity android:name=".WarehouseListActivity" />
+        <activity android:name=".IqcCheckMaterialDetailActivity" />
+        <activity android:name=".IqcCheckListActivity" />
+        <activity android:name=".IqcCheckLabelDetailActivity" />
+        <activity android:name=".IqcCheckLabelActivity" />
+        <activity android:name=".SurplusMaterialListActivity" />
+        <activity android:name=".SubDetailForDiffQtyActivity" />
+        <activity android:name=".SubDetailForPackageActivity" />
+        <activity android:name=".SetProcessActivity" />
+        <activity android:name=".SubDetailForSaleActivity" />
+        <activity android:name=".SubListForSaleActivity" />
+        <activity android:name=".PrinterListActivity" />
+        <activity android:name=".printer.BlueToothDeviceActivity" />
+        <activity android:name=".CheckMaterialListActivity" />
+        <activity android:name=".SubDetailForTaskActivity" />
+        <activity android:name=".PrintStockLabelActivity" />
+        <activity android:name=".PrintLabelActivity" />
         <activity android:name=".QueryStockActivity" />
         <activity android:name=".SubDetailForErrorActivity" />
         <activity android:name=".CheckMaterialActivity" />
@@ -40,10 +60,8 @@
         <activity android:name=".SubDetailForMultipleActivity" />
         <activity android:name=".SubQualityCheckDetailActivity" />
         <activity android:name=".SubQualityCheckActivity" />
-        <activity android:name=".PrinterActivity" />
         <activity android:name=".EmployeeReportActivity" />
         <activity android:name=".SubDetailForModelActivity" />
-        <activity android:name=".SubDetailActivity" />
         <activity android:name=".SubActivity" />
         <activity android:name=".CheckStockDetailActivity" />
         <activity android:name=".ErrorActivity" />
@@ -75,20 +93,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="com.tencent.bugly.beta.ui.BetaActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize|locale"
-            android:theme="@android:style/Theme.Translucent" />
-
-        <provider
-            android:name="androidx.core.content.FileProvider"
-            android:authorities="${applicationId}.fileProvider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths" />
-        </provider>
     </application>
 
 </manifest>

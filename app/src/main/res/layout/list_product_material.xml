@@ -2,67 +2,252 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/list_style_white"
-    android:orientation="horizontal">
+    android:background="@drawable/list_item_styel"
+    android:descendantFocusability="blocksDescendants"
+    android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/listMaterialSeq"
-        android:layout_width="40dp"
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="5dp"
-        android:textSize="@dimen/font14"
-        android:textColor="@color/teal_700"
-        android:layout_marginLeft="5dp"
-        android:background="@drawable/textview_bg_gray"/>
+        android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/listMaterialProductCode"
-        android:layout_width="100dp"
+        <TextView
+            android:id="@+id/listMaterialProductCode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="@dimen/font14"
+            android:layout_marginLeft="5dp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/line"
+        android:orientation="horizontal">
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:textSize="@dimen/font14"
-        android:textColor="@color/teal_700"
-        android:layout_marginLeft="5dp"
-        android:background="@drawable/textview_bg_gray"/>
+        android:gravity="left|center"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal">
 
-<!--    <TextView-->
-<!--        android:id="@+id/listMaterialProcessId"-->
-<!--        android:layout_width="40dp"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:padding="5dp"-->
-<!--        android:textSize="@dimen/font14"-->
-<!--        android:textColor="@color/teal_700"-->
-<!--        android:layout_marginLeft="5dp"-->
-<!--        android:background="@drawable/textview_bg_gray"/>-->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left|center"
+            android:gravity="left|center"
+            android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/listMaterialProcess"
-        android:layout_width="60dp"
-        android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:textSize="@dimen/font14"
-        android:textColor="@color/teal_700"
-        android:layout_marginLeft="5dp"
-        android:background="@drawable/textview_bg_gray"/>
+            <TextView
+                android:id="@+id/listMaterialFlag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/font14"
+                android:layout_marginLeft="5dp"/>
 
-    <TextView
-        android:id="@+id/listMaterialQuantity"
-        android:layout_width="70dp"
-        android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:textSize="@dimen/font14"
-        android:textColor="@color/teal_700"
-        android:layout_marginLeft="5dp"
-        android:background="@drawable/textview_bg_gray"/>
+        </LinearLayout>
 
-    <TextView
-        android:id="@+id/listMaterialFlag"
-        android:layout_width="40dp"
-        android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:textSize="@dimen/font14"
-        android:textColor="@color/teal_700"
-        android:layout_marginLeft="5dp"
-        android:background="@drawable/textview_bg_gray"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="left|center"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:textSize="@dimen/font14"
+                    android:text="@string/listitem_title3"/>
+
+                <TextView
+                    android:id="@+id/listMaterialProcess"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/font14"
+                    android:layout_marginLeft="5dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:textSize="@dimen/font14"
+                    android:text="@string/listitem_title7"/>
+
+                <TextView
+                    android:id="@+id/listMaterialQpa"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/font14"
+                    android:layout_marginLeft="5dp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:textSize="@dimen/font14"
+                            android:text="@string/listitem_title5"/>
+
+                        <TextView
+                            android:id="@+id/listMaterialQuantity"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/font14"
+                            android:layout_marginLeft="5dp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:textSize="@dimen/font14"
+                            android:text="@string/listitem_title51"/>
+
+                        <TextView
+                            android:id="@+id/listMaterialUsedQuantity"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/font14"
+                            android:layout_marginLeft="5dp"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:textSize="@dimen/font14"
+                            android:text="@string/listitem_title55"/>
+
+                        <TextView
+                            android:id="@+id/listMaterialDiffQuantity"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/font14"
+                            android:layout_marginLeft="5dp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:textSize="@dimen/font14"
+                            android:textColor="@color/red"
+                            android:text="@string/listitem_title56"/>
+
+                        <TextView
+                            android:id="@+id/listMaterialBadQuantity"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/font14"
+                            android:textColor="@color/red"
+                            android:layout_marginLeft="5dp"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="20dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/font14"
+                        android:text="@string/listitem_title52"/>
+
+                    <TextView
+                        android:id="@+id/listMaterialUnUsedQuantity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/font14"
+                        android:layout_marginLeft="5dp"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:textSize="@dimen/font14"
+                    android:textColor="@color/teal_700"
+                    android:text="@string/listitem_title53"/>
+
+                <TextView
+                    android:id="@+id/listMaterialPrintQuantity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/font14"
+                    android:textColor="@color/teal_700"
+                    android:layout_marginLeft="5dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:textSize="@dimen/font14"
+                    android:textColor="@color/teal_700"
+                    android:text="@string/listitem_title54"/>
+
+                <TextView
+                    android:id="@+id/listMaterialAvialQuantity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/font14"
+                    android:textColor="@color/teal_700"
+                    android:layout_marginLeft="5dp"/>
+
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
 
 </LinearLayout>

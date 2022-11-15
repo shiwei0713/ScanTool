@@ -5,64 +5,114 @@
     android:background="@drawable/list_style_white"
     android:orientation="horizontal">
 
-    <TextView
-        android:layout_width="40dp"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:textSize="@dimen/font14"
-        android:textColor="@color/teal_700"
-        android:layout_marginLeft="5dp"
-        android:text="@string/listitem_title1"
-        android:background="@drawable/textview_bg_gray"/>
+        android:orientation="horizontal">
 
-    <TextView
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:textSize="@dimen/font14"
-        android:textColor="@color/teal_700"
-        android:layout_marginLeft="5dp"
-        android:text="@string/listitem_title2"
-        android:background="@drawable/textview_bg_gray"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal">
 
-<!--    <TextView-->
-<!--        android:layout_width="40dp"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:padding="5dp"-->
-<!--        android:textSize="@dimen/font14"-->
-<!--        android:textColor="@color/teal_700"-->
-<!--        android:layout_marginLeft="5dp"-->
-<!--        android:text="@string/listitem_title3"-->
-<!--        android:background="@drawable/textview_bg_gray"/>-->
+            <TextView
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:text="@string/listitem_title6"
+                android:background="@drawable/textview_bg_gray"/>
 
-    <TextView
-        android:layout_width="60dp"
-        android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:textSize="@dimen/font14"
-        android:textColor="@color/teal_700"
-        android:layout_marginLeft="5dp"
-        android:text="@string/listitem_title4"
-        android:background="@drawable/textview_bg_gray"/>
+        </LinearLayout>
 
-    <TextView
-        android:layout_width="70dp"
-        android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:textSize="@dimen/font14"
-        android:textColor="@color/teal_700"
-        android:layout_marginLeft="5dp"
-        android:text="@string/listitem_title5"
-        android:background="@drawable/textview_bg_gray"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-    <TextView
-        android:layout_width="40dp"
-        android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:textSize="@dimen/font14"
-        android:textColor="@color/teal_700"
-        android:layout_marginLeft="5dp"
-        android:text="@string/listitem_title6"
-        android:background="@drawable/textview_bg_gray"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textSize="@dimen/font14"
+                    android:textColor="@color/teal_700"
+                    android:layout_marginLeft="5dp"
+                    android:text="@string/listitem_title3"
+                    android:background="@drawable/textview_bg_gray"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textSize="@dimen/font14"
+                    android:textColor="@color/teal_700"
+                    android:layout_marginLeft="5dp"
+                    android:text="@string/listitem_title2"
+                    android:background="@drawable/textview_bg_gray"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="5dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textSize="@dimen/font14"
+                    android:textColor="@color/teal_700"
+                    android:layout_marginLeft="5dp"
+                    android:text="@string/listitem_title7"
+                    android:background="@drawable/textview_bg_gray"/>
+
+                <TextView
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textSize="@dimen/font14"
+                    android:textColor="@color/teal_700"
+                    android:layout_marginLeft="5dp"
+                    android:text="@string/listitem_title5"
+                    android:background="@drawable/textview_bg_gray"/>
+
+                <TextView
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textSize="@dimen/font14"
+                    android:textColor="@color/teal_700"
+                    android:layout_marginLeft="5dp"
+                    android:text="@string/listitem_title51"
+                    android:background="@drawable/textview_bg_gray"/>
+
+                <TextView
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textSize="@dimen/font14"
+                    android:textColor="@color/teal_700"
+                    android:layout_marginLeft="5dp"
+                    android:text="@string/listitem_title51"
+                    android:background="@drawable/textview_bg_gray"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
 
 </LinearLayout>

@@ -419,7 +419,7 @@ public class SubDetailListActivity extends AppCompatActivity {
 
             @Override
             public void onError(Throwable e) {
-                MyToast.myShow(SubDetailListActivity.this,"网络错误",0,0);
+                MyToast.myShow(SubDetailListActivity.this,e.getMessage(),0,0);
                 //隐藏滚动条
                 progressSubDetailBar.setVisibility(View.GONE);
             }

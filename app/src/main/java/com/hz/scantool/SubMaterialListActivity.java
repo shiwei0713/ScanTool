@@ -26,6 +26,7 @@ import com.hz.scantool.adapter.LoadingDialog;
 import com.hz.scantool.adapter.MyToast;
 import com.hz.scantool.adapter.SubAdapter;
 import com.hz.scantool.adapter.SubMaterialAdapter;
+import com.hz.scantool.dialog.SearchView;
 import com.hz.scantool.helper.T100ServiceHelper;
 import com.hz.scantool.models.UserInfo;
 
@@ -57,6 +58,7 @@ public class SubMaterialListActivity extends AppCompatActivity {
     private List<Map<String,Object>> mapResponseList;
     private List<Map<String,Object>> mapResponseStatus;
     private SubMaterialAdapter subMaterialAdapter;
+    private SearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

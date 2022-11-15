@@ -6,19 +6,10 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.graphics.Bitmap;
-import android.hardware.usb.UsbDevice;
-import android.hardware.usb.UsbManager;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Environment;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,34 +21,18 @@ import android.widget.TextView;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
-import com.gprinter.command.CpclCommand;
-import com.gprinter.command.EscCommand;
-import com.gprinter.command.FactoryCommand;
-import com.gprinter.command.LabelCommand;
-import com.gprinter.io.EthernetPort;
 import com.hz.scantool.adapter.LoadingDialog;
 import com.hz.scantool.adapter.MyToast;
 import com.hz.scantool.adapter.SubAdapter;
-import com.hz.scantool.adapter.SubListAdapter;
+import com.hz.scantool.dialog.SearchView;
 import com.hz.scantool.helper.T100ServiceHelper;
 import com.hz.scantool.models.UserInfo;
-import com.hz.scantool.printer.CheckWifiConnThread;
-import com.hz.scantool.printer.Constant;
-import com.hz.scantool.printer.DeviceConnFactoryManager;
-import com.hz.scantool.printer.PrintContent;
-import com.hz.scantool.printer.PrinterCommand;
-import com.hz.scantool.printer.ThreadPool;
-import com.hz.scantool.printer.WifiParameterConfig;
 
 import org.w3c.dom.Text;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -71,14 +46,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
-import static android.hardware.usb.UsbManager.ACTION_USB_DEVICE_ATTACHED;
-import static android.hardware.usb.UsbManager.ACTION_USB_DEVICE_DETACHED;
 import static com.google.zxing.integration.android.IntentIntegrator.REQUEST_CODE;
-import static com.hz.scantool.printer.Constant.MESSAGE_UPDATE_PARAMETER;
-import static com.hz.scantool.printer.Constant.tip;
-import static com.hz.scantool.printer.Constant.ACTION_USB_PERMISSION;
-import static com.hz.scantool.printer.DeviceConnFactoryManager.ACTION_QUERY_PRINTER_STATE;
-import static com.hz.scantool.printer.DeviceConnFactoryManager.CONN_STATE_FAILED;
 
 public class SubActivity extends AppCompatActivity {
 
@@ -95,7 +63,8 @@ public class SubActivity extends AppCompatActivity {
     private SubAdapter subAdapter;
     private TextView txtLoginout;
     private TextView txtWorktime;
-    private TextView txtQuery,txtQueryStock;
+    private Button subAction1,subAction2,subAction3,subAction4;
+    private SearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,6 +77,7 @@ public class SubActivity extends AppCompatActivity {
         //初始化控件
         initView();
         setWorktime();
+        setBtnStyle();
 
         //获取工具栏
         Toolbar toolbar=findViewById(R.id.subListToolBar);
@@ -197,15 +167,83 @@ public class SubActivity extends AppCompatActivity {
     private void initView(){
         txtLoginout = findViewById(R.id.txtLoginout);
         txtWorktime = findViewById(R.id.txtWorktime);
-        txtQuery = findViewById(R.id.txtQuery);
-        txtQueryStock = findViewById(R.id.txtQueryStock);
+        subAction1 = findViewById(R.id.subAction1);
+        subAction2 = findViewById(R.id.subAction2);
+        subAction3 = findViewById(R.id.subAction3);
+        subAction4 = findViewById(R.id.subAction4);
         progressBar = findViewById(R.id.progressBar);
         listView = findViewById(R.id.subView);
 
         txtLoginout.setText("工号:"+UserInfo.getUserId(getApplicationContext()));
-        txtQuery.setOnClickListener(new queryClickListener());
-        txtQueryStock.setOnClickListener(new queryClickListener());
+        subAction1.setOnClickListener(new queryClickListener());
+        subAction2.setOnClickListener(new queryClickListener());
+        subAction3.setOnClickListener(new queryClickListener());
+        subAction4.setOnClickListener(new queryClickListener());
         listView.setOnItemClickListener(new listItemClickListener());
+
+        //初始化查询
+        searchView = (SearchView) findViewById(R.id.searchView);
+        searchView.setSearchViewListener(new SearchView.onSearchViewListener() {
+            @Override
+            public boolean onQueryTextChange(String text) {
+                searchItem("ProductName",text);
+                return false;
+            }
+        });
+    }
+
+    /**
+    *描述: 查询结果解析
+    *日期：2022/7/18
+    **/
+    public void searchItem(String name,String query) {
+        List<Map<String,Object>> mSearchList = new ArrayList<Map<String,Object>>();
+        for (int i = 0; i < mapResponseList.size(); i++) {
+            String sProductName = (String)mapResponseList.get(i).get(name);
+            int index = sProductName.indexOf(query);
+            //存在匹配的数据
+            if (index != -1) {
+                mSearchList.add(mapResponseList.get(i));
+            }
+        }
+
+        //填充清单
+        if(mSearchList.size()>0){
+            subAdapter = new SubAdapter(mSearchList,getApplicationContext(),"CJ");
+            listView.setAdapter(subAdapter);
+        }
+
+    }
+
+    /**
+    *描述: 设置导航按钮样式
+    *日期：2022/6/21
+    **/
+    private void setBtnStyle(){
+        //声明按钮ID和图片ID
+        int[] btnId;
+        int[] imgId;
+        int[] titleId;
+
+        //按照不同导航显示对应按钮
+        btnId = new int[]{R.id.subAction1, R.id.subAction2, R.id.subAction3,R.id.subAction4};
+        imgId = new int[]{R.drawable.sub_action1, R.drawable.sub_action2, R.drawable.sub_action3, R.drawable.sub_action4};
+        titleId = new int[]{R.string.query_price,R.string.query_stock,R.string.query_material,R.string.query_employee};
+
+        //初始化按钮和图片
+        Button btnAction;
+        Drawable drawable;
+
+        //设置按钮样式
+        for(int i=0;i<btnId.length;i++){
+            btnAction=findViewById(btnId[i]);
+            drawable=getResources().getDrawable(imgId[i]);
+            drawable.setBounds(0,0,64,64);
+            btnAction.setCompoundDrawables(drawable,null,null,null);
+            btnAction.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+            btnAction.setBackground(getResources().getDrawable(R.drawable.button_selector_white));
+            btnAction.setText(getResources().getString(titleId[i]));
+        }
     }
 
     private void setWorktime(){
@@ -234,15 +272,28 @@ public class SubActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             Intent intent;
+            Bundle bundle = new Bundle();;
 
             switch (view.getId()){
-                case R.id.txtQuery:
+                case R.id.subAction1:   //产量查询
                     intent = new Intent(SubActivity.this,EmployeeReportActivity.class);
                     startActivity(intent);
                     break;
-                case R.id.txtQueryStock:
+                case R.id.subAction2:   //库容查询
                     intent = new Intent(SubActivity.this,QueryStockActivity.class);
                     startActivity(intent);
+                    break;
+                case R.id.subAction3:   //零件查询
+                    intent = new Intent(SubActivity.this,SubMaterialListActivity.class);
+                    bundle.putInt("btnId",120);
+                    bundle.putString("title",subAction3.getText().toString());
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                    break;
+                case R.id.subAction4:   //考勤查询
+//                    intent = new Intent(SubActivity.this,QueryStockActivity.class);
+//                    startActivity(intent);
+                    MyToast.myShow(SubActivity.this,"敬请期待",2,0);
                     break;
             }
         }
@@ -269,29 +320,47 @@ public class SubActivity extends AppCompatActivity {
             TextView txtSubOperateCount = view.findViewById(R.id.txtSubOperateCount);
             TextView txtSubPrintCount = view.findViewById(R.id.txtSubPrintCount);
             TextView txtVersion = view.findViewById(R.id.txtVersion);
+            TextView txtGroupId = view.findViewById(R.id.txtGroupId);
+            TextView txtProcessEnd = view.findViewById(R.id.txtProcessEnd);
+            TextView txtInputStatus = view.findViewById(R.id.txtInputStatus);
+            TextView txtCheckMaterial = view.findViewById(R.id.txtCheckMaterial);
             String modStatus = txtSubModStatus.getText().toString();
+            String inputStatus = txtInputStatus.getText().toString();
+            String checkMaterial = txtCheckMaterial.getText().toString();
+            String processEnd = txtProcessEnd.getText().toString();
 
-            Intent intent = new Intent(SubActivity.this,SubDetailForMultipleActivity.class);
-            Bundle bundle=new Bundle();
-            bundle.putString("Flag",txtSubFlag.getText().toString());
-            bundle.putString("ProcessId",txtProcessId.getText().toString());
-            bundle.putString("Process",txtProcess.getText().toString());
-            bundle.putString("ModStatus",modStatus);
-            bundle.putString("OperateCount",txtSubOperateCount.getText().toString());
-            bundle.putString("PrintCount",txtSubPrintCount.getText().toString());
-            bundle.putString("StartStatus",subAdapter.getItemValue(i,"StartStatus"));
-            bundle.putString("CheckStatus",subAdapter.getItemValue(i,"CheckStatus"));
-            bundle.putString("UpStatus",subAdapter.getItemValue(i,"UpStatus"));
-            bundle.putString("ErrorStartStatus",subAdapter.getItemValue(i,"ErrorStartStatus"));
-            bundle.putString("ErrorStopStatus",subAdapter.getItemValue(i,"ErrorStopStatus"));
-            bundle.putString("Version",txtVersion.getText().toString());
-            bundle.putString("StartTime",subAdapter.getItemValue(i,"StartTime"));
-            bundle.putString("CheckTime",subAdapter.getItemValue(i,"CheckTime"));
-            bundle.putString("UpTime",subAdapter.getItemValue(i,"UpTime"));
-            bundle.putString("ErrorTime",subAdapter.getItemValue(i,"ErrorTime"));
-            bundle.putString("ProductTotal",subAdapter.getItemValue(i,"ProductTotal"));
-            intent.putExtras(bundle);
-            startActivity(intent);
+            if(inputStatus.equals("N")&&processEnd.equals("Y")&&checkMaterial.equals("N")){
+                MyToast.myShow(SubActivity.this,"连线生产只末序需要报工",0,0);
+            }else{
+                Intent intent = new Intent(SubActivity.this,SubDetailForMultipleActivity.class);
+                Bundle bundle=new Bundle();
+                bundle.putString("Flag",txtSubFlag.getText().toString());
+                bundle.putString("ProcessId",txtProcessId.getText().toString());
+                bundle.putString("Process",txtProcess.getText().toString());
+                bundle.putString("Device",txtDevice.getText().toString());
+                bundle.putString("ModStatus",modStatus);
+                bundle.putString("OperateCount",txtSubOperateCount.getText().toString());
+                bundle.putString("PrintCount",txtSubPrintCount.getText().toString());
+                bundle.putString("StartStatus",subAdapter.getItemValue(i,"StartStatus"));
+                bundle.putString("CheckStatus",subAdapter.getItemValue(i,"CheckStatus"));
+                bundle.putString("UpStatus",subAdapter.getItemValue(i,"UpStatus"));
+                bundle.putString("ErrorStartStatus",subAdapter.getItemValue(i,"ErrorStartStatus"));
+                bundle.putString("ErrorStopStatus",subAdapter.getItemValue(i,"ErrorStopStatus"));
+                bundle.putString("Version",txtVersion.getText().toString());
+                bundle.putString("StartTime",subAdapter.getItemValue(i,"StartTime"));
+                bundle.putString("CheckTime",subAdapter.getItemValue(i,"CheckTime"));
+                bundle.putString("UpTime",subAdapter.getItemValue(i,"UpTime"));
+                bundle.putString("ErrorTime",subAdapter.getItemValue(i,"ErrorTime"));
+                bundle.putString("ProductTotal",subAdapter.getItemValue(i,"ProductTotal"));
+                bundle.putString("GroupId",txtGroupId.getText().toString());
+                bundle.putString("ProcessEnd",txtProcessEnd.getText().toString());
+                bundle.putString("ProcessInitId",subAdapter.getItemValue(i,"ProcessInitId"));
+                bundle.putString("ProcessInit",subAdapter.getItemValue(i,"ProcessInit"));
+                bundle.putString("InputStatus",inputStatus);
+                bundle.putString("CheckMaterial",checkMaterial);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
         }
     }
 

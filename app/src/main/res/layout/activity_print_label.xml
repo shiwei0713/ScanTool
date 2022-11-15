@@ -66,236 +66,321 @@
 
             </LinearLayout>
 
-            <TextView
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/txtPrinter"
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textSize="@dimen/font14"
+                    android:textColor="@color/teal_700"
+                    android:text="@string/content_title37"
+                    android:background="@drawable/textview_bg_gray"/>
+
+                <TextView
+                    android:id="@+id/inputPrintLabelDevice"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textSize="@dimen/font14"
+                    android:textColor="@color/teal_700"
+                    android:layout_marginLeft="5dp"
+                    android:background="@drawable/textview_bg_gray"/>
+
+                <Button
+                    android:id="@+id/btnSetDevice"
+                    android:layout_width="50dp"
+                    android:layout_height="25dp"
+                    android:background="@drawable/list_flag_selector"
+                    android:focusable="false"
+                    android:layout_marginLeft="10dp"
+                    android:text="@string/detail_button5"
+                    android:textColor="@color/teal_700"
+                    android:textSize="@dimen/list_detail_button"
+                    android:textStyle="normal" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="2dp"
+                android:background="@color/line"
+                android:orientation="vertical">
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/viewBasic"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/font14"
-                android:textStyle="bold"
-                android:layout_marginTop="10dp"
-                android:textColor="@color/black"
-                android:text="@string/content_title1"/>
+                android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="80dp"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="5dp"
-                    android:textSize="@dimen/font14"
-                    android:textColor="@color/teal_700"
-                    android:text="@string/content_title2"
-                    android:background="@drawable/textview_bg_gray"/>
+                    android:gravity="left|center_vertical"
+                    android:layout_marginTop="5dp"
+                    android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/printLabelProductCode"
-                    android:layout_width="300dp"
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/font14"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:text="@string/content_title1"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="right"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/btnHide"
+                            android:layout_width="70dp"
+                            android:layout_height="25dp"
+                            android:background="@drawable/button_selector_red"
+                            android:focusable="false"
+                            android:layout_marginRight="20dp"
+                            android:text="@string/dialog_hidden"
+                            android:textColor="@color/master_loginout"
+                            android:textSize="@dimen/list_detail_button"
+                            android:textStyle="normal" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="5dp"
-                    android:textSize="@dimen/font14"
-                    android:textColor="@color/teal_700"
-                    android:layout_marginLeft="5dp"
-                    android:background="@drawable/textview_bg_gray"/>
+                    android:layout_marginTop="5dp"
+                    android:orientation="horizontal">
 
-            </LinearLayout>
+                    <TextView
+                        android:layout_width="80dp"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:textSize="@dimen/font14"
+                        android:textColor="@color/teal_700"
+                        android:text="@string/content_title2"
+                        android:background="@drawable/textview_bg_gray"/>
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/printLabelProductCode"
+                        android:layout_width="300dp"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:textSize="@dimen/font14"
+                        android:textColor="@color/teal_700"
+                        android:layout_marginLeft="5dp"
+                        android:background="@drawable/textview_bg_gray"/>
 
-                <TextView
-                    android:layout_width="80dp"
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="5dp"
-                    android:textSize="@dimen/font14"
-                    android:text="@string/content_title3"
-                    android:textColor="@color/teal_700"
-                    android:background="@drawable/textview_bg_gray"/>
+                    android:layout_marginTop="5dp"
+                    android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/printLabelProductName"
-                    android:layout_width="300dp"
+                    <TextView
+                        android:layout_width="80dp"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:textSize="@dimen/font14"
+                        android:text="@string/content_title3"
+                        android:textColor="@color/teal_700"
+                        android:background="@drawable/textview_bg_gray"/>
+
+                    <TextView
+                        android:id="@+id/printLabelProductName"
+                        android:layout_width="300dp"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:textSize="@dimen/font14"
+                        android:textColor="@color/teal_700"
+                        android:layout_marginLeft="5dp"
+                        android:background="@drawable/textview_bg_gray"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="5dp"
-                    android:textSize="@dimen/font14"
-                    android:textColor="@color/teal_700"
-                    android:layout_marginLeft="5dp"
-                    android:background="@drawable/textview_bg_gray"/>
+                    android:layout_marginTop="5dp"
+                    android:orientation="horizontal">
 
-            </LinearLayout>
+                    <TextView
+                        android:layout_width="80dp"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:textSize="@dimen/font14"
+                        android:text="@string/content_title4"
+                        android:textColor="@color/teal_700"
+                        android:background="@drawable/textview_bg_gray"/>
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/printLabelProductModels"
+                        android:layout_width="300dp"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:textSize="@dimen/font14"
+                        android:textColor="@color/teal_700"
+                        android:layout_marginLeft="5dp"
+                        android:background="@drawable/textview_bg_gray"/>
 
-                <TextView
-                    android:layout_width="80dp"
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="5dp"
-                    android:textSize="@dimen/font14"
-                    android:text="@string/content_title4"
-                    android:textColor="@color/teal_700"
-                    android:background="@drawable/textview_bg_gray"/>
+                    android:layout_marginTop="5dp"
+                    android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/printLabelProductModels"
-                    android:layout_width="300dp"
+                    <TextView
+                        android:layout_width="80dp"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:textSize="@dimen/font14"
+                        android:textColor="@color/teal_700"
+                        android:text="@string/content_title5"
+                        android:background="@drawable/textview_bg_gray"/>
+
+                    <TextView
+                        android:id="@+id/printLabelQuantity"
+                        android:layout_width="120dp"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:textSize="@dimen/font14"
+                        android:textColor="@color/teal_700"
+                        android:layout_marginLeft="5dp"
+                        android:background="@drawable/textview_bg_gray"/>
+
+                    <EditText
+                        android:id="@+id/printLabelModQuantity"
+                        android:layout_width="175dp"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:textSize="@dimen/font14"
+                        android:layout_marginLeft="5dp"
+                        android:textStyle="bold"
+                        android:inputType="number"
+                        android:hint="@string/hint_label_quantity"
+                        android:ems="4"
+                        android:background="@drawable/textview_bg_gray"
+                        android:textColor="@color/master_message" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="5dp"
-                    android:textSize="@dimen/font14"
-                    android:textColor="@color/teal_700"
-                    android:layout_marginLeft="5dp"
-                    android:background="@drawable/textview_bg_gray"/>
+                    android:layout_marginTop="5dp"
+                    android:orientation="horizontal">
 
-            </LinearLayout>
+                    <TextView
+                        android:layout_width="80dp"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:textSize="@dimen/font14"
+                        android:textColor="@color/teal_700"
+                        android:text="@string/content_title6"
+                        android:background="@drawable/textview_bg_gray"/>
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/printLabelCurrentProcessId"
+                        android:layout_width="95dp"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:textSize="@dimen/font14"
+                        android:textColor="@color/teal_700"
+                        android:layout_marginLeft="5dp"
+                        android:background="@drawable/textview_bg_gray"/>
 
-                <TextView
-                    android:layout_width="80dp"
+                    <TextView
+                        android:id="@+id/printLabelCurrentProcess"
+                        android:layout_width="120dp"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:textSize="@dimen/font14"
+                        android:textColor="@color/teal_700"
+                        android:layout_marginLeft="5dp"
+                        android:background="@drawable/textview_bg_gray"/>
+
+                    <TextView
+                        android:id="@+id/printLabelAttribute"
+                        android:layout_width="75dp"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:textSize="@dimen/font14"
+                        android:textColor="@color/master_message"
+                        android:layout_marginLeft="5dp"
+                        android:background="@drawable/textview_bg_gray"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="5dp"
-                    android:textSize="@dimen/font14"
-                    android:textColor="@color/teal_700"
-                    android:text="@string/content_title5"
-                    android:background="@drawable/textview_bg_gray"/>
+                    android:layout_marginTop="5dp"
+                    android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/printLabelQuantity"
-                    android:layout_width="150dp"
+                    <TextView
+                        android:layout_width="80dp"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:textSize="@dimen/font14"
+                        android:textColor="@color/teal_700"
+                        android:text="@string/content_title18"
+                        android:background="@drawable/textview_bg_gray"/>
+
+                    <TextView
+                        android:id="@+id/printLabelProductDocno"
+                        android:layout_width="300dp"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:textSize="@dimen/font14"
+                        android:textColor="@color/teal_700"
+                        android:layout_marginLeft="5dp"
+                        android:background="@drawable/textview_bg_gray"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="5dp"
-                    android:textSize="@dimen/font14"
-                    android:textColor="@color/teal_700"
-                    android:layout_marginLeft="5dp"
-                    android:background="@drawable/textview_bg_gray"/>
+                    android:layout_marginTop="5dp"
+                    android:orientation="horizontal">
 
-                <EditText
-                    android:id="@+id/printLabelModQuantity"
-                    android:layout_width="145dp"
-                    android:layout_height="wrap_content"
-                    android:padding="5dp"
-                    android:textSize="@dimen/font14"
-                    android:layout_marginLeft="5dp"
-                    android:textStyle="bold"
-                    android:inputType="number"
-                    android:hint="@string/hint_label_quantity"
-                    android:ems="4"
-                    android:background="@drawable/textview_bg_gray"
-                    android:textColor="@color/master_message" />
+                    <TextView
+                        android:layout_width="80dp"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:textSize="@dimen/font14"
+                        android:textColor="@color/teal_700"
+                        android:text="@string/content_title32"
+                        android:background="@drawable/textview_bg_gray"/>
 
+                    <TextView
+                        android:id="@+id/printLabelQrcode"
+                        android:layout_width="300dp"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:textSize="@dimen/font14"
+                        android:textColor="@color/teal_700"
+                        android:layout_marginLeft="5dp"
+                        android:background="@drawable/textview_bg_gray"/>
 
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="80dp"
-                    android:layout_height="wrap_content"
-                    android:padding="5dp"
-                    android:textSize="@dimen/font14"
-                    android:textColor="@color/teal_700"
-                    android:text="@string/content_title6"
-                    android:background="@drawable/textview_bg_gray"/>
-
-                <TextView
-                    android:id="@+id/printLabelCurrentProcessId"
-                    android:layout_width="95dp"
-                    android:layout_height="wrap_content"
-                    android:padding="5dp"
-                    android:textSize="@dimen/font14"
-                    android:textColor="@color/teal_700"
-                    android:layout_marginLeft="5dp"
-                    android:background="@drawable/textview_bg_gray"/>
-
-                <TextView
-                    android:id="@+id/printLabelCurrentProcess"
-                    android:layout_width="120dp"
-                    android:layout_height="wrap_content"
-                    android:padding="5dp"
-                    android:textSize="@dimen/font14"
-                    android:textColor="@color/teal_700"
-                    android:layout_marginLeft="5dp"
-                    android:background="@drawable/textview_bg_gray"/>
-
-                <TextView
-                    android:id="@+id/printLabelAttribute"
-                    android:layout_width="75dp"
-                    android:layout_height="wrap_content"
-                    android:padding="5dp"
-                    android:textSize="@dimen/font14"
-                    android:textColor="@color/master_message"
-                    android:layout_marginLeft="5dp"
-                    android:background="@drawable/textview_bg_gray"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="80dp"
-                    android:layout_height="wrap_content"
-                    android:padding="5dp"
-                    android:textSize="@dimen/font14"
-                    android:textColor="@color/teal_700"
-                    android:text="@string/content_title18"
-                    android:background="@drawable/textview_bg_gray"/>
-
-                <TextView
-                    android:id="@+id/printLabelProductDocno"
-                    android:layout_width="300dp"
-                    android:layout_height="wrap_content"
-                    android:padding="5dp"
-                    android:textSize="@dimen/font14"
-                    android:textColor="@color/teal_700"
-                    android:layout_marginLeft="5dp"
-                    android:background="@drawable/textview_bg_gray"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="80dp"
-                    android:layout_height="wrap_content"
-                    android:padding="5dp"
-                    android:textSize="@dimen/font14"
-                    android:textColor="@color/teal_700"
-                    android:text="@string/content_title32"
-                    android:background="@drawable/textview_bg_gray"/>
-
-                <TextView
-                    android:id="@+id/printLabelQrcode"
-                    android:layout_width="300dp"
-                    android:layout_height="wrap_content"
-                    android:padding="5dp"
-                    android:textSize="@dimen/font14"
-                    android:textColor="@color/teal_700"
-                    android:layout_marginLeft="5dp"
-                    android:background="@drawable/textview_bg_gray"/>
+                </LinearLayout>
 
             </LinearLayout>
 
@@ -305,53 +390,58 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:padding="5dp"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/btnPrint"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/button_height"
-            android:background="@drawable/list_button_selector"
-            android:textColor="@color/teal_700"
-            android:textStyle="normal"
-            android:focusable="false"
-            android:textSize="@dimen/list_detail_button"
-            android:text="@string/list_detail_button18" />
-
-        <Button
-            android:id="@+id/btnCancel"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/button_height"
-            android:layout_marginLeft="20dp"
-            android:background="@drawable/list_button_selector"
-            android:textColor="@color/teal_700"
-            android:textStyle="normal"
-            android:focusable="false"
-            android:textSize="@dimen/list_detail_button"
-            android:text="@string/sub_detail_list_cancel" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="5dp"
         android:gravity="left"
         android:layout_gravity="left"
         android:orientation="vertical">
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/font14"
-            android:layout_marginTop="5dp"
-            android:textStyle="bold"
-            android:textColor="@color/black"
-            android:text="@string/content_title30"/>
+            android:gravity="left|center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/font14"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:text="@string/content_title30"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btnPrint"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/button_height"
+                    android:background="@drawable/list_flag_selector"
+                    android:textColor="@color/teal_700"
+                    android:textStyle="normal"
+                    android:focusable="false"
+                    android:textSize="@dimen/list_detail_button"
+                    android:text="@string/list_detail_button18" />
+
+                <Button
+                    android:id="@+id/btnCancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/button_height"
+                    android:layout_marginLeft="20dp"
+                    android:background="@drawable/list_flag_selector"
+                    android:textColor="@color/teal_700"
+                    android:textStyle="normal"
+                    android:focusable="false"
+                    android:textSize="@dimen/list_detail_button"
+                    android:text="@string/sub_detail_list_cancel" />
+
+            </LinearLayout>
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"

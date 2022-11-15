@@ -51,7 +51,7 @@ public class QueryStockActivity extends AppCompatActivity {
     private EditText inputQueryStockQrcode;
     private Button btnQueryStockQrcode;
     private TextView queryStockProductCode,queryStockProductName,queryStockProductModels,queryStockQuantity,queryStockName,queryStockCount;
-    private TextView queryStockQty,queryStockCountNg,queryProductCount,queryProductCountNg,queryProductQty,queryTrayName;
+    private TextView queryStockQty,queryStockCountNo,queryStockCountNg,queryProductCount,queryProductQty,queryTrayName;
     private ListView stockList;
 
     private LoadingDialog loadingDialog;
@@ -190,9 +190,9 @@ public class QueryStockActivity extends AppCompatActivity {
         queryStockName = findViewById(R.id.queryStockName);
         queryStockCount = findViewById(R.id.queryStockCount);
         queryStockQty = findViewById(R.id.queryStockQty);
+        queryStockCountNo = findViewById(R.id.queryStockCountNo);
         queryStockCountNg = findViewById(R.id.queryStockCountNg);
         queryProductCount = findViewById(R.id.queryProductCount);
-        queryProductCountNg = findViewById(R.id.queryProductCountNg);
         queryProductQty = findViewById(R.id.queryProductQty);
         queryTrayName = findViewById(R.id.queryTrayName);
         stockList = findViewById(R.id.stockList);
@@ -300,6 +300,7 @@ public class QueryStockActivity extends AppCompatActivity {
                         String sPackage = "0";
                         String sStockCount = "0";
                         String sStockCountNg = "0";
+                        String sStockCountNo = "0";
                         String sStockCountOk = "0";
                         String sProductCount = "0";
                         String sProductCountNg = "0";
@@ -313,6 +314,7 @@ public class QueryStockActivity extends AppCompatActivity {
                             sPackage = mResponse.get("Package").toString();
                             sStockCount = mResponse.get("StockCount").toString();
                             sStockCountNg = mResponse.get("StockCountNg").toString();
+                            sStockCountNo = mResponse.get("StockCountNo").toString();
                             sStockCountOk = mResponse.get("StockCountOk").toString();
                             sQuantity = mResponse.get("Quantity").toString();
                             sProductCount = mResponse.get("ProductCount").toString();
@@ -327,10 +329,10 @@ public class QueryStockActivity extends AppCompatActivity {
                         queryStockName.setText(sStock);
                         queryTrayName.setText(sPackage);
                         queryStockCount.setText(sStockCount);
+                        queryStockCountNo.setText(sStockCountNo);
                         queryStockCountNg.setText(sStockCountNg);
                         queryStockQty.setText(sStockCountOk);
                         queryProductCount.setText(sProductCount);
-                        queryProductCountNg.setText(sProductCountNg);
                         queryProductQty.setText(sProductCountOk);
                     }
                 }else{

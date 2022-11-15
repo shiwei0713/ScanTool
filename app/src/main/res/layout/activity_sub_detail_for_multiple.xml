@@ -53,6 +53,20 @@
             android:layout_height="wrap_content"
             android:textColor="@color/master_loginout" />
 
+        <TextView
+            android:id="@+id/txtMultipleGroupId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:textColor="@color/master_loginout" />
+
+        <TextView
+            android:id="@+id/txtMultipleProcessEnd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:textColor="@color/master_loginout" />
+
     </LinearLayout>
 
     <LinearLayout
@@ -246,7 +260,7 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/btnMultipleQuery"
+                    android:id="@+id/btnMultiplePrintMaterial"
                     android:layout_width="70dp"
                     android:layout_height="25dp"
                     android:background="@drawable/list_flag_selector"
@@ -254,7 +268,7 @@
                     android:textStyle="normal"
                     android:focusable="false"
                     android:textSize="@dimen/list_detail_button"
-                    android:text="@string/list_detail_button17" />
+                    android:text="@string/detail_button6" />
 
             </LinearLayout>
 
@@ -283,7 +297,7 @@
             android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:layout_marginLeft="10dp"
-            android:background="@drawable/list_button_selector"
+            android:background="@drawable/list_flag_selector"
             android:textColor="@color/teal_700"
             android:textStyle="normal"
             android:focusable="false"
@@ -294,7 +308,7 @@
             android:id="@+id/btnMultiplePrint"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
-            android:background="@drawable/list_button_selector"
+            android:background="@drawable/list_flag_selector"
             android:textColor="@color/teal_700"
             android:layout_marginLeft="30dp"
             android:textStyle="normal"
@@ -306,7 +320,101 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="2dp"
+        android:layout_height="1dp"
+        android:background="@color/line"
+        android:orientation="vertical">
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/viewInputBasic"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="5dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:layout_marginLeft="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
+                android:text="@string/content_title291"
+                android:background="@drawable/textview_bg_gray"/>
+
+            <EditText
+                android:id="@+id/editPackages"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:layout_marginLeft="5dp"
+                android:inputType="number"
+                android:textStyle="bold"
+                android:hint="@string/hint_package"
+                android:background="@drawable/textview_bg_gray"
+                android:textColor="@color/master_message" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnMultipleTransate"
+                android:layout_width="wrap_content"
+                android:layout_height="25dp"
+                android:background="@drawable/button_selector_red"
+                android:textColor="@color/master_loginout"
+                android:textStyle="normal"
+                android:layout_marginLeft="5dp"
+                android:focusable="false"
+                android:textSize="@dimen/list_detail_button"
+                android:text="@string/list_detail_button22" />
+
+            <Button
+                android:id="@+id/btnMore"
+                android:layout_width="wrap_content"
+                android:layout_height="25dp"
+                android:background="@drawable/list_flag_selector"
+                android:focusable="false"
+                android:layout_marginLeft="10dp"
+                android:text="@string/query_more"
+                android:textColor="@color/teal_700"
+                android:textSize="@dimen/list_detail_button"
+                android:textStyle="normal" />
+
+            <Button
+                android:id="@+id/btnLess"
+                android:layout_width="wrap_content"
+                android:layout_height="25dp"
+                android:background="@drawable/button_selector_red"
+                android:focusable="false"
+                android:layout_marginLeft="10dp"
+                android:text="@string/query_less"
+                android:textColor="@color/master_loginout"
+                android:textSize="@dimen/list_detail_button"
+                android:textStyle="normal" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
         android:background="@color/line"
         android:orientation="vertical">
 

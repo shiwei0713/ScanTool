@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -49,6 +50,7 @@ public class PositionActivity extends AppCompatActivity {
     private String strStockType;
     private String statusCode;
     private String statusDescription;
+    private boolean isSave;
 
     private List<Map<String,Object>> mapResponseList;
     private List<Map<String,Object>> mapResponseStatus;
@@ -65,8 +67,9 @@ public class PositionActivity extends AppCompatActivity {
     private TextView checkDetailPosition;
     private EditText checkDetailQuantityPcs;
     private TextView checkDetailDocno;
+    private TextView checkDetailPackage,checkDetailTrayQuantity,checkDetailScan;
     private Button btnCheckError,btnCancelCheckError;
-    private Button btnCheckModify;
+    private Button btnCheckModify,btnCheckCalc;
 
     private LoadingDialog loadingDialog;
 
@@ -106,17 +109,33 @@ public class PositionActivity extends AppCompatActivity {
             case R.id.action_scan:
                 //调用zxing扫码界面
                 IntentIntegrator intentIntegrator = new IntentIntegrator(PositionActivity.this);
-                intentIntegrator.setTimeout(5000);
+//                intentIntegrator.setTimeout(5000);
                 intentIntegrator.setDesiredBarcodeFormats();  //IntentIntegrator.QR_CODE
                 //开始扫描
                 intentIntegrator.initiateScan();
                 break;
             case android.R.id.home:
-                finish();
+                if(isSave){
+                    finish();
+                }else{
+                    MyToast.myShow(PositionActivity.this,"未点保存,无法退出",0,0);
+                }
                 break;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode==KeyEvent.KEYCODE_BACK){
+            if(!isSave){
+                MyToast.myShow(PositionActivity.this,"未点保存,无法退出",0,0);
+                return false;
+            }
+        }
+
+        return super.onKeyDown(keyCode, event);
     }
 
     @Override
@@ -183,6 +202,7 @@ public class PositionActivity extends AppCompatActivity {
             if(strStockId.isEmpty()|| strStockId.equals("")){
                 MyToast.myShow(context,"储位不可为空,请先扫描储位码",0,1);
             }else{
+                isSave = false;
                 getScanQrData(qrCodeValue[0].toString(),"insert");
             }
         }
@@ -198,18 +218,25 @@ public class PositionActivity extends AppCompatActivity {
         checkDetailStockId = findViewById(R.id.checkDetailStockId);
         checkDetailStock = findViewById(R.id.checkDetailStock);
         checkDetailQuantityPcs = findViewById(R.id.checkDetailQuantityPcs);
+        checkDetailPackage = findViewById(R.id.checkDetailPackage);
+        checkDetailTrayQuantity = findViewById(R.id.checkDetailTrayQuantity);
         checkDetailPositionId = findViewById(R.id.checkDetailPositionId);
         checkDetailPosition = findViewById(R.id.checkDetailPosition);
         checkDetailDocno = findViewById(R.id.checkDetailDocno);
+        checkDetailScan = findViewById(R.id.checkDetailScan);
 
         btnCheckError= findViewById(R.id.btnCheckError);
         btnCancelCheckError = findViewById(R.id.btnCancelCheckError);
         btnCheckModify = findViewById(R.id.btnCheckModify);
+        btnCheckCalc = findViewById(R.id.btnCheckCalc);
         checkPosition.setText(strPosition);
+
+        btnCheckModify.setVisibility(View.INVISIBLE);
 
         btnCheckError.setOnClickListener(new btnClickListener());
         btnCancelCheckError.setOnClickListener(new btnClickListener());
         btnCheckModify.setOnClickListener(new btnClickListener());
+        btnCheckCalc.setOnClickListener(new btnClickListener());
     }
 
     //初始化参数
@@ -221,6 +248,7 @@ public class PositionActivity extends AppCompatActivity {
         strPosition = bundle.getString("position");
         strPositionId = bundle.getString("positionid");
         strStockType = bundle.getString("stocktype");
+        isSave = false;
     }
 
     private class btnClickListener implements View.OnClickListener{
@@ -228,17 +256,66 @@ public class PositionActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             switch (view.getId()){
-                case R.id.btnCheckError:
+                case R.id.btnCheckError:        //空储位
                     getScanQrData("","check");
                     break;
-                case R.id.btnCancelCheckError:
+                case R.id.btnCancelCheckError:   //清除储位
                     getScanQrData("","clear");
                     break;
-                case R.id.btnCheckModify:
-                    getScanQrData("","update");
+                case R.id.btnCheckModify:       //保存
+                    if(calcQuantity()){
+                        getScanQrData("","update");
+                        isSave = true;
+                    }else{
+                        MyToast.myShow(PositionActivity.this,"盘点量不等于包装量+尾数",2,0);
+                    }
+                    break;
+                case R.id.btnCheckCalc:         //计算
+                    calcQuantity();
+                    btnCheckModify.setVisibility(View.VISIBLE);
                     break;
             }
         }
+    }
+
+    /**
+    *描述: 计算盘点量,按照整包+尾数计算
+    *日期：2022/6/17
+    **/
+    private boolean calcQuantity(){
+        String sPakageCount = checkDetailQuantityPcs.getText().toString();  //整箱数
+        String sQty = checkDetailTrayQuantity.getText().toString();    //尾数
+        String sPakage = checkDetailPackage.getText().toString();    //包装量
+        String sTotal = checkDetailQuantity.getText().toString();    //盘点量
+        if(sPakageCount.equals("")||sPakageCount.isEmpty()){
+            sPakageCount = "0";
+        }
+
+        if(sQty.equals("")||sQty.isEmpty()){
+            sQty = "0";
+        }
+
+        if(sPakage.equals("")||sPakage.isEmpty()){
+            sPakage = "0";
+        }
+
+        if(sTotal.equals("")||sPakageCount.isEmpty()){
+            sTotal = "0";
+        }
+
+        float fPakageCount = Float.valueOf(sPakageCount);
+        float fQty = Float.valueOf(sQty);
+        float fPakage = Float.valueOf(sPakage);
+        float fQtyTotal = fPakageCount * fPakage + fQty;
+        float fTotal = Float.valueOf(sTotal);
+        String sQtyTotal = String.valueOf(fQtyTotal);
+        checkDetailQuantity.setText(sQtyTotal);
+
+        if(fTotal!=fQtyTotal){
+            return false;
+        }
+
+        return true;
     }
 
     //获取扫描条码信息
@@ -300,10 +377,6 @@ public class PositionActivity extends AppCompatActivity {
                     for(Map<String,Object> mStatus: mapResponseStatus){
                         statusCode = mStatus.get("statusCode").toString();
                         statusDescription = mStatus.get("statusDescription").toString();
-
-                        if(!statusCode.equals("0")){
-                            MyToast.myShow(PositionActivity.this,statusDescription,0,0);
-                        }
                     }
                 }else{
                     MyToast.myShow(PositionActivity.this,"执行接口错误",2,0);
@@ -318,66 +391,75 @@ public class PositionActivity extends AppCompatActivity {
 
             @Override
             public void onComplete() {
-                if(actcode.equals("insert")){
-                    if(mapResponseList.size()>0){
-                        String sProductCode = "";
-                        String sProductName = "";
-                        String sProductModels = "";
-                        String sProductSize = "";
-                        String sQuantity = "";
-                        String sStockId = "";
-                        String sStock = "";
-                        String sStockLocationId = "";
-                        String sStockLocation = "";
-                        String sWeight = "";
-                        String sLots = "";
-                        String sFeatures = "";
-                        String sFeaturesName = "";
-                        String sFeaturesModels = "";
-                        String sTray = "";
+                if(!statusCode.equals("0")){
+                    MyToast.myShow(PositionActivity.this,statusDescription,0,0);
+                }else{
+                    if(actcode.equals("insert")){
+                        if(mapResponseList.size()>0){
+                            String sProductCode = "";
+                            String sProductName = "";
+                            String sProductModels = "";
+                            String sProductSize = "";
+                            String sQuantity = "";
+                            String sStockId = "";
+                            String sStock = "";
+                            String sStockLocationId = "";
+                            String sStockLocation = "";
+                            String sWeight = "";
+                            String sLots = "";
+                            String sFeatures = "";
+                            String sFeaturesName = "";
+                            String sFeaturesModels = "";
+                            String sTray = "";
+                            String sPackage = "0";
 
-                        for(Map<String,Object> mData: mapResponseList){
-                            sProductCode = mData.get("ProductCode").toString();
-                            sProductName = mData.get("ProductName").toString();
-                            sProductModels = mData.get("ProductModels").toString();
-                            sProductSize = mData.get("ProductSize").toString();
-                            sQuantity = mData.get("Quantity").toString();
-                            sStockId = mData.get("StockId").toString();
-                            sStock = mData.get("Stock").toString();
-                            sStockLocationId = mData.get("StockLocationId").toString();
-                            sStockLocation = mData.get("StockLocation").toString();
-                            sWeight = mData.get("Weight").toString();
-                            sLots = mData.get("Lots").toString();
-                            sFeatures = mData.get("Features").toString();
-                            sFeaturesName = mData.get("FeaturesName").toString();
-                            sFeaturesModels = mData.get("FeaturesModels").toString();
-                            sTray = mData.get("Tray").toString();
-                        }
+                            for(Map<String,Object> mData: mapResponseList){
+                                sProductCode = mData.get("ProductCode").toString();
+                                sProductName = mData.get("ProductName").toString();
+                                sProductModels = mData.get("ProductModels").toString();
+                                sProductSize = mData.get("ProductSize").toString();
+                                sQuantity = mData.get("Quantity").toString();
+                                sStockId = mData.get("StockId").toString();
+                                sStock = mData.get("Stock").toString();
+                                sStockLocationId = mData.get("StockLocationId").toString();
+                                sStockLocation = mData.get("StockLocation").toString();
+                                sWeight = mData.get("Weight").toString();
+                                sLots = mData.get("Lots").toString();
+                                sFeatures = mData.get("Features").toString();
+                                sFeaturesName = mData.get("FeaturesName").toString();
+                                sFeaturesModels = mData.get("FeaturesModels").toString();
+                                sTray = mData.get("Tray").toString();
+                                sPackage = mData.get("Package").toString();
+                            }
 
-                        checkDetailProductCode.setText(sProductCode);
-                        checkDetailProductModels.setText(sProductName);
-                        checkDetailModel.setText(sProductModels);
+                            checkDetailProductCode.setText(sProductCode);
+                            checkDetailProductModels.setText(sProductName);
+                            checkDetailModel.setText(sProductModels);
 //                        checkDetailStartPlanDate.setText(sPlanDate);
-                        checkDetailQuantity.setText(sQuantity);
-                        checkDetailStockId.setText(sStockId);
-                        checkDetailStock.setText(sStock);
-                        checkDetailQuantityPcs.setText(sWeight);
-                        checkDetailPositionId.setText(sStockLocationId);
-                        checkDetailPosition.setText(sStockLocation);
-                        checkDetailDocno.setText(qrCode);
+                            checkDetailQuantity.setText(sQuantity);
+                            checkDetailStockId.setText(sStockId);
+                            checkDetailStock.setText(sStock);
+                            checkDetailQuantityPcs.setText(sWeight);
+                            checkDetailPositionId.setText(sStockLocationId);
+                            checkDetailPosition.setText(sStockLocation);
+                            checkDetailDocno.setText(qrCode);
+                            checkDetailPackage.setText(sPackage);
 
-                        btnCheckError.setVisibility(View.GONE);
+                            btnCheckError.setVisibility(View.GONE);
+                            btnCheckModify.setVisibility(View.INVISIBLE);
 
 //                        if(sTray.equals("N")){
 //                            finish();
 //                        }
-                    }
-                }else{
-                    if(statusCode.equals("0")){
-                        MyToast.myShow(PositionActivity.this,statusDescription,1,0);
-                        finish();
+                        }
+                    }else{
+                        if(statusCode.equals("0")){
+                            MyToast.myShow(PositionActivity.this,statusDescription,1,0);
+                            finish();
+                        }
                     }
                 }
+
                 loadingDialog.dismiss();
             }
         });

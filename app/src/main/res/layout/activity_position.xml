@@ -14,58 +14,255 @@
         android:background="@drawable/action_style"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
-    <include
-        layout="@layout/check_detail_content"
-        android:layout_width="match_parent"
-        android:layout_height="350dp"/>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginRight="5dp"
-        android:gravity="center"
-        android:background="@drawable/linearlayout_style_blue"
-        android:layout_marginLeft="@dimen/detail_content_margin"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="5dp"
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/checkPosition"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/master_loginout"
+            android:textSize="@dimen/font14"
             android:textStyle="bold"
-            android:textSize="@dimen/font50" />
+            android:textColor="@color/black"
+            android:text="@string/content_title35"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
+                android:text="@string/detail_content_title10"
+                android:background="@drawable/textview_bg_gray"/>
+
+            <EditText
+                android:id="@+id/checkDetailQuantity"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:layout_marginLeft="5dp"
+                android:textStyle="bold"
+                android:inputType="number"
+                android:hint="@string/hint_quantity1"
+                android:ems="4"
+                android:background="@drawable/textview_bg_gray"
+                android:textColor="@color/master_message" />
+
+            <TextView
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:layout_marginLeft="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/master_loginout"
+                android:text="@string/detail_content_title32"
+                android:background="@drawable/textview_bg_gray"/>
+
+            <TextView
+                android:id="@+id/checkDetailScan"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/master_loginout"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/textview_bg_gray"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
+                android:text="@string/detail_content_title221"
+                android:background="@drawable/textview_bg_gray"/>
+
+            <EditText
+                android:id="@+id/checkDetailQuantityPcs"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:layout_marginLeft="5dp"
+                android:textStyle="bold"
+                android:inputType="number"
+                android:hint="@string/hint_quantity2"
+                android:ems="4"
+                android:background="@drawable/textview_bg_gray"
+                android:textColor="@color/master_message" />
+
+            <TextView
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
+                android:layout_marginLeft="5dp"
+                android:text="@string/detail_content_title222"
+                android:background="@drawable/textview_bg_gray"/>
+
+            <EditText
+                android:id="@+id/checkDetailTrayQuantity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:layout_marginLeft="5dp"
+                android:textStyle="bold"
+                android:inputType="number"
+                android:hint="@string/hint_quantity3"
+                android:ems="4"
+                android:background="@drawable/textview_bg_gray"
+                android:textColor="@color/master_message" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
+                android:text="@string/detail_content_title31"
+                android:background="@drawable/textview_bg_gray"/>
+
+            <TextView
+                android:id="@+id/checkDetailPackage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/textview_bg_gray"/>
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:padding="5dp"
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/btnCheckError"
-                android:layout_width="wrap_content"
+                android:id="@+id/btnCheckCalc"
+                android:layout_width="80dp"
                 android:layout_height="30dp"
-                android:background="@drawable/list_button_selector"
-                android:textColor="@color/teal_700"
+                android:background="@drawable/button_selector_red"
+                android:textColor="@color/master_loginout"
+                android:textStyle="normal"
                 android:focusable="false"
-                android:textSize="@dimen/list_detail_button"
-                android:text="@string/check_stock_error" />
+                android:textSize="@dimen/font12"
+                android:text="@string/btn_calc" />
 
             <Button
-                android:id="@+id/btnCancelCheckError"
-                android:layout_width="wrap_content"
+                android:id="@+id/btnCheckModify"
+                android:layout_width="80dp"
                 android:layout_height="30dp"
-                android:background="@drawable/list_button_selector"
+                android:background="@drawable/list_flag_selector"
                 android:textColor="@color/teal_700"
-                android:layout_marginLeft="10dp"
+                android:textStyle="normal"
+                android:layout_marginLeft="20dp"
                 android:focusable="false"
-                android:textSize="@dimen/list_detail_button"
-                android:text="@string/cancel_check_stock_error" />
+                android:textSize="@dimen/font12"
+                android:text="@string/dept_config_save" />
 
         </LinearLayout>
 
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="5dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/font14"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:text="@string/content_title36"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/linearlayout_gray_border"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/checkPosition"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/master_loginout"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:textSize="@dimen/font50" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btnCancelCheckError"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:background="@drawable/button_selector_red"
+                    android:textColor="@color/master_loginout"
+                    android:focusable="false"
+                    android:textSize="@dimen/list_detail_button"
+                    android:text="@string/cancel_check_stock_error" />
+
+                <Button
+                    android:id="@+id/btnCheckError"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:background="@drawable/list_flag_selector"
+                    android:textColor="@color/teal_700"
+                    android:layout_marginLeft="20dp"
+                    android:focusable="false"
+                    android:textSize="@dimen/list_detail_button"
+                    android:text="@string/check_stock_error" />
+
+            </LinearLayout>
+
+        </LinearLayout>
 
     </LinearLayout>
+
+    <include
+        layout="@layout/check_detail_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>

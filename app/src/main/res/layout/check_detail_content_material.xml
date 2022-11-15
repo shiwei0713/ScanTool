@@ -12,367 +12,330 @@
         android:layout_marginRight="@dimen/detail_content_margin"
         android:orientation="vertical">
 
-        <LinearLayout
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="@dimen/detail_content_height"
-            android:gravity="center|left"
-            android:layout_marginLeft="@dimen/detail_content_margin"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/font14"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:text="@string/content_title33"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="80dp"
                 android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
                 android:text="@string/detail_content_title1"
-                android:textColor="@color/list_item_icon"
-                android:textSize="@dimen/detail_content_textsize" />
+                android:background="@drawable/textview_bg_gray"/>
 
             <TextView
                 android:id="@+id/checkDetailProductCode"
-                android:layout_width="wrap_content"
+                android:layout_width="300dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/detail_content_input_margin"
-                android:textColor="@color/red"
-                android:textStyle="italic"
-                android:textSize="@dimen/detail_content_textsize" />
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/textview_bg_gray"/>
 
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/line"
-            android:orientation="vertical" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/detail_content_height"
-            android:gravity="center|left"
-            android:layout_marginLeft="@dimen/detail_content_margin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="80dp"
                 android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
                 android:text="@string/detail_product_models3"
-                android:textColor="@color/list_item_icon"
-                android:textSize="@dimen/detail_content_textsize" />
+                android:background="@drawable/textview_bg_gray"/>
 
             <TextView
                 android:id="@+id/checkDetailProductModels"
-                android:layout_width="wrap_content"
+                android:layout_width="300dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/detail_content_input_margin"
-                android:textColor="@color/red"
-                android:textStyle="italic"
-                android:textSize="@dimen/detail_content_textsize" />
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/textview_bg_gray"/>
 
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/line"
-            android:orientation="vertical" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/detail_content_height"
-            android:gravity="center|left"
-            android:layout_marginLeft="@dimen/detail_content_margin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="80dp"
                 android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
                 android:text="@string/detail_product_models2"
-                android:textColor="@color/list_item_icon"
-                android:textSize="@dimen/detail_content_textsize" />
+                android:background="@drawable/textview_bg_gray"/>
 
             <TextView
                 android:id="@+id/checkDetailModel"
-                android:layout_width="wrap_content"
+                android:layout_width="300dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/detail_content_input_margin"
-                android:textColor="@color/red"
-                android:textStyle="italic"
-                android:textSize="@dimen/detail_content_textsize" />
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/textview_bg_gray"/>
 
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/line"
-            android:orientation="vertical" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/detail_content_height"
-            android:gravity="center|left"
-            android:layout_marginLeft="@dimen/detail_content_margin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="80dp"
                 android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
                 android:text="@string/detail_content_title18"
-                android:textColor="@color/list_item_icon"
-                android:textSize="@dimen/detail_content_textsize" />
+                android:background="@drawable/textview_bg_gray"/>
 
             <TextView
                 android:id="@+id/checkDetailStartPlanDate"
-                android:layout_width="wrap_content"
+                android:layout_width="300dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/detail_content_input_margin"
-                android:textColor="@color/red"
-                android:textStyle="italic"
-                android:textSize="@dimen/detail_content_textsize" />
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/textview_bg_gray"/>
 
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/line"
-            android:orientation="vertical" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/detail_content_height"
-            android:gravity="center|left"
-            android:layout_marginLeft="@dimen/detail_content_margin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="80dp"
                 android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
                 android:text="@string/item_title_quantity_kg"
-                android:textColor="@color/list_item_icon"
-                android:textSize="@dimen/detail_content_textsize" />
+                android:background="@drawable/textview_bg_gray"/>
 
             <TextView
                 android:id="@+id/checkDetailQuantity"
-                android:layout_width="wrap_content"
+                android:layout_width="300dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/detail_content_input_margin"
-                android:inputType="number"
-                android:textColor="@color/red"
-                android:textSize="@dimen/detail_content_textsize"
-                android:textStyle="italic" />
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/textview_bg_gray"/>
 
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/line"
-            android:orientation="vertical" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/detail_content_height"
-            android:gravity="center|left"
-            android:layout_marginLeft="@dimen/detail_content_margin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="80dp"
                 android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
                 android:text="@string/item_title_quantity_pcs"
-                android:textColor="@color/list_item_icon"
-                android:textSize="@dimen/detail_content_textsize" />
+                android:background="@drawable/textview_bg_gray"/>
 
             <TextView
                 android:id="@+id/checkDetailQuantityPcs"
-                android:layout_width="wrap_content"
+                android:layout_width="300dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/detail_content_input_margin"
-                android:inputType="number"
-                android:textColor="@color/red"
-                android:textSize="@dimen/detail_content_textsize"
-                android:textStyle="italic" />
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/textview_bg_gray"/>
 
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/line"
-            android:orientation="vertical" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/detail_content_height"
-            android:gravity="center|left"
-            android:layout_marginLeft="@dimen/detail_content_margin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="80dp"
                 android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
                 android:text="@string/detail_content_title19"
-                android:textColor="@color/list_item_icon"
-                android:textSize="@dimen/detail_content_textsize" />
+                android:background="@drawable/textview_bg_gray"/>
 
             <TextView
                 android:id="@+id/checkDetailStockId"
-                android:layout_width="wrap_content"
+                android:layout_width="95dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/detail_content_input_margin"
-                android:textColor="@color/red"
-                android:textSize="@dimen/detail_content_textsize"
-                android:textStyle="italic" />
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/textview_bg_gray"/>
 
             <TextView
                 android:id="@+id/checkDetailStock"
-                android:layout_width="wrap_content"
+                android:layout_width="200dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/detail_content_input_margin"
-                android:textColor="@color/red"
-                android:textSize="@dimen/detail_content_textsize"
-                android:textStyle="italic" />
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/textview_bg_gray"/>
 
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/line"
-            android:orientation="vertical" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/detail_content_height"
-            android:gravity="center|left"
-            android:layout_marginLeft="@dimen/detail_content_margin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="80dp"
                 android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
                 android:text="@string/detail_content_title20"
-                android:textColor="@color/list_item_icon"
-                android:textSize="@dimen/detail_content_textsize" />
+                android:background="@drawable/textview_bg_gray"/>
 
             <TextView
                 android:id="@+id/checkDetailPositionId"
-                android:layout_width="wrap_content"
+                android:layout_width="95dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/detail_content_input_margin"
-                android:textColor="@color/red"
-                android:textSize="@dimen/detail_content_textsize"
-                android:textStyle="italic" />
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/textview_bg_gray"/>
 
             <TextView
                 android:id="@+id/checkDetailPosition"
-                android:layout_width="wrap_content"
+                android:layout_width="200dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/detail_content_input_margin"
-                android:textColor="@color/red"
-                android:textSize="@dimen/detail_content_textsize"
-                android:textStyle="italic" />
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/textview_bg_gray"/>
 
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/line"
-            android:orientation="vertical" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/detail_content_height"
-            android:gravity="center|left"
-            android:layout_marginLeft="@dimen/detail_content_margin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="80dp"
                 android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
                 android:text="@string/detail_content_title25"
-                android:textColor="@color/list_item_icon"
-                android:textSize="@dimen/detail_content_textsize" />
+                android:background="@drawable/textview_bg_gray"/>
 
             <TextView
                 android:id="@+id/checkDetailLot"
-                android:layout_width="wrap_content"
+                android:layout_width="300dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/detail_content_input_margin"
-                android:textColor="@color/red"
-                android:textSize="@dimen/detail_content_textsize"
-                android:textStyle="italic" />
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/textview_bg_gray"/>
 
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/line"
-            android:orientation="vertical" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/detail_content_height"
-            android:gravity="center|left"
-            android:layout_marginLeft="@dimen/detail_content_margin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="80dp"
                 android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
                 android:text="@string/detail_content_title26"
-                android:textColor="@color/list_item_icon"
-                android:textSize="@dimen/detail_content_textsize" />
+                android:background="@drawable/textview_bg_gray"/>
 
             <TextView
                 android:id="@+id/checkDetailFeatures"
-                android:layout_width="wrap_content"
+                android:layout_width="300dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/detail_content_input_margin"
-                android:textColor="@color/red"
-                android:textSize="@dimen/detail_content_textsize"
-                android:textStyle="italic" />
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/textview_bg_gray"/>
 
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/line"
-            android:orientation="vertical" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/detail_content_height"
-            android:gravity="center|left"
-            android:layout_marginLeft="@dimen/detail_content_margin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="80dp"
                 android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
                 android:text="@string/detail_content_title27"
-                android:textColor="@color/list_item_icon"
-                android:textSize="@dimen/detail_content_textsize" />
+                android:background="@drawable/textview_bg_gray"/>
 
             <TextView
                 android:id="@+id/checkDetailDocno"
-                android:layout_width="wrap_content"
+                android:layout_width="300dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/detail_content_input_margin"
-                android:textColor="@color/red"
-                android:textSize="@dimen/detail_content_textsize"
-                android:textStyle="italic" />
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/textview_bg_gray"/>
 
         </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/line"
-            android:orientation="vertical" />
-
 
     </LinearLayout>
 

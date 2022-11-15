@@ -19,8 +19,9 @@ public class ProductEntity {
     private String productUser;
     private String lots;
     private float quantity;
+    private String planDate;
 
-    public ProductEntity(String productDocno,String planDocno,int planSeq,int version,String productCode,String processId,String process,String devices,String productUser,String lots,float quantity){
+    public ProductEntity(String productDocno,String planDocno,int planSeq,int version,String productCode,String processId,String process,String devices,String productUser,String lots,float quantity,String planDate){
         this.productDocno = productDocno;
         this.planDocno = planDocno;
         this.planSeq = planSeq;
@@ -32,6 +33,7 @@ public class ProductEntity {
         this.productUser = productUser;
         this.lots = lots;
         this.quantity = quantity;
+        this.planDate = planDate;
     }
 
     @NonNull
@@ -121,5 +123,13 @@ public class ProductEntity {
 
     public void setQuantity(float quantity) {
         this.quantity = quantity;
+    }
+
+    public String getPlanDate() {
+        return planDate;
+    }
+
+    public void setPlanDate(String planDate) {
+        this.planDate = planDate;
     }
 }

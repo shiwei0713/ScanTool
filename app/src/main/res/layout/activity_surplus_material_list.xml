@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".SurplusMaterialListActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/surplusListToolBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/action_style"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
+                android:text="@string/surplus_query_title2"
+                android:background="@drawable/textview_bg_gray"/>
+
+            <EditText
+                android:id="@+id/inputQrcode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:layout_marginLeft="5dp"
+                android:textStyle="bold"
+                android:hint="@string/surplus_query_hint2"
+                android:background="@drawable/textview_bg_gray"
+                android:textColor="@color/master_message" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:paddingBottom="5dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
+                android:text="@string/surplus_query_title"
+                android:background="@drawable/textview_bg_gray"/>
+
+            <EditText
+                android:id="@+id/inputProductName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:layout_marginLeft="5dp"
+                android:textStyle="bold"
+                android:hint="@string/surplus_query_hint"
+                android:background="@drawable/textview_bg_gray"
+                android:textColor="@color/master_message" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:layout_gravity="center"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnQuery"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:background="@drawable/list_flag_selector"
+                android:focusable="false"
+                android:text="@string/detail_button4"
+                android:textColor="@color/teal_700"
+                android:textSize="@dimen/list_detail_button"
+                android:textStyle="normal" />
+
+            <Button
+                android:id="@+id/btnClear"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:background="@drawable/list_flag_selector"
+                android:focusable="false"
+                android:layout_marginLeft="20dp"
+                android:text="@string/detail_button7"
+                android:textColor="@color/teal_700"
+                android:textSize="@dimen/list_detail_button"
+                android:textStyle="normal" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:background="@color/line"
+        android:orientation="vertical">
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:orientation="vertical">
+
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:gravity="left|center_vertical"-->
+<!--            android:orientation="horizontal">-->
+
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:textSize="@dimen/font14"-->
+<!--                android:textStyle="bold"-->
+<!--                android:textColor="@color/black"-->
+<!--                android:text="@string/sale_nav_title1"/>-->
+
+<!--            <LinearLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:gravity="right"-->
+<!--                android:orientation="horizontal">-->
+
+<!--                <Button-->
+<!--                    android:id="@+id/btnFlag1"-->
+<!--                    android:layout_width="80dp"-->
+<!--                    android:layout_height="25dp"-->
+<!--                    android:background="@drawable/list_flag_selector"-->
+<!--                    android:focusable="false"-->
+<!--                    android:layout_marginLeft="15dp"-->
+<!--                    android:text="@string/sale_button_title1"-->
+<!--                    android:textColor="@color/teal_700"-->
+<!--                    android:textSize="@dimen/list_detail_button"-->
+<!--                    android:textStyle="normal" />-->
+
+<!--                <Button-->
+<!--                    android:id="@+id/btnFlag2"-->
+<!--                    android:layout_width="80dp"-->
+<!--                    android:layout_height="25dp"-->
+<!--                    android:background="@drawable/button_selector_red"-->
+<!--                    android:textColor="@color/red"-->
+<!--                    android:focusable="false"-->
+<!--                    android:text="@string/sale_button_title2"-->
+<!--                    android:layout_marginLeft="10dp"-->
+<!--                    android:layout_marginRight="10dp"-->
+<!--                    android:textSize="@dimen/list_detail_button"-->
+<!--                    android:textStyle="normal" />-->
+
+<!--            </LinearLayout>-->
+
+<!--        </LinearLayout>-->
+
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="1dp"-->
+<!--            android:layout_marginTop="3dp"-->
+<!--            android:layout_marginBottom="2dp"-->
+<!--            android:background="@color/line"-->
+<!--            android:orientation="vertical">-->
+<!--        </LinearLayout>-->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/linearlayout_gray_border"
+            android:orientation="horizontal">
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:max="100"/>
+
+            <com.hz.scantool.dialog.LoadListView
+                android:id="@+id/surplusListView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:dividerHeight="2dp"
+                android:scrollbars="vertical" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -10,8 +10,8 @@ android {
         applicationId "com.hz.scantool"
         minSdkVersion 16
         targetSdkVersion 29
-        versionCode 7
-        versionName "5.2"
+        versionCode 21
+        versionName "5.6.2"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -53,14 +53,10 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxjava:2.0.7'
     implementation 'com.squareup.okhttp3:okhttp:3.12.0'
     implementation 'es.voghdev.pdfviewpager:library:1.1.2'
-    implementation files('libs\\gprintersdkv2.jar')
+    implementation files('libs\\SDKLib.jar')
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-    implementation 'com.tencent.bugly:crashreport_upgrade:latest.release'
-    implementation 'com.tencent.bugly:nativecrashreport:latest.release'
     implementation "android.arch.persistence.room:runtime:2.4.2"
     annotationProcessor "android.arch.persistence.room:compiler:2.4.2"
-//    implementation 'com.github.VictorAlbertos.RxCache:runtime:1.8.3-2.x'
-//    implementation 'com.github.VictorAlbertos.Jolyglot:gson:0.0.4'
 }

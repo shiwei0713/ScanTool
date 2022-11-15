@@ -54,7 +54,7 @@ public class SubDetailForModelActivity extends AppCompatActivity {
 
     private TextView subForModelProductName;
     private TextView subForModelUserName;
-    private EditText subForModelQuantity;
+    private TextView subForModelStartDate,subForModelStartTime;
     private TextView subDetailProductCode;
     private TextView subDetailProductModels;
     private TextView subDetailProcessId,subDetailProcess;
@@ -179,7 +179,8 @@ public class SubDetailForModelActivity extends AppCompatActivity {
     private void intiView(){
         subForModelProductName = findViewById(R.id.subForModelProductName);
         subForModelUserName = findViewById(R.id.subForModelUserName);
-        subForModelQuantity= findViewById(R.id.subForModelQuantity);
+        subForModelStartDate = findViewById(R.id.subForModelStartDate);
+        subForModelStartTime= findViewById(R.id.subForModelStartTime);
         subDetailProductCode = findViewById(R.id.subDetailProductCode);
         subDetailProductModels= findViewById(R.id.subDetailProductModels);
         subDetailProcessId = findViewById(R.id.subDetailProcessId);
@@ -304,6 +305,17 @@ public class SubDetailForModelActivity extends AppCompatActivity {
                         subDetailDocno.setText(docno);
                         subDetailVersion.setText(sVersion);
                         subDetailSeq.setText(seq);
+
+                        //开始换装时间
+                        //获取当前时间
+                        long timeCurrentTimeMillis = System.currentTimeMillis();
+                        SimpleDateFormat simpleTimeFormat = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd",Locale.getDefault());
+                        String currentTime = simpleTimeFormat.format(timeCurrentTimeMillis);
+                        String currentDate = simpleDateFormat.format(new Date());
+
+                        subForModelStartDate.setText(currentDate);
+                        subForModelStartTime.setText(currentTime);
                     }
                 }
                 loadingDialog.dismiss();
@@ -329,13 +341,6 @@ public class SubDetailForModelActivity extends AppCompatActivity {
                 //初始化T100服务名
                 String webServiceName = "WorkReportRequestGen";
 
-                //获取当前时间
-                long timeCurrentTimeMillis = System.currentTimeMillis();
-                SimpleDateFormat simpleTimeFormat = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd",Locale.getDefault());
-                String currentTime = simpleTimeFormat.format(timeCurrentTimeMillis);
-                String currentDate = simpleDateFormat.format(new Date());
-
                 //按照协同类别区分：model分为20：单独安装；21：人员协同
                 String sUser="";
                 if(strActionId.equals("20")){
@@ -354,10 +359,10 @@ public class SubDetailForModelActivity extends AppCompatActivity {
                         "&lt;Field name=\"sffbent\" value=\""+UserInfo.getUserEnterprise(getApplicationContext())+"\"/&gt;\n"+
                         "&lt;Field name=\"sffb002\" value=\""+ UserInfo.getUserId(getApplicationContext()) +"\"/&gt;\n"+  //异动人员
                         "&lt;Field name=\"sffbseq\" value=\""+ subDetailProcessId.getText().toString() +"\"/&gt;\n"+  //工艺项次
-                        "&lt;Field name=\"sffb012\" value=\""+ currentDate +"\"/&gt;\n"+  //批量生产止日期
-                        "&lt;Field name=\"sffb013\" value=\""+ currentTime +"\"/&gt;\n"+  //批量生产止时间
+                        "&lt;Field name=\"sffb012\" value=\""+ subForModelStartDate.getText().toString() +"\"/&gt;\n"+  //批量生产止日期
+                        "&lt;Field name=\"sffb013\" value=\""+ subForModelStartTime.getText().toString() +"\"/&gt;\n"+  //批量生产止时间
                         "&lt;Field name=\"sffb029\" value=\""+ subDetailProductCode.getText().toString() +"\"/&gt;\n"+  //报工料号
-                        "&lt;Field name=\"sffb017\" value=\""+ subForModelQuantity.getText().toString() +"\"/&gt;\n"+  //良品数量
+                        "&lt;Field name=\"sffb017\" value=\""+ 0 +"\"/&gt;\n"+  //良品数量
                         "&lt;Field name=\"processid\" value=\""+ subDetailProcessId.getText().toString() +"\"/&gt;\n"+  //工艺项次
                         "&lt;Field name=\"process\" value=\""+ subDetailProcess.getText().toString() +"\"/&gt;\n"+  //工序
                         "&lt;Field name=\"planseq\" value=\""+ subDetailSeq.getText().toString() +"\"/&gt;\n"+  //报工次数

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:layout_marginTop="7dp">
+
+        <TextView
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:textSize="@dimen/font14"
+            android:textColor="@color/teal_700"
+            android:text="@string/dialog_title1"
+            android:background="@drawable/textview_bg_gray"/>
+
+        <EditText
+            android:id="@+id/inputDevice"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:textSize="@dimen/font14"
+            android:layout_marginLeft="5dp"
+            android:textStyle="bold"
+            android:hint="@string/hint_device"
+            android:background="@drawable/textview_bg_gray"
+            android:textColor="@color/master_message" />
+
+        <Button
+            android:id="@+id/btnQuery"
+            android:layout_width="50dp"
+            android:layout_height="25dp"
+            android:background="@drawable/list_flag_selector"
+            android:focusable="false"
+            android:layout_marginLeft="10dp"
+            android:text="@string/detail_button4"
+            android:textColor="@color/teal_700"
+            android:textSize="@dimen/list_detail_button"
+            android:textStyle="normal" />
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/font14"
+        android:textStyle="bold"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="5dp"
+        android:textColor="@color/black"
+        android:text="@string/dialog_title2"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal">
+
+
+
+    </LinearLayout>
+
+</LinearLayout>
