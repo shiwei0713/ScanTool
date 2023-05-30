@@ -153,11 +153,11 @@
                 android:padding="5dp"
                 android:textSize="@dimen/font14"
                 android:textColor="@color/teal_700"
-                android:text="@string/detail_content_title14"
+                android:text="@string/model_content_label_title2"
                 android:background="@drawable/textview_bg_gray"/>
 
             <TextView
-                android:id="@+id/subDetailLots"
+                android:id="@+id/subDetailProcessEnd"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
@@ -208,11 +208,11 @@
                 android:padding="5dp"
                 android:textSize="@dimen/font14"
                 android:textColor="@color/teal_700"
-                android:text="@string/item_title_quantity"
+                android:text="@string/model_content_label_title1"
                 android:background="@drawable/textview_bg_gray"/>
 
             <TextView
-                android:id="@+id/subDetailQuantity"
+                android:id="@+id/subDetailProductDocno"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:padding="5dp"

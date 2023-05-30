@@ -15,57 +15,129 @@
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="3dp"
         android:layout_gravity="left"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/master_loginout"
-            android:text="@string/sub_detail_multiple_title4"/>
+            android:layout_marginTop="3dp"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/txtMultiplePlanNo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/master_loginout" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
+                android:text="@string/sub_detail_multiple_title11"
+                android:background="@drawable/textview_bg_gray"/>
 
-        <TextView
-            android:id="@+id/txtMultipleModle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:textColor="@color/master_loginout" />
+            <TextView
+                android:id="@+id/txtMultipleGroupId"
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:visibility="gone"
+                android:textColor="@color/teal_700"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/textview_bg_gray"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/master_loginout"
-            android:layout_marginLeft="10dp"
-            android:text="@string/sub_detail_multiple_title5"/>
+            <TextView
+                android:id="@+id/txtMultipleGroup"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/textview_bg_gray"/>
 
-        <TextView
-            android:id="@+id/txtMultipleVersion"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/master_loginout" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
+                android:layout_marginLeft="5dp"
+                android:text="@string/sub_detail_multiple_title12"
+                android:background="@drawable/textview_bg_gray"/>
 
-        <TextView
-            android:id="@+id/txtMultipleGroupId"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:textColor="@color/master_loginout" />
+            <TextView
+                android:id="@+id/txtMultipleProcessEnd"
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/textview_bg_gray"/>
 
-        <TextView
-            android:id="@+id/txtMultipleProcessEnd"
-            android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/txtMultipleConnectDocno"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/textview_bg_gray"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:textColor="@color/master_loginout" />
+            android:layout_marginTop="3dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/master_message"
+                android:text="@string/sub_detail_multiple_title10"
+                android:background="@drawable/textview_bg_gray"/>
+
+            <TextView
+                android:id="@+id/txtMultipleStation"
+                android:layout_width="130dp"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/master_message"
+                android:hint="@string/sub_detail_multiple_hint"
+                android:layout_marginLeft="5dp"
+                android:textStyle="bold"
+                android:textAlignment="center"
+                android:background="@drawable/textview_bg_gray"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:layout_marginLeft="5dp"
+                android:textColor="@color/teal_700"
+                android:text="@string/sub_detail_multiple_title13"
+                android:background="@drawable/textview_bg_gray"/>
+
+            <TextView
+                android:id="@+id/txtMultipleGroupStation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/textview_bg_gray"/>
+
+        </LinearLayout>
 
     </LinearLayout>
 
@@ -142,6 +214,13 @@
                     android:focusable="false"
                     android:textSize="@dimen/list_detail_button"
                     android:text="@string/list_detail_button12" />
+
+                <TextView
+                    android:id="@+id/txtMultipleMaterialQty"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="3dp"
+                    android:textColor="@color/master_loginout" />
 
             </LinearLayout>
 
@@ -278,48 +357,6 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:background="@color/line"
-        android:orientation="vertical">
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:layout_gravity="center"
-        android:padding="5dp"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/btnMultipleSave"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:layout_marginLeft="10dp"
-            android:background="@drawable/list_flag_selector"
-            android:textColor="@color/teal_700"
-            android:textStyle="normal"
-            android:focusable="false"
-            android:textSize="@dimen/list_detail_button"
-            android:text="@string/list_detail_button6" />
-
-        <Button
-            android:id="@+id/btnMultiplePrint"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:background="@drawable/list_flag_selector"
-            android:textColor="@color/teal_700"
-            android:layout_marginLeft="30dp"
-            android:textStyle="normal"
-            android:focusable="false"
-            android:textSize="@dimen/list_detail_button"
-            android:text="@string/list_detail_button2" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/line"
         android:orientation="vertical">
@@ -333,6 +370,48 @@
         android:gravity="center"
         android:padding="5dp"
         android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:layout_gravity="center"
+            android:padding="5dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnMultipleSave"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/list_flag_selector"
+                android:textColor="@color/teal_700"
+                android:textStyle="normal"
+                android:focusable="false"
+                android:textSize="@dimen/list_detail_button"
+                android:text="@string/list_detail_button6" />
+
+            <Button
+                android:id="@+id/btnMultiplePrint"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:background="@drawable/list_flag_selector"
+                android:textColor="@color/teal_700"
+                android:layout_marginLeft="30dp"
+                android:textStyle="normal"
+                android:focusable="false"
+                android:textSize="@dimen/list_detail_button"
+                android:text="@string/list_detail_button2" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/line"
+            android:orientation="vertical">
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -352,11 +431,12 @@
 
             <EditText
                 android:id="@+id/editPackages"
-                android:layout_width="120dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
                 android:textSize="@dimen/font14"
                 android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
                 android:inputType="number"
                 android:textStyle="bold"
                 android:hint="@string/hint_package"
@@ -427,6 +507,14 @@
         android:divider="@color/white"
         android:dividerHeight="5dp"
         android:padding="5dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/line"
+        android:orientation="vertical">
+
+    </LinearLayout>
 
     <include
         layout="@layout/content_multiple_detail"

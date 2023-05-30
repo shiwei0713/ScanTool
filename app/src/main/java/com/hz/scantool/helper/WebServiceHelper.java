@@ -15,7 +15,7 @@ public class WebServiceHelper {
     private String webUrl;
     private static final String webIp="192.168.210.3";
     private static final String webId="topprd";   //toptst
-    private static final String webEntId="12";
+    private static final String webEntId="10";
     private static final String ARG_NETWORK_WLAN="外部网络";
     private static final String serviceUrl="http://192.168.210.3/wtopprd/ws/r/awsp900?WSDL";  //wtoptst
     private static final String serviceWlanUrl="http://119.97.210.146:8089/wtopprd/ws/r/awsp900?WSDL";  //wtoptst

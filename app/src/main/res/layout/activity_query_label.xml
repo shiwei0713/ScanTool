@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".QueryLabelActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/queryLabelToolBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/action_style"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:textSize="@dimen/font14"
+            android:textColor="@color/teal_700"
+            android:text="@string/query_label_textview_title1"
+            android:background="@drawable/textview_bg_gray"/>
+
+        <EditText
+            android:id="@+id/inputQueryQrcode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:textSize="@dimen/font14"
+            android:layout_marginLeft="5dp"
+            android:textStyle="bold"
+            android:hint="@string/query_label_hint1"
+            android:background="@drawable/textview_bg_gray"
+            android:textColor="@color/master_message" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="28dp"
+            android:background="@drawable/list_flag_selector"
+            android:focusable="false"
+            android:text="@string/query_data_button_title2"
+            android:textColor="@color/teal_700"
+            android:textSize="@dimen/list_detail_button"
+            android:textStyle="normal" />
+
+        <Button
+            android:id="@+id/btnQuery"
+            android:layout_width="wrap_content"
+            android:layout_height="28dp"
+            android:background="@drawable/button_selector_red"
+            android:focusable="false"
+            android:layout_marginLeft="20dp"
+            android:text="@string/query_data_button_title1"
+            android:textColor="@color/master_loginout"
+            android:textSize="@dimen/list_detail_button"
+            android:textStyle="normal" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="left|center_vertical"
+        android:padding="5dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/font14"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:text="@string/query_label_title1"/>
+
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="5dp"
+            android:gravity="left"
+            android:layout_gravity="left"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textSize="@dimen/font14"
+                    android:text="@string/query_label_textview_title1"
+                    android:textColor="@color/teal_700"
+                    android:background="@drawable/textview_bg_gray"/>
+
+                <TextView
+                    android:id="@+id/queryLabelQrcode"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textSize="@dimen/font14"
+                    android:textColor="@color/teal_700"
+                    android:layout_marginLeft="5dp"
+                    android:background="@drawable/textview_bg_gray"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textSize="@dimen/font14"
+                    android:text="@string/query_label_textview_title6"
+                    android:textColor="@color/teal_700"
+                    android:background="@drawable/textview_bg_gray"/>
+
+                <TextView
+                    android:id="@+id/queryLabelProduct"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textSize="@dimen/font14"
+                    android:textColor="@color/teal_700"
+                    android:layout_marginLeft="5dp"
+                    android:background="@drawable/textview_bg_gray"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textSize="@dimen/font14"
+                    android:text="@string/query_label_textview_title7"
+                    android:textColor="@color/teal_700"
+                    android:background="@drawable/textview_bg_gray"/>
+
+                <TextView
+                    android:id="@+id/queryLabelProductName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textSize="@dimen/font14"
+                    android:textColor="@color/teal_700"
+                    android:layout_marginLeft="5dp"
+                    android:background="@drawable/textview_bg_gray"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textSize="@dimen/font14"
+                    android:text="@string/query_label_textview_title8"
+                    android:textColor="@color/teal_700"
+                    android:background="@drawable/textview_bg_gray"/>
+
+                <TextView
+                    android:id="@+id/queryLabelProductModel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textSize="@dimen/font14"
+                    android:textColor="@color/teal_700"
+                    android:layout_marginLeft="5dp"
+                    android:background="@drawable/textview_bg_gray"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textSize="@dimen/font14"
+                    android:text="@string/query_label_textview_title2"
+                    android:textColor="@color/teal_700"
+                    android:background="@drawable/textview_bg_gray"/>
+
+                <TextView
+                    android:id="@+id/queryLabelProcessId"
+                    android:layout_width="70dp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textSize="@dimen/font14"
+                    android:textColor="@color/teal_700"
+                    android:layout_marginLeft="5dp"
+                    android:background="@drawable/textview_bg_gray"/>
+
+                <TextView
+                    android:id="@+id/queryLabelProcess"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textSize="@dimen/font14"
+                    android:textColor="@color/teal_700"
+                    android:layout_marginLeft="5dp"
+                    android:background="@drawable/textview_bg_gray"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textSize="@dimen/font14"
+                    android:text="@string/query_label_textview_title3"
+                    android:textColor="@color/teal_700"
+                    android:background="@drawable/textview_bg_gray"/>
+
+                <TextView
+                    android:id="@+id/queryLabelDevices"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textSize="@dimen/font14"
+                    android:textColor="@color/teal_700"
+                    android:layout_marginLeft="5dp"
+                    android:background="@drawable/textview_bg_gray"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textSize="@dimen/font14"
+                    android:text="@string/query_label_textview_title4"
+                    android:textColor="@color/teal_700"
+                    android:background="@drawable/textview_bg_gray"/>
+
+                <TextView
+                    android:id="@+id/queryLabelQty"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textSize="@dimen/font14"
+                    android:textColor="@color/teal_700"
+                    android:layout_marginLeft="5dp"
+                    android:background="@drawable/textview_bg_gray"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="left|center_vertical"
+        android:padding="5dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/font14"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:text="@string/query_label_title2"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/queryLabelStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="2dp"
+            android:textColor="@color/teal_700"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:textSize="@dimen/font30"/>
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -12,14 +12,12 @@ import android.widget.TextView;
 import com.hz.scantool.adapter.MyToast;
 import com.hz.scantool.models.UserInfo;
 
-import java.lang.reflect.Array;
 import java.util.Calendar;
-import java.util.List;
 import java.util.TimeZone;
 
 public class MasterActivity extends AppCompatActivity {
 
-    private static final int[] agrTitle={R.string.master_action1,R.string.master_action2,R.string.master_action3,R.string.master_action4,R.string.master_action5,R.string.master_action6,R.string.master_action7,R.string.master_action8};
+    private static final int[] agrTitle={R.string.master_action1,R.string.master_action2,R.string.master_action3,R.string.master_action4,R.string.master_action5,R.string.master_action6,R.string.master_action7,R.string.master_action8,R.string.master_action9,R.string.master_action10,R.string.master_action11};
 
     TextView txtMasterUser;
     TextView txtMasterDate;
@@ -33,6 +31,7 @@ public class MasterActivity extends AppCompatActivity {
     Button btnAction6;
     Button btnAction7;
     Button btnAction8;
+    Button btnAction9,btnAction10,btnAction11;
 
     Calendar calendar;
     String year;
@@ -48,6 +47,7 @@ public class MasterActivity extends AppCompatActivity {
     private boolean btnAction6Power;
     private boolean btnAction7Power;
     private boolean btnAction8Power;
+    private boolean btnAction9Power,btnAction10Power,btnAction11Power;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +80,9 @@ public class MasterActivity extends AppCompatActivity {
         btnAction6=findViewById(R.id.btnAction6);
         btnAction7=findViewById(R.id.btnAction7);
         btnAction8=findViewById(R.id.btnAction8);
+        btnAction9=findViewById(R.id.btnAction9);
+        btnAction10=findViewById(R.id.btnAction10);
+        btnAction11=findViewById(R.id.btnAction11);
         btnAction1.setOnClickListener(new btnActionListener());
         btnAction2.setOnClickListener(new btnActionListener());
         btnAction3.setOnClickListener(new btnActionListener());
@@ -88,6 +91,9 @@ public class MasterActivity extends AppCompatActivity {
         btnAction6.setOnClickListener(new btnActionListener());
         btnAction7.setOnClickListener(new btnActionListener());
         btnAction8.setOnClickListener(new btnActionListener());
+        btnAction9.setOnClickListener(new btnActionListener());
+        btnAction10.setOnClickListener(new btnActionListener());
+        btnAction11.setOnClickListener(new btnActionListener());
     }
 
     //初始化显示数据
@@ -123,6 +129,9 @@ public class MasterActivity extends AppCompatActivity {
         btnAction6Power =false;     //销售出货
         btnAction7Power =false;    //生产协同
         btnAction8Power =false;     //期末盘点
+        btnAction9Power =false;     //区域管理
+        btnAction10Power =false;     //查询报表
+        btnAction11Power =false;     //零件图示
 
         String strUserPower = UserInfo.getUserPower(getApplicationContext());
         String[] arrayPower = strUserPower.split(",");
@@ -158,6 +167,18 @@ public class MasterActivity extends AppCompatActivity {
             if(power.equals("17")){
                 btnAction8Power =true;    //期末盘点
             }
+
+            if(power.equals("18")){
+                btnAction9Power =true;    //区域管理
+            }
+
+            if(power.equals("19")){
+                btnAction10Power =true;    //查询报表
+            }
+
+            if(power.equals("20")){
+                btnAction11Power =true;    //零件图示
+            }
         }
 
     }
@@ -165,8 +186,8 @@ public class MasterActivity extends AppCompatActivity {
     //设置导航按钮样式
     private void setBtnStyle(){
         //声明按钮ID和图片ID
-        int[] btnId= {R.id.btnAction1,R.id.btnAction2,R.id.btnAction3,R.id.btnAction4,R.id.btnAction5,R.id.btnAction6,R.id.btnAction7,R.id.btnAction8};
-        int[] imgId= {R.drawable.master_action1,R.drawable.master_action2,R.drawable.master_action3,R.drawable.master_action4,R.drawable.master_action5,R.drawable.master_action6,R.drawable.master_action7,R.drawable.master_action9};
+        int[] btnId= {R.id.btnAction1,R.id.btnAction2,R.id.btnAction3,R.id.btnAction4,R.id.btnAction5,R.id.btnAction6,R.id.btnAction7,R.id.btnAction8,R.id.btnAction9,R.id.btnAction10,R.id.btnAction11};
+        int[] imgId= {R.drawable.master_action1,R.drawable.master_action2,R.drawable.master_action3,R.drawable.master_action4,R.drawable.master_action5,R.drawable.master_action6,R.drawable.master_action7,R.drawable.master_action8,R.drawable.master_action9,R.drawable.master_action10,R.drawable.master_action11};
 
         //初始化按钮和图片
         Button btnAction;
@@ -287,6 +308,45 @@ public class MasterActivity extends AppCompatActivity {
                         bundle=new Bundle();
                         bundle.putString("title",getString(agrTitle[7]));
                         bundle.putInt("index",7);
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                    }else{
+                        MyToast.myShow(MasterActivity.this,"无此功能权限",2,0);
+                    }
+                    break;
+                //区域管理
+                case R.id.btnAction9:
+                    if(btnAction9Power){
+                        intent=new Intent(MasterActivity.this,ProductAreaActivity.class);
+                        bundle=new Bundle();
+                        bundle.putString("title",getString(agrTitle[8]));
+                        bundle.putInt("index",8);
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                    }else{
+                        MyToast.myShow(MasterActivity.this,"无此功能权限",2,0);
+                    }
+                    break;
+                //查询报表
+                case R.id.btnAction10:
+                    if(btnAction10Power){
+                        intent=new Intent(MasterActivity.this,ReportActivity.class);
+                        bundle=new Bundle();
+                        bundle.putString("title",getString(agrTitle[9]));
+                        bundle.putInt("index",9);
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                    }else{
+                        MyToast.myShow(MasterActivity.this,"无此功能权限",2,0);
+                    }
+                    break;
+                //零件图示
+                case R.id.btnAction11:
+                    if(btnAction11Power){
+                        intent=new Intent(MasterActivity.this,SubMaterialListActivity.class);
+                        bundle=new Bundle();
+                        bundle.putString("title",getString(agrTitle[10]));
+                        bundle.putInt("index",10);
                         intent.putExtras(bundle);
                         startActivity(intent);
                     }else{

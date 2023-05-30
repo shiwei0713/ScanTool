@@ -110,6 +110,7 @@ public class SubAdapter extends BaseAdapter {
             holder.listSubQcStatus = view.findViewById(R.id.listSubQcStatus);
             holder.txtInputStatus = view.findViewById(R.id.txtInputStatus);
             holder.txtCheckMaterial = view.findViewById(R.id.txtCheckMaterial);
+            holder.txtGroupStation = view.findViewById(R.id.txtGroupStation);
 
             view.setTag(holder);
         }else{
@@ -154,6 +155,7 @@ public class SubAdapter extends BaseAdapter {
         holder.txtInputStatus.setText((String)mData.get(i).get("InputStatus"));
         holder.txtCheckMaterial.setText((String)mData.get(i).get("CheckMaterial"));
         holder.imageVersionIcon.setImageDrawable(view.getResources().getDrawable(R.drawable.version));
+        holder.txtGroupStation.setText((String)mData.get(i).get("GroupStation"));
 
         //连线标识
         String sProcessStatus = (String)mData.get(i).get("ProcessEnd");
@@ -244,7 +246,7 @@ public class SubAdapter extends BaseAdapter {
         TextView txtSubFlag;
         TextView txtSubModStatus;
         TextView txtVersion;
-        TextView txtGroupId,txtGroup,txtProcessEnd,txtInputStatus,txtCheckMaterial;
+        TextView txtGroupId,txtGroup,txtProcessEnd,txtInputStatus,txtCheckMaterial,txtGroupStation;
 
         String status;
         String StartStatus;

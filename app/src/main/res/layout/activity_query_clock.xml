@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".QueryClockActivity"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/clockReportToolBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/action_style"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:textSize="@dimen/font14"
+            android:textColor="@color/teal_700"
+            android:text="@string/query_title1"
+            android:background="@drawable/textview_bg_gray"/>
+
+        <EditText
+            android:id="@+id/inputQuerySdate"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:textSize="@dimen/font14"
+            android:layout_marginLeft="5dp"
+            android:textStyle="bold"
+            android:hint="@string/hint_bdate"
+            android:background="@drawable/textview_bg_gray"
+            android:textColor="@color/master_message" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:textSize="@dimen/font14"
+            android:textColor="@color/teal_700"
+            android:layout_marginLeft="5dp"
+            android:text="至"
+            android:background="@drawable/textview_bg_gray"/>
+
+        <EditText
+            android:id="@+id/inputQueryEdate"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:textSize="@dimen/font14"
+            android:layout_marginLeft="5dp"
+            android:textStyle="bold"
+            android:hint="@string/hint_edate"
+            android:background="@drawable/textview_bg_gray"
+            android:textColor="@color/master_message" />
+
+        <Button
+            android:id="@+id/btnQuery"
+            android:layout_width="wrap_content"
+            android:layout_height="26dp"
+            android:background="@drawable/list_flag_selector"
+            android:focusable="false"
+            android:layout_marginLeft="10dp"
+            android:text="@string/detail_button4"
+            android:textColor="@color/teal_700"
+            android:textSize="@dimen/list_detail_button"
+            android:textStyle="normal" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/linearlayout_gray_border"
+        android:orientation="horizontal">
+
+        <ListView
+            android:id="@+id/queryClockList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="5dp"
+            android:dividerHeight="2dp"
+            android:scrollbars="horizontal" />
+
+    </LinearLayout>
+
+</LinearLayout>

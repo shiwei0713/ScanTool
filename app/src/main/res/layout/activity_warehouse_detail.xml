@@ -195,6 +195,43 @@
 
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textSize="@dimen/font14"
+                    android:text="@string/warehous_detail_label7"
+                    android:textColor="@color/teal_700"
+                    android:background="@drawable/textview_bg_gray"/>
+
+                <TextView
+                    android:id="@+id/warehouseDetailAreaId"
+                    android:layout_width="70dp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textSize="@dimen/font14"
+                    android:textColor="@color/teal_700"
+                    android:layout_marginLeft="5dp"
+                    android:background="@drawable/textview_bg_gray"/>
+
+                <TextView
+                    android:id="@+id/warehouseDetailArea"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textSize="@dimen/font14"
+                    android:textColor="@color/teal_700"
+                    android:layout_marginLeft="5dp"
+                    android:background="@drawable/textview_bg_gray"/>
+
+            </LinearLayout>
+
         </LinearLayout>
 
     </ScrollView>

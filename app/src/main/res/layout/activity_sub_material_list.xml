@@ -21,36 +21,37 @@
         android:orientation="horizontal">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="60dp"
             android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:text="@string/query_title_name" />
+            android:padding="5dp"
+            android:textSize="@dimen/font14"
+            android:textColor="@color/teal_700"
+            android:text="@string/query_title_name"
+            android:background="@drawable/textview_bg_gray"/>
 
         <EditText
             android:id="@+id/txtQueryCondition"
-            android:layout_width="wrap_content"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:textSize="@dimen/font14"
             android:layout_marginLeft="5dp"
-            android:background="@drawable/query_style"
-            android:ems="8"
-            android:padding="2dp"
+            android:textStyle="bold"
             android:hint="@string/query_hint_product_name"
-            android:textColorHint="@color/hint_color"
-            android:textColor="@color/black"
-            android:inputType=""
-            android:textSize="14sp" />
+            android:background="@drawable/textview_bg_gray"
+            android:textColor="@color/master_message" />
 
         <Button
             android:id="@+id/btnMaterialQuery"
-            android:layout_width="wrap_content"
+            android:layout_width="70dp"
             android:layout_height="25dp"
-            android:background="@drawable/list_button_selector"
-            android:layout_marginLeft="10dp"
-            android:textColor="@color/teal_700"
-            android:textStyle="normal"
+            android:background="@drawable/list_flag_selector"
             android:focusable="false"
+            android:layout_marginLeft="10dp"
+            android:text="@string/query_button"
+            android:textColor="@color/teal_700"
             android:textSize="@dimen/list_detail_button"
-            android:text="@string/query_button"/>
+            android:textStyle="normal" />
 
     </LinearLayout>
 

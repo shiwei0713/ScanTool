@@ -54,6 +54,53 @@
 
     <LinearLayout
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/detail_content_margin"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/check_product_label7"
+            android:textColor="@color/list_item_number"
+            android:textSize="@dimen/font14" />
+
+        <TextView
+            android:id="@+id/checkStockDetailAreaId"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:textSize="@dimen/font14"
+            android:textColor="@color/teal_700"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/textview_bg_gray"/>
+
+        <TextView
+            android:id="@+id/checkStockDetailArea"
+            android:layout_width="135dp"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:textSize="@dimen/font14"
+            android:textColor="@color/teal_700"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/textview_bg_gray"/>
+
+        <Button
+            android:id="@+id/checkBtnSaveArea"
+            android:layout_width="60dp"
+            android:layout_height="25dp"
+            android:background="@drawable/button_selector_red"
+            android:textColor="@color/master_loginout"
+            android:textStyle="normal"
+            android:layout_marginLeft="10dp"
+            android:focusable="false"
+            android:textSize="@dimen/font14"
+            android:text="@string/check_product_button_title2" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/line"
         android:orientation="vertical">
@@ -63,6 +110,26 @@
     <include
         layout="@layout/check_product_detail_content"
         android:layout_width="match_parent"
-        android:layout_height="450dp"/>
+        android:layout_height="wrap_content"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/checkBtnClear"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@drawable/button_bg_blue_selector"
+            android:textColor="@color/white"
+            android:layout_marginTop="5dp"
+            android:textStyle="normal"
+            android:focusable="false"
+            android:textSize="@dimen/font14"
+            android:text="@string/check_product_button_title3" />
+
+    </LinearLayout>
 
 </LinearLayout>

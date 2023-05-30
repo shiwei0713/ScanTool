@@ -455,6 +455,37 @@ public class T100ServiceHelper {
     }
 
     //解析料件数据
+    public List<Map<String,Object>> getT100JsonProcessData(String listJson, String xmlIndexStr){
+        List<Map<String,Object>> detailList = new ArrayList<Map<String,Object>>();
+        String strDetailContent = listJson.replaceAll("&amp;quot;","\"");
+        int iStartId = strDetailContent.indexOf(xmlIndexStr,1);
+        //处理返回xml
+        while(iStartId>-1) {
+            String strSubContent = strDetailContent.substring(iStartId, strDetailContent.length());
+            String strJson = strSubContent.substring(strSubContent.indexOf("value", 1) + 7, strSubContent.indexOf("&gt;", 1) - 2);
+            Map<String, Object> map = new HashMap<String, Object>();
+            try {
+                JSONArray jsonArray = new JSONArray(strJson);
+                JSONObject jsonObject = jsonArray.getJSONObject(0);
+
+                map.put("ProductName", jsonObject.getString("erpProductName").trim());
+                map.put("Process", jsonObject.getString("erpProcess").trim());
+                detailList.add(map);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            int iCurrentStartId = strSubContent.indexOf("/Record", 1);
+            int iCurrentEndId = strSubContent.length();
+
+            strDetailContent = strSubContent.substring(iCurrentStartId, iCurrentEndId);
+            iStartId = strDetailContent.indexOf(xmlIndexStr, 1);
+        }
+
+        return detailList;
+    }
+
+    //解析料件数据
     public List<Map<String,Object>> getT100JsonItemData(String listJson, String xmlIndexStr){
         List<Map<String,Object>> detailList = new ArrayList<Map<String,Object>>();
         String strDetailContent = listJson.replaceAll("&amp;quot;","\"");
@@ -678,6 +709,43 @@ public class T100ServiceHelper {
         return detailList;
     }
 
+    //解析料件库存数据
+    public List<Map<String,Object>> getT100JsonItemMaterialBomData(String listJson, String xmlIndexStr){
+        List<Map<String,Object>> detailList = new ArrayList<Map<String,Object>>();
+        String strDetailContent = listJson.replaceAll("&amp;quot;","\"");
+        int iStartId = strDetailContent.indexOf(xmlIndexStr,1);
+        //处理返回xml
+        while(iStartId>-1) {
+            String strSubContent = strDetailContent.substring(iStartId, strDetailContent.length());
+            String strJson = strSubContent.substring(strSubContent.indexOf("value", 1) + 7, strSubContent.indexOf("&gt;", 1) - 2);
+            Map<String, Object> map = new HashMap<String, Object>();
+            try {
+                JSONArray jsonArray = new JSONArray(strJson);
+                JSONObject jsonObject = jsonArray.getJSONObject(0);
+
+                map.put("MaterialCode", jsonObject.getString("erpMaterialCode").trim());
+                map.put("MaterialName", jsonObject.getString("erpMaterialName").trim());
+                map.put("MaterialModels", jsonObject.getString("erpMaterialModels").trim());
+                map.put("MaterialSize", jsonObject.getString("erpMaterialSize").trim());
+                map.put("ProductCode", jsonObject.getString("erpProductCode").trim());
+                map.put("ProductName", jsonObject.getString("erpProductName").trim());
+                map.put("ProductModels", jsonObject.getString("erpProductModels").trim());
+                map.put("Qpa", jsonObject.getString("erpQpa").trim());
+                detailList.add(map);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            int iCurrentStartId = strSubContent.indexOf("/Record", 1);
+            int iCurrentEndId = strSubContent.length();
+
+            strDetailContent = strSubContent.substring(iCurrentStartId, iCurrentEndId);
+            iStartId = strDetailContent.indexOf(xmlIndexStr, 1);
+        }
+
+        return detailList;
+    }
+
     //解析设备数据
     public List<Map<String,Object>> getT100JsonDeviceData(String listJson, String xmlIndexStr){
         List<Map<String,Object>> detailList = new ArrayList<Map<String,Object>>();
@@ -694,6 +762,80 @@ public class T100ServiceHelper {
 
                 map.put("DeviceId", jsonObject.getString("erpDeviceId").trim());
                 map.put("Device", jsonObject.getString("erpDevice").trim());
+                detailList.add(map);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            int iCurrentStartId = strSubContent.indexOf("/Record", 1);
+            int iCurrentEndId = strSubContent.length();
+
+            strDetailContent = strSubContent.substring(iCurrentStartId, iCurrentEndId);
+            iStartId = strDetailContent.indexOf(xmlIndexStr, 1);
+        }
+
+        return detailList;
+    }
+
+    //解析人员设备数据集合
+    public List<Map<String,Object>> getT100JsonEmpDeviceData(String listJson, String xmlIndexStr){
+        List<Map<String,Object>> detailList = new ArrayList<Map<String,Object>>();
+        String strDetailContent = listJson.replaceAll("&amp;quot;","\"");
+        int iStartId = strDetailContent.indexOf(xmlIndexStr,1);
+        //处理返回xml
+        while(iStartId>-1) {
+            String strSubContent = strDetailContent.substring(iStartId, strDetailContent.length());
+            String strJson = strSubContent.substring(strSubContent.indexOf("value", 1) + 7, strSubContent.indexOf("&gt;", 1) - 2);
+            Map<String, Object> map = new HashMap<String, Object>();
+            try {
+                JSONArray jsonArray = new JSONArray(strJson);
+                JSONObject jsonObject = jsonArray.getJSONObject(0);
+
+                map.put("DeviceId", jsonObject.getString("erpDeviceId").trim());
+                map.put("Device", jsonObject.getString("erpDevice").trim());
+                map.put("DeviceType", jsonObject.getString("erpDeviceType").trim());
+                detailList.add(map);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            int iCurrentStartId = strSubContent.indexOf("/Record", 1);
+            int iCurrentEndId = strSubContent.length();
+
+            strDetailContent = strSubContent.substring(iCurrentStartId, iCurrentEndId);
+            iStartId = strDetailContent.indexOf(xmlIndexStr, 1);
+        }
+
+        return detailList;
+    }
+
+    //解析卷料上料回传数据
+    public List<Map<String,Object>> getT100JsonModelMaterialData(String listJson, String xmlIndexStr){
+        List<Map<String,Object>> detailList = new ArrayList<Map<String,Object>>();
+        String strDetailContent = listJson.replaceAll("&amp;quot;","\"");
+        int iStartId = strDetailContent.indexOf(xmlIndexStr,1);
+        //处理返回xml
+        while(iStartId>-1) {
+            String strSubContent = strDetailContent.substring(iStartId, strDetailContent.length());
+            String strJson = strSubContent.substring(strSubContent.indexOf("value", 1) + 7, strSubContent.indexOf("&gt;", 1) - 2);
+            Map<String, Object> map = new HashMap<String, Object>();
+            try {
+                JSONArray jsonArray = new JSONArray(strJson);
+                JSONObject jsonObject = jsonArray.getJSONObject(0);
+
+                map.put("Docno", jsonObject.getString("erpDocno").trim());
+                map.put("ProductCode", jsonObject.getString("erpProductCode").trim());
+                map.put("ProductName", jsonObject.getString("erpProductName").trim());
+                map.put("ProductModel", jsonObject.getString("erpProductModel").trim());
+                map.put("Device", jsonObject.getString("erpDevice").trim());
+                map.put("ProcessId", jsonObject.getString("erpProcessId").trim());
+                map.put("Process", jsonObject.getString("erpProcess").trim());
+                map.put("QuantityPcs", jsonObject.getString("erpQuantityPcs").trim());
+                map.put("QuantityWeight", jsonObject.getString("erpQuantityWeight").trim());
+                map.put("BeginDate", jsonObject.getString("erpBeginDate").trim());
+                map.put("EndDate", jsonObject.getString("erpEndDate").trim());
+                map.put("Employee", jsonObject.getString("erpEmployee").trim());
+                map.put("Version", jsonObject.getString("erpVersion").trim());
                 detailList.add(map);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -791,6 +933,197 @@ public class T100ServiceHelper {
                 map.put("InputStatus", jsonObject.getString("erpInputStatus").trim());
                 map.put("CheckMaterial", jsonObject.getString("erpCheckMaterial").trim());
                 map.put("Count", jsonObject.getString("erpCount").trim());
+                map.put("Station", jsonObject.getString("erpStation").trim());
+                map.put("GroupStation", jsonObject.getString("erpGroupStation").trim());
+                map.put("UpStation", jsonObject.getString("erpUpStation").trim());
+                map.put("StationDocno", jsonObject.getString("erpStationDocno").trim());
+                map.put("Select", jsonObject.getString("erpSelect").trim());
+                detailList.add(map);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            int iCurrentStartId = strSubContent.indexOf("/Record", 1);
+            int iCurrentEndId = strSubContent.length();
+
+            strDetailContent = strSubContent.substring(iCurrentStartId, iCurrentEndId);
+            iStartId = strDetailContent.indexOf(xmlIndexStr, 1);
+        }
+
+        return detailList;
+    }
+
+    //解析制造命令xml结果数据
+    public List<Map<String,Object>> getT100JsonUserTaskData(String listJson, String xmlIndexStr){
+        List<Map<String,Object>> detailList = new ArrayList<Map<String,Object>>();
+        String strDetailContent = listJson.replaceAll("&amp;quot;","\"");
+        int iStartId = strDetailContent.indexOf(xmlIndexStr,1);
+        //处理返回xml
+        while(iStartId>-1) {
+            String strSubContent = strDetailContent.substring(iStartId, strDetailContent.length());
+            String strJson = strSubContent.substring(strSubContent.indexOf("value", 1) + 7, strSubContent.indexOf("&gt;", 1) - 2);
+            Map<String, Object> map = new HashMap<String, Object>();
+            try {
+                JSONArray jsonArray = new JSONArray(strJson);
+                JSONObject jsonObject = jsonArray.getJSONObject(0);
+
+                map.put("Docno", jsonObject.getString("erpDocno").trim());
+                map.put("ProductCode", jsonObject.getString("erpProductCode").trim());
+                map.put("ProductName", jsonObject.getString("erpProductName").trim());
+                map.put("ProductModels", jsonObject.getString("erpProductModels").trim());
+                map.put("PlanDate", jsonObject.getString("erpPlanDate").trim());
+                map.put("ProcessId", jsonObject.getString("erpProcessId").trim());
+                map.put("Process", jsonObject.getString("erpProcess").trim());
+                map.put("Device", jsonObject.getString("erpDevice").trim());
+                map.put("Quantity", jsonObject.getString("erpQuantity").trim());
+                map.put("Employee", jsonObject.getString("erpEmployee").trim());
+                map.put("Lots", jsonObject.getString("erpLots").trim());
+                map.put("Planno", jsonObject.getString("erpPlanno").trim());
+                map.put("ModStatus", jsonObject.getString("erpModStatus").trim());
+                map.put("OperateCount", jsonObject.getString("erpOperateCount").trim());
+                map.put("PrintCount", jsonObject.getString("erpPrintCount").trim());
+                map.put("Version", jsonObject.getString("erpVersion").trim());
+                map.put("GroupId", jsonObject.getString("erpGroupId").trim());
+                map.put("Group", jsonObject.getString("erpGroup").trim());
+                map.put("ConnectStatus", jsonObject.getString("erpConnectStatus").trim());
+                map.put("GroupStation", jsonObject.getString("erpGroupStation").trim());
+                map.put("ConnectProcess", jsonObject.getString("erpConnectProcess").trim());
+                map.put("UpStation", jsonObject.getString("erpUpStation").trim());
+                map.put("ConnectDocno", jsonObject.getString("erpConnectDocno").trim());
+                map.put("StationDocno", jsonObject.getString("erpStationDocno").trim());
+                map.put("DocType", jsonObject.getString("erpDocType").trim());
+                detailList.add(map);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            int iCurrentStartId = strSubContent.indexOf("/Record", 1);
+            int iCurrentEndId = strSubContent.length();
+
+            strDetailContent = strSubContent.substring(iCurrentStartId, iCurrentEndId);
+            iStartId = strDetailContent.indexOf(xmlIndexStr, 1);
+        }
+
+        return detailList;
+    }
+
+    //解析制造命令xml结果数据
+    public List<Map<String,Object>> getT100JsonSendTaskData(String listJson, String xmlIndexStr){
+        List<Map<String,Object>> detailList = new ArrayList<Map<String,Object>>();
+        String strDetailContent = listJson.replaceAll("&amp;quot;","\"");
+        int iStartId = strDetailContent.indexOf(xmlIndexStr,1);
+        //处理返回xml
+        while(iStartId>-1) {
+            String strSubContent = strDetailContent.substring(iStartId, strDetailContent.length());
+            String strJson = strSubContent.substring(strSubContent.indexOf("value", 1) + 7, strSubContent.indexOf("&gt;", 1) - 2);
+            Map<String, Object> map = new HashMap<String, Object>();
+            try {
+                JSONArray jsonArray = new JSONArray(strJson);
+                JSONObject jsonObject = jsonArray.getJSONObject(0);
+
+                map.put("Docno", jsonObject.getString("erpDocno").trim());
+                map.put("ProductCode", jsonObject.getString("erpProductCode").trim());
+                map.put("ProductName", jsonObject.getString("erpProductName").trim());
+                map.put("ProductModels", jsonObject.getString("erpProductModels").trim());
+                map.put("PlanDate", jsonObject.getString("erpPlanDate").trim());
+                map.put("ProcessId", jsonObject.getString("erpProcessId").trim());
+                map.put("Process", jsonObject.getString("erpProcess").trim());
+                map.put("Device", jsonObject.getString("erpDevice").trim());
+                map.put("Quantity", jsonObject.getString("erpQuantity").trim());
+                map.put("Employee", jsonObject.getString("erpEmployee").trim());
+                map.put("Lots", jsonObject.getString("erpLots").trim());
+                map.put("Flag", jsonObject.getString("erpFlag").trim());
+                map.put("ModStatus", jsonObject.getString("erpModStatus").trim());
+                map.put("OperateCount", jsonObject.getString("erpOperateCount").trim());
+                map.put("PrintCount", jsonObject.getString("erpPrintCount").trim());
+                map.put("Version", jsonObject.getString("erpVersion").trim());
+                map.put("Status", jsonObject.getString("erpStatus").trim());
+                map.put("GroupId", jsonObject.getString("erpGroupId").trim());
+                map.put("Group", jsonObject.getString("erpGroup").trim());
+                map.put("ProcessEnd", jsonObject.getString("erpProcessEnd").trim());
+                map.put("ProcessInitId", jsonObject.getString("erpProcessInitId").trim());
+                map.put("ProcessInit", jsonObject.getString("erpProcessInit").trim());
+                map.put("QcStatus", "OK");
+                map.put("InputStatus", jsonObject.getString("erpInputStatus").trim());
+                map.put("CheckMaterial", jsonObject.getString("erpCheckMaterial").trim());
+                map.put("Count", jsonObject.getString("erpCount").trim());
+                map.put("Station", jsonObject.getString("erpStation").trim());
+                map.put("GroupStation", jsonObject.getString("erpGroupStation").trim());
+                map.put("UpStation", jsonObject.getString("erpUpStation").trim());
+                map.put("StationDocno", jsonObject.getString("erpStationDocno").trim());
+                map.put("Select", "N");
+                map.put("ConnectDocno", jsonObject.getString("erpConnectDocno").trim());
+                map.put("ErrorMsg", jsonObject.getString("erpErrorMsg").trim());
+                map.put("Label", jsonObject.getString("erpLabel").trim());
+                detailList.add(map);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            int iCurrentStartId = strSubContent.indexOf("/Record", 1);
+            int iCurrentEndId = strSubContent.length();
+
+            strDetailContent = strSubContent.substring(iCurrentStartId, iCurrentEndId);
+            iStartId = strDetailContent.indexOf(xmlIndexStr, 1);
+        }
+
+        return detailList;
+    }
+
+    //解析区域xml结果数据
+    public List<Map<String,Object>> getT100JsonAreaData(String listJson, String xmlIndexStr){
+        List<Map<String,Object>> detailList = new ArrayList<Map<String,Object>>();
+        String strDetailContent = listJson.replaceAll("&amp;quot;","\"");
+        int iStartId = strDetailContent.indexOf(xmlIndexStr,1);
+        //处理返回xml
+        while(iStartId>-1) {
+            String strSubContent = strDetailContent.substring(iStartId, strDetailContent.length());
+            String strJson = strSubContent.substring(strSubContent.indexOf("value", 1) + 7, strSubContent.indexOf("&gt;", 1) - 2);
+            Map<String, Object> map = new HashMap<String, Object>();
+            try {
+                JSONArray jsonArray = new JSONArray(strJson);
+                JSONObject jsonObject = jsonArray.getJSONObject(0);
+
+                map.put("AreaId", jsonObject.getString("erpAreaId").trim());
+                map.put("Area", jsonObject.getString("erpArea").trim());
+                detailList.add(map);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            int iCurrentStartId = strSubContent.indexOf("/Record", 1);
+            int iCurrentEndId = strSubContent.length();
+
+            strDetailContent = strSubContent.substring(iCurrentStartId, iCurrentEndId);
+            iStartId = strDetailContent.indexOf(xmlIndexStr, 1);
+        }
+
+        return detailList;
+    }
+
+    //解析区域扫描xml结果数据
+    public List<Map<String,Object>> getT100JsonAreaListData(String listJson, String xmlIndexStr){
+        List<Map<String,Object>> detailList = new ArrayList<Map<String,Object>>();
+        String strDetailContent = listJson.replaceAll("&amp;quot;","\"");
+        int iStartId = strDetailContent.indexOf(xmlIndexStr,1);
+        //处理返回xml
+        while(iStartId>-1) {
+            String strSubContent = strDetailContent.substring(iStartId, strDetailContent.length());
+            String strJson = strSubContent.substring(strSubContent.indexOf("value", 1) + 7, strSubContent.indexOf("&gt;", 1) - 2);
+            Map<String, Object> map = new HashMap<String, Object>();
+            try {
+                JSONArray jsonArray = new JSONArray(strJson);
+                JSONObject jsonObject = jsonArray.getJSONObject(0);
+
+                map.put("ProductCode", jsonObject.getString("erpProductCode").trim());
+                map.put("ProductName", jsonObject.getString("erpProductName").trim());
+                map.put("ProductModels", jsonObject.getString("erpProductModels").trim());
+                map.put("ProcessId", jsonObject.getString("erpProcessId").trim());
+                map.put("Process", jsonObject.getString("erpProcess").trim());
+                map.put("Device", jsonObject.getString("erpDevice").trim());
+                map.put("Employee", jsonObject.getString("erpEmployee").trim());
+                map.put("Quantity", jsonObject.getString("erpQuantity").trim());
+                map.put("Qrcode", jsonObject.getString("erpQrcode").trim());
                 detailList.add(map);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -889,6 +1222,7 @@ public class T100ServiceHelper {
                 map.put("BadQuantity", jsonObject.getString("erpBadQuantity").trim());
                 map.put("Attribute", jsonObject.getString("erpAttribute").trim());
                 map.put("Status", jsonObject.getString("erpStatus").trim());
+                map.put("Employee", jsonObject.getString("erpEmployee").trim());
                 map.put("Qpa", jsonObject.getString("erpQpa").trim());
                 detailList.add(map);
             } catch (Exception e) {
@@ -924,6 +1258,126 @@ public class T100ServiceHelper {
                 map.put("ProductName", jsonObject.getString("erpProductName").trim());
                 map.put("Process", jsonObject.getString("erpProcess").trim());
                 map.put("Quantity", jsonObject.getString("erpQuantity").trim());
+                detailList.add(map);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            int iCurrentStartId = strSubContent.indexOf("/Record", 1);
+            int iCurrentEndId = strSubContent.length();
+
+            strDetailContent = strSubContent.substring(iCurrentStartId, iCurrentEndId);
+            iStartId = strDetailContent.indexOf(xmlIndexStr, 1);
+        }
+
+        return detailList;
+    }
+
+    //解析查询报表xml结果数据cwssp024
+    public List<Map<String,Object>> getT100JsonQueryProductAreaData(String listJson, String xmlIndexStr){
+        List<Map<String,Object>> detailList = new ArrayList<Map<String,Object>>();
+        String strDetailContent = listJson.replaceAll("&amp;quot;","\"");
+        int iStartId = strDetailContent.indexOf(xmlIndexStr,1);
+        //处理返回xml
+        while(iStartId>-1) {
+            String strSubContent = strDetailContent.substring(iStartId, strDetailContent.length());
+            String strJson = strSubContent.substring(strSubContent.indexOf("value", 1) + 7, strSubContent.indexOf("&gt;", 1) - 2);
+            Map<String, Object> map = new HashMap<String, Object>();
+            try {
+                JSONArray jsonArray = new JSONArray(strJson);
+                JSONObject jsonObject = jsonArray.getJSONObject(0);
+
+                map.put("ProductCode", jsonObject.getString("erpProductCode").trim());
+                map.put("ProductName", jsonObject.getString("erpProductName").trim());
+                map.put("ProductModel", jsonObject.getString("erpProductModel").trim());
+                map.put("Unit", jsonObject.getString("erpUnit").trim());
+                map.put("Area", jsonObject.getString("erpArea").trim());
+                map.put("Process", jsonObject.getString("erpProcess").trim());
+                map.put("Flag", jsonObject.getString("erpFlag").trim());
+                map.put("Quantity", jsonObject.getString("erpQuantity").trim());
+                detailList.add(map);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            int iCurrentStartId = strSubContent.indexOf("/Record", 1);
+            int iCurrentEndId = strSubContent.length();
+
+            strDetailContent = strSubContent.substring(iCurrentStartId, iCurrentEndId);
+            iStartId = strDetailContent.indexOf(xmlIndexStr, 1);
+        }
+
+        return detailList;
+    }
+
+    //解析生产报工查询报表xml结果数据cwssp024
+    public List<Map<String,Object>> getT100JsonQueryProductReportData(String listJson, String xmlIndexStr){
+        List<Map<String,Object>> detailList = new ArrayList<Map<String,Object>>();
+        String strDetailContent = listJson.replaceAll("&amp;quot;","\"");
+        int iStartId = strDetailContent.indexOf(xmlIndexStr,1);
+        //处理返回xml
+        while(iStartId>-1) {
+            String strSubContent = strDetailContent.substring(iStartId, strDetailContent.length());
+            String strJson = strSubContent.substring(strSubContent.indexOf("value", 1) + 7, strSubContent.indexOf("&gt;", 1) - 2);
+            Map<String, Object> map = new HashMap<String, Object>();
+            try {
+                JSONArray jsonArray = new JSONArray(strJson);
+                JSONObject jsonObject = jsonArray.getJSONObject(0);
+
+                map.put("PlanNo", jsonObject.getString("erpPlanNo").trim());
+                map.put("Version", jsonObject.getString("erpVersion").trim());
+                map.put("PlanDate", jsonObject.getString("erpPlanDate").trim());
+                map.put("ProductCode", jsonObject.getString("erpProductCode").trim());
+                map.put("ProductName", jsonObject.getString("erpProductName").trim());
+                map.put("Process", jsonObject.getString("erpProcess").trim());
+                map.put("Device", jsonObject.getString("erpDevice").trim());
+                map.put("StartTime", jsonObject.getString("erpStartTime").trim());
+                map.put("EndTime", jsonObject.getString("erpEndTime").trim());
+                map.put("ErrorMintiue", jsonObject.getString("erpErrorMintiue").trim());
+                map.put("MaterialCount", jsonObject.getString("erpMaterialCount").trim());
+                map.put("PlanQuantity", jsonObject.getString("erpPlanQuantity").trim());
+                map.put("Employee", jsonObject.getString("erpEmployee").trim());
+                map.put("Quantity", jsonObject.getString("erpQuantity").trim());
+                map.put("BadQuantity", jsonObject.getString("erpBadQuantity").trim());
+                detailList.add(map);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            int iCurrentStartId = strSubContent.indexOf("/Record", 1);
+            int iCurrentEndId = strSubContent.length();
+
+            strDetailContent = strSubContent.substring(iCurrentStartId, iCurrentEndId);
+            iStartId = strDetailContent.indexOf(xmlIndexStr, 1);
+        }
+
+        return detailList;
+    }
+
+    //解析查询报表xml标签结果数据cwssp024
+    public List<Map<String,Object>> getT100JsonQueryProductLabelData(String listJson, String xmlIndexStr){
+        List<Map<String,Object>> detailList = new ArrayList<Map<String,Object>>();
+        String strDetailContent = listJson.replaceAll("&amp;quot;","\"");
+        int iStartId = strDetailContent.indexOf(xmlIndexStr,1);
+        //处理返回xml
+        while(iStartId>-1) {
+            String strSubContent = strDetailContent.substring(iStartId, strDetailContent.length());
+            String strJson = strSubContent.substring(strSubContent.indexOf("value", 1) + 7, strSubContent.indexOf("&gt;", 1) - 2);
+            Map<String, Object> map = new HashMap<String, Object>();
+            try {
+                JSONArray jsonArray = new JSONArray(strJson);
+                JSONObject jsonObject = jsonArray.getJSONObject(0);
+
+                map.put("ProductCode", jsonObject.getString("erpProductCode").trim());
+                map.put("ProductName", jsonObject.getString("erpProductName").trim());
+                map.put("ProductModel", jsonObject.getString("erpProductModel").trim());
+                map.put("Qrcode", jsonObject.getString("erpQrcode").trim());
+                map.put("Device", jsonObject.getString("erpDevice").trim());
+                map.put("ProcessId", jsonObject.getString("erpProcessId").trim());
+                map.put("Process", jsonObject.getString("erpProcess").trim());
+                map.put("Quantity", jsonObject.getString("erpQuantity").trim());
+                map.put("Status", jsonObject.getString("erpStatus").trim());
+                map.put("Flag", jsonObject.getString("erpFlag").trim());
                 detailList.add(map);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -1061,6 +1515,64 @@ public class T100ServiceHelper {
                 map.put("Status", jsonObject.getString("erpStatus").trim());
                 map.put("Tray", jsonObject.getString("erpTray").trim());
                 map.put("Package", jsonObject.getString("erpPackage").trim());
+                map.put("BadQuantity", jsonObject.getString("erpBadQuantity").trim());
+                map.put("StationDocno", jsonObject.getString("erpStationDocno").trim());
+                detailList.add(map);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            int iCurrentStartId = strSubContent.indexOf("/Record", 1);
+            int iCurrentEndId = strSubContent.length();
+
+            strDetailContent = strSubContent.substring(iCurrentStartId, iCurrentEndId);
+            iStartId = strDetailContent.indexOf(xmlIndexStr, 1);
+        }
+
+        return detailList;
+    }
+
+    //解析用户报工数据xml
+    public List<Map<String,Object>> getT100JsonUserTaskDetailData(String listJson, String xmlIndexStr){
+        List<Map<String,Object>> detailList = new ArrayList<Map<String,Object>>();
+        String strDetailContent = listJson.replaceAll("&amp;quot;","\"");
+        int iStartId = strDetailContent.indexOf(xmlIndexStr,1);
+        //处理返回xml
+        while(iStartId>-1) {
+            String strSubContent = strDetailContent.substring(iStartId, strDetailContent.length());
+            String strJson = strSubContent.substring(strSubContent.indexOf("value", 1) + 7, strSubContent.indexOf("&gt;", 1) - 2);
+            Map<String, Object> map = new HashMap<String, Object>();
+            try {
+                JSONArray jsonArray = new JSONArray(strJson);
+                JSONObject jsonObject = jsonArray.getJSONObject(0);
+
+                map.put("Docno", jsonObject.getString("erpDocno").trim());
+                map.put("ProductCode", jsonObject.getString("erpProductCode").trim());
+                map.put("ProductName", jsonObject.getString("erpProductName").trim());
+                map.put("ProductModels", jsonObject.getString("erpProductModels").trim());
+                map.put("PlanDate", jsonObject.getString("erpPlanDate").trim());
+                map.put("ProcessId", jsonObject.getString("erpProcessId").trim());
+                map.put("Process", jsonObject.getString("erpProcess").trim());
+                map.put("Device", jsonObject.getString("erpDevice").trim());
+                map.put("Quantity", jsonObject.getString("erpQuantity").trim());
+                map.put("Employee", jsonObject.getString("erpEmployee").trim());
+                map.put("Lots", jsonObject.getString("erpLots").trim());
+                map.put("PlanNo", jsonObject.getString("erpPlanNo").trim());
+                map.put("ModStatus", jsonObject.getString("erpModStatus").trim());
+                map.put("Version", jsonObject.getString("erpVersion").trim());
+                map.put("Tray", jsonObject.getString("erpTray").trim());
+                map.put("ConnectProcess", jsonObject.getString("erpConnectProcess").trim());
+                map.put("Package", jsonObject.getString("erpPackage").trim());
+                map.put("BadQuantity", jsonObject.getString("erpBadQuantity").trim());
+                map.put("StartStatus", jsonObject.getString("erpStartStatus").trim());
+                map.put("CheckStatus", jsonObject.getString("erpCheckStatus").trim());
+                map.put("UpStatus", jsonObject.getString("erpUpStatus").trim());
+                map.put("ErrorStartStatus", jsonObject.getString("erpErrorStartStatus").trim());
+                map.put("ErrorStopStatus", jsonObject.getString("erpErrorStopStatus").trim());
+                map.put("StartTime", jsonObject.getString("erpStartTime").trim());
+                map.put("CheckTime", jsonObject.getString("erpCheckTime").trim());
+                map.put("UpTime", jsonObject.getString("erpUpTime").trim());
+                map.put("ErrorTime", jsonObject.getString("erpErrorTime").trim());
                 detailList.add(map);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -1184,6 +1696,8 @@ public class T100ServiceHelper {
                 map.put("Seq", jsonObject.getString("erpSeq").trim());
                 map.put("Seq1", jsonObject.getString("erpSeq1").trim());
                 map.put("Status", jsonObject.getString("erpStatus").trim());
+                map.put("QcStatus", jsonObject.getString("erpQcStatus").trim());
+                map.put("QrCode", jsonObject.getString("erpQrCode").trim());
                 map.put("Attribute", jsonObject.getString("erpAttribute").trim());
                 map.put("Planno", jsonObject.getString("erpPlanno").trim());
                 map.put("ProductDocno", jsonObject.getString("erpProductDocno").trim());
@@ -1369,6 +1883,110 @@ public class T100ServiceHelper {
                 map.put("Process", jsonObject.getString("erpProcess").trim());
                 map.put("Select", jsonObject.getString("erpSelect").trim());
                 map.put("PreProcess", jsonObject.getString("erpPreProcess").trim());
+                map.put("ConnectProcess", jsonObject.getString("erpConnectProcess").trim());
+                detailList.add(map);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            int iCurrentStartId = strSubContent.indexOf("/Record", 1);
+            int iCurrentEndId = strSubContent.length();
+
+            strDetailContent = strSubContent.substring(iCurrentStartId, iCurrentEndId);
+            iStartId = strDetailContent.indexOf(xmlIndexStr, 1);
+        }
+
+        return detailList;
+    }
+
+    //解析工艺数据-增加人员和设备显示
+    public List<Map<String,Object>> getT100JsonItemProcessData2(String listJson, String xmlIndexStr){
+        List<Map<String,Object>> detailList = new ArrayList<Map<String,Object>>();
+        String strDetailContent = listJson.replaceAll("&amp;quot;","\"");
+        int iStartId = strDetailContent.indexOf(xmlIndexStr,1);
+        //处理返回xml
+        while(iStartId>-1) {
+            String strSubContent = strDetailContent.substring(iStartId, strDetailContent.length());
+            String strJson = strSubContent.substring(strSubContent.indexOf("value", 1) + 7, strSubContent.indexOf("&gt;", 1) - 2);
+            Map<String, Object> map = new HashMap<String, Object>();
+            try {
+                JSONArray jsonArray = new JSONArray(strJson);
+                JSONObject jsonObject = jsonArray.getJSONObject(0);
+
+                map.put("ProcessId", jsonObject.getString("erpProcessId").trim());
+                map.put("Process", jsonObject.getString("erpProcess").trim());
+                map.put("Select", jsonObject.getString("erpSelect").trim());
+                map.put("PreProcess", jsonObject.getString("erpPreProcess").trim());
+                map.put("Docno", jsonObject.getString("erpDocno").trim());
+                map.put("Version", jsonObject.getString("erpVersion").trim());
+                map.put("Employee", jsonObject.getString("erpEmployee").trim());
+                map.put("ProductCode", jsonObject.getString("erpProductCode").trim());
+                map.put("ProductName", jsonObject.getString("erpProductName").trim());
+                map.put("ProductModels", jsonObject.getString("erpProductModels").trim());
+                map.put("Unit", jsonObject.getString("erpUnit").trim());
+                map.put("PlanDate", jsonObject.getString("erpPlanDate").trim());
+                map.put("Device", jsonObject.getString("erpDevice").trim());
+                map.put("Quantity", jsonObject.getString("erpQuantity").trim());
+                map.put("GroupId", jsonObject.getString("erpGroupId").trim());
+                map.put("Lots", jsonObject.getString("erpLots").trim());
+                map.put("ModLots", jsonObject.getString("erpModLots").trim());
+                map.put("PlanNO", jsonObject.getString("erpPlanNO").trim());
+                map.put("WorkHours", jsonObject.getString("erpWorkHours").trim());
+                map.put("GroupStation", jsonObject.getString("erpGroupStation").trim());
+                map.put("DocType", jsonObject.getString("erpDocType").trim());
+                map.put("StationDocno", jsonObject.getString("erpStationDocno").trim());
+                map.put("ConnectDocno", jsonObject.getString("erpConnectDocno").trim());
+                map.put("ConnectProcess", jsonObject.getString("erpConnectProcess").trim());
+                map.put("UserProduct", jsonObject.getString("erpUserProduct").trim());
+                map.put("WorkStation", jsonObject.getString("erpWorkStation").trim());
+                map.put("OldGroupStation", jsonObject.getString("erpOldGroupStation").trim());
+                detailList.add(map);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            int iCurrentStartId = strSubContent.indexOf("/Record", 1);
+            int iCurrentEndId = strSubContent.length();
+
+            strDetailContent = strSubContent.substring(iCurrentStartId, iCurrentEndId);
+            iStartId = strDetailContent.indexOf(xmlIndexStr, 1);
+        }
+
+        return detailList;
+    }
+
+    //解析工艺数据
+    public List<Map<String,Object>> getT100JsonConnectProcessData(String listJson, String xmlIndexStr){
+        List<Map<String,Object>> detailList = new ArrayList<Map<String,Object>>();
+        String strDetailContent = listJson.replaceAll("&amp;quot;","\"");
+        int iStartId = strDetailContent.indexOf(xmlIndexStr,1);
+        //处理返回xml
+        while(iStartId>-1) {
+            String strSubContent = strDetailContent.substring(iStartId, strDetailContent.length());
+            String strJson = strSubContent.substring(strSubContent.indexOf("value", 1) + 7, strSubContent.indexOf("&gt;", 1) - 2);
+            Map<String, Object> map = new HashMap<String, Object>();
+            try {
+                JSONArray jsonArray = new JSONArray(strJson);
+                JSONObject jsonObject = jsonArray.getJSONObject(0);
+
+                map.put("Docno", jsonObject.getString("erpDocno").trim());
+                map.put("ProductCode", jsonObject.getString("erpProductCode").trim());
+                map.put("ProductName", jsonObject.getString("erpProductName").trim());
+                map.put("ProductModels", jsonObject.getString("erpProductModels").trim());
+                map.put("PlanDate", jsonObject.getString("erpPlanDate").trim());
+                map.put("ProcessId", jsonObject.getString("erpProcessId").trim());
+                map.put("Process", jsonObject.getString("erpProcess").trim());
+                map.put("Device", jsonObject.getString("erpDevice").trim());
+                map.put("Quantity", jsonObject.getString("erpQuantity").trim());
+                map.put("Employee", jsonObject.getString("erpEmployee").trim());
+                map.put("Lots", jsonObject.getString("erpLots").trim());
+                map.put("Flag", jsonObject.getString("erpFlag").trim());
+                map.put("Version", jsonObject.getString("erpVersion").trim());
+                map.put("GroupId", jsonObject.getString("erpGroupId").trim());
+                map.put("Group", jsonObject.getString("erpGroup").trim());
+                map.put("ProcessEnd", jsonObject.getString("erpProcessEnd").trim());
+                map.put("PreProcess", jsonObject.getString("erpPreProcess").trim());
+                map.put("Select", jsonObject.getString("erpSelect").trim());
                 detailList.add(map);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -1617,6 +2235,48 @@ public class T100ServiceHelper {
                 map.put("FeaturesModels",jsonObject.getString("erpFeaturesModels").trim());
                 map.put("PlanDate",jsonObject.getString("erpPlanDate").trim());
                 map.put("Weight",jsonObject.getString("erpWeight").trim());
+                map.put("Process",jsonObject.getString("erpProcess").trim());
+                detailList.add(map);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            int iCurrentStartId = strSubContent.indexOf("/Record", 1);
+            int iCurrentEndId = strSubContent.length();
+
+            strDetailContent = strSubContent.substring(iCurrentStartId, iCurrentEndId);
+            iStartId = strDetailContent.indexOf(xmlIndexStr, 1);
+        }
+
+        return detailList;
+    }
+
+    //解析扫描盘点二维码xml结果数据-清除数据
+    public List<Map<String,Object>> getT100JsonQrCodeClearData(String listJson, String xmlIndexStr){
+        List<Map<String,Object>> detailList = new ArrayList<Map<String,Object>>();
+        String strDetailContent = listJson.replaceAll("&amp;quot;","\"");
+        int iStartId = strDetailContent.indexOf(xmlIndexStr,1);
+        //处理返回xml
+        while(iStartId>-1) {
+            String strSubContent = strDetailContent.substring(iStartId, strDetailContent.length());
+            String strJson = strSubContent.substring(strSubContent.indexOf("value", 1) + 7, strSubContent.indexOf("&gt;", 1) - 2);
+            Map<String, Object> map = new HashMap<String, Object>();
+            try {
+                JSONArray jsonArray = new JSONArray(strJson);
+                JSONObject jsonObject = jsonArray.getJSONObject(0);
+
+                map.put("ProductCode",jsonObject.getString("erpProductCode").trim());
+                map.put("StockId",jsonObject.getString("erpStockId").trim());
+                map.put("StockLocationId",jsonObject.getString("erpStockLocationId").trim());
+                map.put("Quantity",jsonObject.getString("erpQuantity").trim());
+                map.put("ProductName",jsonObject.getString("erpProductName").trim());
+                map.put("ProductModels",jsonObject.getString("erpProductModels").trim());
+                map.put("ProductSize",jsonObject.getString("erpProductSize").trim());
+                map.put("Qrcode",jsonObject.getString("erpQrcode").trim());
+                map.put("Lots",jsonObject.getString("erpLots").trim());
+                map.put("PlanDate",jsonObject.getString("erpPlanDate").trim());
+                map.put("Weight",jsonObject.getString("erpWeight").trim());
+                map.put("Process",jsonObject.getString("erpProcess").trim());
                 detailList.add(map);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -1913,6 +2573,41 @@ public class T100ServiceHelper {
                 map.put("Process",jsonObject.getString("erpProcess").trim());
                 map.put("Quantity",jsonObject.getString("erpQuantity").trim());
                 map.put("Status",jsonObject.getString("erpStatus").trim());
+                map.put("Attribute",jsonObject.getString("erpAttribute").trim());
+                detailList.add(map);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+
+        return detailList;
+    }
+
+    //解析条码确认回传结果数据
+    public List<Map<String,Object>> getT100ResponseDocno5(String listJson, String xmlIndexStr){
+        List<Map<String,Object>> detailList = new ArrayList<Map<String,Object>>();
+        Map<String,Object> map = new HashMap<String,Object>();
+
+        //检查索引
+        int iTaskIndex=listJson.indexOf(xmlIndexStr,1);
+        if (iTaskIndex>-1){
+            //扫描明细
+            String strContent =listJson.replaceAll("&amp;quot;","\"");
+            String strQr=strContent.substring(strContent.indexOf(xmlIndexStr,1),strContent.length());
+            String strQrJson=strQr.substring(strQr.indexOf("value",1)+7,strQr.indexOf("&gt;",1)-2);
+            try{
+                JSONArray jsonArray = new JSONArray(strQrJson);
+                JSONObject jsonObject = jsonArray.getJSONObject(0);
+                map.put("Docno",jsonObject.getString("erpDocno").trim());
+                map.put("ProductCode",jsonObject.getString("erpProductCode").trim());
+                map.put("ProductName",jsonObject.getString("erpProductName").trim());
+                map.put("ProductModels",jsonObject.getString("erpProductModels").trim());
+                map.put("ProcessId",jsonObject.getString("erpProcessId").trim());
+                map.put("Process",jsonObject.getString("erpProcess").trim());
+                map.put("Quantity",jsonObject.getString("erpQuantity").trim());
+                map.put("Status",jsonObject.getString("erpStatus").trim());
+                map.put("Qrcode",jsonObject.getString("erpQrcode").trim());
+                map.put("CheckQuantity",jsonObject.getString("erpCheckQuantity").trim());
                 map.put("Attribute",jsonObject.getString("erpAttribute").trim());
                 detailList.add(map);
             }catch (Exception e){

@@ -32,7 +32,7 @@
 
         <EditText
             android:id="@+id/inputQuerySdate"
-            android:layout_width="110dp"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:padding="5dp"
             android:textSize="@dimen/font14"
@@ -42,9 +42,19 @@
             android:background="@drawable/textview_bg_gray"
             android:textColor="@color/master_message" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:textSize="@dimen/font14"
+            android:textColor="@color/teal_700"
+            android:layout_marginLeft="5dp"
+            android:text="至"
+            android:background="@drawable/textview_bg_gray"/>
+
         <EditText
             android:id="@+id/inputQueryEdate"
-            android:layout_width="110dp"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:padding="5dp"
             android:textSize="@dimen/font14"
@@ -56,8 +66,8 @@
 
         <Button
             android:id="@+id/btnQuery"
-            android:layout_width="50dp"
-            android:layout_height="25dp"
+            android:layout_width="wrap_content"
+            android:layout_height="26dp"
             android:background="@drawable/list_flag_selector"
             android:focusable="false"
             android:layout_marginLeft="10dp"
@@ -79,8 +89,9 @@
             android:id="@+id/queryProductList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="2dp"
             android:dividerHeight="2dp"
             android:scrollbars="horizontal" />
 

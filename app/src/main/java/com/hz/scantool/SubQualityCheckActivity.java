@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -61,7 +62,8 @@ public class SubQualityCheckActivity extends AppCompatActivity {
     private LoadingDialog loadingDialog;
     private ListView listView;
     private SubAdapter subAdapter;
-    private Button btnFlag1,btnFlag2;
+    private Button btnFlag1,btnFlag2,btnCheckQualityQrcode;
+    private EditText inputCheckQualityQrcode;
     private TextView subCheckTitle;
     private SearchView searchView;
 
@@ -202,12 +204,15 @@ public class SubQualityCheckActivity extends AppCompatActivity {
     private void initView(){
         btnFlag1 = findViewById(R.id.btnFlag1);
         btnFlag2 = findViewById(R.id.btnFlag2);
+        btnCheckQualityQrcode = findViewById(R.id.btnCheckQualityQrcode);
+        inputCheckQualityQrcode = findViewById(R.id.inputCheckQualityQrcode);
         subCheckTitle = findViewById(R.id.subCheckTitle);
         listView = findViewById(R.id.subQualityCheckView);
 
         listView.setOnItemClickListener(new listItemClickListener());
         btnFlag1.setOnClickListener(new btnClickListenter());
         btnFlag2.setOnClickListener(new btnClickListenter());
+        btnCheckQualityQrcode.setOnClickListener(new btnClickListenter());
 
         subCheckTitle.setText(getResources().getString(R.string.content_title39)+"-"+btnFlag1.getText());
 
@@ -259,6 +264,10 @@ public class SubQualityCheckActivity extends AppCompatActivity {
                     //中检
                     subCheckTitle.setText(getResources().getString(R.string.content_title39)+"-"+btnFlag2.getText());
                     getSubListData("13");
+                    break;
+                case R.id.btnCheckQualityQrcode:
+                    String sQrcode = inputCheckQualityQrcode.getText().toString().toUpperCase();
+                    showCheckDetailData(sQrcode);
                     break;
             }
         }
@@ -594,6 +603,8 @@ public class SubQualityCheckActivity extends AppCompatActivity {
                         String strAttribute="";
                         String strPlanno = "";
                         String strProductDocno = "";
+                        String strQcStatus = "";
+                        String strQrCode = "";
 
                         for (Map<String, Object> mResponse : mapResponseList) {
                             strDocno = mResponse.get("Docno").toString();
@@ -616,6 +627,8 @@ public class SubQualityCheckActivity extends AppCompatActivity {
                             strAttribute= mResponse.get("Attribute").toString();
                             strPlanno= mResponse.get("Planno").toString();
                             strProductDocno= mResponse.get("ProductDocno").toString();
+                            strQcStatus= mResponse.get("QcStatus").toString();
+                            strQrCode= mResponse.get("QrCode").toString();
                         }
 
                         Intent intent = new Intent(SubQualityCheckActivity.this,SubQualityCheckDetailActivity.class);
@@ -638,9 +651,10 @@ public class SubQualityCheckActivity extends AppCompatActivity {
                         bundle.putString("Seq1",strSeq1);
                         bundle.putString("Status",strStatus);
                         bundle.putString("Attribute",strAttribute);
-                        bundle.putString("qrCode",qrCode);
+                        bundle.putString("qrCode",strQrCode);
                         bundle.putString("Planno",strPlanno);
                         bundle.putString("ProductDocno",strProductDocno);
+                        bundle.putString("QcStatus",strQcStatus);
                         intent.putExtras(bundle);
                         startActivity(intent);
                     }else{

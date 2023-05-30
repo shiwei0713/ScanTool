@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".QueryDataActivity"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/queryDataToolBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/action_style"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:textSize="@dimen/font14"
+            android:textColor="@color/teal_700"
+            android:text="@string/query_data_textview_title1"
+            android:background="@drawable/textview_bg_gray"/>
+
+        <EditText
+            android:id="@+id/inputQueryProduct"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:textSize="@dimen/font14"
+            android:layout_marginLeft="5dp"
+            android:textStyle="bold"
+            android:hint="@string/query_data_editview_hint1"
+            android:background="@drawable/textview_bg_gray"
+            android:textColor="@color/master_message" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:paddingBottom="5dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:textSize="@dimen/font14"
+            android:textColor="@color/teal_700"
+            android:text="@string/query_data_textview_title2"
+            android:background="@drawable/textview_bg_gray"/>
+
+        <EditText
+            android:id="@+id/inputQueryProcess"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:textSize="@dimen/font14"
+            android:layout_marginLeft="5dp"
+            android:textStyle="bold"
+            android:hint="@string/query_data_editview_hint2"
+            android:background="@drawable/textview_bg_gray"
+            android:textColor="@color/master_message" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="28dp"
+            android:background="@drawable/list_flag_selector"
+            android:focusable="false"
+            android:text="@string/query_data_button_title2"
+            android:textColor="@color/teal_700"
+            android:textSize="@dimen/list_detail_button"
+            android:textStyle="normal" />
+
+        <Button
+            android:id="@+id/btnQuery"
+            android:layout_width="wrap_content"
+            android:layout_height="28dp"
+            android:background="@drawable/button_selector_red"
+            android:focusable="false"
+            android:layout_marginLeft="20dp"
+            android:text="@string/query_data_button_title1"
+            android:textColor="@color/master_loginout"
+            android:textSize="@dimen/list_detail_button"
+            android:textStyle="normal" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="5dp"
+        android:background="#E4E4E4"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/linearlayout_gray_border"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left|center_vertical"
+            android:padding="5dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/font14"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:text="@string/query_data_title1"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btnFlag1"
+                    android:layout_width="80dp"
+                    android:layout_height="25dp"
+                    android:background="@drawable/list_flag_selector"
+                    android:focusable="false"
+                    android:layout_marginLeft="15dp"
+                    android:text="@string/query_data_button_title3"
+                    android:textColor="@color/teal_700"
+                    android:textSize="@dimen/list_detail_button"
+                    android:textStyle="normal" />
+
+                <Button
+                    android:id="@+id/btnFlag2"
+                    android:layout_width="80dp"
+                    android:layout_height="25dp"
+                    android:background="@drawable/list_flag_selector"
+                    android:focusable="false"
+                    android:layout_marginLeft="15dp"
+                    android:text="@string/query_data_button_title4"
+                    android:textColor="@color/teal_700"
+                    android:textSize="@dimen/list_detail_button"
+                    android:textStyle="normal" />
+
+                <Button
+                    android:id="@+id/btnFlag3"
+                    android:layout_width="80dp"
+                    android:layout_height="25dp"
+                    android:background="@drawable/button_selector_red"
+                    android:textColor="@color/red"
+                    android:focusable="false"
+                    android:text="@string/query_data_button_title5"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:textSize="@dimen/list_detail_button"
+                    android:textStyle="normal" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/queryDataList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="5dp"
+            android:dividerHeight="5dp"
+            android:scrollbars="horizontal" />
+
+    </LinearLayout>
+
+</LinearLayout>

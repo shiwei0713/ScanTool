@@ -64,7 +64,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
@@ -151,14 +151,14 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:layout_marginLeft="3dp"
             android:orientation="horizontal">
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="@dimen/list_show_sub_linearlayout_width"
                 android:layout_height="wrap_content"
                 android:gravity="left"
                 android:orientation="vertical">
@@ -172,11 +172,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/black"
-                        android:text="@string/detail_content_title1"/>
+                        android:text="@string/list_show_sub_title1"/>
 
                     <TextView
                         android:id="@+id/txtProductCode"
-                        android:layout_width="@dimen/list_show_sub_textview_width2"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/black"/>
 
@@ -191,18 +191,18 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/black"
-                        android:text="@string/detail_content_title21"/>
+                        android:text="@string/list_show_sub_title2"/>
 
                     <TextView
                         android:id="@+id/txtProductModels"
-                        android:layout_width="@dimen/list_show_sub_textview_width2"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/black"/>
 
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="@dimen/list_show_sub_linearlayout_width"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
@@ -218,13 +218,18 @@
                         android:layout_height="wrap_content"
                         android:textColor="@color/black"/>
 
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"
-                        android:text="/"
-                        android:textColor="@color/black"/>
+                        android:textColor="@color/black"
+                        android:text="@string/detail_content_title39"/>
 
                     <TextView
                         android:id="@+id/txtProcess"
@@ -268,7 +273,7 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="@dimen/list_show_sub_linearlayout_width"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
@@ -295,11 +300,30 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/black"
-                        android:text="@string/detail_content_title8"/>
+                        android:text="@string/detail_content_title41"/>
+
+                    <TextView
+                        android:id="@+id/txtGroupStation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black"
+                        android:text="@string/list_show_sub_title3"/>
 
                     <TextView
                         android:id="@+id/txtDocno"
-                        android:layout_width="@dimen/list_show_sub_textview_width2"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/black"/>
 
@@ -310,6 +334,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
                 android:gravity="right"
                 android:orientation="vertical">
 

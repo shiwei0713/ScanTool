@@ -17,14 +17,16 @@ public class QrcodeEntity {
     private String productName;
     private String planDate;
     private float quantity;
+    private String scantime;
 
-    public QrcodeEntity(String qrcode,String docNo,String productCode,String productName,String planDate,float quantity){
+    public QrcodeEntity(String qrcode,String docNo,String productCode,String productName,String planDate,float quantity,String scantime){
         this.qrcode = qrcode;
         this.docNo = docNo;
         this.productCode = productCode;
         this.productName = productName;
         this.planDate = planDate;
         this.quantity = quantity;
+        this.scantime = scantime;
     }
 
     @NonNull
@@ -74,6 +76,14 @@ public class QrcodeEntity {
 
     public void setProductName(String productName) {
         this.productName = productName;
+    }
+
+    public String getScantime() {
+        return scantime;
+    }
+
+    public void setScantime(String scantime) {
+        this.scantime = scantime;
     }
 
     public Map<String, Object> getQrcodeListData(){

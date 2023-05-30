@@ -26,6 +26,7 @@ import com.google.zxing.integration.android.IntentResult;
 import com.hz.scantool.adapter.DiffQtyListAdapter;
 import com.hz.scantool.adapter.LabelMergeListAdapter;
 import com.hz.scantool.adapter.LoadingDialog;
+import com.hz.scantool.adapter.MyAlertDialog;
 import com.hz.scantool.adapter.MyToast;
 import com.hz.scantool.database.HzDb;
 import com.hz.scantool.database.MergeLabelEntity;
@@ -427,7 +428,8 @@ public class SubDetailForDiffQtyActivity extends AppCompatActivity {
                     getDbData();
                 }else{
 //                    MyToast.myShow(SubDetailForPackageActivity.this,statusDescription,0,0);
-                    ShowAlertDialog.myShow(SubDetailForDiffQtyActivity.this,statusDescription);
+//                    ShowAlertDialog.myShow(SubDetailForDiffQtyActivity.this,statusDescription);
+                    MyAlertDialog.myShowAlertDialog(SubDetailForDiffQtyActivity.this,"错误信息",statusDescription);
                 }
                 loadingDialog.dismiss();
                 loadingDialog = null;

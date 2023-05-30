@@ -1,0 +1,459 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SetTaskActivity"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/setTaskToolBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/action_style"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
+
+    <ScrollView
+        android:id="@+id/viewBasic"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="5dp"
+            android:layout_marginTop="5dp"
+            android:gravity="left"
+            android:layout_gravity="left"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="left|center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/font14"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:text="@string/content_title1"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:visibility="gone"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textSize="@dimen/font14"
+                    android:textColor="@color/teal_700"
+                    android:text="@string/content_title2"
+                    android:background="@drawable/textview_bg_gray"/>
+
+                <TextView
+                    android:id="@+id/subTaskProductCode"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textSize="@dimen/font14"
+                    android:textColor="@color/teal_700"
+                    android:layout_marginLeft="5dp"
+                    android:background="@drawable/textview_bg_gray"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textSize="@dimen/font14"
+                    android:text="@string/content_title31"
+                    android:textColor="@color/teal_700"
+                    android:background="@drawable/textview_bg_gray"/>
+
+                <TextView
+                    android:id="@+id/setTaskProductName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textSize="@dimen/font14"
+                    android:textColor="@color/teal_700"
+                    android:layout_marginLeft="5dp"
+                    android:background="@drawable/textview_bg_gray"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textSize="@dimen/font14"
+                    android:text="@string/content_title41"
+                    android:textColor="@color/teal_700"
+                    android:background="@drawable/textview_bg_gray"/>
+
+                <TextView
+                    android:id="@+id/setTaskProductModels"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textSize="@dimen/font14"
+                    android:textColor="@color/teal_700"
+                    android:layout_marginLeft="5dp"
+                    android:background="@drawable/textview_bg_gray"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textSize="@dimen/font14"
+                    android:textColor="@color/teal_700"
+                    android:text="@string/content_title6"
+                    android:background="@drawable/textview_bg_gray"/>
+
+                <TextView
+                    android:id="@+id/setTaskProcessId"
+                    android:layout_width="95dp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textSize="@dimen/font14"
+                    android:textColor="@color/teal_700"
+                    android:layout_marginLeft="5dp"
+                    android:background="@drawable/textview_bg_gray"/>
+
+                <TextView
+                    android:id="@+id/setTaskProcess"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textSize="@dimen/font14"
+                    android:textColor="@color/teal_700"
+                    android:layout_marginLeft="5dp"
+                    android:background="@drawable/textview_bg_gray"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:visibility="gone"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textSize="@dimen/font14"
+                    android:textColor="@color/teal_700"
+                    android:text="@string/content_title18"
+                    android:background="@drawable/textview_bg_gray"/>
+
+                <TextView
+                    android:id="@+id/subTaskProductDocno"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textSize="@dimen/font14"
+                    android:textColor="@color/teal_700"
+                    android:layout_marginLeft="5dp"
+                    android:background="@drawable/textview_bg_gray"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textSize="@dimen/font14"
+                    android:textColor="@color/teal_700"
+                    android:text="@string/label_title1"
+                    android:background="@drawable/textview_bg_gray"/>
+
+                <TextView
+                    android:id="@+id/setTaskPlanDocno"
+                    android:layout_width="220dp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textSize="@dimen/font14"
+                    android:textColor="@color/teal_700"
+                    android:layout_marginLeft="5dp"
+                    android:background="@drawable/textview_bg_gray"/>
+
+                <TextView
+                    android:id="@+id/setTaskVersion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textSize="@dimen/font14"
+                    android:textColor="@color/teal_700"
+                    android:layout_marginLeft="5dp"
+                    android:background="@drawable/textview_bg_gray"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textSize="@dimen/font14"
+                    android:textColor="@color/teal_700"
+                    android:text="@string/content_title48"
+                    android:background="@drawable/textview_bg_gray"/>
+
+                <TextView
+                    android:id="@+id/setTaskPlanDate"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textSize="@dimen/font14"
+                    android:textColor="@color/teal_700"
+                    android:layout_marginLeft="5dp"
+                    android:background="@drawable/textview_bg_gray"/>
+
+                <TextView
+                    android:id="@+id/setTaskGroupId"
+                    android:layout_width="75dp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textSize="@dimen/font14"
+                    android:textColor="@color/teal_700"
+                    android:layout_marginLeft="5dp"
+                    android:background="@drawable/textview_bg_gray"/>
+
+                <TextView
+                    android:id="@+id/setTaskGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textSize="@dimen/font14"
+                    android:textColor="@color/teal_700"
+                    android:layout_marginLeft="5dp"
+                    android:background="@drawable/textview_bg_gray"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textSize="@dimen/font14"
+                    android:text="@string/set_task_title3"
+                    android:textColor="@color/teal_700"
+                    android:background="@drawable/textview_bg_gray"/>
+
+                <TextView
+                    android:id="@+id/setTaskDocno"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textSize="@dimen/font14"
+                    android:textColor="@color/teal_700"
+                    android:layout_marginLeft="5dp"
+                    android:background="@drawable/textview_bg_gray"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textSize="@dimen/font14"
+                    android:text="@string/set_task_title2"
+                    android:textColor="@color/teal_700"
+                    android:background="@drawable/textview_bg_gray"/>
+
+                <TextView
+                    android:id="@+id/setTaskQuantity"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textSize="@dimen/font14"
+                    android:textColor="@color/teal_700"
+                    android:layout_marginLeft="5dp"
+                    android:background="@drawable/textview_bg_gray"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textSize="@dimen/font14"
+                    android:textColor="@color/teal_700"
+                    android:text="@string/content_title16"
+                    android:background="@drawable/textview_bg_gray"/>
+
+                <TextView
+                    android:id="@+id/setTaskEmployee"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textSize="@dimen/font14"
+                    android:textColor="@color/master_message"
+                    android:layout_marginLeft="5dp"
+                    android:hint="@string/task_hint1"
+                    android:background="@drawable/textview_bg_gray"/>
+
+                <ImageButton
+                    android:id="@+id/setTaskEmployeeClear"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/clear"
+                    android:layout_marginLeft="-20dp"
+                    android:layout_gravity="center_vertical"
+                    android:visibility="visible"
+                    android:scaleType="centerInside"
+                    android:background="#F0F0F0" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textSize="@dimen/font14"
+                    android:textColor="@color/teal_700"
+                    android:text="@string/content_title37"
+                    android:background="@drawable/textview_bg_gray"/>
+
+                <TextView
+                    android:id="@+id/setTaskDevice"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textSize="@dimen/font14"
+                    android:textColor="@color/master_message"
+                    android:layout_marginLeft="5dp"
+                    android:hint="@string/task_hint2"
+                    android:background="@drawable/textview_bg_gray"/>
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/font14"
+                android:layout_marginTop="15dp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:text="@string/set_task_title1"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:background="@drawable/linearlayout_gray_border"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/setTaskMsg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/font14"
+                    android:textStyle="bold"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:textColor="@color/master_message" />
+
+                <ImageView
+                    android:id="@+id/imageViewResult"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginTop="5dp"
+                android:padding="10dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btnSave"
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:background="@drawable/list_flag_selector"
+                    android:focusable="false"
+                    android:text="@string/dialog_save"
+                    android:textColor="@color/teal_700"
+                    android:textSize="@dimen/list_detail_button"
+                    android:textStyle="normal" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

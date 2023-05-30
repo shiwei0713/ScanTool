@@ -11,7 +11,7 @@ public class ProductEntity {
     private String productDocno;
     private String planDocno;
     private int planSeq;
-    private int version;
+    private String version;
     private String productCode;
     private String processId;
     private String process;
@@ -20,8 +20,12 @@ public class ProductEntity {
     private String lots;
     private float quantity;
     private String planDate;
+    private float badquantity;
+    private String stationDocno;
+    private String connectProcess;
+    private String connectDocno;
 
-    public ProductEntity(String productDocno,String planDocno,int planSeq,int version,String productCode,String processId,String process,String devices,String productUser,String lots,float quantity,String planDate){
+    public ProductEntity(String productDocno, String planDocno, int planSeq, String version, String productCode, String processId, String process, String devices, String productUser, String lots, float quantity, String planDate, float badquantity, String stationDocno,String connectProcess,String connectDocno){
         this.productDocno = productDocno;
         this.planDocno = planDocno;
         this.planSeq = planSeq;
@@ -34,6 +38,10 @@ public class ProductEntity {
         this.lots = lots;
         this.quantity = quantity;
         this.planDate = planDate;
+        this.badquantity = badquantity;
+        this.stationDocno = stationDocno;
+        this.connectProcess = connectProcess;
+        this.connectDocno = connectDocno;
     }
 
     @NonNull
@@ -61,11 +69,11 @@ public class ProductEntity {
         this.planSeq = planSeq;
     }
 
-    public int getVersion() {
+    public String getVersion() {
         return version;
     }
 
-    public void setVersion(int version) {
+    public void setVersion(String version) {
         this.version = version;
     }
 
@@ -131,5 +139,37 @@ public class ProductEntity {
 
     public void setPlanDate(String planDate) {
         this.planDate = planDate;
+    }
+
+    public float getBadquantity() {
+        return badquantity;
+    }
+
+    public void setBadquantity(float badquantity) {
+        this.badquantity = badquantity;
+    }
+
+    public String getStationDocno() {
+        return stationDocno;
+    }
+
+    public void setStationDocno(String stationDocno) {
+        this.stationDocno = stationDocno;
+    }
+
+    public String getConnectProcess() {
+        return connectProcess;
+    }
+
+    public void setConnectProcess(String connectProcess) {
+        this.connectProcess = connectProcess;
+    }
+
+    public String getConnectDocno() {
+        return connectDocno;
+    }
+
+    public void setConnectDocno(String connectDocno) {
+        this.connectDocno = connectDocno;
     }
 }

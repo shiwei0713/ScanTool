@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -16,6 +17,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.hz.scantool.adapter.LoadingDialog;
+import com.hz.scantool.adapter.MyAlertDialog;
 import com.hz.scantool.adapter.MyToast;
 import com.hz.scantool.helper.SharedHelper;
 import com.hz.scantool.helper.T100ServiceHelper;
@@ -261,8 +263,16 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onClick(View v) {
-            Intent intent=new Intent(MainActivity.this,ResetUserActivity.class);
-            startActivity(intent);
+            String strUserName = txtUserName.getText().toString();
+            if(strUserName.equals("")){
+                MyAlertDialog.myShowAlertDialog(MainActivity.this,"错误信息","请输入用户工号");
+            }else {
+                Intent intent=new Intent(MainActivity.this,ResetUserActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("UserCode",strUserName);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
         }
     }
 

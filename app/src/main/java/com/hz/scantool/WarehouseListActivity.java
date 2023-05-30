@@ -26,6 +26,7 @@ import android.widget.TextView;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.hz.scantool.adapter.LoadingDialog;
+import com.hz.scantool.adapter.MyAlertDialog;
 import com.hz.scantool.adapter.MyToast;
 import com.hz.scantool.adapter.SubListAdapter;
 import com.hz.scantool.adapter.WarehouseListAdapter;
@@ -113,6 +114,10 @@ public class WarehouseListActivity extends AppCompatActivity {
         btnFlag2 = findViewById(R.id.btnFlag2);
         progressBar = findViewById(R.id.progressBar);
         warehouseListView = findViewById(R.id.warehouseListView);
+
+        //初始化状态
+        btnFlag1.setSelected(true);
+        btnFlag2.setSelected(false);
 
         //绑定事件
         checkBox1.setOnCheckedChangeListener(new checkClickListener());
@@ -240,7 +245,7 @@ public class WarehouseListActivity extends AppCompatActivity {
         if(qrContent.equals("")||qrContent.isEmpty()){
             MyToast.myShow(context,"条码错误:"+qrContent,0,1);
         }else{
-            getWarehousDetailData(qrContent);
+            getWarehousDetailData(qrContent.trim());
         }
     }
 
@@ -281,9 +286,15 @@ public class WarehouseListActivity extends AppCompatActivity {
                     break;
                 case R.id.btnFlag1:
                     strFlag = "DEPT";
+                    btnFlag1.setSelected(true);
+                    btnFlag2.setSelected(false);
+                    getWarehouseListData();
                     break;
                 case R.id.btnFlag2:
                     strFlag = "SUPP";
+                    btnFlag1.setSelected(false);
+                    btnFlag2.setSelected(true);
+                    getWarehouseListData();
                     break;
             }
         }
@@ -402,6 +413,14 @@ public class WarehouseListActivity extends AppCompatActivity {
      *日期：2022/11/9
      **/
     private void getWarehousDetailData(String qrCode){
+        boolean isCheck = false;
+
+        //显示进度条
+        if(loadingDialog == null){
+            loadingDialog = new LoadingDialog(WarehouseListActivity.this,"数据查询中",R.drawable.dialog_loading);
+            loadingDialog.show();
+        }
+
         if(mapResponseList!=null){
             if(mapResponseList.size()>0){
                 for(int i=0;i<mapResponseList.size();i++){
@@ -412,6 +431,7 @@ public class WarehouseListActivity extends AppCompatActivity {
                         String sStock = (String)mapResponseList.get(i).get("Stock");
                         String sStockId = (String)mapResponseList.get(i).get("StockId");
                         String sPlanDate = (String)mapResponseList.get(i).get("PlanDate");
+                        isCheck = true;
 
                         Intent intent = new Intent(WarehouseListActivity.this,WarehouseDetailActivity.class);
                         Bundle bundle = new Bundle();
@@ -432,5 +452,12 @@ public class WarehouseListActivity extends AppCompatActivity {
         }else{
             MyToast.myShow(WarehouseListActivity.this,"无备料单数据",0,0);
         }
+
+        if(!isCheck){
+            MyAlertDialog.myShowAlertDialog(WarehouseListActivity.this,"错误信息","无备料单数据");
+        }
+
+        loadingDialog.dismiss();
+        loadingDialog = null;
     }
 }

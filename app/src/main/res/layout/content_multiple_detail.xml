@@ -9,13 +9,49 @@
         android:padding="5dp"
         android:orientation="vertical">
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/font14"
-            android:textStyle="bold"
-            android:textColor="@color/black"
-            android:text="@string/content_title13"/>
+            android:gravity="left|center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/list_detail_button"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:text="@string/content_title13"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btnLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="25dp"
+                    android:background="@drawable/button_selector_red"
+                    android:focusable="false"
+                    android:text="@string/multiple_button_title1"
+                    android:textColor="@color/master_loginout"
+                    android:textSize="@dimen/list_detail_button"
+                    android:textStyle="normal" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="3dp"
+            android:background="@color/line"
+            android:orientation="vertical">
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"

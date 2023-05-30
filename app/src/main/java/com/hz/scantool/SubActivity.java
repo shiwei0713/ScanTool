@@ -5,6 +5,9 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
@@ -24,9 +27,11 @@ import com.google.zxing.integration.android.IntentResult;
 import com.hz.scantool.adapter.LoadingDialog;
 import com.hz.scantool.adapter.MyToast;
 import com.hz.scantool.adapter.SubAdapter;
+import com.hz.scantool.adapter.UserTaskListAdapter;
 import com.hz.scantool.dialog.SearchView;
 import com.hz.scantool.helper.T100ServiceHelper;
 import com.hz.scantool.models.UserInfo;
+import com.hz.scantool.myui.MyDecoration;
 
 import org.w3c.dom.Text;
 
@@ -59,8 +64,9 @@ public class SubActivity extends AppCompatActivity {
     private List<Map<String,Object>> mapResponseStatus;
     private ProgressBar progressBar;
     private LoadingDialog loadingDialog;
-    private ListView listView;
-    private SubAdapter subAdapter;
+    private UserTaskListAdapter userTaskListAdapter;
+    private RecyclerView userTaskProcessRecyclerView;
+    private LinearLayoutManager linearLayoutManager;
     private TextView txtLoginout;
     private TextView txtWorktime;
     private Button subAction1,subAction2,subAction3,subAction4;
@@ -79,20 +85,7 @@ public class SubActivity extends AppCompatActivity {
         setWorktime();
         setBtnStyle();
 
-        //获取工具栏
-        Toolbar toolbar=findViewById(R.id.subListToolBar);
-        setSupportActionBar(toolbar);
-
-        //工具栏增加返回按钮和标题显示
-        ActionBar actionBar=getSupportActionBar();
-        if(actionBar!=null){
-            actionBar.setTitle(strTitle);
-            actionBar.setHomeButtonEnabled(true);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
-
         //初始化清单数据
-        strType = "1";
         getSubListData();
     }
 
@@ -147,7 +140,6 @@ public class SubActivity extends AppCompatActivity {
         super.onResume();
 
         //初始化清单数据
-        strType = "1";
         getSubListData();
     }
 
@@ -162,9 +154,22 @@ public class SubActivity extends AppCompatActivity {
         Bundle bundle = intent.getExtras();
         intIndex = bundle.getInt("index");
         strTitle = bundle.getString("title");
+        strType = "8";
     }
 
     private void initView(){
+        //获取工具栏
+        Toolbar toolbar=findViewById(R.id.subListToolBar);
+        setSupportActionBar(toolbar);
+
+        //工具栏增加返回按钮和标题显示
+        ActionBar actionBar=getSupportActionBar();
+        if(actionBar!=null){
+            actionBar.setTitle(strTitle);
+            actionBar.setHomeButtonEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
         txtLoginout = findViewById(R.id.txtLoginout);
         txtWorktime = findViewById(R.id.txtWorktime);
         subAction1 = findViewById(R.id.subAction1);
@@ -172,14 +177,19 @@ public class SubActivity extends AppCompatActivity {
         subAction3 = findViewById(R.id.subAction3);
         subAction4 = findViewById(R.id.subAction4);
         progressBar = findViewById(R.id.progressBar);
-        listView = findViewById(R.id.subView);
+
+        //定义list控件
+        linearLayoutManager = new LinearLayoutManager(this);
+        userTaskProcessRecyclerView = findViewById(R.id.userTaskProcessRecyclerView);
+        userTaskProcessRecyclerView.setLayoutManager(linearLayoutManager);
+        userTaskProcessRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        userTaskProcessRecyclerView.addItemDecoration(new MyDecoration());
 
         txtLoginout.setText("工号:"+UserInfo.getUserId(getApplicationContext()));
         subAction1.setOnClickListener(new queryClickListener());
         subAction2.setOnClickListener(new queryClickListener());
         subAction3.setOnClickListener(new queryClickListener());
         subAction4.setOnClickListener(new queryClickListener());
-        listView.setOnItemClickListener(new listItemClickListener());
 
         //初始化查询
         searchView = (SearchView) findViewById(R.id.searchView);
@@ -209,8 +219,9 @@ public class SubActivity extends AppCompatActivity {
 
         //填充清单
         if(mSearchList.size()>0){
-            subAdapter = new SubAdapter(mSearchList,getApplicationContext(),"CJ");
-            listView.setAdapter(subAdapter);
+//            subAdapter = new SubAdapter(mSearchList,getApplicationContext(),"CJ");
+//            listView.setAdapter(subAdapter);
+            showItemData();
         }
 
     }
@@ -246,6 +257,10 @@ public class SubActivity extends AppCompatActivity {
         }
     }
 
+    /**
+    *描述: 获取班次
+    *日期：2023-05-19
+    **/
     private void setWorktime(){
         long timeCurrentTimeMillis = System.currentTimeMillis();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss",Locale.getDefault());
@@ -291,75 +306,9 @@ public class SubActivity extends AppCompatActivity {
                     startActivity(intent);
                     break;
                 case R.id.subAction4:   //考勤查询
-//                    intent = new Intent(SubActivity.this,QueryStockActivity.class);
-//                    startActivity(intent);
-                    MyToast.myShow(SubActivity.this,"敬请期待",2,0);
+                    intent = new Intent(SubActivity.this,QueryClockActivity.class);
+                    startActivity(intent);
                     break;
-            }
-        }
-    }
-
-    //行单击事件
-    private class listItemClickListener implements AdapterView.OnItemClickListener{
-
-        @Override
-        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-            TextView txtProductName = view.findViewById(R.id.txtProductName);
-            TextView txtPlanDate = view.findViewById(R.id.txtPlanDate);
-            TextView txtProductCode = view.findViewById(R.id.txtProductCode);
-            TextView txtProductModels = view.findViewById(R.id.txtProductModels);
-            TextView txtProcess = view.findViewById(R.id.txtProcess);
-            TextView txtProcessId = view.findViewById(R.id.txtProcessId);
-            TextView txtDevice = view.findViewById(R.id.txtDevice);
-            TextView txtDocno = view.findViewById(R.id.txtDocno);
-            TextView txtQuantity = view.findViewById(R.id.txtQuantity);
-            TextView txtEmployee = view.findViewById(R.id.txtEmployee);
-            TextView txtLots = view.findViewById(R.id.txtLots);
-            TextView txtSubFlag = view.findViewById(R.id.txtSubFlag);
-            TextView txtSubModStatus = view.findViewById(R.id.txtSubModStatus);
-            TextView txtSubOperateCount = view.findViewById(R.id.txtSubOperateCount);
-            TextView txtSubPrintCount = view.findViewById(R.id.txtSubPrintCount);
-            TextView txtVersion = view.findViewById(R.id.txtVersion);
-            TextView txtGroupId = view.findViewById(R.id.txtGroupId);
-            TextView txtProcessEnd = view.findViewById(R.id.txtProcessEnd);
-            TextView txtInputStatus = view.findViewById(R.id.txtInputStatus);
-            TextView txtCheckMaterial = view.findViewById(R.id.txtCheckMaterial);
-            String modStatus = txtSubModStatus.getText().toString();
-            String inputStatus = txtInputStatus.getText().toString();
-            String checkMaterial = txtCheckMaterial.getText().toString();
-            String processEnd = txtProcessEnd.getText().toString();
-
-            if(inputStatus.equals("N")&&processEnd.equals("Y")&&checkMaterial.equals("N")){
-                MyToast.myShow(SubActivity.this,"连线生产只末序需要报工",0,0);
-            }else{
-                Intent intent = new Intent(SubActivity.this,SubDetailForMultipleActivity.class);
-                Bundle bundle=new Bundle();
-                bundle.putString("Flag",txtSubFlag.getText().toString());
-                bundle.putString("ProcessId",txtProcessId.getText().toString());
-                bundle.putString("Process",txtProcess.getText().toString());
-                bundle.putString("Device",txtDevice.getText().toString());
-                bundle.putString("ModStatus",modStatus);
-                bundle.putString("OperateCount",txtSubOperateCount.getText().toString());
-                bundle.putString("PrintCount",txtSubPrintCount.getText().toString());
-                bundle.putString("StartStatus",subAdapter.getItemValue(i,"StartStatus"));
-                bundle.putString("CheckStatus",subAdapter.getItemValue(i,"CheckStatus"));
-                bundle.putString("UpStatus",subAdapter.getItemValue(i,"UpStatus"));
-                bundle.putString("ErrorStartStatus",subAdapter.getItemValue(i,"ErrorStartStatus"));
-                bundle.putString("ErrorStopStatus",subAdapter.getItemValue(i,"ErrorStopStatus"));
-                bundle.putString("Version",txtVersion.getText().toString());
-                bundle.putString("StartTime",subAdapter.getItemValue(i,"StartTime"));
-                bundle.putString("CheckTime",subAdapter.getItemValue(i,"CheckTime"));
-                bundle.putString("UpTime",subAdapter.getItemValue(i,"UpTime"));
-                bundle.putString("ErrorTime",subAdapter.getItemValue(i,"ErrorTime"));
-                bundle.putString("ProductTotal",subAdapter.getItemValue(i,"ProductTotal"));
-                bundle.putString("GroupId",txtGroupId.getText().toString());
-                bundle.putString("ProcessEnd",txtProcessEnd.getText().toString());
-                bundle.putString("ProcessInitId",subAdapter.getItemValue(i,"ProcessInitId"));
-                bundle.putString("ProcessInit",subAdapter.getItemValue(i,"ProcessInit"));
-                bundle.putString("InputStatus",inputStatus);
-                bundle.putString("CheckMaterial",checkMaterial);
-                intent.putExtras(bundle);
-                startActivity(intent);
             }
         }
     }
@@ -389,7 +338,7 @@ public class SubActivity extends AppCompatActivity {
                         "&lt;Document/&gt;\n";
                 String strResponse = t100ServiceHelper.getT100Data(requestBody,webServiceName,getApplicationContext(),"");
                 mapResponseStatus = t100ServiceHelper.getT100StatusData(strResponse);
-                mapResponseList = t100ServiceHelper.getT100JsonProductData(strResponse,"workorder");
+                mapResponseList = t100ServiceHelper.getT100JsonUserTaskData(strResponse,"workorder");
 
                 e.onNext(mapResponseStatus);
                 e.onNext(mapResponseList);
@@ -426,12 +375,80 @@ public class SubActivity extends AppCompatActivity {
             @Override
             public void onComplete() {
                 if(statusCode.equals("0")){
-                    subAdapter = new SubAdapter(mapResponseList,getApplicationContext(),"CJ");
-                    listView.setAdapter(subAdapter);
+                    showItemData();
                 }
 
                 progressBar.setVisibility(View.GONE);
             }
         });
+    }
+
+    /**
+    *描述: 绑定RecyclerView Item数据
+    *日期：2023-05-19
+    **/
+    private void showItemData(){
+        userTaskListAdapter = new UserTaskListAdapter(mapResponseList,getApplicationContext());
+        userTaskProcessRecyclerView.setAdapter(userTaskListAdapter);
+
+        //item点击事件
+        userTaskListAdapter.setOnItemClickListener(new UserTaskListAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View itemView, int position) {
+                TextView txtProcessId = itemView.findViewById(R.id.txtProcessId);    //工序项次
+                TextView txtProcess = itemView.findViewById(R.id.txtProcess);   //工序号
+                TextView txtPlanNo = itemView.findViewById(R.id.txtSubFlag);    //计划单号
+                TextView txtConnectDocno = itemView.findViewById(R.id.txtConnectDocno);  //连线单号
+                TextView txtProcessEnd = itemView.findViewById(R.id.txtProcessEnd); //是否连线
+                TextView txtStationDocno = itemView.findViewById(R.id.txtStationDocno);  //组合单号
+                TextView txtVersion = itemView.findViewById(R.id.txtVersion);
+                TextView txtDevice = itemView.findViewById(R.id.txtDevice); //设备
+                TextView txtGroupStation = itemView.findViewById(R.id.txtGroupStation); //组合
+                TextView txtGroupId = itemView.findViewById(R.id.txtGroupId); //班次
+                TextView txtGroup = itemView.findViewById(R.id.txtGroup); //班次
+
+                String strPlanNo = txtPlanNo.getText().toString();
+                String strVersion = txtVersion.getText().toString();
+                String strProcessId = txtProcessId.getText().toString();
+                String strProcess = txtProcess.getText().toString();
+                String strConnectDocno = txtConnectDocno.getText().toString();
+                String strStationDocno = txtStationDocno.getText().toString();
+                String strProcessEnd = txtProcessEnd.getText().toString();
+                String strDevice = txtDevice.getText().toString();
+                String strGroupStation = txtGroupStation.getText().toString();
+                String strGroupId = txtGroupId.getText().toString();
+                String strGroup = txtGroup.getText().toString();
+                String strOperateCount = userTaskListAdapter.getItemValue(position,"OperateCount");
+                String strPrintCount = userTaskListAdapter.getItemValue(position,"PrintCount");
+                String strDocType = userTaskListAdapter.getItemValue(position,"DocType");
+
+                showTaskDetail(strPlanNo,strVersion,strProcessId,strProcess,strConnectDocno,strStationDocno,strProcessEnd,strDevice,strOperateCount,strPrintCount,strGroupStation,strGroupId,strGroup,strDocType);
+            }
+        });
+    }
+
+    /**
+    *描述: 显示任务细节数据
+    *日期：2023-05-19
+    **/
+    private void showTaskDetail(String strPlanNo,String strVersion,String strProcessId,String strProcess,String strConnectDocno,String strStationDocno,String strProcessEnd,String strDevice,String strOperateCount,String strPrintCount,String strGroupStation,String strGroupId,String strGroup,String strDocType){
+        Intent intent = new Intent(SubActivity.this,SubDetailForMultipleActivity.class);
+        Bundle bundle=new Bundle();
+        bundle.putString("PlanNo",strPlanNo);
+        bundle.putString("Version",strVersion);
+        bundle.putString("ProcessId",strProcessId);
+        bundle.putString("Process",strProcess);
+        bundle.putString("ConnectDocno",strConnectDocno);
+        bundle.putString("StationDocno",strStationDocno);
+        bundle.putString("ProcessEnd",strProcessEnd);
+        bundle.putString("Device",strDevice);
+        bundle.putString("GroupStation",strGroupStation);
+        bundle.putString("GroupId",strGroupId);
+        bundle.putString("Group",strGroup);
+        bundle.putString("OperateCount",strOperateCount);
+        bundle.putString("PrintCount",strPrintCount);
+        bundle.putString("DocType",strDocType);
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
 }

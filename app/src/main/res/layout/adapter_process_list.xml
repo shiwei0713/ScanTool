@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@drawable/list_item_styel"
     android:descendantFocusability="blocksDescendants"
     android:gravity="center_vertical"
@@ -10,9 +10,24 @@
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
         android:padding="5dp">
+
+        <Button
+            android:id="@+id/listBtnClear"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginBottom="10dp"
+            android:textSize="@dimen/list_detail_button"/>
+
+        <TextView
+            android:id="@+id/txtAdapterSeq"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/font14"
+            android:layout_marginBottom="5dp"/>
 
         <CheckBox
             android:id="@+id/checkBoxSel"
@@ -43,18 +58,27 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/font14"
+                    android:textColor="@color/black"
+                    android:text="@string/set_process_label3"/>
+
+                <TextView
                     android:id="@+id/txtAdapterProcessId"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/font14"
-                    android:layout_marginLeft="10dp"/>
+                    android:textColor="@color/black"
+                    android:layout_marginLeft="5dp"/>
 
                 <TextView
                     android:id="@+id/txtAdapterProcess"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/font14"
-                    android:layout_marginLeft="10dp"/>
+                    android:textColor="@color/black"
+                    android:layout_marginLeft="5dp"/>
 
             </LinearLayout>
 
@@ -69,6 +93,7 @@
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/font14"
                     android:text="@string/set_preprocess_label"
+                    android:textColor="@color/black"
                     android:layout_marginRight="5dp"/>
 
                 <TextView
@@ -76,6 +101,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/font14"
+                    android:textColor="@color/black"
                     android:layout_marginRight="10dp"/>
 
             </LinearLayout>
@@ -88,19 +114,139 @@
             android:orientation="horizontal"
             android:padding="5dp">
 
+            <Button
+                android:id="@+id/listBtnSetEmployee"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/list_button_size"
+                android:background="@drawable/button_selector_red"
+                android:textColor="@color/master_loginout"
+                android:textStyle="normal"
+                android:focusable="false"
+                android:textSize="@dimen/list_detail_button"
+                android:text="@string/set_process_button2"/>
+
             <TextView
                 android:id="@+id/txtAdapterEmployee"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/font14"
-                android:layout_marginLeft="10dp"/>
+                android:textColor="@color/black"
+                android:layout_marginLeft="5dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="5dp">
+
+            <Button
+                android:id="@+id/listBtnSetDevice"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/list_button_size"
+                android:background="@drawable/button_selector_red"
+                android:textColor="@color/master_loginout"
+                android:textStyle="normal"
+                android:focusable="false"
+                android:textSize="@dimen/list_detail_button"
+                android:text="@string/set_process_button3"/>
 
             <TextView
                 android:id="@+id/txtAdapterDevices"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/font14"
-                android:layout_marginLeft="10dp"/>
+                android:textColor="@color/black"
+                android:layout_marginLeft="5dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/line"
+            android:orientation="horizontal">
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:padding="3dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/detail_content_title41"/>
+
+                    <TextView
+                        android:id="@+id/txtGroupStation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/list_show_sub_title3"/>
+
+                    <TextView
+                        android:id="@+id/txtDocno"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/list_show_sub_title4"/>
+
+                    <TextView
+                        android:id="@+id/txtPlanNo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="_"/>
+
+                    <TextView
+                        android:id="@+id/txtVersion"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:textColor="@color/teal_700"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
 
         </LinearLayout>
 

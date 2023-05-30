@@ -21,7 +21,7 @@ public interface QrcodeDao {
     @Query("delete from QrcodeEntity where qrcode=:qrcode ")
     void deleteQrcode(String qrcode);
 
-    @Query("select * from QrcodeEntity")
+    @Query("select * from QrcodeEntity order by scantime desc")
     List<QrcodeEntity> getAll();
 
     @Query("select distinct docNo from QrcodeEntity")

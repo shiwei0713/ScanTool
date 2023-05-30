@@ -21,6 +21,9 @@
     <string name="master_action6">销售出货</string>
     <string name="master_action7">生产协同</string>
     <string name="master_action8">月末盘点</string>
+    <string name="master_action9">区域管理</string>
+    <string name="master_action10">查询报表</string>
+    <string name="master_action11">零件图示</string>
     <string name="master_message_title">公告</string>
     <string name="master_message_content">欢迎使用华滋东江智能制造系统，系统异常请咨询信息室：\n\u2000\u2000联系人：施巍\n\u2000\u2000联系电话：13164661960</string>
     <string name="list_task1">总数:</string>
@@ -105,6 +108,8 @@
     <string name="tab_product21">遗失补打</string>
     <string name="tab_product22">生产上料</string>
     <string name="tab_product23">打印机</string>
+    <string name="tab_product24">材料标签</string>
+    <string name="tab_product25">卷料确认</string>
     <string name="item_title_product_code">料件编码:</string>
     <string name="item_title_product_name">品名:</string>
     <string name="item_title_process">工序:</string>
@@ -150,6 +155,7 @@
     <string name="listitem_title7">QPA</string>
     <string name="listitem_title8">日期</string>
     <string name="listitem_title9">数量</string>
+    <string name="listitem_title10">上料人员</string>
     <string name="check_stock_btn">设置</string>
     <string name="check_stock_query">查询结果</string>
     <string name="check_stock_get">盘点开始</string>
@@ -166,8 +172,10 @@
     <string name="detail_content_title1">料件编码:</string>
     <string name="detail_content_title2">零件号:</string>
     <string name="detail_content_title21">零件名:</string>
-    <string name="detail_content_title3">工序:</string>
+    <string name="detail_content_title3">序号:</string>
+    <string name="detail_content_title39">工序:</string>
     <string name="detail_content_title4">设备:</string>
+    <string name="detail_content_title41">组合:</string>
     <string name="detail_content_title5">开始日期:</string>
     <string name="detail_content_title6">结束日期:</string>
     <string name="detail_content_title7">检验数量:</string>
@@ -199,6 +207,7 @@
     <string name="detail_content_title32">已扫箱数:</string>
     <string name="detail_content_title33">容器:</string>
     <string name="detail_content_title34">班次:</string>
+    <string name="detail_content_title35">组合:</string>
     <string name="content_title1">基础信息</string>
     <string name="content_title2">料件编码</string>
     <string name="content_title3">品名</string>
@@ -308,9 +317,9 @@
     <string name="sub_detail_plandate">需求日期:</string>
     <string name="sub_detail_position">送货位置:</string>
     <string name="sub_detail_docno">工单单号:</string>
-    <string name="hint_quantity">请输入数量</string>
-    <string name="hint_ng_quantity">请输入不良数量</string>
-    <string name="hint_bad_quantity">请输入废品数量</string>
+    <string name="hint_quantity">请输入良品数</string>
+    <string name="hint_ng_quantity">请输入不良数</string>
+    <string name="hint_bad_quantity">请输入废品数</string>
     <string name="hint_hours">请输入时长</string>
     <string name="hint_material">请输入条码</string>
     <string name="hint_query">请输入异常人员工号</string>
@@ -421,14 +430,214 @@
     <string name="sub_detail_multiple_title2">当前打印:</string>
     <string name="sub_detail_multiple_title3">当前状态:</string>
     <string name="sub_detail_multiple_title4">计划单号:</string>
-    <string name="sub_detail_multiple_title5">Ver:</string>
+    <string name="sub_detail_multiple_title41">计划:</string>
+    <string name="sub_detail_multiple_title5">版本:</string>
     <string name="sub_detail_multiple_title6">开始生产:</string>
     <string name="sub_detail_multiple_title7">报首检:</string>
     <string name="sub_detail_multiple_title8">上料检核:</string>
     <string name="sub_detail_multiple_title9">异常时间:</string>
+    <string name="sub_detail_multiple_title10">工位:</string>
+    <string name="sub_detail_multiple_title11">班次:</string>
+    <string name="sub_detail_multiple_title12">连线:</string>
+    <string name="sub_detail_multiple_title13">组合:</string>
+    <string name="sub_detail_multiple_hint">请点击扫描工位码</string>
     <string name="title_printer_server">服务器IP:</string>
     <string name="title_devices">设备编号:</string>
     <string name="button_restart">重启设备</string>
+    <!--    上料检核-->
+    <string name="product_material_title1">料号</string>
+    <string name="product_material_title2">工序</string>
+    <string name="product_material_title3">计划</string>
+    <string name="product_material_title4">设备</string>
+    <string name="product_material_listitem_title1">料号</string>
+    <!--    一般任务派工设置-->
+    <string name="set_task_title">一般任务</string>
+    <string name="set_task_title1">状态信息</string>
+    <string name="set_task_title2">计划量</string>
+    <string name="set_task_title3">工单单号</string>
+    <string name="set_task_button_title1">启用</string>
+    <string name="set_task_button_title2">中止</string>
+    <!--    组合任务派工设置人员-->
+    <string name="set_station_title">组合任务</string>
+    <string name="set_station_title1">组合标识</string>
+    <string name="set_station_title2">组合单号</string>
+    <string name="set_station_title3">设备编号</string>
+    <string name="set_station_title4">计划单号</string>
+    <string name="set_station_title5">任务清单</string>
+    <string name="set_station_button_title1">单开</string>
+    <string name="set_station_button_title2">启用</string>
+    <string name="set_station_button_title3">停用</string>
+    <!--    连线任务设置-->
+    <string name="set_process_title">连线任务</string>
+    <string name="set_process_button_title1">启用任务</string>
+    <string name="set_process_button_title2">中止任务</string>
+    <string name="set_process_button_title3">生成新任务</string>
+    <string name="set_process_text_title1">批量人员</string>
+    <string name="set_process_text_title2">批量设备</string>
+    <!--    PQC检验,sub_quality_check_detail-->
+    <string name="check_detail_button_title1">良品</string>
+    <string name="check_detail_button_title2">不良品</string>
+    <string name="check_detail_button_title3">废品</string>
+    <!--    工序报工-->
+    <string name="multiple_label_title1">良:</string>
+    <string name="multiple_label_title2">废:</string>
+    <string name="multiple_button_title1">标签信息</string>
+    <string name="multiple_product_label_title1">显示未确认</string>
+    <string name="multiple_product_label_title2">显示所有</string>
+    <string name="multiple_product_label_title3">显示当前</string>
+    <string name="multiple_product_label_title4">计划信息</string>
+    <string name="multiple_product_button_title1">打印</string>
+    <!--    模具安装-->
+    <string name="model_button_title1">模具安装</string>
+    <string name="model_button_title2">卷料上料</string>
+    <string name="model_content_label_title1">工单单号:</string>
+    <string name="model_material_content_title">上料信息</string>
+    <string name="model_content_label_title2">连线生产:</string>
+    <string name="model_material_content_label_title1">料号</string>
+    <string name="model_material_content_label_title2">牌号</string>
+    <string name="model_material_content_label_title3">尺寸</string>
+    <string name="model_material_content_label_title4">工序</string>
+    <string name="model_material_content_label_title5">设备</string>
+    <string name="model_material_content_label_title6">数量</string>
+    <string name="model_material_content_label_title7">上料时间</string>
+    <string name="model_material_content_label_title8">上料人员</string>
+    <string name="model_material_content_label_title9">计划单号</string>
+    <string name="model_material_content_label_title10">至</string>
+    <!--    工序报工-->
+    <string name="detail_button_title1">开始换卷</string>
+    <string name="detail_button_title2">结束换卷</string>
+    <!--    原材料标签补打-->
+    <string name="print_material_label_textview_title1">重量</string>
+    <string name="print_material_label_textview_title2">材料编号</string>
+    <string name="print_material_label_textview_title3">材料牌号</string>
+    <string name="print_material_label_textview_title4">材料尺寸</string>
+    <string name="print_material_label_textview_title5">零件编号</string>
+    <string name="print_material_label_textview_title6">零件号</string>
+    <string name="print_material_label_textview_title7">零件名</string>
+    <string name="print_material_label_textview_title8">QPA</string>
+    <!--    标签信息追踪-->
+    <string name="query_label_title1">标签信息</string>
+    <string name="query_label_title2">状态信息</string>
+    <string name="query_label_textview_title1">条码</string>
+    <string name="query_label_textview_title2">工序</string>
+    <string name="query_label_textview_title3">设备</string>
+    <string name="query_label_textview_title4">数量</string>
+    <string name="query_label_textview_title5">状态</string>
+    <string name="query_label_textview_title6">料号</string>
+    <string name="query_label_textview_title7">零件</string>
+    <string name="query_label_textview_title8">名称</string>
+    <string name="query_label_hint1">请输入条码编号</string>
+    <!--    任务列表list_show_sub-->
+    <string name="list_show_sub_title1">料编:</string>
+    <string name="list_show_sub_title2">零件:</string>
+    <string name="list_show_sub_title3">工单:</string>
+    <string name="list_show_sub_title4">计划:</string>
+    <string name="list_show_sub_title5">连线:</string>
+    <string name="list_show_sub_title6">单号:</string>
+    <string name="list_show_sub_title7">版本:</string>
+    <!--    查询报表-->
+    <string name="report_button_title1">区域库存查询</string>
+    <string name="report_button_title2">打卡明细查询</string>
+    <string name="report_button_title3">标签追踪查询</string>
+    <string name="report_button_title4">报工数据查询</string>
+    <string name="query_data_textview_title1">零件</string>
+    <string name="query_data_textview_title2">工序</string>
+    <string name="query_data_textview_title3">设备</string>
+    <string name="query_data_textview_title4">日期</string>
+    <string name="query_data_textview_title5">人员</string>
+    <string name="query_data_textview_title6">部门</string>
+    <string name="query_data_editview_hint1">请输入零件号</string>
+    <string name="query_data_editview_hint2">请输入工序号</string>
+    <string name="query_data_editview_hint3">请输入设备号</string>
+    <string name="query_data_editview_hint4">开始日期</string>
+    <string name="query_data_editview_hint5">截至日期</string>
+    <string name="query_data_editview_hint6">请输入工号</string>
+    <string name="query_data_editview_hint7">请输入部门</string>
+    <string name="query_data_title1">库存明细</string>
+    <string name="query_data_button_title1">查询</string>
+    <string name="query_data_button_title2">清除</string>
+    <string name="query_data_button_title3">线边</string>
+    <string name="query_data_button_title4">半成品</string>
+    <string name="query_data_button_title5">成品</string>
+    <string name="query_data_list_title1">料件:</string>
+    <string name="query_data_list_title2">名称:</string>
+    <string name="query_data_list_title3">区域:</string>
+    <string name="query_data_list_title4">工序:</string>
+    <string name="query_data_list_title5">设备:</string>
+    <string name="query_data_list_title6">时间:</string>
+    <string name="query_data_list_title7">至</string>
+    <string name="query_data_list_title8">异常:</string>
+    <string name="query_data_list_title9">卷料:</string>
+    <string name="query_data_list_title10">计划:</string>
+    <string name="query_data_list_title11">良品:</string>
+    <string name="query_data_list_title12">废品:</string>
+    <string name="query_data_list_title13">员工:</string>
+    <!--    标签确认-->
+    <string name="check_label_title1">标签确认</string>
+    <string name="check_label_title2">区域信息</string>
+    <string name="check_label_title3">标签信息</string>
+    <string name="check_label_textview_title1">存放区域</string>
+    <string name="check_label_textview_title2">条码编号</string>
+    <string name="check_label_textview_hint1">请输入条码编号</string>
+    <string name="check_label_button_title1">关闭</string>
+    <string name="check_label_button_title2">确认</string>
+    <string name="check_label_button_title3">扫描区域</string>
+    <!--    区域管理-->
+    <string name="produc_area_title1">区域信息</string>
+    <string name="produc_area_button_title1">保存</string>
+    <string name="produc_area_button_title2">关闭</string>
+    <string name="produc_area_detail_content_title1">零件信息</string>
+    <string name="produc_area_detail_content_label1">料件编码:</string>
+    <string name="produc_area_detail_content_label2">零件号:</string>
+    <string name="produc_area_detail_content_label3">零件名:</string>
+    <string name="produc_area_detail_content_label4">总数量:</string>
+    <string name="produc_area_detail_content_label5">工序:</string>
+    <string name="produc_area_detail_content_label6">设备:</string>
+    <string name="produc_area_detail_content_label7">操作工:</string>
+    <string name="produc_area_detail_content_label8">当前量:</string>
+    <string name="produc_area_detail_content_label9">条码编号:</string>
+    <string name="produc_area_detail_content_label10">总数量:</string>
+    <string name="produc_area_detail_content_label11">总箱数:</string>
+    <string name="produc_area_tool_title1">扫描模式</string>
+    <string name="produc_area_tool_title2">清除模式</string>
+    <!--    修改密码-->
+    <string name="reset_user_title">修改密码</string>
+    <string name="reset_user_label1">新密码:</string>
+    <string name="reset_user_label2">确认密码:</string>
+    <string name="reset_user_label3">旧密码:</string>
+    <string name="reset_user_button1">保存</string>
+    <string name="reset_user_button2">取消</string>
+    <string name="reset_user_hint">请输入新密码</string>
+    <string name="reset_user_hint1">请输入旧密码</string>
+    <!--    自定义dialog-->
+    <string name="free_dialog_btn_title1">确定</string>
+    <string name="free_dialog_btn_title2">取消</string>
+    <string name="password_dialog_label1">旧密码:</string>
+    <string name="password_dialog_label2">新密码:</string>
+    <string name="password_dialog_label3">确认密码:</string>
+    <string name="input_dialog_label1">数量:</string>
+    <string name="input_dialog_button1">1</string>
+    <string name="input_dialog_button2">2</string>
+    <string name="input_dialog_button3">3</string>
+    <string name="input_dialog_button4">4</string>
+    <string name="input_dialog_button5">5</string>
+    <string name="input_dialog_button6">6</string>
+    <string name="input_dialog_button7">7</string>
+    <string name="input_dialog_button8">8</string>
+    <string name="input_dialog_button9">9</string>
+    <string name="input_dialog_button0">0</string>
+    <string name="input_dialog_button_del">删除</string>
+    <!--    人员考勤-->
+    <string name="clock_title">个人考勤</string>
+    <string name="clock_list_title1">部门</string>
+    <string name="clock_list_title2">卡机</string>
+    <string name="clock_list_title3">星期</string>
+    <!--    任务指派-->
+    <string name="label_title1">计划单号</string>
+    <string name="task_label_title2">组合标识</string>
+    <string name="task_label_title3">组合单号</string>
+    <string name="task_hint1">请选择人员</string>
+    <string name="task_hint2">请选择设备</string>
     <!--    仓库收发料-->
     <string name="warehous_list_label1">部门</string>
     <string name="warehous_list_hint1">请输入领退料部门</string>
@@ -449,6 +658,7 @@
     <string name="warehous_detail_label4">收料仓库</string>
     <string name="warehous_detail_label5">总量</string>
     <string name="warehous_detail_label6">总箱数</string>
+    <string name="warehous_detail_label7">送货区域</string>
     <string name="warehous_detail_button1">保存</string>
     <string name="warehous_detail_button2">清除</string>
     <string name="warehous_adapter_detail_label1">料号</string>
@@ -491,6 +701,7 @@
     <string name="multiple_detail_label2">零件:</string>
     <string name="multiple_detail_label3">工单:</string>
     <string name="multiple_detail_label4">包装量:</string>
+    <string name="multiple_detail_label5">计划:</string>
     <!--    车间盘点-->
     <string name="check_product_title">盘点信息</string>
     <string name="check_product_label1">实盘量:</string>
@@ -498,9 +709,14 @@
     <string name="check_product_label3">材料牌号:</string>
     <string name="check_product_label4">材料尺寸:</string>
     <string name="check_product_label5">条码编号:</string>
+    <string name="check_product_label6">工序:</string>
+    <string name="check_product_label7">盘点区域:</string>
     <string name="check_product_button_title">选择</string>
     <string name="check_product_button_title2">保存</string>
+    <string name="check_product_button_title3">清除</string>
     <string name="check_product_hint">请输入实盘量</string>
+    <string name="check_product_tool_title1">盘点模式</string>
+    <string name="check_product_tool_title2">清除模式</string>
     <!--   余料标签补打-->
     <string name="surplus_title">余料标签</string>
     <string name="surplus_query_title">零件号</string>
@@ -534,8 +750,14 @@
     <!--  连线生产设置  -->
     <string name="set_process_label1">全选</string>
     <string name="set_process_label2">取消</string>
+    <string name="set_process_label3">当前:</string>
+    <string name="set_process_label4">人员:</string>
+    <string name="set_process_label5">设备:</string>
     <string name="set_preprocess_label">上序:</string>
     <string name="set_process_button1">更新</string>
+    <string name="set_process_button2">人员</string>
+    <string name="set_process_button3">设备</string>
+    <string name="set_process_button4">删除</string>
     <!--  备货尾数标签打印 -->
     <string name="sale_query_title1">客户</string>
     <string name="sale_query_hint1">请输入客户</string>
@@ -561,12 +783,14 @@
     <string name="sale_list_title11">回仓标签</string>
     <string name="sale_list_hint_quantity">请输入数量</string>
     <!--  零件图查看  -->
-    <string name="show_material_label1">零件号:</string>
+    <string name="show_material_label1">零件:</string>
     <string name="show_material_label2">零件图</string>
     <string name="show_material_label3">相似件</string>
     <string name="show_material_label4">工艺图</string>
     <string name="show_material_label5">URL:</string>
+    <string name="show_material_label7">工序:</string>
     <string name="show_material_label6">操作:双指伸缩放大缩小;单指左右滑动翻页</string>
+    <string name="show_material_hint1">请选择工序</string>
     <!--  蓝牙打印机打印页面  -->
     <string name="blue_label">蓝牙设备</string>
     <string name="usb_label">USB设备</string>

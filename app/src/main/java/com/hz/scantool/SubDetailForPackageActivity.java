@@ -28,6 +28,7 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.hz.scantool.adapter.LabelMergeListAdapter;
 import com.hz.scantool.adapter.LoadingDialog;
+import com.hz.scantool.adapter.MyAlertDialog;
 import com.hz.scantool.adapter.MyToast;
 import com.hz.scantool.adapter.PrintLabelListAdapter;
 import com.hz.scantool.database.HzDb;
@@ -413,7 +414,8 @@ public class SubDetailForPackageActivity extends AppCompatActivity {
                     getDbData();
                 }else{
 //                    MyToast.myShow(SubDetailForPackageActivity.this,statusDescription,0,0);
-                    ShowAlertDialog.myShow(SubDetailForPackageActivity.this,statusDescription);
+//                    ShowAlertDialog.myShow(SubDetailForPackageActivity.this,statusDescription);
+                    MyAlertDialog.myShowAlertDialog(SubDetailForPackageActivity.this,"错误信息",statusDescription);
                 }
                 loadingDialog.dismiss();
                 loadingDialog = null;

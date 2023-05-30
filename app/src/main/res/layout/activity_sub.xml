@@ -24,13 +24,13 @@
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_marginTop="10dp"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="10dp"
             app:srcCompat="@drawable/user" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="5dp"
             android:padding="5dp"
             android:orientation="vertical">
 
@@ -64,6 +64,43 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="3dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/subAction1"
+                android:layout_width="70dp"
+                android:layout_height="35dp"
+                android:textColor="@color/teal_700"/>
+
+            <Button
+                android:id="@+id/subAction2"
+                android:layout_width="70dp"
+                android:layout_height="35dp"
+                android:textColor="@color/teal_700"
+                android:layout_marginLeft="7dp"/>
+
+            <Button
+                android:id="@+id/subAction3"
+                android:layout_width="70dp"
+                android:layout_height="35dp"
+                android:textColor="@color/teal_700"
+                android:layout_marginLeft="7dp"/>
+
+            <Button
+                android:id="@+id/subAction4"
+                android:layout_width="70dp"
+                android:layout_height="35dp"
+                android:textColor="@color/teal_700"
+                android:visibility="gone"
+                android:layout_marginLeft="7dp"/>
+
+        </LinearLayout>
+
     </LinearLayout>
 
     <LinearLayout
@@ -73,42 +110,6 @@
         android:layout_marginBottom="5dp"
         android:background="@color/line"
         android:orientation="vertical">
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="3dp"
-        android:gravity="center"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/subAction1"
-            android:layout_width="70dp"
-            android:layout_height="37dp"
-            android:textColor="@color/teal_700"/>
-
-        <Button
-            android:id="@+id/subAction2"
-            android:layout_width="70dp"
-            android:layout_height="37dp"
-            android:textColor="@color/teal_700"
-            android:layout_marginLeft="7dp"/>
-
-        <Button
-            android:id="@+id/subAction3"
-            android:layout_width="70dp"
-            android:layout_height="37dp"
-            android:textColor="@color/teal_700"
-            android:layout_marginLeft="7dp"/>
-
-        <Button
-            android:id="@+id/subAction4"
-            android:layout_width="70dp"
-            android:layout_height="37dp"
-            android:textColor="@color/teal_700"
-            android:layout_marginLeft="7dp"/>
-
     </LinearLayout>
 
     <com.hz.scantool.dialog.SearchView
@@ -133,12 +134,20 @@
         android:visibility="gone"
         android:max="100"/>
 
-    <ListView
-        android:id="@+id/subView"
+<!--    <ListView-->
+<!--        android:id="@+id/subView"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:divider="@color/white"-->
+<!--        android:dividerHeight="5dp"-->
+<!--        android:padding="5dp" />-->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/userTaskProcessRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:divider="@color/white"
-        android:dividerHeight="5dp"
-        android:padding="5dp" />
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:padding="5dp"
+        android:scrollbars="vertical"/>
 
 </LinearLayout>

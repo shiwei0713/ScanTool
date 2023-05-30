@@ -94,8 +94,8 @@ public class EmployeeReportActivity extends AppCompatActivity {
         btnQuery = findViewById(R.id.btnQuery);
 
         //初始化日期
-        inputQuerySdate.setText(setQueryDate(0));
-        inputQueryEdate.setText(setQueryDate(1));
+        inputQuerySdate.setText(setQueryDate(-6));
+        inputQueryEdate.setText(setQueryDate(0));
 
         //ListView增加表头
         View header = getLayoutInflater().inflate(R.layout.list_query_product_head,null);

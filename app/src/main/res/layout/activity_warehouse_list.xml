@@ -159,7 +159,7 @@
                     android:layout_width="90dp"
                     android:layout_height="25dp"
                     android:background="@drawable/button_selector_red"
-                    android:textColor="@color/master_loginout"
+                    android:textColor="@color/master_message"
                     android:focusable="false"
                     android:text="@string/warehous_list_button2"
                     android:layout_marginLeft="10dp"

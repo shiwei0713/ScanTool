@@ -53,15 +53,15 @@ public class SubQualityCheckDetailActivity extends AppCompatActivity {
     private static final String SCANACTION="com.android.server.scannerservice.broadcast";
 
     private String strTitle;
-    private String strProductName,strPlanDate,strProductCode,strProductModels,strProcessId,strProcess,strDevice,strDocno,strProductDocno,strPlanno;
+    private String strProductName,strPlanDate,strProductCode,strProductModels,strProcessId,strProcess,strDevice,strDocno,strProductDocno,strPlanno,strQcStatus;
     private String strQuantity,strBadQuantity,strNgQuantity;
     private String strLots,strVersion,strUnit,strSeq,strSeq1,strStatus,strAttribute,strQrcode;
 
     private TextView checkDetailProductCode,checkDetailProductName,checkDetailProductModels,checkDetailProcessId,checkDetailProcess,checkDetailLots;
     private TextView checkDetailDocno,checkDetailQuantity,checkDetailUnit,checkDetailAttribute,checkDetailPlanno,checkDetailVersion,checkDetailQrcode;
     private EditText checkDetailNgQuantity,checkDetailBadQuantity;
-    private ImageView imageViewResult;
-    private Button btncheckDetailCancel,btncheckDetailFinish;
+    private ImageView imageViewResult,imageViewQcResult;
+    private Button btncheckDetailCancel,btncheckDetailFinish,btncheckDetailWaste;
 
     private String statusCode;
     private String statusDescription;
@@ -129,6 +129,7 @@ public class SubQualityCheckDetailActivity extends AppCompatActivity {
         strSeq = bundle.getString("Seq");
         strSeq1 = bundle.getString("Seq1");
         strStatus = bundle.getString("Status");
+        strQcStatus = bundle.getString("QcStatus");
         strAttribute = bundle.getString("Attribute");
         strPlanno = bundle.getString("Planno");
         strProductDocno = bundle.getString("ProductDocno");
@@ -168,7 +169,9 @@ public class SubQualityCheckDetailActivity extends AppCompatActivity {
         checkDetailQrcode = findViewById(R.id.checkDetailQrcode);
         btncheckDetailCancel = findViewById(R.id.btncheckDetailCancel);
         btncheckDetailFinish = findViewById(R.id.btncheckDetailFinish);
+        btncheckDetailWaste = findViewById(R.id.btncheckDetailWaste);
         imageViewResult = findViewById(R.id.imageViewResult);
+        imageViewQcResult = findViewById(R.id.imageViewQcResult);
 
         //初始值
         checkDetailProductName.setText(strProductName);
@@ -184,12 +187,31 @@ public class SubQualityCheckDetailActivity extends AppCompatActivity {
         checkDetailQrcode.setText(strQrcode);
         checkDetailPlanno.setText(strPlanno);
         checkDetailVersion.setText(strVersion);
+        checkDetailBadQuantity.setText(strBadQuantity);
 
-        if(strStatus.equals("K")){
-//            checkDetailNgQuantity.setEnabled(false);
-//            checkDetailBadQuantity.setEnabled(false);
-//            btncheckDetailFinish.setEnabled(false);
-//            btncheckDetailCancel.setEnabled(false);
+        //质量状态
+        if(strQcStatus.equals("W")){
+            //废品
+            imageViewQcResult.setImageDrawable(getResources().getDrawable(R.drawable.pqc_detail_waste));
+            btncheckDetailFinish.setEnabled(false);
+            btncheckDetailCancel.setEnabled(false);
+            btncheckDetailWaste.setEnabled(true);
+        }else{
+            //良品
+            imageViewQcResult.setImageDrawable(getResources().getDrawable(R.drawable.pqc_detail_ok));
+            btncheckDetailFinish.setEnabled(true);
+            btncheckDetailCancel.setEnabled(true);
+            btncheckDetailWaste.setEnabled(false);
+        }
+
+        //处理状态
+        String sStatus = strStatus.substring(0,1);
+        if(sStatus.equals("K")){
+            checkDetailNgQuantity.setEnabled(false);
+            checkDetailBadQuantity.setEnabled(false);
+            btncheckDetailFinish.setEnabled(false);
+            btncheckDetailCancel.setEnabled(false);
+            btncheckDetailWaste.setEnabled(false);
             if(strNgQuantity.equals("")||strNgQuantity.isEmpty()){
                 strNgQuantity = "0";
             }
@@ -197,18 +219,19 @@ public class SubQualityCheckDetailActivity extends AppCompatActivity {
                 strBadQuantity = "0";
             }
             checkDetailNgQuantity.setText(strNgQuantity);
-            checkDetailBadQuantity.setText(strBadQuantity);
             imageViewResult.setImageDrawable(getResources().getDrawable(R.drawable.detail_status_ok));
         }else{
-//            checkDetailNgQuantity.setEnabled(true);
-//            checkDetailBadQuantity.setEnabled(true);
-//            btncheckDetailFinish.setEnabled(true);
-//            btncheckDetailCancel.setEnabled(true);
+            checkDetailNgQuantity.setEnabled(true);
+            checkDetailBadQuantity.setEnabled(true);
+            btncheckDetailFinish.setEnabled(true);
+            btncheckDetailCancel.setEnabled(true);
+            btncheckDetailWaste.setEnabled(true);
             imageViewResult.setImageDrawable(getResources().getDrawable(R.drawable.detail_status_deal));
         }
 
         btncheckDetailFinish.setOnClickListener(new commandClickListener());
         btncheckDetailCancel.setOnClickListener(new commandClickListener());
+        btncheckDetailWaste.setOnClickListener(new commandClickListener());
     }
 
     @Override
@@ -294,14 +317,23 @@ public class SubQualityCheckDetailActivity extends AppCompatActivity {
                         MyToast.myShow(SubQualityCheckDetailActivity.this,"计划信息和工序不可为空",2,0);
                     }
                     break;
-                case R.id.btncheckDetailCancel://异常
-//                    strErrorLots = txtMultipleErrorCount.getText().toString();
-//                    saveMultipleToT100("insert","13","S","");
+                case R.id.btncheckDetailCancel://不良品
                     if(checkDocno()){
                         if(checkQty("NG")){
                             updatePqcData("KO");
                         }else{
-                            MyToast.myShow(SubQualityCheckDetailActivity.this,"异常产品，不良品和废品量不可为0或不可大于报工量",2,0);
+                            MyToast.myShow(SubQualityCheckDetailActivity.this,"不良品量不可为0或不可大于报工量,废品量应为0",2,0);
+                        }
+                    }else{
+                        MyToast.myShow(SubQualityCheckDetailActivity.this,"计划信息和工序不可为空",2,0);
+                    }
+                    break;
+                case R.id.btncheckDetailWaste: //废品
+                    if(checkDocno()){
+                        if(checkQty("NO")){
+                            updatePqcData("KW");
+                        }else{
+                            MyToast.myShow(SubQualityCheckDetailActivity.this,"废品量不可为0,不良品和良品量应全为0",2,0);
                         }
                     }else{
                         MyToast.myShow(SubQualityCheckDetailActivity.this,"计划信息和工序不可为空",2,0);
@@ -337,7 +369,7 @@ public class SubQualityCheckDetailActivity extends AppCompatActivity {
     *日期：2022/6/7
     **/
     private boolean checkQty(String sFlag){
-        boolean isCheck = true;
+        boolean isCheck = false;
         String strBadQty = checkDetailBadQuantity.getText().toString();
         String strNgQty = checkDetailNgQuantity.getText().toString();
 
@@ -355,18 +387,18 @@ public class SubQualityCheckDetailActivity extends AppCompatActivity {
 
         if(sFlag.equals("OK")){
             //合格
-            if(iNgQty>0 ){
-                isCheck = false;
+            if(iNgQty==0 && iBadQty==0 && iQuantity>0){
+                isCheck = true;
+            }
+        }else if(sFlag.equals("NG")){
+            //不良品
+            if(iNgQty>0 && iBadQty==0 && iQuantity>0){
+                isCheck = true;
             }
         }else{
-            //异常
-            if(iNgQty==0 ){
-                isCheck = false;
-            }else{
-                int iQty = iQuantity + iBadQty - iNgQty;
-                if(iQty<0){
-                    isCheck = false;
-                }
+            //废品
+            if(iNgQty==0 && iBadQty>0){
+                isCheck = true;
             }
         }
 

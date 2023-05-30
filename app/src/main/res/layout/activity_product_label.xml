@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ProductLabelActivity"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/productLabelToolBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/action_style"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
+                android:text="@string/multiple_product_label_title4"
+                android:background="@drawable/textview_bg_gray"/>
+
+            <TextView
+                android:id="@+id/txtProductLabelPlan"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/textview_bg_gray"
+                android:textColor="@color/master_message" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:padding="5dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <CheckBox
+                android:id="@+id/checkBoxUnConfirm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="@color/teal_700"
+                android:checked="false"
+                android:text="@string/multiple_product_label_title1" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btnQuery"
+                    android:layout_width="wrap_content"
+                    android:layout_height="25dp"
+                    android:background="@drawable/button_selector_red"
+                    android:focusable="false"
+                    android:text="@string/detail_button4"
+                    android:textColor="@color/master_loginout"
+                    android:textSize="@dimen/list_detail_button"
+                    android:textStyle="normal" />
+
+                <Button
+                    android:id="@+id/btnPrint"
+                    android:layout_width="wrap_content"
+                    android:layout_height="25dp"
+                    android:background="@drawable/list_flag_selector"
+                    android:focusable="false"
+                    android:layout_marginLeft="20dp"
+                    android:text="@string/multiple_product_button_title1"
+                    android:textColor="@color/teal_700"
+                    android:textSize="@dimen/list_detail_button"
+                    android:textStyle="normal" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/line"
+        android:layout_marginTop="5dp"
+        android:orientation="vertical">
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/action_print"
+        android:icon="@drawable/sub_menu_print"
+        app:showAsAction="always"
+        android:title="打印">
+
+    </item>
+
+    <item android:id="@+id/action_closetask"
+        android:icon="@drawable/sub_menu_close_all"
+        app:showAsAction="always"
+        android:title="中止">
+
+    </item>
+</menu>

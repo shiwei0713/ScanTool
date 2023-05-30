@@ -81,8 +81,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/imgMasterBanner"
-        android:layout_centerInParent="true"
         android:layout_marginTop="20dp"
+        android:layout_marginLeft="10dp"
         android:orientation="horizontal">
 
         <Button
@@ -123,7 +123,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/linearMasterAction"
-        android:layout_centerInParent="true"
+        android:layout_marginLeft="10dp"
         android:layout_marginTop="20dp"
         android:orientation="horizontal">
 
@@ -155,9 +155,44 @@
             android:id="@+id/btnAction8"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableTop="@drawable/master_action8"
+            android:drawableTop="@drawable/master_action10"
             android:drawablePadding="5dp"
             android:text="@string/master_action8"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearMasterAction3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/linearMasterAction2"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="10dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnAction9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableTop="@drawable/master_action5"
+            android:drawablePadding="5dp"
+            android:text="@string/master_action9"/>
+
+        <Button
+            android:id="@+id/btnAction10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableTop="@drawable/master_action6"
+            android:drawablePadding="5dp"
+            android:text="@string/master_action10"/>
+
+        <Button
+            android:id="@+id/btnAction11"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableTop="@drawable/master_action11"
+            android:drawablePadding="5dp"
+            android:text="@string/master_action11"/>
+
     </LinearLayout>
 
     <LinearLayout

@@ -10,7 +10,7 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/setProcessToolBar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/toolbar_height"
+        android:layout_height="wrap_content"
         android:background="@drawable/action_style"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
@@ -50,12 +50,12 @@
 
                     <Button
                         android:id="@+id/btnSave"
-                        android:layout_width="70dp"
+                        android:layout_width="90dp"
                         android:layout_height="25dp"
                         android:background="@drawable/button_selector_red"
                         android:focusable="false"
                         android:layout_marginRight="10dp"
-                        android:text="@string/dialog_save"
+                        android:text="@string/set_process_button_title1"
                         android:textColor="@color/master_loginout"
                         android:textSize="@dimen/list_detail_button"
                         android:textStyle="normal" />
@@ -65,7 +65,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:orientation="horizontal">
@@ -81,7 +81,7 @@
 
                 <TextView
                     android:id="@+id/setProcessProductCode"
-                    android:layout_width="300dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
                     android:textSize="@dimen/font14"
@@ -92,7 +92,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:orientation="horizontal">
@@ -108,7 +108,7 @@
 
                 <TextView
                     android:id="@+id/setProcessProductName"
-                    android:layout_width="300dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
                     android:textSize="@dimen/font14"
@@ -119,7 +119,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:orientation="horizontal">
@@ -135,7 +135,7 @@
 
                 <TextView
                     android:id="@+id/setProcessProductModels"
-                    android:layout_width="300dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
                     android:textSize="@dimen/font14"
@@ -146,91 +146,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="80dp"
-                    android:layout_height="wrap_content"
-                    android:padding="5dp"
-                    android:textSize="@dimen/font14"
-                    android:textColor="@color/teal_700"
-                    android:text="@string/content_title6"
-                    android:background="@drawable/textview_bg_gray"/>
-
-                <TextView
-                    android:id="@+id/setProcessProcessId"
-                    android:layout_width="75dp"
-                    android:layout_height="wrap_content"
-                    android:padding="5dp"
-                    android:textSize="@dimen/font14"
-                    android:textColor="@color/teal_700"
-                    android:layout_marginLeft="5dp"
-                    android:background="@drawable/textview_bg_gray"/>
-
-                <TextView
-                    android:id="@+id/setProcessProcess"
-                    android:layout_width="145dp"
-                    android:layout_height="wrap_content"
-                    android:padding="5dp"
-                    android:textSize="@dimen/font14"
-                    android:textColor="@color/teal_700"
-                    android:layout_marginLeft="5dp"
-                    android:background="@drawable/textview_bg_gray"/>
-
-                <TextView
-                    android:id="@+id/setProcessIndex"
-                    android:layout_width="70dp"
-                    android:layout_height="wrap_content"
-                    android:padding="5dp"
-                    android:textSize="@dimen/font14"
-                    android:textColor="@color/teal_700"
-                    android:layout_marginLeft="5dp"
-                    android:background="@drawable/textview_bg_gray"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="80dp"
-                    android:layout_height="wrap_content"
-                    android:padding="5dp"
-                    android:textSize="@dimen/font14"
-                    android:textColor="@color/teal_700"
-                    android:text="@string/content_title18"
-                    android:background="@drawable/textview_bg_gray"/>
-
-                <TextView
-                    android:id="@+id/setProcessProductDocno"
-                    android:layout_width="200dp"
-                    android:layout_height="wrap_content"
-                    android:padding="5dp"
-                    android:textSize="@dimen/font14"
-                    android:textColor="@color/teal_700"
-                    android:layout_marginLeft="5dp"
-                    android:background="@drawable/textview_bg_gray"/>
-
-                <TextView
-                    android:id="@+id/setProcessVersion"
-                    android:layout_width="95dp"
-                    android:layout_height="wrap_content"
-                    android:padding="5dp"
-                    android:textSize="@dimen/font14"
-                    android:textColor="@color/teal_700"
-                    android:layout_marginLeft="5dp"
-                    android:background="@drawable/textview_bg_gray"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:orientation="horizontal">
@@ -266,7 +182,7 @@
 
                 <TextView
                     android:id="@+id/setProcessGroup"
-                    android:layout_width="115dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
                     android:textSize="@dimen/font14"
@@ -277,228 +193,20 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:padding="5dp"
                 android:layout_marginTop="5dp"
-                android:orientation="horizontal">
+                android:background="@drawable/linearlayout_gray_border">
 
                 <TextView
-                    android:layout_width="80dp"
+                    android:id="@+id/textProcessDesc"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="5dp"
-                    android:textSize="@dimen/font14"
-                    android:textColor="@color/teal_700"
-                    android:text="@string/content_title16"
-                    android:background="@drawable/textview_bg_gray"/>
-
-                <TextView
-                    android:id="@+id/setProcessEmployee"
-                    android:layout_width="80dp"
-                    android:layout_height="wrap_content"
-                    android:padding="5dp"
-                    android:textSize="@dimen/font14"
-                    android:textColor="@color/master_message"
-                    android:layout_marginLeft="5dp"
-                    android:background="@drawable/textview_bg_gray"/>
-
-                <ImageButton
-                    android:id="@+id/setProcessEmployeeClear"
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:src="@drawable/clear"
-                    android:layout_marginLeft="-20dp"
-                    android:layout_gravity="center_vertical"
-                    android:visibility="visible"
-                    android:scaleType="centerInside"
-                    android:background="#F0F0F0" />
-
-                <TextView
-                    android:id="@+id/setProcessEmployee2"
-                    android:layout_width="80dp"
-                    android:layout_height="wrap_content"
-                    android:padding="5dp"
-                    android:textSize="@dimen/font14"
-                    android:textColor="@color/master_message"
-                    android:layout_marginLeft="10dp"
-                    android:background="@drawable/textview_bg_gray"/>
-
-                <ImageButton
-                    android:id="@+id/setProcessEmployeeClear2"
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:src="@drawable/clear"
-                    android:layout_marginLeft="-20dp"
-                    android:layout_gravity="center_vertical"
-                    android:visibility="visible"
-                    android:scaleType="centerInside"
-                    android:background="#F0F0F0" />
-
-                <TextView
-                    android:id="@+id/setProcessEmployee3"
-                    android:layout_width="80dp"
-                    android:layout_height="wrap_content"
-                    android:padding="5dp"
-                    android:textSize="@dimen/font14"
-                    android:textColor="@color/master_message"
-                    android:layout_marginLeft="10dp"
-                    android:background="@drawable/textview_bg_gray"/>
-
-                <ImageButton
-                    android:id="@+id/setProcessEmployeeClear3"
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:src="@drawable/clear"
-                    android:layout_marginLeft="-20dp"
-                    android:layout_gravity="center_vertical"
-                    android:visibility="visible"
-                    android:scaleType="centerInside"
-                    android:background="#F0F0F0" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="80dp"
-                    android:layout_height="wrap_content"
-                    android:padding="5dp"
-                    android:textSize="@dimen/font14"
-                    android:textColor="@color/teal_700"
-                    android:text="@string/content_title16"
-                    android:background="@drawable/textview_bg_gray"/>
-
-                <TextView
-                    android:id="@+id/setProcessEmployee4"
-                    android:layout_width="80dp"
-                    android:layout_height="wrap_content"
-                    android:padding="5dp"
-                    android:textSize="@dimen/font14"
-                    android:textColor="@color/master_message"
-                    android:layout_marginLeft="5dp"
-                    android:background="@drawable/textview_bg_gray"/>
-
-                <ImageButton
-                    android:id="@+id/setProcessEmployeeClear4"
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:src="@drawable/clear"
-                    android:layout_marginLeft="-20dp"
-                    android:layout_gravity="center_vertical"
-                    android:visibility="visible"
-                    android:scaleType="centerInside"
-                    android:background="#F0F0F0" />
-
-                <TextView
-                    android:id="@+id/setProcessEmployee5"
-                    android:layout_width="80dp"
-                    android:layout_height="wrap_content"
-                    android:padding="5dp"
-                    android:textSize="@dimen/font14"
-                    android:textColor="@color/master_message"
-                    android:layout_marginLeft="10dp"
-                    android:background="@drawable/textview_bg_gray"/>
-
-                <ImageButton
-                    android:id="@+id/setProcessEmployeeClear5"
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:src="@drawable/clear"
-                    android:layout_marginLeft="-20dp"
-                    android:layout_gravity="center_vertical"
-                    android:visibility="visible"
-                    android:scaleType="centerInside"
-                    android:background="#F0F0F0" />
-
-                <TextView
-                    android:id="@+id/setProcessEmployee6"
-                    android:layout_width="80dp"
-                    android:layout_height="wrap_content"
-                    android:padding="5dp"
-                    android:textSize="@dimen/font14"
-                    android:textColor="@color/master_message"
-                    android:layout_marginLeft="10dp"
-                    android:background="@drawable/textview_bg_gray"/>
-
-                <ImageButton
-                    android:id="@+id/setProcessEmployeeClear6"
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:src="@drawable/clear"
-                    android:layout_marginLeft="-20dp"
-                    android:layout_gravity="center_vertical"
-                    android:visibility="visible"
-                    android:scaleType="centerInside"
-                    android:background="#F0F0F0" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="80dp"
-                    android:layout_height="wrap_content"
-                    android:padding="5dp"
-                    android:textSize="@dimen/font14"
-                    android:textColor="@color/teal_700"
-                    android:text="@string/content_title37"
-                    android:background="@drawable/textview_bg_gray"/>
-
-                <TextView
-                    android:id="@+id/setProcessDevice"
-                    android:layout_width="175dp"
-                    android:layout_height="wrap_content"
-                    android:padding="5dp"
-                    android:textSize="@dimen/font14"
-                    android:textColor="@color/master_message"
-                    android:layout_marginLeft="5dp"
-                    android:background="@drawable/textview_bg_gray"/>
-
-                <Button
-                    android:id="@+id/btnUpdateEmployee"
-                    android:layout_width="70dp"
-                    android:layout_height="25dp"
-                    android:background="@drawable/button_selector_red"
-                    android:focusable="false"
-                    android:layout_marginLeft="10dp"
-                    android:text="@string/set_process_button1"
                     android:textColor="@color/master_loginout"
-                    android:textSize="@dimen/list_detail_button"
-                    android:textStyle="normal" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="80dp"
-                    android:layout_height="wrap_content"
-                    android:padding="5dp"
-                    android:textSize="@dimen/font14"
-                    android:textColor="@color/teal_700"
-                    android:text="@string/content_title44"
-                    android:background="@drawable/textview_bg_gray"/>
-
-                <TextView
-                    android:id="@+id/setProcessFlag"
-                    android:layout_width="300dp"
-                    android:layout_height="wrap_content"
-                    android:padding="5dp"
-                    android:textSize="@dimen/font14"
-                    android:textColor="@color/master_message"
                     android:layout_marginLeft="5dp"
-                    android:background="@drawable/textview_bg_gray"/>
+                    android:textStyle="bold"
+                    android:textSize="@dimen/font16" />
 
             </LinearLayout>
 
@@ -515,7 +223,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:gravity="left|center_vertical"
             android:orientation="horizontal">
 
@@ -534,18 +241,20 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:id="@+id/txtSetEmployee"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/teal_700"
-                    android:text="@string/set_process_label1"/>
+                    android:textColor="@color/master_loginout"
+                    android:layout_marginRight="10dp"
+                    android:text="@string/set_process_text_title1"/>
 
                 <TextView
+                    android:id="@+id/txtSetDevices"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/teal_700"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="10dp"
-                    android:text="@string/set_process_label2"/>
+                    android:layout_marginRight="5dp"
+                    android:textColor="@color/master_loginout"
+                    android:text="@string/set_process_text_title2"/>
 
             </LinearLayout>
 
@@ -574,14 +283,14 @@
                 android:visibility="gone"
                 android:max="100"/>
 
-            <ListView
-                android:id="@+id/setProcessView"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/setProcessRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
-                android:dividerHeight="2dp"
-                android:scrollbars="horizontal" />
+                android:padding="5dp"
+                android:scrollbars="vertical"/>
 
         </LinearLayout>
 

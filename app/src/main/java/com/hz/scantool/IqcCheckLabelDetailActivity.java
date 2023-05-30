@@ -161,7 +161,7 @@ public class IqcCheckLabelDetailActivity extends AppCompatActivity {
                     saveData("Y");
                     break;
                 case R.id.btnIqcCheckDetailCancel:
-                    saveData("N");
+                    finish();
                     break;
             }
         }
@@ -204,7 +204,11 @@ public class IqcCheckLabelDetailActivity extends AppCompatActivity {
 
                 //初始化T100服务名:cwssp028
                 String webServiceName = "CheckUpdateQc";
-                String sCheckType = "IQC";
+                String sCheckType = "UPD_IQC";
+
+                //扫描时间
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.getDefault());
+                String currentDate = simpleDateFormat.format(new Date());
 
                 //发送服务器请求
                 T100ServiceHelper t100ServiceHelper = new T100ServiceHelper();
@@ -215,7 +219,7 @@ public class IqcCheckLabelDetailActivity extends AppCompatActivity {
                         "&lt;Field name=\"bcacucsite\" value=\""+ UserInfo.getUserSiteId(getApplicationContext())+"\"/&gt;\n"+
                         "&lt;Field name=\"bcacucent\" value=\""+UserInfo.getUserEnterprise(getApplicationContext())+"\"/&gt;\n"+
                         "&lt;Field name=\"bcacucmodid\" value=\""+ UserInfo.getUserId(getApplicationContext()) +"\"/&gt;\n"+  //异动人员
-                        "&lt;Field name=\"bcacuc001\" value=\""+ strQrcode +"\"/&gt;\n"+  //条码编号
+                        "&lt;Field name=\"bcacuc001\" value=\""+ strQrcode.trim() +"\"/&gt;\n"+  //条码编号
                         "&lt;Field name=\"bcacuc002\" value=\""+ strProductCode +"\"/&gt;\n"+  //料件编码
                         "&lt;Field name=\"bcacuc003\" value=\""+ strQuantity +"\"/&gt;\n"+  //条码数量
                         "&lt;Field name=\"bcacuc004\" value=\""+ strDocNo +"\"/&gt;\n"+  //扫描批次
@@ -244,7 +248,7 @@ public class IqcCheckLabelDetailActivity extends AppCompatActivity {
                     if(!strQuantity.equals("")&&!strQuantity.isEmpty()){
                         quantity = Float.parseFloat(strQuantity);
                     }
-                    qrcodeEntity = new QrcodeEntity(strQrcode,strDocNo,strProductCode,strProductName,strPlanDate,quantity);
+                    qrcodeEntity = new QrcodeEntity(strQrcode,strDocNo,strProductCode,strProductName,strPlanDate,quantity,currentDate);
                     hzDb.qrcodeDao().insert(qrcodeEntity);
 
                     int iCount = hzDb.qrcodeDao().getCount(strQrcode);

@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center|left"
+        android:layout_marginLeft="@dimen/detail_content_margin"
+        android:layout_marginRight="@dimen/detail_content_margin"
+        android:layout_marginTop="5dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/font14"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:text="@string/produc_area_detail_content_title1"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
+                android:text="@string/produc_area_detail_content_label1"
+                android:background="@drawable/textview_bg_gray"/>
+
+            <TextView
+                android:id="@+id/areaDetailProductCode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/textview_bg_gray"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
+                android:text="@string/produc_area_detail_content_label2"
+                android:background="@drawable/textview_bg_gray"/>
+
+            <TextView
+                android:id="@+id/areaDetailProductModels"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/textview_bg_gray"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
+                android:text="@string/produc_area_detail_content_label3"
+                android:background="@drawable/textview_bg_gray"/>
+
+            <TextView
+                android:id="@+id/areaDetailModel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/textview_bg_gray"
+                android:padding="5dp"
+                android:textColor="@color/teal_700"
+                android:textSize="@dimen/font14" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/master_loginout"
+                android:text="@string/produc_area_detail_content_label4"
+                android:background="@drawable/textview_bg_gray"/>
+
+            <TextView
+                android:id="@+id/areaDetailQuantityTotal"
+                android:layout_width="130dp"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/master_loginout"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/textview_bg_gray"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/master_loginout"
+                android:layout_marginLeft="5dp"
+                android:text="@string/produc_area_detail_content_label10"
+                android:background="@drawable/textview_bg_gray"/>
+
+            <TextView
+                android:id="@+id/areaDetailPcsTotal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/master_loginout"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/textview_bg_gray"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/master_loginout"
+                android:text="@string/produc_area_detail_content_label8"
+                android:background="@drawable/textview_bg_gray"/>
+
+            <TextView
+                android:id="@+id/areaDetailQuantity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/master_loginout"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/textview_bg_gray"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
+                android:text="@string/produc_area_detail_content_label5"
+                android:background="@drawable/textview_bg_gray"/>
+
+            <TextView
+                android:id="@+id/areaDetailProcessId"
+                android:layout_width="95dp"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/textview_bg_gray"/>
+
+            <TextView
+                android:id="@+id/areaDetailProcess"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/textview_bg_gray"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
+                android:text="@string/produc_area_detail_content_label6"
+                android:background="@drawable/textview_bg_gray"/>
+
+            <TextView
+                android:id="@+id/areaDetailDevice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/textview_bg_gray"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
+                android:text="@string/produc_area_detail_content_label7"
+                android:background="@drawable/textview_bg_gray"/>
+
+            <TextView
+                android:id="@+id/areaDetailEmployee"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/textview_bg_gray"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
+                android:text="@string/produc_area_detail_content_label9"
+                android:background="@drawable/textview_bg_gray"/>
+
+            <TextView
+                android:id="@+id/areaDetailQrcode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/textview_bg_gray"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>

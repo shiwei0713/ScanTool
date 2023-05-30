@@ -121,7 +121,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/black"
-                    android:text="@string/detail_content_title3"/>
+                    android:text="@string/detail_content_title39"/>
 
                 <TextView
                     android:id="@+id/txtMultipleDetailProcessId"
@@ -132,14 +132,12 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
-                    android:text="/"
-                    android:textColor="@color/black"/>
+                    android:textColor="@color/black"
+                    android:text="/"/>
 
                 <TextView
                     android:id="@+id/txtMultipleDetailProcess"
-                    android:layout_width="wrap_content"
+                    android:layout_width="@dimen/list_show_sub_textview_width"
                     android:layout_height="wrap_content"
                     android:textColor="@color/black"/>
 
@@ -158,7 +156,7 @@
 
                 <TextView
                     android:id="@+id/txtMultipleDetailDevice"
-                    android:layout_width="wrap_content"
+                    android:layout_width="@dimen/list_show_sub_textview_width"
                     android:layout_height="wrap_content"
                     android:textColor="@color/black"/>
 
@@ -177,6 +175,37 @@
 
                 <TextView
                     android:id="@+id/txtMultipleDetailDocno"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:text="@string/multiple_detail_label5"/>
+
+                <TextView
+                    android:id="@+id/txtMultiplePlanDocno"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:text="_"/>
+
+                <TextView
+                    android:id="@+id/txtMultipleVersion"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/black"/>
@@ -215,14 +244,12 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-<!--                <TextView-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:text="@string/detail_title1"-->
-<!--                    android:layout_gravity="center_vertical|right"-->
-<!--                    android:textSize="@dimen/detail_content_titlesizte"-->
-<!--                    android:textStyle="bold"-->
-<!--                    android:textColor="@color/master_loginout" />-->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|right"
+                    android:text="@string/multiple_label_title1"
+                    android:textColor="@color/teal_700" />
 
                 <EditText
                     android:id="@+id/txtMultipleDetailQuantity"
@@ -232,9 +259,9 @@
                     android:layout_marginRight="10dp"
                     android:textColor="@color/list_item_number"
                     android:textStyle="bold"
-                    android:inputType="numberDecimal"
+                    android:inputType="number"
                     android:hint="@string/hint_quantity"
-                    android:textSize="@dimen/font16" />
+                    android:textSize="@dimen/font14" />
 
             </LinearLayout>
 
@@ -256,6 +283,26 @@
                 android:textStyle="italic"
                 android:textColor="@color/master_loginout" />
 
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/teal_700"
+                    android:text="@string/detail_content_title35"/>
+
+                <TextView
+                    android:id="@+id/txtMultipleDetailStationDocno"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textColor="@color/teal_700" />
+
+            </LinearLayout>
+
         </LinearLayout>
 
     </LinearLayout>
@@ -274,22 +321,20 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:padding="5dp"
+        android:padding="2dp"
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/txtMultipleProductDocno"
+            android:id="@+id/txtMultipleConnectProcess"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|right"
-            android:layout_marginLeft="10dp"
-            android:textColor="@color/master_loginout" />
+            android:textColor="@color/green" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/master_message"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="5dp"
             android:textStyle="bold"
             android:text="@string/multiple_detail_label4"/>
 
@@ -303,19 +348,27 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="right">
+            android:layout_marginLeft="20dp"
+            android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/multipleBtnPrint"
+            <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/list_button_size"
-                android:background="@drawable/list_flag_selector"
-                android:textColor="@color/teal_700"
-                android:textStyle="normal"
-                android:layout_marginRight="10dp"
-                android:focusable="false"
-                android:textSize="@dimen/list_detail_button"
-                android:text="@string/list_detail_button23"/>
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|right"
+                android:text="@string/multiple_label_title2"
+                android:textStyle="bold"
+                android:textSize="@dimen/font16"
+                android:textColor="@color/master_loginout" />
+
+            <TextView
+                android:id="@+id/txtMultipleDetailBadQuantity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|right"
+                android:textStyle="bold"
+                android:textSize="@dimen/font16"
+                android:hint="@string/hint_bad_quantity"
+                android:textColor="@color/master_message"/>
 
         </LinearLayout>
 

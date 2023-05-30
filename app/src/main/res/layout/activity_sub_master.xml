@@ -148,6 +148,24 @@
                 android:text="@string/tab_product22" />
 
             <Button
+                android:id="@+id/subMasterAction17"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tab_product24" />
+
+        </TableRow>
+
+    </TableLayout>
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:orientation="horizontal">
+
+        <TableRow>
+
+            <Button
                 android:id="@+id/subMasterAction16"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

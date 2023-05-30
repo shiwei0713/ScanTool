@@ -6,8 +6,10 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
@@ -30,6 +32,7 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.hz.scantool.adapter.LoadingDialog;
 import com.hz.scantool.adapter.MyToast;
+import com.hz.scantool.adapter.SendTaskListAdapter;
 import com.hz.scantool.adapter.SubAdapter;
 import com.hz.scantool.dialog.DeviceListDialog;
 import com.hz.scantool.dialog.LoadListView;
@@ -64,28 +67,20 @@ public class SubDetailForTaskActivity extends AppCompatActivity {
     private String strTitle,strMessage;
     private String statusCode;
     private String statusDescription;
-    private String strWhere,strWhereProduct,strFlag;
+    private String strWhere,strWhereProduct,strFlag,strRestart;
     private boolean isLoadMore;
     private int iRows,iEveryRow,iCount;
     private int iStartCount,iEndCount;
 
-    private Button btnSave,btnCancel,btnSetDevice,btnFlag1,btnFlag2,btnFlag3,btnQuery,btnClear;
-    private TextView subTaskProductCode,subTaskProductName,subTaskProductModels,subTaskProcessId,subTaskProcess;
-    private TextView subTaskProductDocno,subTaskVersion,subTaskDevice,subTaskPlanDate,subTaskGroupId,subTaskGroup;
-    private TextView subTaskEmployee,subTaskEmployee2,subTaskEmployee3,subTaskEmployee4,subTaskEmployee5,subTaskEmployee6;
-    private ImageButton subTaskEmployeeClear,subTaskEmployeeClear2,subTaskEmployeeClear3,subTaskEmployeeClear4,subTaskEmployeeClear5,subTaskEmployeeClear6;
+    private Button btnFlag1,btnFlag2,btnFlag3,btnQuery,btnClear;
     private ProgressBar progressBar;
-//    private ListView subTaskView;
     private LoadListView subTaskLoadView;
-    private SubAdapter subAdapter;
-    private ScrollView viewBasic;
+    private SendTaskListAdapter sendTaskListAdapter;
     private EditText inputDevice,inputProductName;
     private CheckBox checkBoxThree,checkBoxSeven;
 
-    private List<Map<String,Object>> mapResponseList,mapResponseStatus,mapResponseDeviceList,mapResponseDeviceEmpList;
-    private List<Map<String,Object>> mSearchList;
+    private List<Map<String,Object>> mapResponseList,mapResponseStatus;
     private LoadingDialog loadingDialog;
-    private List<String> mDataDevice,mDataEmployee,mDataPlanEmp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,10 +92,6 @@ public class SubDetailForTaskActivity extends AppCompatActivity {
         initRows();
         initView();
 
-        //初始化选择数据源
-        mDataDevice = initData("3"," 1=1");
-        mDataEmployee = initData("4"," 1=1");
-
         //初始化数据
         strFlag = "N";
         setWhereCondition("N");
@@ -108,8 +99,15 @@ public class SubDetailForTaskActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+
+        getSubListData("11",strWhere,strFlag);
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.sub_menu_print,menu);
+        getMenuInflater().inflate(R.menu.sub_menu_for_task,menu);
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -118,19 +116,34 @@ public class SubDetailForTaskActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         //工具栏按钮事件定义
         switch (item.getItemId()){
-//            case R.id.action_scan:
-//                //调用zxing扫码界面
-//                IntentIntegrator intentIntegrator = new IntentIntegrator(SubDetailForTaskActivity.this);
-//                intentIntegrator.setDesiredBarcodeFormats();  //IntentIntegrator.QR_CODE
-//                //开始扫描
-//                intentIntegrator.initiateScan();
-//                break;
             case android.R.id.home:
                 finish();
                 break;
             case R.id.action_print:
                 Intent intent = new Intent(SubDetailForTaskActivity.this,SurplusMaterialListActivity.class);
                 startActivity(intent);
+                break;
+            case R.id.action_closetask:
+                AlertDialog.Builder builder = new AlertDialog.Builder(SubDetailForTaskActivity.this);
+                builder.setMessage("是否确认中止所有任务");
+                builder.setTitle("提示");
+                builder.setIcon(R.drawable.dialog_error);
+
+                builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        updateTaskData(0,"closetask","C");
+                    }
+                });
+
+                builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                builder.create().show();
+
                 break;
         }
 
@@ -170,69 +183,22 @@ public class SubDetailForTaskActivity extends AppCompatActivity {
         }
 
         //初始化控件
-        subTaskProductCode = findViewById(R.id.subTaskProductCode);
-        subTaskProductName = findViewById(R.id.subTaskProductName);
-        subTaskProductModels = findViewById(R.id.subTaskProductModels);
-        subTaskProcessId = findViewById(R.id.subTaskProcessId);
-        subTaskProcess = findViewById(R.id.subTaskProcess);
-        subTaskProductDocno = findViewById(R.id.subTaskProductDocno);
-        subTaskPlanDate = findViewById(R.id.subTaskPlanDate);
-        subTaskGroupId = findViewById(R.id.subTaskGroupId);
-        subTaskGroup = findViewById(R.id.subTaskGroup);
-        subTaskVersion = findViewById(R.id.subTaskVersion);
-        subTaskEmployee = findViewById(R.id.subTaskEmployee);
-        subTaskEmployee2 = findViewById(R.id.subTaskEmployee2);
-        subTaskEmployee3 = findViewById(R.id.subTaskEmployee3);
-        subTaskEmployee4 = findViewById(R.id.subTaskEmployee4);
-        subTaskEmployee5 = findViewById(R.id.subTaskEmployee5);
-        subTaskEmployee6 = findViewById(R.id.subTaskEmployee6);
-        subTaskEmployeeClear = findViewById(R.id.subTaskEmployeeClear);
-        subTaskEmployeeClear2 = findViewById(R.id.subTaskEmployeeClear2);
-        subTaskEmployeeClear3 = findViewById(R.id.subTaskEmployeeClear3);
-        subTaskEmployeeClear4 = findViewById(R.id.subTaskEmployeeClear4);
-        subTaskEmployeeClear5 = findViewById(R.id.subTaskEmployeeClear5);
-        subTaskEmployeeClear6 = findViewById(R.id.subTaskEmployeeClear6);
-        subTaskDevice = findViewById(R.id.subTaskDevice);
         inputDevice = findViewById(R.id.inputDevice);
         inputProductName = findViewById(R.id.inputProductName);
-        btnSave = findViewById(R.id.btnSave);
-        btnCancel = findViewById(R.id.btnCancel);
-        btnSetDevice = findViewById(R.id.btnSetDevice);
         btnFlag1 = findViewById(R.id.btnFlag1);
         btnFlag2 = findViewById(R.id.btnFlag2);
         btnFlag3 = findViewById(R.id.btnFlag3);
         progressBar = findViewById(R.id.progressBar);
-//        subTaskView = findViewById(R.id.subTaskView);
         subTaskLoadView = findViewById(R.id.subTaskLoadView);
-        viewBasic = findViewById(R.id.viewBasic);
         btnQuery = findViewById(R.id.btnQuery);
         btnClear = findViewById(R.id.btnClear);
         checkBoxThree = findViewById(R.id.checkBoxThree);
         checkBoxSeven = findViewById(R.id.checkBoxSeven);
 
-        //初始化控件显示
-        showView(false);
-
         //定义事件
-        btnSave.setOnClickListener(new commandClickListener());
-        btnCancel.setOnClickListener(new commandClickListener());
-        subTaskEmployee.setOnClickListener(new commandClickListener());
-        subTaskEmployee2.setOnClickListener(new commandClickListener());
-        subTaskEmployee3.setOnClickListener(new commandClickListener());
-        subTaskEmployee4.setOnClickListener(new commandClickListener());
-        subTaskEmployee5.setOnClickListener(new commandClickListener());
-        subTaskEmployee6.setOnClickListener(new commandClickListener());
-        subTaskEmployeeClear.setOnClickListener(new commandClickListener());
-        subTaskEmployeeClear2.setOnClickListener(new commandClickListener());
-        subTaskEmployeeClear3.setOnClickListener(new commandClickListener());
-        subTaskEmployeeClear4.setOnClickListener(new commandClickListener());
-        subTaskEmployeeClear5.setOnClickListener(new commandClickListener());
-        subTaskEmployeeClear6.setOnClickListener(new commandClickListener());
-        btnSetDevice.setOnClickListener(new commandClickListener());
         btnFlag1.setOnClickListener(new commandClickListener());
         btnFlag2.setOnClickListener(new commandClickListener());
         btnFlag3.setOnClickListener(new commandClickListener());
-//        subTaskView.setOnItemClickListener(new listItemClickListener());
         btnQuery.setOnClickListener(new commandClickListener());
         btnClear.setOnClickListener(new commandClickListener());
         checkBoxThree.setOnCheckedChangeListener(new checkClickListener());
@@ -250,18 +216,6 @@ public class SubDetailForTaskActivity extends AppCompatActivity {
         //初始化显示天数
         iStartCount = -1;
         iEndCount = 1;
-    }
-
-    /**
-    *描述: 显示隐藏控件
-    *日期：2022/7/19
-    **/
-    private void showView(boolean isOpen){
-        if(isOpen){
-            viewBasic.setVisibility(View.VISIBLE);
-        }else{
-            viewBasic.setVisibility(View.GONE);
-        }
     }
 
     /**
@@ -295,7 +249,7 @@ public class SubDetailForTaskActivity extends AppCompatActivity {
 
         @Override
         public void LoadMore() {
-            subAdapter.notifyDataSetChanged();
+            sendTaskListAdapter.notifyDataSetChanged();
 
             if(isLoadMore){
                 getSubListData("11",strWhere,strFlag);
@@ -313,7 +267,7 @@ public class SubDetailForTaskActivity extends AppCompatActivity {
 
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
+            //获取list item控件
             TextView txtProductCode = view.findViewById(R.id.txtProductCode);
             TextView txtProductName = view.findViewById(R.id.txtProductName);
             TextView txtProductModels = view.findViewById(R.id.txtProductModels);
@@ -328,62 +282,43 @@ public class SubDetailForTaskActivity extends AppCompatActivity {
             TextView txtGroupId = view.findViewById(R.id.txtGroupId);
             TextView txtGroup = view.findViewById(R.id.txtGroup);
             TextView txtProcessEnd = view.findViewById(R.id.txtProcessEnd);
+            TextView txtSubFlag = view.findViewById(R.id.txtSubFlag);
+            TextView txtGroupStation = view.findViewById(R.id.txtGroupStation);
+            TextView txtQuantity = view.findViewById(R.id.txtQuantity);
+            TextView txtConnectDocno = view.findViewById(R.id.txtConnectDocno);
+
+            //获取值
+            String strProductCode = txtProductCode.getText().toString();
             String sStatus = txtSubStatus.getText().toString();
             String sConnect = txtProcessEnd.getText().toString();
+            String sStationDocno = sendTaskListAdapter.getItemValue(i,"StationDocno");
+            String strProductName = txtProductName.getText().toString();
+            String strProductModels = txtProductModels.getText().toString();
+            String strProcessId = txtProcessId.getText().toString();
+            String strProcess = txtProcess.getText().toString();
+            String strPlanDocno = txtSubFlag.getText().toString();
+            String strVersion = txtVersion.getText().toString();
+            String strPlanDate = txtPlanDate.getText().toString();
+            String strGroupId = txtGroupId.getText().toString();
+            String strGroup = txtGroup.getText().toString();
+            String strQuantity = txtQuantity.getText().toString();
+            String strEmployee = txtEmployee.getText().toString();
+            String strDevice = txtDevice.getText().toString();
+            String strDocno = txtDocno.getText().toString();
+            String strConnectDocno = txtConnectDocno.getText().toString();
+            String strErrorMsg = sendTaskListAdapter.getItemValue(i,"ErrorMsg");
+            String strLabel = sendTaskListAdapter.getItemValue(i,"Label");
 
-            if(sStatus.equals("Y")){
-                showView(false);
-                MyToast.myShow(SubDetailForTaskActivity.this,"命令已启用,无法变更设备和人员",0,0);
+            if(sConnect.equals("Y")){
+                showConnectTask(strProductName,strProductCode,strProductModels,strProcessId,strProcess,strDevice,strDocno,strVersion,strFlag,strPlanDate,strGroupId,strGroup,sConnect,strConnectDocno,strErrorMsg,strLabel);
             }else{
                 //连线生产禁止直接启用
-                if(sConnect.equals("Y")){
-                    showView(false);
-                    MyToast.myShow(SubDetailForTaskActivity.this,"连线任务,请使用连线生产功能启用",0,0);
+                if(sStationDocno.equals("")||sStationDocno.isEmpty()){
+                    showSetTask(strProductName,strProductModels,strProcessId,strProcess,strPlanDocno,strVersion,strPlanDate,strGroupId,strGroup,strQuantity,strEmployee,strDevice,strDocno,strErrorMsg,strLabel);
                 }else{
-                    //初始化控件显示
-                    showView(true);
-
-                    //人员显示
-                    showEmployee(txtEmployee.getText().toString());
-
-                    subTaskProductCode.setText(txtProductCode.getText().toString());
-                    subTaskProductName.setText(txtProductName.getText().toString());
-                    subTaskProductModels.setText(txtProductModels.getText().toString());
-                    subTaskProcessId.setText(txtProcessId.getText().toString());
-                    subTaskProcess.setText(txtProcess.getText().toString());
-                    subTaskProductDocno.setText(txtDocno.getText().toString());
-                    subTaskVersion.setText(txtVersion.getText().toString());
-                    subTaskDevice.setText(txtDevice.getText().toString());
-                    subTaskPlanDate.setText(txtPlanDate.getText().toString());
-                    subTaskGroupId.setText(txtGroupId.getText().toString());
-                    subTaskGroup.setText(txtGroup.getText().toString());
+                    showSetStation(sStationDocno,txtGroupStation.getText().toString(),txtDevice.getText().toString(),txtVersion.getText().toString(),strErrorMsg,strLabel);
                 }
             }
-        }
-    }
-
-    /**
-    *描述: 获取人员显示
-    *日期：2022/7/20
-    **/
-    private void showEmployee(String sEmployee){
-        subTaskEmployee.setText("");
-        subTaskEmployee2.setText("");
-        subTaskEmployee3.setText("");
-        subTaskEmployee4.setText("");
-        subTaskEmployee5.setText("");
-        subTaskEmployee6.setText("");
-        int index = sEmployee.indexOf("/");
-        if(index!=-1){
-            String[] arrEmployee = sEmployee.split("/");
-            TextView textView;
-            int[] empId = new int[]{R.id.subTaskEmployee, R.id.subTaskEmployee2, R.id.subTaskEmployee3, R.id.subTaskEmployee4,R.id.subTaskEmployee5,R.id.subTaskEmployee6};
-            for(int j=0;j<arrEmployee.length;j++){
-                textView = findViewById(empId[j]);
-                textView.setText(arrEmployee[j]);
-            }
-        }else{
-            subTaskEmployee.setText(sEmployee);
         }
     }
 
@@ -416,34 +351,6 @@ public class SubDetailForTaskActivity extends AppCompatActivity {
     }
 
     /**
-    *描述: 检查人员和设备是否填写完整
-    *日期：2022/10/31
-    **/
-    private boolean checkSave(){
-        boolean isSuccess = true;
-        strMessage = "人员不可为空";
-        String[] textView = new String[]{subTaskEmployee.getText().toString(), subTaskEmployee2.getText().toString(), subTaskEmployee3.getText().toString(), subTaskEmployee4.getText().toString(),subTaskEmployee5.getText().toString(),subTaskEmployee6.getText().toString()};
-
-        //检查设备是否录入
-        String sDevice = subTaskDevice.getText().toString();
-        if(sDevice.equals("")&&sDevice.isEmpty()){
-            strMessage = "设备不可为空";
-            return false;
-        }
-
-        //检查人员是否录入
-        for(int i=0;i<textView.length;i++){
-            if(!textView[i].equals("")&&!textView[i].isEmpty()){
-                return true;
-            }else{
-                isSuccess = false;
-            }
-        }
-
-        return isSuccess;
-    }
-
-    /**
     *描述: 按钮事件实现
     *日期：2022/7/19
     **/
@@ -452,58 +359,7 @@ public class SubDetailForTaskActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             switch (view.getId()){
-                case R.id.btnSave:
-                    if(checkSave()){
-                        updateTaskData(1,view,"upddevice","Y");
-                    }else{
-                        MyToast.myShow(SubDetailForTaskActivity.this,strMessage,0,0);
-                    }
-                    break;
-                case R.id.btnCancel:
-                    //隐藏详细页
-                    showView(false);
-                    break;
-                case R.id.subTaskEmployee:
-                    openSearchSelectDialog(subTaskEmployee,"请选择操作工",mDataEmployee);
-                    break;
-                case R.id.subTaskEmployee2:
-                    openSearchSelectDialog(subTaskEmployee2,"请选择操作工",mDataEmployee);
-                    break;
-                case R.id.subTaskEmployee3:
-                    openSearchSelectDialog(subTaskEmployee3,"请选择操作工",mDataEmployee);
-                    break;
-                case R.id.subTaskEmployee4:
-                    openSearchSelectDialog(subTaskEmployee4,"请选择操作工",mDataEmployee);
-                    break;
-                case R.id.subTaskEmployee5:
-                    openSearchSelectDialog(subTaskEmployee5,"请选择操作工",mDataEmployee);
-                    break;
-                case R.id.subTaskEmployee6:
-                    openSearchSelectDialog(subTaskEmployee6,"请选择操作工",mDataEmployee);
-                    break;
-                case R.id.subTaskEmployeeClear:
-                    subTaskEmployee.setText("");
-                    break;
-                case R.id.subTaskEmployeeClear2:
-                    subTaskEmployee2.setText("");
-                    break;
-                case R.id.subTaskEmployeeClear3:
-                    subTaskEmployee3.setText("");
-                    break;
-                case R.id.subTaskEmployeeClear4:
-                    subTaskEmployee4.setText("");
-                    break;
-                case R.id.subTaskEmployeeClear5:
-                    subTaskEmployee5.setText("");
-                    break;
-                case R.id.subTaskEmployeeClear6:
-                    subTaskEmployee6.setText("");
-                    break;
-                case R.id.btnSetDevice:
-                    openSearchSelectDialog(subTaskDevice,"请选择设备",mDataDevice);
-                    break;
                 case R.id.btnFlag1:  //未启用
-                    showView(false);
                     initRows();
                     initList();
                     btnFlag1.setSelected(true);
@@ -513,7 +369,6 @@ public class SubDetailForTaskActivity extends AppCompatActivity {
                     getSubListData("11",strWhere,"N");
                     break;
                 case R.id.btnFlag2: //已启用
-                    showView(false);
                     initRows();
                     initList();
                     btnFlag1.setSelected(false);
@@ -523,7 +378,6 @@ public class SubDetailForTaskActivity extends AppCompatActivity {
                     getSubListData("11",strWhere,"Y");
                     break;
                 case R.id.btnFlag3: //已中止
-                    showView(false);
                     initRows();
                     initList();
                     btnFlag1.setSelected(false);
@@ -548,257 +402,83 @@ public class SubDetailForTaskActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        //注册广播接收器
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(SCANACTION);
-        intentFilter.setPriority(Integer.MAX_VALUE);
-        registerReceiver(scanReceiver,intentFilter);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-        unregisterReceiver(scanReceiver);
-    }
-
     private void initList(){
         if(mapResponseList!=null){
             mapResponseList.clear();
         }
     }
 
-    //PDA扫描数据接收
-    private BroadcastReceiver scanReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if(intent.getAction().equals(SCANACTION)){
-                String qrContent = intent.getStringExtra("scannerdata");
-
-                if(qrContent!=null && qrContent.length()!=0){
-                    scanResult(qrContent,context,intent);
-                }else{
-                    MyToast.myShow(context,"扫描失败,请重新扫描",0,0);
-                }
-            }
-        }
-    };
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if(requestCode==REQUEST_CODE){
-            IntentResult intentResult = IntentIntegrator.parseActivityResult(resultCode,data);
-            String qrContent = intentResult.getContents();
-            Intent intent = null;
-
-            if(qrContent!=null && qrContent.length()!=0){
-                scanResult(qrContent,this,intent);
-            }else{
-                MyToast.myShow(this,"条码错误,请重新扫描"+qrContent,0,0);
-            }
-        }
-    }
-
     /**
-    *描述: 扫描结果解析
-    *日期：2022/7/19
+    *描述: 显示连线任务设置
+    *日期：2023-05-18
     **/
-    private void scanResult(String qrContent,Context context, Intent intent){
-        subTaskDevice.setText(qrContent.trim());
+    private void showConnectTask(String strProductName,String strProductCode,String strProductModels,String strProcessId,String strProcess,String strDevice,String strDocno,String strVersion,String strFlag,String strPlanDate,String strGroupId,String strGroup,String strProcessEnd,String strConnectDocno,String strErrorMsg,String strLabel){
 
-//        //依据设备自动带出预排人员
-//        showDeviceEmpData();
+        Intent intent = new Intent(SubDetailForTaskActivity.this,SetProcessActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("productName",strProductName);
+        bundle.putString("productCode",strProductCode);
+        bundle.putString("productModels",strProductModels);
+        bundle.putString("processId",strProcessId);
+        bundle.putString("process",strProcess);
+        bundle.putString("device",strDevice);
+        bundle.putString("docno",strDocno);
+        bundle.putString("version",strVersion);
+        bundle.putString("menuitem",strFlag);
+        bundle.putString("plandate",strPlanDate);
+        bundle.putString("groupid",strGroupId);
+        bundle.putString("group",strGroup);
+        bundle.putString("connect",strProcessEnd);
+        bundle.putString("connectDocno",strConnectDocno);
+        bundle.putString("errorMsg",strErrorMsg);
+        bundle.putString("label",strLabel);
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
 
     /**
-     *描述: 选择设备清单
-     *日期：2022/7/17
-     **/
-    public void openSearchSelectDialog(TextView textView, String title, List<String> mDatas) {
-        DeviceListDialog.Builder alert = new DeviceListDialog.Builder(SubDetailForTaskActivity.this);
-        alert.setListData(mDatas);
-        alert.setTitle(title);
-        alert.setSelectedListiner(new DeviceListDialog.Builder.OnSelectedListiner() {
-            @Override
-            public void onSelected(String info) {
-                textView.setText(info);
-
-//                if(textView == subTaskDevice){
-//                    //依据设备自动带出预排人员
-//                    showDeviceEmpData();
-//                }
-            }
-        });
-        DeviceListDialog mDialog = alert.show();
-        //设置Dialog 尺寸
-        mDialog.setDialogWindowAttr(0.8, 0.8, SubDetailForTaskActivity.this);
-    }
-
-    /**
-     *描述: 初始化选择数据
-     *日期：2022/7/17
-     **/
-    private List<String> initData(String strType,String strwhere) {
-        List<String> mDatas = new ArrayList<>();
-
-        Observable.create(new ObservableOnSubscribe<List<Map<String, Object>>>() {
-            @Override
-            public void subscribe(ObservableEmitter<List<Map<String, Object>>> e) throws Exception {
-
-                //初始化T100服务名
-                String webServiceName = "StockGet";
-
-                //发送服务器请求
-                T100ServiceHelper t100ServiceHelper = new T100ServiceHelper();
-                String requestBody = "&lt;Parameter&gt;\n"+
-                        "&lt;Record&gt;\n"+
-                        "&lt;Field name=\"enterprise\" value=\""+ UserInfo.getUserEnterprise(getApplicationContext())+"\"/&gt;\n"+
-                        "&lt;Field name=\"site\" value=\""+UserInfo.getUserSiteId(getApplicationContext())+"\"/&gt;\n"+
-                        "&lt;Field name=\"type\" value=\""+ strType +"\"/&gt;\n"+
-                        "&lt;Field name=\"where\" value=\""+ strwhere +"\"/&gt;\n"+
-                        "&lt;Field name=\"user\" value=\""+ UserInfo.getUserId(getApplicationContext()) +"\"/&gt;\n"+  //异动人员
-                        "&lt;/Record&gt;\n"+
-                        "&lt;/Parameter&gt;\n"+
-                        "&lt;Document/&gt;\n";
-                String strResponse = t100ServiceHelper.getT100Data(requestBody,webServiceName,getApplicationContext(),"");
-                mapResponseStatus = t100ServiceHelper.getT100StatusData(strResponse);
-                mapResponseDeviceList = t100ServiceHelper.getT100JsonDeviceData(strResponse,"stockinfo");
-
-                e.onNext(mapResponseStatus);
-                e.onNext(mapResponseDeviceList);
-                e.onComplete();
-            }
-        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<List<Map<String, Object>>>() {
-            @Override
-            public void onSubscribe(Disposable d) {
-
-            }
-
-            @Override
-            public void onNext(List<Map<String, Object>> maps) {
-                if(mapResponseStatus.size()> 0){
-                    for(Map<String,Object> mStatus: mapResponseStatus){
-                        statusCode = mStatus.get("statusCode").toString();
-                        statusDescription = mStatus.get("statusDescription").toString();
-                    }
-                }else{
-                    MyToast.myShow(SubDetailForTaskActivity.this,"执行接口错误",2,0);
-                }
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                MyToast.myShow(SubDetailForTaskActivity.this,e.getMessage(),0,0);
-            }
-
-            @Override
-            public void onComplete() {
-                if(statusCode.equals("0")){
-                    if(mapResponseDeviceList.size()> 0) {
-                        //显示单头数据
-                        for(int i=0;i<mapResponseDeviceList.size();i++){
-                            String sData;
-                            if(strType.equals("4")){
-                                //人员信息
-                                sData = mapResponseDeviceList.get(i).get("DeviceId").toString()+":"+mapResponseDeviceList.get(i).get("Device").toString();
-                            }else{
-                                sData = mapResponseDeviceList.get(i).get("DeviceId").toString();
-                            }
-                            mDatas.add(sData);
-                        }
-                    }
-                }else{
-                    MyToast.myShow(SubDetailForTaskActivity.this,statusDescription,0,0);
-                }
-            }
-        });
-
-        return mDatas;
-    }
-
-    /**
-    *描述: 依据设备自动带出之前派工人员
-    *日期：2022/7/20
+    *描述: 显示组合任务设置
+    *日期：2023-05-11
     **/
-    private void showDeviceEmpData() {
+    private void showSetStation(String stationDocno,String station,String device,String version,String strErrorMsg,String strLabel){
+        Intent intent = new Intent(SubDetailForTaskActivity.this,SetStationActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("station",station);
+        bundle.putString("stationDocno",stationDocno);
+        bundle.putString("device",device);
+        bundle.putString("version",version);
+        bundle.putString("menuitem",strFlag);
+        bundle.putString("errorMsg",strErrorMsg);
+        bundle.putString("label",strLabel);
+        intent.putExtras(bundle);
+        startActivity(intent);
+    }
 
-        Observable.create(new ObservableOnSubscribe<List<Map<String, Object>>>() {
-            @Override
-            public void subscribe(ObservableEmitter<List<Map<String, Object>>> e) throws Exception {
-
-                //初始化T100服务名
-                String webServiceName = "StockGet";
-                String strType = "5";
-                String strwhere = " sfaauc009='"+subTaskDevice.getText().toString()+"'";
-
-                //发送服务器请求
-                T100ServiceHelper t100ServiceHelper = new T100ServiceHelper();
-                String requestBody = "&lt;Parameter&gt;\n"+
-                        "&lt;Record&gt;\n"+
-                        "&lt;Field name=\"enterprise\" value=\""+ UserInfo.getUserEnterprise(getApplicationContext())+"\"/&gt;\n"+
-                        "&lt;Field name=\"site\" value=\""+UserInfo.getUserSiteId(getApplicationContext())+"\"/&gt;\n"+
-                        "&lt;Field name=\"type\" value=\""+ strType +"\"/&gt;\n"+
-                        "&lt;Field name=\"where\" value=\""+ strwhere +"\"/&gt;\n"+
-                        "&lt;/Record&gt;\n"+
-                        "&lt;/Parameter&gt;\n"+
-                        "&lt;Document/&gt;\n";
-                String strResponse = t100ServiceHelper.getT100Data(requestBody,webServiceName,getApplicationContext(),"");
-                mapResponseStatus = t100ServiceHelper.getT100StatusData(strResponse);
-                mapResponseDeviceEmpList = t100ServiceHelper.getT100JsonDeviceData(strResponse,"stockinfo");
-
-                e.onNext(mapResponseStatus);
-                if(mapResponseDeviceEmpList.size()>0){
-                    e.onNext(mapResponseDeviceEmpList);
-                }
-                e.onComplete();
-            }
-        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<List<Map<String, Object>>>() {
-            @Override
-            public void onSubscribe(Disposable d) {
-
-            }
-
-            @Override
-            public void onNext(List<Map<String, Object>> maps) {
-                if(mapResponseStatus.size()> 0){
-                    for(Map<String,Object> mStatus: mapResponseStatus){
-                        statusCode = mStatus.get("statusCode").toString();
-                        statusDescription = mStatus.get("statusDescription").toString();
-                    }
-                }else{
-                    MyToast.myShow(SubDetailForTaskActivity.this,"执行接口错误",2,0);
-                }
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                MyToast.myShow(SubDetailForTaskActivity.this,e.getMessage(),0,0);
-            }
-
-            @Override
-            public void onComplete() {
-                if(statusCode.equals("0")){
-                    if(mapResponseDeviceEmpList.size()> 0) {
-                        //显示单头数据
-                        String sDeviceEmp = "";
-                        for(int i=0;i<mapResponseDeviceEmpList.size();i++){
-                            sDeviceEmp = mapResponseDeviceEmpList.get(i).get("DeviceId").toString();
-                        }
-
-                        //更新UI字段显示
-                        showEmployee(sDeviceEmp);
-                    }
-                }else{
-                    MyToast.myShow(SubDetailForTaskActivity.this,statusDescription,0,0);
-                }
-            }
-        });
+    /**
+    *描述: 显示一般任务设置
+    *日期：2023-05-17
+    **/
+    private void showSetTask(String strProductName,String strProductModels,String strProcessId,String strProcess,String strPlanDocno,String strVersion,String strPlanDate,String strGroupId,String strGroup,String strQuantity,String strEmployee,String strDevice,String strDocno,String strErrorMsg,String strLabel){
+        Intent intent = new Intent(SubDetailForTaskActivity.this,SetTaskActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("menuitem",strFlag);
+        bundle.putString("ProductName",strProductName);
+        bundle.putString("ProductModels",strProductModels);
+        bundle.putString("ProcessId",strProcessId);
+        bundle.putString("Process",strProcess);
+        bundle.putString("PlanDocno",strPlanDocno);
+        bundle.putString("Version",strVersion);
+        bundle.putString("PlanDate",strPlanDate);
+        bundle.putString("GroupId",strGroupId);
+        bundle.putString("Group",strGroup);
+        bundle.putString("Quantity",strQuantity);
+        bundle.putString("Employee",strEmployee);
+        bundle.putString("Device",strDevice);
+        bundle.putString("Docno",strDocno);
+        bundle.putString("ErrorMsg",strErrorMsg);
+        bundle.putString("Label",strLabel);
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
 
     /**
@@ -814,6 +494,7 @@ public class SubDetailForTaskActivity extends AppCompatActivity {
             public void subscribe(ObservableEmitter<List<Map<String, Object>>> e) throws Exception {
                 //初始化T100服务名
                 String webServiceName = "ProductListGet";
+                String strType = "7";
 
                 //发送服务器请求
                 T100ServiceHelper t100ServiceHelper = new T100ServiceHelper();
@@ -833,7 +514,7 @@ public class SubDetailForTaskActivity extends AppCompatActivity {
                         "&lt;Document/&gt;\n";
                 String strResponse = t100ServiceHelper.getT100Data(requestBody,webServiceName,getApplicationContext(),"");
                 mapResponseStatus = t100ServiceHelper.getT100StatusData(strResponse);
-                mapResponseList = t100ServiceHelper.getT100JsonProductData(strResponse,"workorder");
+                mapResponseList = t100ServiceHelper.getT100JsonSendTaskData(strResponse,"workorder");
 
                 e.onNext(mapResponseStatus);
                 e.onNext(mapResponseList);
@@ -871,65 +552,24 @@ public class SubDetailForTaskActivity extends AppCompatActivity {
             public void onComplete() {
                 if(statusCode.equals("0")){
                     if(mapResponseList!=null){
-//                        if(mSearchList==null){
-//                            mSearchList = new ArrayList<Map<String,Object>>();
-//                        }else{
-//                            mSearchList.clear();
-//                        }
+                        sendTaskListAdapter = new SendTaskListAdapter(mapResponseList,getApplicationContext(),mSetTaskClickListener,strFlag,mStartTaskListener,mStopTaskListener);
+                        subTaskLoadView.setAdapter(sendTaskListAdapter);
 
-//                        //获取查询条件
-//                        String sInputProductName = inputProductName.getText().toString();
-//
-//                        //按照查询条件筛选
-//                        if(sInputProductName.equals("")&&sInputProductName.isEmpty()){
-//                            mSearchList = mapResponseList;
-//                            Log.i("TaskActivity","sInputProductName:"+sInputProductName);
-//                        }else{
-//                            if(mapResponseList.size()>0){
-//                                for (int i = 0; i < mapResponseList.size(); i++) {
-//                                    String sFlag = "Y";
-//                                    String sProductName = (String)mapResponseList.get(i).get("ProductName");
-//                                    int indexProduct = sProductName.indexOf(sInputProductName);
-//
-//                                    //存在匹配的数据
-//                                    if(indexProduct==-1){
-//                                        sFlag = "N";
-//                                        continue;
-//                                    }
-//
-//                                    if(sFlag.equals("Y")){
-//                                        mSearchList.add(mapResponseList.get(i));
-//                                        Log.i("TaskActivity","sProductName:"+sProductName);
-//                                    }
-//                                }
-//                            }
-//                        }
+                        //显示当前笔数
+                        String sCount = (String)mapResponseList.get(0).get("Count");
+                        if(sCount.equals("")||sCount.isEmpty()){
+                            sCount = "0";
+                        }
+                        iCount = Integer.parseInt(sCount);
+                        if(iCount<=mapResponseList.size()){
+                            isLoadMore = false;
+                        }else{
+                            isLoadMore = true;
+                        }
 
-                        //填充清单
-//                        if(mSearchList.size()>0){
-                            subAdapter = new SubAdapter(mapResponseList,getApplicationContext(),mStartTaskClickListener,mStopTaskClickListener,mSetTaskClickListener,"ZZ");
-                            subTaskLoadView.setAdapter(subAdapter);
-
-                            //显示当前笔数
-                            String sCount = (String)mapResponseList.get(0).get("Count");
-                            if(sCount.equals("")||sCount.isEmpty()){
-                                sCount = "0";
-                            }
-                            iCount = Integer.parseInt(sCount);
-                            if(iCount<=mapResponseList.size()){
-                                isLoadMore = false;
-                            }else{
-                                isLoadMore = true;
-                            }
-
-                            //显示加载结果
-                            String msg = "总数:"+sCount+",当前:"+String.valueOf(mapResponseList.size());
-                            subTaskLoadView.setLoadMoreTitle(msg);
-//                        }else{
-//                            subAdapter = new SubAdapter(mapResponseList,getApplicationContext(),mStartTaskClickListener,mStopTaskClickListener,"ZZ");
-//                            subTaskView.setAdapter(subAdapter);
-//                            MyToast.myShow(SubDetailForTaskActivity.this,"无数据",0,0);
-//                        }
+                        //显示加载结果
+                        String msg = "总数:"+sCount+",当前:"+String.valueOf(mapResponseList.size());
+                        subTaskLoadView.setLoadMoreTitle(msg);
 
                         //记录条目数
                         iRows = iRows + iEveryRow;
@@ -946,104 +586,59 @@ public class SubDetailForTaskActivity extends AppCompatActivity {
                 }
 
                 progressBar.setVisibility(View.GONE);
+
+                //初始化重启任务状态
+                strRestart = "N";
             }
         });
     }
 
     /**
-    *描述: 启用命令
-    *日期：2022/7/19
+    *描述: 开启任务
+    *日期：2023-05-25
     **/
-    private SubAdapter.StartTaskClickListener mStartTaskClickListener = new SubAdapter.StartTaskClickListener() {
-
+    private SendTaskListAdapter.StartTaskListener mStartTaskListener = new SendTaskListAdapter.StartTaskListener() {
         @Override
         public void StartTaskClick(int position, View view) {
-            String strstatus = subAdapter.getItemValue(position,"Status");
-            String strProcessEnd = subAdapter.getItemValue(position,"ProcessEnd");
 
-            if(strProcessEnd.equals("Y")){
-                MyToast.myShow(SubDetailForTaskActivity.this,"连线生产不可直接启用,请点击连线生产启用",0,0);
-            }else{
-                if(strstatus.equals("Y")){
-                    MyToast.myShow(SubDetailForTaskActivity.this,"此命令已启动,不需重复启动",0,0);
-                }else{
-                    updateTaskData(position,view,"updstatus","Y");
-                }
-            }
         }
     };
 
     /**
-     *描述: 中止命令
-     *日期：2022/7/19
-     **/
-    private SubAdapter.StopTaskClickListener mStopTaskClickListener = new SubAdapter.StopTaskClickListener() {
-
-
+    *描述: 中止任务
+    *日期：2023-05-25
+    **/
+    private SendTaskListAdapter.StopTaskListener mStopTaskListener = new SendTaskListAdapter.StopTaskListener() {
         @Override
         public void StopTaskClick(int position, View view) {
-            String strstatus = subAdapter.getItemValue(position,"Status");
 
-            if(strstatus.equals("C")){
-                MyToast.myShow(SubDetailForTaskActivity.this,"此命令已中止,不需重复中止",0,0);
-            }else{
-                updateTaskData(position,view,"updstatus","C");
-            }
         }
     };
 
     /**
-    *描述: 连线生产
+    *描述: 连线任务
     *日期：2022/9/14
     **/
-    private SubAdapter.SetTaskClickListener mSetTaskClickListener = new SubAdapter.SetTaskClickListener() {
+    private SendTaskListAdapter.SetTaskClickListener mSetTaskClickListener = new SendTaskListAdapter.SetTaskClickListener() {
         @Override
         public void SetTaskClick(int position, View view) {
-            //获取控件
-            Button listSubBtnSet = view.findViewById(R.id.listSubBtnSet);
-
             //初始化值
-            String strProductName = subAdapter.getItemValue(position,"ProductName");
-            String strProductCode = subAdapter.getItemValue(position,"ProductCode");
-            String strProductModels = subAdapter.getItemValue(position,"ProductModels");
-            String strProcessId = subAdapter.getItemValue(position,"ProcessId");
-            String strProcess = subAdapter.getItemValue(position,"Process");
-            String strDevice = subAdapter.getItemValue(position,"Device");
-            String strDocno = subAdapter.getItemValue(position,"Docno");
-            String strVersion = subAdapter.getItemValue(position,"Version");
-            String strFlag = subAdapter.getItemValue(position,"Flag");
-            String strPlanDate = subAdapter.getItemValue(position,"PlanDate");
-            String strGroupId = subAdapter.getItemValue(position,"GroupId");
-            String strGroup = subAdapter.getItemValue(position,"Group");
-            String strProcessEnd = subAdapter.getItemValue(position,"ProcessEnd");
-            String strProcessInitId = subAdapter.getItemValue(position,"ProcessInitId");
-            String strProcessInit = subAdapter.getItemValue(position,"ProcessInit");
+            String strProductName = sendTaskListAdapter.getItemValue(position,"ProductName");
+            String strProductCode = sendTaskListAdapter.getItemValue(position,"ProductCode");
+            String strProductModels = sendTaskListAdapter.getItemValue(position,"ProductModels");
+            String strProcessId = sendTaskListAdapter.getItemValue(position,"ProcessId");
+            String strProcess = sendTaskListAdapter.getItemValue(position,"Process");
+            String strDevice = sendTaskListAdapter.getItemValue(position,"Device");
+            String strDocno = sendTaskListAdapter.getItemValue(position,"Docno");
+            String strVersion = sendTaskListAdapter.getItemValue(position,"Version");
+            String strPlanNo = sendTaskListAdapter.getItemValue(position,"Flag");
+            String strPlanDate = sendTaskListAdapter.getItemValue(position,"PlanDate");
+            String strGroupId = sendTaskListAdapter.getItemValue(position,"GroupId");
+            String strGroup = sendTaskListAdapter.getItemValue(position,"Group");
+            String strConnectDocno = sendTaskListAdapter.getItemValue(position,"ConnectDocno");
 
-            //连线标识
-            if(strProcessEnd.equals("Y")){
-                strProcessId = strProcessInitId;
-                strProcess = strProcessInit;
-                strDevice = "";
-            }
-
-            Intent intent = new Intent(SubDetailForTaskActivity.this,SetProcessActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putString("title",listSubBtnSet.getText().toString());
-            bundle.putString("productName",strProductName);
-            bundle.putString("productCode",strProductCode);
-            bundle.putString("productModels",strProductModels);
-            bundle.putString("processId",strProcessId);
-            bundle.putString("process",strProcess);
-            bundle.putString("device",strDevice);
-            bundle.putString("docno",strDocno);
-            bundle.putString("version",strVersion);
-            bundle.putString("flag",strFlag);
-            bundle.putString("plandate",strPlanDate);
-            bundle.putString("groupid",strGroupId);
-            bundle.putString("group",strGroup);
-            bundle.putString("connect",strProcessEnd);
-            intent.putExtras(bundle);
-            startActivity(intent);
+            //打开连线任务设置
+            showConnectTask(strProductName,strProductCode,strProductModels,strProcessId,strProcess,strDevice,strDocno,strVersion,strFlag,strPlanDate,strGroupId,strGroup,"Y",strConnectDocno,"","");
         }
     };
 
@@ -1051,7 +646,7 @@ public class SubDetailForTaskActivity extends AppCompatActivity {
     *描述: 更新派工单数据
     *日期：2022/7/19
     **/
-    private void updateTaskData(int position, View view,String action,String status){
+    private void updateTaskData(int position,String action,String status){
         //显示进度条
         loadingDialog = new LoadingDialog(SubDetailForTaskActivity.this,"数据提交中",R.drawable.dialog_loading);
         loadingDialog.show();
@@ -1062,36 +657,17 @@ public class SubDetailForTaskActivity extends AppCompatActivity {
                 //初始化T100服务名
                 String webServiceName = "ProductTaskUpdate";
 
-                String strDocno = "";
-                String strProcessId = "";
-                String strProcess = "";
-                String strDevice = "";
-                String strVersion = "";
-                String strEmployee = "";
-                String strPlanDate = "";
-                String strGroupId = "";
-                String strProcessEnd = "";
-
-                if(action.equals("updstatus")){
-                    strDocno = subAdapter.getItemValue(position,"Docno");
-                    strProcessId = subAdapter.getItemValue(position,"ProcessId");
-                    strProcess = subAdapter.getItemValue(position,"Process");
-                    strDevice = subAdapter.getItemValue(position,"Device");
-                    strVersion = subAdapter.getItemValue(position,"Version");
-                    strEmployee = subAdapter.getItemValue(position,"Employee");
-                    strPlanDate = subAdapter.getItemValue(position,"PlanDate");
-                    strGroupId = subAdapter.getItemValue(position,"GroupId");
-                    strProcessEnd = subAdapter.getItemValue(position,"ProcessEnd");
-                }else{
-                    strDocno = subTaskProductDocno.getText().toString();
-                    strProcessId = subTaskProcessId.getText().toString();
-                    strProcess = subTaskProcess.getText().toString();
-                    strDevice = subTaskDevice.getText().toString();
-                    strVersion = subTaskVersion.getText().toString();
-                    strPlanDate = subTaskPlanDate.getText().toString();
-                    strGroupId = subTaskGroupId.getText().toString();
-                    strEmployee = subTaskEmployee.getText().toString()+"/"+subTaskEmployee2.getText().toString()+"/"+subTaskEmployee3.getText().toString()+"/"+subTaskEmployee4.getText().toString();
-                }
+                String strProcessId = sendTaskListAdapter.getItemValue(position,"ProcessId");
+                String strProcess = sendTaskListAdapter.getItemValue(position,"Process");
+                String strDevice = sendTaskListAdapter.getItemValue(position,"Device");
+                String strDocno = sendTaskListAdapter.getItemValue(position,"Docno");
+                String strVersion = sendTaskListAdapter.getItemValue(position,"Version");
+                String strPlanNo = sendTaskListAdapter.getItemValue(position,"Flag");
+                String strPlanDate = sendTaskListAdapter.getItemValue(position,"PlanDate");
+                String strGroupId = sendTaskListAdapter.getItemValue(position,"GroupId");
+                String strStationDocno = sendTaskListAdapter.getItemValue(position,"StationDocno");
+                String strProcessEnd = sendTaskListAdapter.getItemValue(position,"ProcessEnd");
+                String strConnectDocno = sendTaskListAdapter.getItemValue(position,"ConnectDocno");
 
                 //发送服务器请求
                 T100ServiceHelper t100ServiceHelper = new T100ServiceHelper();
@@ -1107,11 +683,14 @@ public class SubDetailForTaskActivity extends AppCompatActivity {
                         "&lt;Field name=\"sfaauc007\" value=\""+ strProcessId +"\"/&gt;\n"+  //工序项次
                         "&lt;Field name=\"sfaauc008\" value=\""+ strProcess +"\"/&gt;\n"+  //工序号
                         "&lt;Field name=\"sfaauc009\" value=\""+ strDevice +"\"/&gt;\n"+  //机器编号
-                        "&lt;Field name=\"sfaauc002\" value=\""+ strEmployee +"\"/&gt;\n"+  //生产人员
                         "&lt;Field name=\"sfaauc001\" value=\""+ strVersion +"\"/&gt;\n"+  //版本
                         "&lt;Field name=\"sfaauc011\" value=\""+ strGroupId +"\"/&gt;\n"+  //班次
+                        "&lt;Field name=\"sfaauc014\" value=\""+ strPlanNo +"\"/&gt;\n"+  //计划单号
                         "&lt;Field name=\"sfaauc023\" value=\""+ strProcessEnd +"\"/&gt;\n"+  //是否连线
+                        "&lt;Field name=\"sfaauc028\" value=\""+ strConnectDocno +"\"/&gt;\n"+  //连线单号
+                        "&lt;Field name=\"sfaauc031\" value=\""+ strStationDocno +"\"/&gt;\n"+  //组合单号
                         "&lt;Field name=\"sfaaucstus\" value=\""+ status +"\"/&gt;\n"+  //状态码
+                        "&lt;Field name=\"restart\" value=\""+ strRestart +"\"/&gt;\n"+  //是否重新启动任务
                         "&lt;Field name=\"act\" value=\""+ action +"\"/&gt;\n"+  //执行动作
                         "&lt;Detail name=\"s_detail1\" node_id=\"1_1\"&gt;\n"+
                         "&lt;Record&gt;\n"+

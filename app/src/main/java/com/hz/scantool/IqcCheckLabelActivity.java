@@ -24,6 +24,7 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.hz.scantool.adapter.IqcCheckResultAdapter;
 import com.hz.scantool.adapter.LoadingDialog;
+import com.hz.scantool.adapter.MyAlertDialog;
 import com.hz.scantool.adapter.MyToast;
 import com.hz.scantool.database.HzDb;
 import com.hz.scantool.database.QrcodeEntity;
@@ -459,44 +460,46 @@ public class IqcCheckLabelActivity extends AppCompatActivity {
             @Override
             public void subscribe(ObservableEmitter<String> e) throws Exception {
 
-                //初始化T100服务名:cwssp028
-                String webServiceName = "CheckUpdateQc";
-                String sCheckType = "IQCUPD";
-
-                //获取扫描批次
-                String strDocNo = hzDb.qrcodeDao().getDcono();
-
-                //发送服务器请求
-                T100ServiceHelper t100ServiceHelper = new T100ServiceHelper();
-                String requestBody = "&lt;Document&gt;\n"+
-                        "&lt;RecordSet id=\"1\"&gt;\n"+
-                        "&lt;Master name=\"bcacuc_t\" node_id=\"1\"&gt;\n"+
-                        "&lt;Record&gt;\n"+
-                        "&lt;Field name=\"bcacucsite\" value=\""+ UserInfo.getUserSiteId(getApplicationContext())+"\"/&gt;\n"+
-                        "&lt;Field name=\"bcacucent\" value=\""+UserInfo.getUserEnterprise(getApplicationContext())+"\"/&gt;\n"+
-                        "&lt;Field name=\"bcacucmodid\" value=\""+ UserInfo.getUserId(getApplicationContext()) +"\"/&gt;\n"+  //异动人员
-                        "&lt;Field name=\"bcacuc004\" value=\""+ strDocNo +"\"/&gt;\n"+  //扫描批次
-                        "&lt;Field name=\"bcacuc005\" value=\""+ sCheckType +"\"/&gt;\n"+  //扫描类别
-                        "&lt;Field name=\"bcacuc006\" value=\""+ status +"\"/&gt;\n"+  //状态
-                        "&lt;Detail name=\"s_detail1\" node_id=\"1_1\"&gt;\n"+
-                        "&lt;Record&gt;\n"+
-                        "&lt;Field name=\"bcacucseq\" value=\"1.0\"/&gt;\n"+
-                        "&lt;/Record&gt;\n"+
-                        "&lt;/Detail&gt;\n"+
-                        "&lt;Memo/&gt;\n"+
-                        "&lt;Attachment count=\"0\"/&gt;\n"+
-                        "&lt;/Record&gt;\n"+
-                        "&lt;/Master&gt;\n"+
-                        "&lt;/RecordSet&gt;\n"+
-                        "&lt;/Document&gt;\n";
-                String strResponse = t100ServiceHelper.getT100Data(requestBody,webServiceName,getApplicationContext(),"");
-                mapResponseStatus = t100ServiceHelper.getT100StatusData(strResponse);
-                for(Map<String,Object> mStatus: mapResponseStatus){
-                    statusCode = mStatus.get("statusCode").toString();
-                    statusDescription = mStatus.get("statusDescription").toString();
-                }
+//                //初始化T100服务名:cwssp028
+//                String webServiceName = "CheckUpdateQc";
+//                String sCheckType = "IQCUPD";
+//
+//                //获取扫描批次
+//                String strDocNo = hzDb.qrcodeDao().getDcono();
+//
+//                //发送服务器请求
+//                T100ServiceHelper t100ServiceHelper = new T100ServiceHelper();
+//                String requestBody = "&lt;Document&gt;\n"+
+//                        "&lt;RecordSet id=\"1\"&gt;\n"+
+//                        "&lt;Master name=\"bcacuc_t\" node_id=\"1\"&gt;\n"+
+//                        "&lt;Record&gt;\n"+
+//                        "&lt;Field name=\"bcacucsite\" value=\""+ UserInfo.getUserSiteId(getApplicationContext())+"\"/&gt;\n"+
+//                        "&lt;Field name=\"bcacucent\" value=\""+UserInfo.getUserEnterprise(getApplicationContext())+"\"/&gt;\n"+
+//                        "&lt;Field name=\"bcacucmodid\" value=\""+ UserInfo.getUserId(getApplicationContext()) +"\"/&gt;\n"+  //异动人员
+//                        "&lt;Field name=\"bcacuc004\" value=\""+ strDocNo +"\"/&gt;\n"+  //扫描批次
+//                        "&lt;Field name=\"bcacuc005\" value=\""+ sCheckType +"\"/&gt;\n"+  //扫描类别
+//                        "&lt;Field name=\"bcacuc006\" value=\""+ status +"\"/&gt;\n"+  //状态
+//                        "&lt;Detail name=\"s_detail1\" node_id=\"1_1\"&gt;\n"+
+//                        "&lt;Record&gt;\n"+
+//                        "&lt;Field name=\"bcacucseq\" value=\"1.0\"/&gt;\n"+
+//                        "&lt;/Record&gt;\n"+
+//                        "&lt;/Detail&gt;\n"+
+//                        "&lt;Memo/&gt;\n"+
+//                        "&lt;Attachment count=\"0\"/&gt;\n"+
+//                        "&lt;/Record&gt;\n"+
+//                        "&lt;/Master&gt;\n"+
+//                        "&lt;/RecordSet&gt;\n"+
+//                        "&lt;/Document&gt;\n";
+//                String strResponse = t100ServiceHelper.getT100Data(requestBody,webServiceName,getApplicationContext(),"");
+//                mapResponseStatus = t100ServiceHelper.getT100StatusData(strResponse);
+//                for(Map<String,Object> mStatus: mapResponseStatus){
+//                    statusCode = mStatus.get("statusCode").toString();
+//                    statusDescription = mStatus.get("statusDescription").toString();
+//                }
 
                 //清空本地数据
+                statusCode="0";
+                statusDescription="提交成功";
                 if(statusCode.equals("0")){
                     hzDb.qrcodeDao().deleteAll();
                 }
@@ -531,7 +534,8 @@ public class IqcCheckLabelActivity extends AppCompatActivity {
                     MyToast.myShow(IqcCheckLabelActivity.this,statusDescription,1,0);
                 }else{
 //                    MyToast.myShow(IqcCheckLabelActivity.this,statusDescription,0,0);
-                    ShowAlertDialog.myShow(IqcCheckLabelActivity.this,statusDescription);
+//                    ShowAlertDialog.myShow(IqcCheckLabelActivity.this,statusDescription);
+                    MyAlertDialog.myShowAlertDialog(IqcCheckLabelActivity.this,"错误信息",statusDescription);
                 }
 
                 loadingDialog.dismiss();

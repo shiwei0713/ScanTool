@@ -25,6 +25,7 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.hz.scantool.adapter.IqcCheckResultAdapter;
 import com.hz.scantool.adapter.LoadingDialog;
+import com.hz.scantool.adapter.MyAlertDialog;
 import com.hz.scantool.adapter.MyToast;
 import com.hz.scantool.adapter.WarehouseDetailAdapter;
 import com.hz.scantool.adapter.WarehouseListAdapter;
@@ -54,17 +55,15 @@ public class WarehouseDetailActivity extends AppCompatActivity {
     private static final String SCANACTION="com.android.server.scannerservice.broadcast";
     private static final int ROWS = 30;
 
-    private HzDb hzDb;
-    private String dataBaseName = "HzDb";
     private String strTitle,strWhere,strDocno,strDeptId,strDept,strStockId,strStock,strType,strFlag;
     private String statusCode,statusDescription;
     private int iRows,iEveryRow,iCount;
     private boolean isLoadMore;
-    private List<Map<String,Object>> mapResponseList,mapResponseStatus;
+    private List<Map<String,Object>> mapResponseList,mapResponseStatus,mapResponseAreaList;
 
     private ScrollView viewBasic;
     private TextView warehouseDetailDocno,warehouseDetailDeptTitle,warehouseDetailDeptId,warehouseDetailDept,warehouseDetailStockTitle,warehouseDetailStockId,warehouseDetailStock;
-    private TextView warehouseDetailQty,warehouseDetailQtyPcs;
+    private TextView warehouseDetailQty,warehouseDetailQtyPcs,warehouseDetailAreaId,warehouseDetailArea;
     private Button btnSave,btnDelete;
     private LoadListView warehouseDetailView;
     private ProgressBar progressBar;
@@ -115,6 +114,8 @@ public class WarehouseDetailActivity extends AppCompatActivity {
         warehouseDetailStock = findViewById(R.id.warehouseDetailStock);
         warehouseDetailQty = findViewById(R.id.warehouseDetailQty);
         warehouseDetailQtyPcs = findViewById(R.id.warehouseDetailQtyPcs);
+        warehouseDetailAreaId = findViewById(R.id.warehouseDetailAreaId);
+        warehouseDetailArea = findViewById(R.id.warehouseDetailArea);
         progressBar = findViewById(R.id.progressBar);
         btnSave = findViewById(R.id.btnSave);
         btnDelete = findViewById(R.id.btnDelete);
@@ -141,7 +142,8 @@ public class WarehouseDetailActivity extends AppCompatActivity {
         public void onClick(View view) {
             switch (view.getId()){
                 case R.id.btnSave:
-
+                    warehouseDetailAreaId.setText("");
+                    warehouseDetailArea.setText("");
                     break;
                 case R.id.btnDelete:
 
@@ -246,14 +248,6 @@ public class WarehouseDetailActivity extends AppCompatActivity {
         unregisterReceiver(scanReceiver);
     }
 
-    /**
-     *描述: 初始化本地数据库
-     *日期：2022/11/3
-     **/
-    private void initDataBase(){
-        hzDb = Room.databaseBuilder(this,HzDb.class,dataBaseName).build();
-    }
-
     //PDA扫描数据接收
     private BroadcastReceiver scanReceiver = new BroadcastReceiver() {
         @Override
@@ -293,7 +287,12 @@ public class WarehouseDetailActivity extends AppCompatActivity {
         if(qrContent.equals("")||qrContent.isEmpty()){
             MyToast.myShow(context,"条码错误:"+qrContent,0,1);
         }else{
-            updateT100Data(qrContent);
+            String sAreaId = warehouseDetailAreaId.getText().toString();
+            if(sAreaId.equals("")||sAreaId.isEmpty()){
+                getAreaData(qrContent);
+            }else{
+                updateT100Data(qrContent);
+            }
         }
     }
 
@@ -450,6 +449,7 @@ public class WarehouseDetailActivity extends AppCompatActivity {
                         "&lt;Field name=\"inaj015\" value=\""+strProg+"\"/&gt;\n"+
                         "&lt;Field name=\"inajuser\" value=\""+ UserInfo.getUserId(getApplicationContext()) +"\"/&gt;\n"+  //异动人员
                         "&lt;Field name=\"qrcode\" value=\""+ qrCode +"\"/&gt;\n"+  //条码编号
+                        "&lt;Field name=\"areacode\" value=\""+ warehouseDetailAreaId.getText().toString().trim() +"\"/&gt;\n"+  //区域码
                         "&lt;Detail name=\"s_detail1\" node_id=\"1_1\"&gt;\n"+
                         "&lt;Record&gt;\n"+
                         "&lt;Field name=\"inaj002\" value=\"1.0\"/&gt;\n"+
@@ -501,6 +501,80 @@ public class WarehouseDetailActivity extends AppCompatActivity {
                 }
 
                 loadingDialog.dismiss();
+            }
+        });
+    }
+
+    /**
+     *描述: 获取区域信息
+     *日期：2022/12/30
+     **/
+    private void getAreaData(String qrcontent){
+        Observable.create(new ObservableOnSubscribe<List<Map<String,Object>>>(){
+            @Override
+            public void subscribe(ObservableEmitter<List<Map<String, Object>>> e) throws Exception {
+                //初始化T100服务名
+                String webServiceName = "StockGet";
+                String strwhere = " oocql002='"+qrcontent.substring(0,3)+"'";
+                String strType = "8";
+
+                //发送服务器请求
+                T100ServiceHelper t100ServiceHelper = new T100ServiceHelper();
+                String requestBody = "&lt;Parameter&gt;\n"+
+                        "&lt;Record&gt;\n"+
+                        "&lt;Field name=\"enterprise\" value=\""+ UserInfo.getUserEnterprise(getApplicationContext())+"\"/&gt;\n"+
+                        "&lt;Field name=\"site\" value=\""+UserInfo.getUserSiteId(getApplicationContext())+"\"/&gt;\n"+
+                        "&lt;Field name=\"type\" value=\""+ strType +"\"/&gt;\n"+
+                        "&lt;Field name=\"where\" value=\""+ strwhere +"\"/&gt;\n"+
+                        "&lt;/Record&gt;\n"+
+                        "&lt;/Parameter&gt;\n"+
+                        "&lt;Document/&gt;\n";
+                String strResponse = t100ServiceHelper.getT100Data(requestBody,webServiceName,getApplicationContext(),"");
+                mapResponseStatus = t100ServiceHelper.getT100StatusData(strResponse);
+                mapResponseAreaList = t100ServiceHelper.getT100JsonAreaData(strResponse,"areainfo");
+
+                e.onNext(mapResponseStatus);
+                e.onNext(mapResponseAreaList);
+                e.onComplete();
+            }
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<List<Map<String, Object>>>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(List<Map<String, Object>> maps) {
+                if(mapResponseStatus.size()> 0){
+                    for(Map<String,Object> mStatus: mapResponseStatus){
+                        statusCode = mStatus.get("statusCode").toString();
+                        statusDescription = mStatus.get("statusDescription").toString();
+                    }
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                MyToast.myShow(WarehouseDetailActivity.this,e.getMessage(),0,0);
+            }
+
+            @Override
+            public void onComplete() {
+                if(statusCode.equals("0")){
+                    if(mapResponseAreaList.size()>0){
+                        for(Map<String,Object> mData: mapResponseAreaList){
+                            String sAreaId = mData.get("AreaId").toString();
+                            String sArea = mData.get("Area").toString();
+
+                            warehouseDetailAreaId.setText(sAreaId);
+                            warehouseDetailArea.setText(sArea);
+                        }
+                    }else{
+                        MyAlertDialog.myShowAlertDialog(WarehouseDetailActivity.this,"错误信息",statusDescription);
+                    }
+                }else{
+                    MyAlertDialog.myShowAlertDialog(WarehouseDetailActivity.this,"错误信息",statusDescription);
+                }
             }
         });
     }

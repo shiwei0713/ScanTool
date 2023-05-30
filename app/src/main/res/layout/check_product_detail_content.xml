@@ -227,6 +227,33 @@
                 android:padding="5dp"
                 android:textSize="@dimen/font14"
                 android:textColor="@color/teal_700"
+                android:text="@string/check_product_label6"
+                android:background="@drawable/textview_bg_gray"/>
+
+            <TextView
+                android:id="@+id/inputDetailProcess"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/textview_bg_gray"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textSize="@dimen/font14"
+                android:textColor="@color/teal_700"
                 android:text="@string/check_product_label2"
                 android:background="@drawable/textview_bg_gray"/>
 

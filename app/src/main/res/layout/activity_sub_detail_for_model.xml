@@ -10,160 +10,308 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/subForModelToolBar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/toolbar_height"
+        android:layout_height="wrap_content"
         android:background="@drawable/action_style"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:padding="5dp"
-        android:layout_marginTop="5dp"
-        android:gravity="left"
-        android:layout_gravity="left"
-        android:orientation="vertical">
+        android:gravity="center"
+        android:orientation="horizontal">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/font14"
-            android:textStyle="bold"
-            android:textColor="@color/black"
-            android:text="@string/content_title1"/>
+        <Button
+            android:id="@+id/btnFlag1"
+            android:layout_width="@dimen/model_button_width"
+            android:layout_height="@dimen/model_button_height"
+            android:background="@drawable/list_flag_selector"
+            android:textColor="@color/teal_700"
+            android:textStyle="normal"
+            android:focusable="false"
+            android:textSize="@dimen/list_detail_button"
+            android:text="@string/model_button_title1" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="80dp"
-                android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:textSize="@dimen/font14"
-                android:textColor="@color/teal_700"
-                android:text="@string/content_title31"
-                android:background="@drawable/textview_bg_gray"/>
-
-            <TextView
-                android:id="@+id/subForModelProductName"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:textSize="@dimen/font14"
-                android:textStyle="bold"
-                android:textColor="@color/master_message"
-                android:layout_marginLeft="5dp"
-                android:background="@drawable/textview_bg_gray"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="80dp"
-                android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:textSize="@dimen/font14"
-                android:textColor="@color/teal_700"
-                android:text="@string/content_title16"
-                android:background="@drawable/textview_bg_gray"/>
-
-            <TextView
-                android:id="@+id/subForModelUserName"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:textSize="@dimen/font14"
-                android:textStyle="bold"
-                android:textColor="@color/master_message"
-                android:layout_marginLeft="5dp"
-                android:background="@drawable/textview_bg_gray"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="80dp"
-                android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:textSize="@dimen/font14"
-                android:textColor="@color/teal_700"
-                android:text="@string/detail_title8"
-                android:background="@drawable/textview_bg_gray"/>
-
-            <TextView
-                android:id="@+id/subForModelStartDate"
-                android:layout_width="155dp"
-                android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:textSize="@dimen/font14"
-                android:textStyle="bold"
-                android:textColor="@color/master_message"
-                android:layout_marginLeft="5dp"
-                android:background="@drawable/textview_bg_gray"/>
-
-            <TextView
-                android:id="@+id/subForModelStartTime"
-                android:layout_width="140dp"
-                android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:textSize="@dimen/font14"
-                android:textStyle="bold"
-                android:textColor="@color/master_message"
-                android:layout_marginLeft="5dp"
-                android:background="@drawable/textview_bg_gray"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="5dp"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/btnSave"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/button_height"
-                android:background="@drawable/list_flag_selector"
-                android:textColor="@color/teal_700"
-                android:textStyle="normal"
-                android:focusable="false"
-                android:textSize="@dimen/list_detail_button"
-                android:text="@string/list_detail_button15" />
-
-            <Button
-                android:id="@+id/btnSaveForUser"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/button_height"
-                android:layout_marginLeft="20dp"
-                android:background="@drawable/button_selector_red"
-                android:textColor="@color/master_loginout"
-                android:textStyle="normal"
-                android:focusable="false"
-                android:textSize="@dimen/list_detail_button"
-                android:text="@string/list_detail_button16" />
-
-        </LinearLayout>
-
-        <include
-            layout="@layout/sub_product_content"
-            android:layout_width="match_parent"
-            android:layout_height="400dp"/>
+        <Button
+            android:id="@+id/btnFlag2"
+            android:layout_width="@dimen/model_button_width"
+            android:layout_height="@dimen/model_button_height"
+            android:layout_marginLeft="30dp"
+            android:background="@drawable/button_selector_red"
+            android:textColor="@color/red"
+            android:textStyle="normal"
+            android:focusable="false"
+            android:textSize="@dimen/list_detail_button"
+            android:text="@string/model_button_title2" />
 
     </LinearLayout>
+    
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginTop="3dp"
+        android:background="@color/line"/>
+    
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/layoutRoot"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="5dp"
+            android:gravity="left"
+            android:layout_gravity="left"
+            android:visibility="visible"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/font14"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:text="@string/content_title1"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textSize="@dimen/font14"
+                    android:textColor="@color/teal_700"
+                    android:text="@string/content_title31"
+                    android:background="@drawable/textview_bg_gray"/>
+
+                <TextView
+                    android:id="@+id/subForModelProductName"
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textSize="@dimen/font14"
+                    android:textStyle="bold"
+                    android:textColor="@color/master_message"
+                    android:layout_marginLeft="5dp"
+                    android:background="@drawable/textview_bg_gray"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textSize="@dimen/font14"
+                    android:textColor="@color/teal_700"
+                    android:text="@string/content_title16"
+                    android:background="@drawable/textview_bg_gray"/>
+
+                <TextView
+                    android:id="@+id/subForModelUserName"
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textSize="@dimen/font14"
+                    android:textStyle="bold"
+                    android:textColor="@color/master_message"
+                    android:layout_marginLeft="5dp"
+                    android:background="@drawable/textview_bg_gray"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textSize="@dimen/font14"
+                    android:textColor="@color/teal_700"
+                    android:text="@string/detail_title8"
+                    android:background="@drawable/textview_bg_gray"/>
+
+                <TextView
+                    android:id="@+id/subForModelStartDate"
+                    android:layout_width="155dp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textSize="@dimen/font14"
+                    android:textStyle="bold"
+                    android:textColor="@color/master_message"
+                    android:layout_marginLeft="5dp"
+                    android:background="@drawable/textview_bg_gray"/>
+
+                <TextView
+                    android:id="@+id/subForModelStartTime"
+                    android:layout_width="140dp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textSize="@dimen/font14"
+                    android:textStyle="bold"
+                    android:textColor="@color/master_message"
+                    android:layout_marginLeft="5dp"
+                    android:background="@drawable/textview_bg_gray"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="5dp"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btnSave"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/button_height"
+                    android:background="@drawable/list_flag_selector"
+                    android:textColor="@color/teal_700"
+                    android:textStyle="normal"
+                    android:focusable="false"
+                    android:textSize="@dimen/list_detail_button"
+                    android:text="@string/list_detail_button15" />
+
+                <Button
+                    android:id="@+id/btnSaveForUser"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/button_height"
+                    android:layout_marginLeft="20dp"
+                    android:background="@drawable/button_selector_red"
+                    android:textColor="@color/master_loginout"
+                    android:textStyle="normal"
+                    android:focusable="false"
+                    android:textSize="@dimen/list_detail_button"
+                    android:text="@string/list_detail_button16" />
+
+            </LinearLayout>
+
+            <include
+                layout="@layout/sub_product_content"
+                android:layout_width="match_parent"
+                android:layout_height="400dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layoutMaterialRoot"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="5dp"
+            android:gravity="left"
+            android:layout_gravity="left"
+            android:visibility="gone"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="5dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/font14"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:text="@string/check_label_title3"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="80dp"
+                            android:layout_height="wrap_content"
+                            android:padding="5dp"
+                            android:textSize="@dimen/font14"
+                            android:textColor="@color/teal_700"
+                            android:text="@string/check_label_textview_title2"
+                            android:background="@drawable/textview_bg_gray"/>
+
+                        <EditText
+                            android:id="@+id/inputModelQrcode"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="5dp"
+                            android:textSize="@dimen/font14"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginRight="5dp"
+                            android:textStyle="bold"
+                            android:hint="@string/check_label_textview_hint1"
+                            android:background="@drawable/textview_bg_gray"
+                            android:textColor="@color/master_message" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/btnClose"
+                            android:layout_width="wrap_content"
+                            android:layout_height="30dp"
+                            android:background="@drawable/button_selector_red"
+                            android:textColor="@color/master_loginout"
+                            android:focusable="false"
+                            android:textSize="@dimen/list_detail_button"
+                            android:text="@string/check_label_button_title1" />
+
+                        <Button
+                            android:id="@+id/btnQuery"
+                            android:layout_width="wrap_content"
+                            android:layout_height="30dp"
+                            android:background="@drawable/list_flag_selector"
+                            android:textColor="@color/teal_700"
+                            android:textStyle="normal"
+                            android:layout_marginLeft="20dp"
+                            android:focusable="false"
+                            android:textSize="@dimen/list_detail_button"
+                            android:text="@string/check_label_button_title2" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <include
+                layout="@layout/sub_model_material_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+        </LinearLayout>
+
+    </FrameLayout>
 
 </LinearLayout>
